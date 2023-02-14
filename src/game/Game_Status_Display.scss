@@ -1,0 +1,49 @@
+@import './normalize.css';
+
+.master_node {
+
+
+	.game_status_display {
+		height: 2 * 325px;
+		width: calc(200px + 1.5rem);
+		margin-left: 50px;
+
+		border: 3px solid black;
+		border-radius: 3px;
+	
+		
+		flex-shrink: 0;
+		
+		display: flex;
+		flex-flow: column nowrap;
+		align-items: flex-start;
+		overflow-y: scroll;
+		padding: 1rem;
+		
+		line-height: 1.5;
+		
+		button {
+			margin-bottom: 1rem;
+		}
+
+
+
+		.label_and_data_pair {
+			display: flex;
+			flex-flow: row;
+			justify-content: flex-start;
+			align-items: baseline;
+			line-height: 1.5;
+
+			.label {
+				font-weight: 600;
+				margin-right: 0.3em;
+				font-size: 14px;
+			}
+			.data {
+				color: #555;
+				font-size: 16px;
+			}
+		}
+	}
+}

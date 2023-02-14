@@ -1,0 +1,124 @@
+@import './normalize.css';
+@font-face {
+	font-family: 'pixel';
+	src:	url('~/src/fonts/Monaco.woff2') format('woff2'), /* Modern Browsers */
+			url('~/src/fonts/Monaco.ttf')  format('truetype'); /* Safari, Android, iOS */
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+body {
+	background: #dedede;
+}
+
+.master_node {
+	//font-family: 'pixel';
+	font-family: Gill Sans, sans-serif;
+	padding: 3em;
+
+	* {
+		box-sizing: border-box;
+	}
+
+	.master_flex_wrapper {
+		padding-top: 2rem;
+		
+		.editor_node, .game_node {
+			display: flex;
+			flex-flow: row nowrap;
+		}
+
+
+		.canvas_holder {
+			canvas {
+				box-shadow: darkslategrey 0px 4px 8px;
+				image-rendering: pixelated;
+				image-rendering: crisp-edges;
+				width: calc(567px * 2);
+				height: calc(325px * 2);
+			}
+		}
+
+
+		.tile_palette {
+			height: calc(2 * 325px);
+			width: calc(100px + 23px + 1.5rem);
+			margin-left: 50px;
+
+			border: 3px solid black;
+			border-radius: 3px;
+		
+			
+			flex-shrink: 0;
+			
+			display: flex;
+			flex-flow: column nowrap;
+			align-items: center;
+			overflow-y: scroll;
+			
+			.tile_cell {
+				width: 100px;
+				height: 100px;
+				flex-shrink: 0;
+				margin: 12px;
+				margin-bottom: 0px;
+				background: aliceblue;
+				
+				&.active {
+					box-shadow: darkslategrey 0px 4px 8px;
+				}
+				
+				&:last-of-type {
+					margin-bottom: 12px;
+				}
+			}		
+		}
+
+		.instructional_text {
+			font-family: 'pixel';
+			font-size: 1.5rem;
+			margin-top: 1rem;
+		}
+
+	}
+
+	* {
+
+		&::-webkit-scrollbar-thumb{
+			background-color: rgba(#777, 0.35);
+			transition: all 0.25s ease-in-out;
+			border-radius: 0.75rem;
+			border: 0.25rem solid white;
+		}
+		&::-webkit-scrollbar-track {
+			background-color: rgba(#ddd, 0.35);
+			transition: all 0.25s ease-in-out;
+			border-radius: 0.75rem;
+			border: 0.25rem solid white;
+		}
+	
+		&:focus-within,
+		&:hover {
+			&::-webkit-scrollbar-thumb{
+				background-color: rgba(#777, 1);
+			}
+			&::-webkit-scrollbar-track {
+				background-color: rgba(#ddd, 1);
+			}
+		}
+	
+		&::-webkit-scrollbar-corner {
+			visibility: hidden;
+		}
+	
+	
+		&::-webkit-scrollbar {
+			width: 1.5rem;
+			height: 1.5rem;
+			border-radius: 0.75rem;
+			background-color: transparent;
+		}
+	}
+}
+
