@@ -294,12 +294,12 @@ export class Tilemap_Manager {
 	*/
 
 	cubic_to_cartesian = ( cubeCoords: PointCubic): Point2D => ({
-		x: cubeCoords.q + (cubeCoords.r - (cubeCoords.r&1)) / 2,
+		x: cubeCoords.q + (cubeCoords.r + (cubeCoords.r & 1)) / 2,
 		y: cubeCoords.r,
 	})
 
 	cartesian_to_cubic = ( cartCoords: Point2D ): PointCubic => {
-		const q = cartCoords.x - (cartCoords.y - (cartCoords.y & 1)) / 2;
+		const q = cartCoords.x - (cartCoords.y + (cartCoords.y & 1)) / 2;
 		const r = cartCoords.y;
 		
 		return {
