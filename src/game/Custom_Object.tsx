@@ -72,7 +72,7 @@ export class Custom_Object {
 
 
 
-		console.log(`old: ${this.pixel_pos.y}   new: ${newObj.pixel_pos.y}`)
+		//console.log(`old: ${this.pixel_pos.y}   new: ${newObj.pixel_pos.y}`)
 
 
 		return new Custom_Object({

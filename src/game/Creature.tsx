@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _ from "lodash";
+import _, { find } from "lodash";
 import { v4 as uuid } from "uuid";
 
 import { ƒ } from "./Utils";
@@ -277,6 +277,15 @@ export class Creature extends Base_Object {
 			pixel_pos: new_obj.pixel_pos,
 			type_name: 'shot' as CustomObjectTypeName,
 		})], []);
+
+
+		const target = find( this.get_game_state().current_frame_state.creature_list, (val) => (
+			val.type_name === 'hermit'
+		));
+				
+		if( this.type_name == 'peasant' && target){
+			console.log( `distance between peasant and hermit: ${_Tilemap_Manager.get_tile_coord_distance_between(this.tile_pos, target.tile_pos)}`)
+		}
 
 		return {
 			new_state: new_obj,

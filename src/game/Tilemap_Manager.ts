@@ -9,7 +9,7 @@ import { ƒ } from "./Utils";
 
 
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
-import { Point2D, Rectangle } from './interfaces';
+import { Point2D, Rectangle, PointCubic } from './interfaces';
 
 interface tileViewState {
 	tile_maps: TileMaps,
@@ -175,6 +175,8 @@ export class Tilemap_Manager {
 		pos.y < this._AM.consts.col_height 
 	)
 
+
+
 	get_tile_comparator_sample_for_pos = ( pos: Point2D, tilemap_name: TileMapKeys ): TileComparatorSample => {
 		const tpc = this.get_tile_position_comparator_for_pos(pos);
 		
@@ -282,6 +284,48 @@ export class Tilemap_Manager {
 
 
 
+
+	
+/*----------------------- distance calculations -----------------------*/
+	/*
+		based on https://www.redblobgames.com/grids/hexagons/
+		
+		Our tile system, in this page's lingo, is "pointy topped" and "odd-r" (shoves odd rows by +1/2 tile to the right).
+	*/
+
+	cubic_to_cartesian = ( cubeCoords: PointCubic): Point2D => ({
+		x: cubeCoords.q + (cubeCoords.r - (cubeCoords.r&1)) / 2,
+		y: cubeCoords.r,
+	})
+
+	cartesian_to_cubic = ( cartCoords: Point2D ): PointCubic => {
+		const q = cartCoords.x - (cartCoords.y - (cartCoords.y & 1)) / 2;
+		const r = cartCoords.y;
+		
+		return {
+			q: q,
+			r: r,
+			s: (-q - r),
+		}
+	}
+
+	cubic_subtraction = ( a: PointCubic, b: PointCubic ): PointCubic => ({
+		q: a.q - b.q,
+		r: a.r - b.r,
+		s: a.s - b.s,
+	})
+
+	cubic_distance = ( a: PointCubic, b: PointCubic ): Number => {
+		const vector = this.cubic_subtraction(a, b);
+
+		return Math.max( Math.abs(vector.q), Math.abs(vector.r), Math.abs(vector.s));
+	}
+
+
+
+	get_tile_coord_distance_between = ( startPos: Point2D, endPos: Point2D ) => Number (
+		this.cubic_distance( this.cartesian_to_cubic(startPos), this.cartesian_to_cubic(endPos) )
+	)
 
 /*----------------------- direction handling -----------------------*/
 

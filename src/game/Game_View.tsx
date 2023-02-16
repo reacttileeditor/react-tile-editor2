@@ -183,7 +183,6 @@ class Game_Manager {
 						}
 					);
 		
-				console.error(`new pos ${new_position}`);
 				if( new_position == undefined){ //if we didn't find *any* open slots, give up and remain at our current pos
 					new_position = {
 						position: creature.tile_pos,
@@ -288,18 +287,18 @@ class Game_Manager {
 		
 
 		var objects = _.concat( _.cloneDeep(this.game_state.prior_frame_state.custom_object_list), _.cloneDeep(spawnees));
-		console.log('spawnees', _.map( spawnees, (val)=>(val.pixel_pos.y)) )
+		//console.log('spawnees', _.map( spawnees, (val)=>(val.pixel_pos.y)) )
 
-		console.log('prev', _.map( this.game_state.prior_frame_state.custom_object_list, (val)=>(val.pixel_pos.y)) )
+		//console.log('prev', _.map( this.game_state.prior_frame_state.custom_object_list, (val)=>(val.pixel_pos.y)) )
 
 		this.game_state.current_frame_state.custom_object_list = _.map( objects, (val,idx) => {
-			return ƒ.dump(val.process_single_frame(this._Tilemap_Manager, this.get_time_offset()))
+			return (val.process_single_frame(this._Tilemap_Manager, this.get_time_offset()))
 		});
 
 		/*
 			Clear our "double-buffering" by replacing the old 'prior frame state' with our finished new frame.
 		*/
-		console.log('curr', _.map( this.game_state.current_frame_state.custom_object_list, (val)=>(val.pixel_pos.y)) )
+	//	console.log('curr', _.map( this.game_state.current_frame_state.custom_object_list, (val)=>(val.pixel_pos.y)) )
 
 		this.game_state.prior_frame_state = _.cloneDeep(this.game_state.current_frame_state);
 
