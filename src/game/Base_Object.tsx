@@ -43,8 +43,9 @@ export class Base_Object {
 
 	}
 
-
-
+	get_current_mid_turn_tile_pos = (TM: Tilemap_Manager): Point2D => (
+		TM.convert_pixel_coords_to_tile_coords(this.pixel_pos)
+	)
 
 
 

@@ -28,21 +28,30 @@ export type CreatureTypeName = 'hermit' | 'peasant' | 'skeleton';
 
 
 export class Creature extends Base_Object {
-	tile_pos: Point2D;
-	facing_direction: Direction;
-	planned_tile_pos: Point2D;
+		//static values
 	unique_id: string;
+	type_name: CreatureTypeName;
+	team: number;
+	creature_basetype_delegate: CreatureType;
+
+		//state	
+	tile_pos: Point2D;
+	pixel_pos: Point2D;
+	facing_direction: Direction;
+
+		//accessors
+	get_game_state: () => Game_State;
+
+
+		//intended moves
+	planned_tile_pos: Point2D;
 	path_this_turn: Array<Point2D>;
 	path_this_turn_with_directions: Array<PathNodeWithDirection>;
 	path_reachable_this_turn: Array<Point2D>;
 	path_reachable_this_turn_with_directions: Array<PathNodeWithDirection>;
 	animation_this_turn: Array<Anim_Schedule_Element>;
-	type_name: CreatureTypeName;
-	team: number;
-	get_game_state: () => Game_State;
+	
 
-	creature_basetype_delegate: CreatureType;
-	pixel_pos: Point2D;
 
 
 
@@ -105,7 +114,6 @@ export class Creature extends Base_Object {
 	yield_creature_image = () => (
 		this.creature_basetype_delegate.yield_creature_image()
 	)
-
 
 
 
@@ -266,11 +274,11 @@ export class Creature extends Base_Object {
 		)
 	}
 
-	process_single_frame = (_Tilemap_Manager: Tilemap_Manager, offset_in_ms: number): {new_state: Creature, spawnees: Array<Custom_Object> } => {
+	process_single_frame = (TM: Tilemap_Manager, offset_in_ms: number): {new_state: Creature, spawnees: Array<Custom_Object> } => {
 
 		const new_obj = _.cloneDeep(this);
 
-		new_obj.pixel_pos = new_obj.yield_position_for_time_in_post_turn_animation(_Tilemap_Manager, offset_in_ms)
+		new_obj.pixel_pos = new_obj.yield_position_for_time_in_post_turn_animation(TM, offset_in_ms)
 
 		const spawnees = ƒ.if(offset_in_ms >= 20 && offset_in_ms <= 100 && this.type_name == 'peasant', [new Custom_Object({
 			get_game_state: this.get_game_state,
@@ -284,7 +292,16 @@ export class Creature extends Base_Object {
 		));
 				
 		if( this.type_name == 'peasant' && target){
-			console.log( `distance between peasant and hermit: ${_Tilemap_Manager.get_tile_coord_distance_between(this.tile_pos, target.tile_pos)}`)
+//			console.log( `distance between peasant and hermit: ${_Tilemap_Manager.get_tile_coord_distance_between(this.tile_pos, target.tile_pos)}`)
+
+			//console.log( `distance between peasant and hermit: ${TM.get_tile_coord_distance_between(this.get_current_mid_turn_tile_pos(TM), target.get_current_mid_turn_tile_pos(TM))} ${this.get_current_mid_turn_tile_pos(TM).x} ${this.get_current_mid_turn_tile_pos(TM).y} ${target.get_current_mid_turn_tile_pos(TM).x} ${target.get_current_mid_turn_tile_pos(TM).y}`)
+
+			//console.log(`test ${new_obj.pixel_pos.x} ${new_obj.pixel_pos.y}`)
+			console.log(`test ${this.pixel_pos.x} ${this.pixel_pos.y}`)
+
+			
+			//console.log( `distance between peasant and hermit: ${TM.get_tile_coord_distance_between(new_obj.get_current_mid_turn_tile_pos(TM), target.get_current_mid_turn_tile_pos(TM))} ${new_obj.get_current_mid_turn_tile_pos(TM).x} ${new_obj.get_current_mid_turn_tile_pos(TM).y} ${target.get_current_mid_turn_tile_pos(TM).x} ${target.get_current_mid_turn_tile_pos(TM).y}`)
+
 		}
 
 		return {
