@@ -208,7 +208,7 @@ export class Tilemap_Manager {
 												_.range(pos.x - 0, pos.x + 2)
 											);
 			
-			return horizontal_tile_indices.map( (col_value, col_index) => {
+			return horizontal_tile_indices.map( (col_value: number, col_index: number) => {
 				return {x: col_value, y: row_value};
 			});
 		}) as TilePositionComparatorSample;
