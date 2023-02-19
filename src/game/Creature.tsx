@@ -26,7 +26,7 @@ export type CreatureTypeName = 'hermit' | 'peasant' | 'skeleton';
 
 
 
-type CreatureData = {
+export type CreatureData = {
 	//static values
 	unique_id: string;
 	type_name: CreatureTypeName;

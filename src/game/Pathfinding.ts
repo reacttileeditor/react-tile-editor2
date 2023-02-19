@@ -8,7 +8,7 @@ import { ƒ } from "./Utils";
 
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Tilemap_Manager } from "./Tilemap_Manager";
-import { Creature } from "./Creature";
+import { CreatureData, Creature_ƒ } from "./Creature";
 import { Point2D, Rectangle } from './interfaces';
 
 interface tileViewState {
@@ -43,9 +43,9 @@ export type Pathfinding_Result = {
 
 export class Node_Graph_Generator {
 	_TM: Tilemap_Manager;
-	_Creature: Creature;
+	_Creature: CreatureData;
 
-	constructor( _TM: Tilemap_Manager, _Creature: Creature ) {
+	constructor( _TM: Tilemap_Manager, _Creature: CreatureData ) {
 		
 		this._TM = _TM;
 		this._Creature = _Creature;
@@ -54,7 +54,7 @@ export class Node_Graph_Generator {
 	
 /*----------------------- core functionality -----------------------*/
 	move_cost_for_coords = ( _grid: TileGrid, _coords: Point2D ): number|null => (
-		this._Creature.yield_move_cost_for_tile_type( _grid[_coords.y][_coords.x] )
+		Creature_ƒ.yield_move_cost_for_tile_type( this._Creature, _grid[_coords.y][_coords.x] )
 	)
 	
 	
@@ -131,7 +131,7 @@ const tuple_to_addr = (the_tuple: Point2D): string => {
 			
 
 
-const a_star_search = ( _graph: NodeGraph, _start_coords: Point2D, _end_coords: Point2D, _creature: Creature ): Pathfinding_Result => {
+const a_star_search = ( _graph: NodeGraph, _start_coords: Point2D, _end_coords: Point2D, _creature: CreatureData ): Pathfinding_Result => {
 	var discarded_nodes = [];
 	let search_was_aborted_early : boolean = false;
 	let search_has_succeeded : boolean = false;
@@ -240,7 +240,7 @@ export class Pathfinder {
 		
 	}
 
-	find_path_between_map_tiles = (_TM: Tilemap_Manager, _start_coords: Point2D, _end_coords: Point2D, _Creature: Creature) => {
+	find_path_between_map_tiles = (_TM: Tilemap_Manager, _start_coords: Point2D, _end_coords: Point2D, _Creature: CreatureData) => {
 		/*
 			We're going to go ahead and pass in the creature as a constructor argument; the idea here is that we can't really "reuse" an existing node graph generator and just pass in a new creature type; the moment anything changes about the creature we're using, we need to completely rebuild the node graph from scratch.  So there's no sense in pipelining it into the whole function tree inside the class - we have to nuke and rebuild anyways, so why not make the interface a bit simpler?
 		*/

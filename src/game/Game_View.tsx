@@ -11,7 +11,7 @@ import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Tilemap_Manager, Direction } from "./Tilemap_Manager";
 import { Pathfinder } from "./Pathfinding";
 
-import { Creature, PathNodeWithDirection } from "./Creature";
+import { Creature_ƒ, NewCreature, CreatureData, PathNodeWithDirection } from "./Creature";
 
 import "./Primary_View.scss";
 import "./Game_Status_Display.scss";
@@ -37,7 +37,7 @@ export interface Game_State {
 }
 
 interface Individual_Game_Turn_State {
-	creature_list: Array<Creature>,
+	creature_list: Array<CreatureData>,
 	custom_object_list: Array<Custom_Object>,
 }
 
@@ -97,25 +97,25 @@ class Game_Manager {
 		};
 
 		const first_turn_state_init = {
-			creature_list: [new Creature({
+			creature_list: [NewCreature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 1, y: 6},
 				planned_tile_pos: {x: 0, y: 6},
 				type_name: 'hermit',
 				team: 1,
-			}), new Creature({
+			}), NewCreature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 2, y: 4},
 				planned_tile_pos: {x: 2, y: 4},
 				type_name: 'peasant',
 				team: 1,
-			}), new Creature({
+			}), NewCreature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 4, y: 4},
 				planned_tile_pos: {x: 4, y: 4},
 				type_name: 'skeleton',
 				team: 2,
-			}), new Creature({
+			}), NewCreature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 5, y: 8},
 				planned_tile_pos: {x: 5, y: 8},
@@ -193,7 +193,7 @@ class Game_Manager {
 				}
 		
 		
-				return new Creature({
+				return NewCreature({
 					get_game_state: this.get_game_state,
 					tile_pos: new_position.position,
 					direction: new_position.direction,
@@ -236,7 +236,7 @@ class Game_Manager {
 			return _.reduce(
 				_.map(
 					this.get_previous_turn_state().creature_list,
-					(val) => ( val.calculate_total_anim_duration() )
+					(val) => ( Creature_ƒ.calculate_total_anim_duration(val) )
 				),
 				(left, right) => ( ƒ.if( left > right, left, right) )
 			) as number;
@@ -273,7 +273,7 @@ class Game_Manager {
 
 		const spawnees: Array<Custom_Object> = [];
 		this.game_state.current_frame_state.creature_list = _.map( this.game_state.prior_frame_state.creature_list, (val,idx) => {
-			const processed_entity = val.process_single_frame(this._Tilemap_Manager, this.get_time_offset());
+			const processed_entity = Creature_ƒ.process_single_frame(val, this._Tilemap_Manager, this.get_time_offset());
 
 			_.map(processed_entity.spawnees, (val)=>{ spawnees.push(val) });
 
@@ -313,10 +313,10 @@ class Game_Manager {
 			this.animation_state.is_animating_turn_end = false;
 		} else {
 			_.map( this.game_state.current_frame_state.creature_list, (val,idx) => {
-				const direction = val.yield_direction_for_time_in_post_turn_animation(this.get_time_offset());
+				const direction = Creature_ƒ.yield_direction_for_time_in_post_turn_animation(val, this.get_time_offset());
 
 				this._Asset_Manager.draw_image_for_asset_name({
-					asset_name:					val.yield_walk_asset_for_direction( direction ), //i.e. 'peasant-se-walk',
+					asset_name:					Creature_ƒ.yield_walk_asset_for_direction( val, direction ), //i.e. 'peasant-se-walk',
 					_BM:						this._Blit_Manager,
 					pos:						val.pixel_pos, //yield_position_for_time_in_post_turn_animation( this._Tilemap_Manager, this.get_time_offset() ),
 					zorder:						12,
@@ -348,7 +348,7 @@ class Game_Manager {
 		*/
 		_.map( this.get_current_turn_state().creature_list, (val,idx) => {
 			this._Asset_Manager.draw_image_for_asset_name({
-				asset_name:					val.yield_stand_asset_for_direction(val.facing_direction),
+				asset_name:					Creature_ƒ.yield_stand_asset_for_direction(val, val.facing_direction),
 				_BM:						this._Blit_Manager,
 				pos:						this._Tilemap_Manager.convert_tile_coords_to_pixel_coords(val.tile_pos),
 				zorder:						12,
@@ -362,7 +362,7 @@ class Game_Manager {
 				Draw the "ghost" image of the position the unit will be in at the end of their move.
 			*/
 			this._Asset_Manager.draw_image_for_asset_name({
-				asset_name:					val.yield_stand_asset_for_direction(val.facing_direction),
+				asset_name:					Creature_ƒ.yield_stand_asset_for_direction(val, val.facing_direction),
 				_BM:						this._Blit_Manager,
 				pos:						this._Tilemap_Manager.convert_tile_coords_to_pixel_coords(val.planned_tile_pos),
 				zorder:						12,
@@ -420,7 +420,7 @@ class Game_Manager {
 		this.select_object_based_on_tile_click(pos);
 	}
 
-	get_selected_creature = ():Creature|undefined => {
+	get_selected_creature = ():CreatureData|undefined => {
 		const idx = this.game_state.selected_object_index;
 		
 		
@@ -460,7 +460,8 @@ class Game_Manager {
 				const creature = this.get_current_turn_state().creature_list[ this.game_state.selected_object_index ];
 				creature.planned_tile_pos = new_pos;
 				
-				creature.set_path(
+				Creature_ƒ.set_path(
+					creature,
 					this._Pathfinder.find_path_between_map_tiles( this._Tilemap_Manager, creature.tile_pos, new_pos, creature ).successful_path,
 					this._Tilemap_Manager
 				);
@@ -502,7 +503,7 @@ class Game_Status_Display extends React.Component <Game_Status_Display_Props, {
 		this.setState({game_state: _.cloneDeep(game_state)});
 	}
 
-	get_selected_creature = (): Creature|undefined => {
+	get_selected_creature = (): CreatureData|undefined => {
 		const _gs = this.state.game_state;
 
 		if( _gs.selected_object_index != undefined ){
@@ -535,7 +536,7 @@ class Game_Status_Display extends React.Component <Game_Status_Display_Props, {
 					(selected_creature !== undefined ?
 						<Label_and_Data_Pair
 							label={'Selected Unit:'}
-							data={`${selected_creature.get_info().yield_prettyprint_name()}`}
+							data={`${Creature_ƒ.get_info(selected_creature).yield_prettyprint_name()}`}
 						/> :
 						<Label_and_Data_Pair
 							label={''}
@@ -557,21 +558,21 @@ class Game_Status_Display extends React.Component <Game_Status_Display_Props, {
 						<Tile_Palette_Element
 							asset_manager={this.props._Asset_Manager}
 							tile_name={''}
-							asset_name={`${selected_creature.get_info().yield_creature_image()}`}
+							asset_name={`${Creature_ƒ.get_info(selected_creature).yield_creature_image()}`}
 							highlight={false}
 							handle_click={ ()=>{} }
 						/>
 						<Label_and_Data_Pair
 							label={'Hitpoints:'}
-							data={`${selected_creature.get_info().yield_max_hitpoints()}`}
+							data={`${Creature_ƒ.get_info(selected_creature).yield_max_hitpoints()}`}
 						/>
 						<Label_and_Data_Pair
 							label={'Moves:'}
-							data={`${selected_creature.get_info().yield_moves_per_turn()}`}
+							data={`${Creature_ƒ.get_info(selected_creature).yield_moves_per_turn()}`}
 						/>
 						<Label_and_Data_Pair
 							label={'Damage:'}
-							data={`${selected_creature.get_info().yield_damage()}`}
+							data={`${Creature_ƒ.get_info(selected_creature).yield_damage()}`}
 						/>
 					</>
 				}
