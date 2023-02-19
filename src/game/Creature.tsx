@@ -125,7 +125,9 @@ export const Creature_ƒ = {
 
 
 
-
+	get_current_mid_turn_tile_pos: (me: CreatureData, TM: Tilemap_Manager): Point2D => (
+		TM.convert_pixel_coords_to_tile_coords(me.pixel_pos)
+	),
 
 /*----------------------- basetype management -----------------------*/
 
@@ -309,15 +311,15 @@ export const Creature_ƒ = {
 		));
 				
 		if( me.type_name == 'peasant' && target){
-//			console.log( `distance between peasant and hermit: ${_Tilemap_Manager.get_tile_coord_distance_between(me.tile_pos, target.tile_pos)}`)
 
-			//console.log( `distance between peasant and hermit: ${TM.get_tile_coord_distance_between(me.get_current_mid_turn_tile_pos(TM), target.get_current_mid_turn_tile_pos(TM))} ${me.get_current_mid_turn_tile_pos(TM).x} ${me.get_current_mid_turn_tile_pos(TM).y} ${target.get_current_mid_turn_tile_pos(TM).x} ${target.get_current_mid_turn_tile_pos(TM).y}`)
 
 			//console.log(`test ${new_obj.pixel_pos.x} ${new_obj.pixel_pos.y}`)
-			console.log(`test ${me.pixel_pos.x} ${me.pixel_pos.y}`)
+			//console.log(`test ${me.pixel_pos.x} ${me.pixel_pos.y}`)
 
+			//console.log( `distance between peasant and hermit: ${TM.get_tile_coord_distance_between(me.tile_pos, target.tile_pos)}`)
+			console.log( `distance between peasant and hermit: ${TM.get_tile_coord_distance_between(Creature_ƒ.get_current_mid_turn_tile_pos(me,TM), Creature_ƒ.get_current_mid_turn_tile_pos(target,TM))}`)
 			
-			//console.log( `distance between peasant and hermit: ${TM.get_tile_coord_distance_between(new_obj.get_current_mid_turn_tile_pos(TM), target.get_current_mid_turn_tile_pos(TM))} ${new_obj.get_current_mid_turn_tile_pos(TM).x} ${new_obj.get_current_mid_turn_tile_pos(TM).y} ${target.get_current_mid_turn_tile_pos(TM).x} ${target.get_current_mid_turn_tile_pos(TM).y}`)
+			//console.log( `distance between peasant and hermit: ${TM.get_tile_coord_distance_between(Creature_ƒ.get_current_mid_turn_tile_pos(new_obj, TM), Creature_ƒ.get_current_mid_turn_tile_pos(target,TM))} ${Creature_ƒ.get_current_mid_turn_tile_pos(new_obj, TM).x} ${Creature_ƒ.get_current_mid_turn_tile_pos(new_obj, TM).y} ${Creature_ƒ.get_current_mid_turn_tile_pos(target, TM).x} ${Creature_ƒ.get_current_mid_turn_tile_pos(target, TM).y}`)
 
 		}
 
