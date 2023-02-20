@@ -11,7 +11,7 @@ import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Tilemap_Manager, Direction } from "./Tilemap_Manager";
 import { Pathfinder } from "./Pathfinding";
 
-import { Creature_ƒ, NewCreature, CreatureData, PathNodeWithDirection } from "../objects_core/Creature";
+import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection } from "../objects_core/Creature";
 
 import "./Primary_View.scss";
 import "./Game_Status_Display.scss";
@@ -37,7 +37,7 @@ export interface Game_State {
 }
 
 interface Individual_Game_Turn_State {
-	creature_list: Array<CreatureData>,
+	creature_list: Array<Creature_Data>,
 	custom_object_list: Array<Custom_Object_Data>,
 }
 
@@ -97,25 +97,25 @@ class Game_Manager {
 		};
 
 		const first_turn_state_init = {
-			creature_list: [NewCreature({
+			creature_list: [New_Creature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 1, y: 6},
 				planned_tile_pos: {x: 0, y: 6},
 				type_name: 'hermit',
 				team: 1,
-			}), NewCreature({
+			}), New_Creature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 2, y: 4},
 				planned_tile_pos: {x: 2, y: 4},
 				type_name: 'peasant',
 				team: 1,
-			}), NewCreature({
+			}), New_Creature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 4, y: 4},
 				planned_tile_pos: {x: 4, y: 4},
 				type_name: 'skeleton',
 				team: 2,
-			}), NewCreature({
+			}), New_Creature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 5, y: 8},
 				planned_tile_pos: {x: 5, y: 8},
@@ -193,7 +193,7 @@ class Game_Manager {
 				}
 		
 		
-				return NewCreature({
+				return New_Creature({
 					get_game_state: this.get_game_state,
 					tile_pos: new_position.position,
 					direction: new_position.direction,
@@ -420,7 +420,7 @@ class Game_Manager {
 		this.select_object_based_on_tile_click(pos);
 	}
 
-	get_selected_creature = ():CreatureData|undefined => {
+	get_selected_creature = ():Creature_Data|undefined => {
 		const idx = this.game_state.selected_object_index;
 		
 		
@@ -503,7 +503,7 @@ class Game_Status_Display extends React.Component <Game_Status_Display_Props, {
 		this.setState({game_state: _.cloneDeep(game_state)});
 	}
 
-	get_selected_creature = (): CreatureData|undefined => {
+	get_selected_creature = (): Creature_Data|undefined => {
 		const _gs = this.state.game_state;
 
 		if( _gs.selected_object_index != undefined ){

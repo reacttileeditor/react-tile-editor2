@@ -16,7 +16,7 @@ import { Point2D, Rectangle } from '../interfaces';
 import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
 import { CustomObjectType } from "./Custom_Object_Base_Type";
 import { Game_State } from "../core/Game_View";
-import { Base_Object_Data } from "./Base_Object";
+import { Base_Object_Data, New_Base_Object } from "./Base_Object";
 
 export type PathNodeWithDirection = {
 	position: Point2D,
@@ -27,21 +27,15 @@ export type CreatureTypeName = 'hermit' | 'peasant' | 'skeleton';
 
 
 
-export type CreatureData = {
+export type Creature_Data = {
 	//static values
-	unique_id: string;
 	type_name: CreatureTypeName;
 	team: number;
 	creature_basetype_delegate: CreatureType;
 
 	//state	
 	tile_pos: Point2D;
-	pixel_pos: Point2D;
 	facing_direction: Direction;
-
-	//accessors
-	get_game_state: () => Game_State;
-
 
 	//intended moves
 	planned_tile_pos: Point2D;
@@ -50,11 +44,12 @@ export type CreatureData = {
 	path_reachable_this_turn: Array<Point2D>;
 	path_reachable_this_turn_with_directions: Array<PathNodeWithDirection>;
 	animation_this_turn: Array<Anim_Schedule_Element>;	
-}
+} & Base_Object_Data;
 
 
 
-export const NewCreature = (
+
+export const New_Creature = (
 	p: {
 		get_game_state:  () => Game_State,
 		tile_pos: Point2D,
@@ -63,29 +58,22 @@ export const NewCreature = (
 		type_name: CreatureTypeName,
 		team: number,
 		unique_id?: string,
-	}): CreatureData => {
-		// super({
-		// 	get_game_state:  p.get_game_state,
-		// 	type_name: p.type_name,
-		// 	pixel_pos: {x:0, y: 0},
-		// })
+	}): Creature_Data => {
 	return {
+		...New_Base_Object({
+			get_game_state: p.get_game_state,
+			pixel_pos: {x:0, y: 0}, //TODO use TM
+			unique_id: p.unique_id,
+		}),
+
 		//static values
-		unique_id: ƒ.if(p.unique_id != undefined,
-			p.unique_id,
-			uuid()
-		),
 		type_name: p.type_name,
 		team: p.team,
 		creature_basetype_delegate: Creature_ƒ.instantiate_basetype_delegate(p.type_name),
 
 		//state	
 		tile_pos: p.tile_pos,
-		pixel_pos: {x:0, y: 0},  //TODO use TM
 		facing_direction: ƒ.if(p.direction !== undefined, p.direction, Direction.south_east),
-
-		//accessors
-		get_game_state: p.get_game_state,
 
 
 		//intended moves
@@ -103,36 +91,36 @@ export const NewCreature = (
 
 export const Creature_ƒ = {
 	
-	yield_move_cost_for_tile_type: (me: CreatureData, tile_type: string): number|null => (
+	yield_move_cost_for_tile_type: (me: Creature_Data, tile_type: string): number|null => (
 		me.creature_basetype_delegate.yield_move_cost_for_tile_type(tile_type)
 	),
 	
-	yield_moves_per_turn: (me: CreatureData,): number => (
+	yield_moves_per_turn: (me: Creature_Data,): number => (
 		me.creature_basetype_delegate.yield_moves_per_turn()
 	),
 	
-	yield_walk_asset_for_direction: (me: CreatureData, direction: Direction):string => (
+	yield_walk_asset_for_direction: (me: Creature_Data, direction: Direction):string => (
 		me.creature_basetype_delegate.yield_walk_asset_for_direction(direction)
 	),
 
-	yield_stand_asset_for_direction: (me: CreatureData, direction: Direction):string => (
+	yield_stand_asset_for_direction: (me: Creature_Data, direction: Direction):string => (
 		me.creature_basetype_delegate.yield_stand_asset_for_direction(direction)
 	),
 
 
-	yield_creature_image: (me: CreatureData) => (
+	yield_creature_image: (me: Creature_Data) => (
 		me.creature_basetype_delegate.yield_creature_image()
 	),
 
 
 
-	get_current_mid_turn_tile_pos: (me: CreatureData, TM: Tilemap_Manager): Point2D => (
+	get_current_mid_turn_tile_pos: (me: Creature_Data, TM: Tilemap_Manager): Point2D => (
 		TM.convert_pixel_coords_to_tile_coords(me.pixel_pos)
 	),
 
 /*----------------------- basetype management -----------------------*/
 
-	get_info: (me: CreatureData):CreatureType => (
+	get_info: (me: Creature_Data):CreatureType => (
 		me.creature_basetype_delegate
 	),
 
@@ -147,7 +135,7 @@ export const Creature_ƒ = {
 
 /*----------------------- movement -----------------------*/
 
-	set_path: (me: CreatureData, new_path: Array<Point2D>, _Tilemap_Manager: Tilemap_Manager) => {
+	set_path: (me: Creature_Data, new_path: Array<Point2D>, _Tilemap_Manager: Tilemap_Manager) => {
 		me.path_this_turn = new_path;
 		me.path_reachable_this_turn = Creature_ƒ.yield_path_reachable_this_turn(me,new_path);
 		
@@ -167,7 +155,7 @@ export const Creature_ƒ = {
 		//console.log('anim:', me.animation_this_turn)
 	},
 	
-	yield_path_reachable_this_turn: (me: CreatureData, new_path: Array<Point2D>):Array<Point2D> => {
+	yield_path_reachable_this_turn: (me: Creature_Data, new_path: Array<Point2D>):Array<Point2D> => {
 		let moves_remaining = Creature_ƒ.yield_moves_per_turn(me);
 		let final_path: Array<Point2D> = [];
 	
@@ -182,7 +170,7 @@ export const Creature_ƒ = {
 		return final_path;
 	},
 
-	yield_directional_path_reachable_this_turn: (me: CreatureData, new_path: Array<PathNodeWithDirection>):Array<PathNodeWithDirection> => {
+	yield_directional_path_reachable_this_turn: (me: Creature_Data, new_path: Array<PathNodeWithDirection>):Array<PathNodeWithDirection> => {
 		let moves_remaining = Creature_ƒ.yield_moves_per_turn(me);
 		let final_path: Array<PathNodeWithDirection> = [];
 	
@@ -198,7 +186,7 @@ export const Creature_ƒ = {
 	},
 
 	
-	build_anim_from_path: (me: CreatureData, _Tilemap_Manager: Tilemap_Manager) => {
+	build_anim_from_path: (me: Creature_Data, _Tilemap_Manager: Tilemap_Manager) => {
 		var time_so_far = 0;
 		me.animation_this_turn = [];
 
@@ -223,7 +211,7 @@ export const Creature_ƒ = {
 	},
 
 	build_directional_path_from_path: (
-		me: CreatureData,
+		me: Creature_Data,
 		raw_path: Array<Point2D>,
 		_Tilemap_Manager: Tilemap_Manager
 	): Array<PathNodeWithDirection> => (
@@ -251,7 +239,7 @@ export const Creature_ƒ = {
 	),
 
 	extract_direction_from_map_vector: (
-		me: CreatureData,
+		me: Creature_Data,
 		start_pos: Point2D,
 		end_pos: Point2D,
 		_Tilemap_Manager: Tilemap_Manager
@@ -280,7 +268,7 @@ export const Creature_ƒ = {
 		}
 	},
 	
-	calculate_total_anim_duration: (me: CreatureData): number => {
+	calculate_total_anim_duration: (me: Creature_Data): number => {
 		return ƒ.if( _.size(me.animation_this_turn) > 0,
 			_.reduce(
 				_.map(me.animation_this_turn, (val)=> (val.duration)),
@@ -291,10 +279,10 @@ export const Creature_ƒ = {
 	},
 
 	process_single_frame: (
-		me: CreatureData,
+		me: Creature_Data,
 		TM: Tilemap_Manager,
 		offset_in_ms: number
-	): {new_state: CreatureData, spawnees: Array<Custom_Object_Data> } => {
+	): {new_state: Creature_Data, spawnees: Array<Custom_Object_Data> } => {
 
 		const new_obj = _.cloneDeep(me);
 
@@ -338,7 +326,7 @@ export const Creature_ƒ = {
 
 
 
-	yield_animation_segment_for_time_offset: (me: CreatureData, offset_in_ms: number): Anim_Schedule_Element|undefined => (
+	yield_animation_segment_for_time_offset: (me: Creature_Data, offset_in_ms: number): Anim_Schedule_Element|undefined => (
 		_.find(me.animation_this_turn, (val) => {
 			//			console.log(`start ${val.start_time}, offset ${offset_in_ms}, end ${val.start_time + val.duration}`);
 		
@@ -349,7 +337,7 @@ export const Creature_ƒ = {
 	),
 
 
-	yield_direction_for_time_in_post_turn_animation: (me: CreatureData, offset_in_ms: number ):Direction => {
+	yield_direction_for_time_in_post_turn_animation: (me: Creature_Data, offset_in_ms: number ):Direction => {
 		var animation_segment = Creature_ƒ.yield_animation_segment_for_time_offset(me, offset_in_ms);
 
 		if(animation_segment == undefined){
@@ -363,7 +351,7 @@ export const Creature_ƒ = {
 		}
 	},
 	
-	yield_position_for_time_in_post_turn_animation: (me: CreatureData, _Tilemap_Manager: Tilemap_Manager, offset_in_ms: number):Point2D => {
+	yield_position_for_time_in_post_turn_animation: (me: Creature_Data, _Tilemap_Manager: Tilemap_Manager, offset_in_ms: number):Point2D => {
 //		console.log(me.animation_this_turn);
 		var animation_segment = Creature_ƒ.yield_animation_segment_for_time_offset(me, offset_in_ms);
 		
