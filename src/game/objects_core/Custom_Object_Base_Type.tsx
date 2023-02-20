@@ -15,12 +15,18 @@ export type CustomObjectTypeName = 'shot';
 
 
 
-export type CustomObjectType = CO_Shot;
 
+export type Custom_Object_Delegate = {
+	process_single_frame: (
+		prior_pixel_pos: Point2D, 
+		get_game_state: () => Game_State,	
+	) => { pixel_pos: Point2D },
 
-export class Custom_Object_Base_Type {
+	yield_image: () => string,
+}
 
-	process_single_frame = (
+const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
+	process_single_frame: (
 		prior_pixel_pos: Point2D, 
 		get_game_state: () => Game_State,	
 	): { pixel_pos: Point2D } => {
@@ -42,17 +48,17 @@ export class Custom_Object_Base_Type {
 		return {
 			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
 		}
-	}
+	},
 
 
-	yield_image = () => (
+	yield_image: () => (
 		'red_dot'
 	)
 }
 
-export class CO_Shot extends Custom_Object_Base_Type {
+export const CO_Shot_ƒ: Custom_Object_Delegate = {
+	...Custom_Object_Delegate_Base_ƒ,
 
-	yield_image = () => (
-		'red_dot'
-	)
+	yield_image: () => 'red_dot',
 }
+

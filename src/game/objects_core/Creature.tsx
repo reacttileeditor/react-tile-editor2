@@ -14,7 +14,6 @@ import { Pathfinder, Pathfinding_Result } from "../core/Pathfinding";
 
 import { Point2D, Rectangle } from '../interfaces';
 import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
-import { CustomObjectType } from "./Custom_Object_Base_Type";
 import { Game_State } from "../core/Game_View";
 import { Base_Object_Data, New_Base_Object } from "./Base_Object";
 
