@@ -13,46 +13,48 @@ import { CreatureType, CreatureTypeName } from "./Creature";
 import { CustomObjectTypeName } from "./Custom_Object";
 import { CustomObjectType } from "./Custom_Object_Base_Type";
 
-type CombinedObjectTypes = CustomObjectTypeName | CreatureTypeName
 
-export class Base_Object {
-	pixel_pos: Point2D;
+
+export type Base_Object_Data = {
+	//static values
 	unique_id: string;
-	type_name: CombinedObjectTypes;
+
+	//state	
+	pixel_pos: Point2D;
+
+	//accessors
 	get_game_state: () => Game_State;
+}
 
-
-
-
-	constructor(p: {
+export const New_Base_Object = (
+	p: {
 		get_game_state: () => Game_State,
 		pixel_pos: Point2D,
-		type_name: CombinedObjectTypes,
 		unique_id?: string,
-	}) {
-		this.pixel_pos = p.pixel_pos;
-		this.type_name = p.type_name;
-		this.get_game_state = p.get_game_state;
+	}): Base_Object_Data => {
 
-		
-		if(p.unique_id != undefined){
-			this.unique_id = p.unique_id;
-		} else {
-			this.unique_id = uuid();
-		}
+	return {
+		//static values
+		unique_id: ƒ.if(p.unique_id != undefined,
+			p.unique_id,
+			uuid()
+		),
+
+		//state	
+		pixel_pos: {x:0, y: 0},  //TODO use TM
+
+		//accessors
+		get_game_state: p.get_game_state,
+	}	
+}
 
 
-	}
 
-	get_current_mid_turn_tile_pos = (TM: Tilemap_Manager): Point2D => (
-		TM.convert_pixel_coords_to_tile_coords(this.pixel_pos)
+export const Base_Object_ƒ = {
+
+	get_current_mid_turn_tile_pos: (me: Base_Object_Data, TM: Tilemap_Manager): Point2D => (
+		TM.convert_pixel_coords_to_tile_coords(me.pixel_pos)
 	)
-
-
-
-
-
-
 }
 
 

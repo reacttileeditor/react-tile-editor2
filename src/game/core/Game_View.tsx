@@ -17,7 +17,7 @@ import "./Primary_View.scss";
 import "./Game_Status_Display.scss";
 
 import { Point2D, Rectangle } from '../interfaces';
-import { Custom_Object } from "../objects_core/Custom_Object";
+import { Custom_Object_Data, Custom_Object_ƒ } from "../objects_core/Custom_Object";
 
 interface Game_View_Props {
 	_Asset_Manager: Asset_Manager,
@@ -38,7 +38,7 @@ export interface Game_State {
 
 interface Individual_Game_Turn_State {
 	creature_list: Array<CreatureData>,
-	custom_object_list: Array<Custom_Object>,
+	custom_object_list: Array<Custom_Object_Data>,
 }
 
 const Individual_Game_Turn_State_Init = {
@@ -271,7 +271,7 @@ class Game_Manager {
 			Process all of the existing creatures, and collate a list of any Custom_Objects they're going to spawn.
 		*/
 
-		const spawnees: Array<Custom_Object> = [];
+		const spawnees: Array<Custom_Object_Data> = [];
 		this.game_state.current_frame_state.creature_list = _.map( this.game_state.prior_frame_state.creature_list, (val,idx) => {
 			const processed_entity = Creature_ƒ.process_single_frame(val, this._Tilemap_Manager, this.get_time_offset());
 
@@ -292,7 +292,7 @@ class Game_Manager {
 		//console.log('prev', _.map( this.game_state.prior_frame_state.custom_object_list, (val)=>(val.pixel_pos.y)) )
 
 		this.game_state.current_frame_state.custom_object_list = _.map( objects, (val,idx) => {
-			return (val.process_single_frame(this._Tilemap_Manager, this.get_time_offset()))
+			return (Custom_Object_ƒ.process_single_frame(val,this._Tilemap_Manager, this.get_time_offset()))
 		});
 
 		/*
@@ -329,7 +329,7 @@ class Game_Manager {
 
 			_.map( this.game_state.current_frame_state.custom_object_list, (val,idx) => {
 				this._Asset_Manager.draw_image_for_asset_name({
-					asset_name:					val.yield_image(),
+					asset_name:					Custom_Object_ƒ.yield_image(val),
 					_BM:						this._Blit_Manager,
 					pos:						val.pixel_pos, //yield_position_for_time_in_post_turn_animation( this._Tilemap_Manager, this.get_time_offset() ),
 					zorder:						13,

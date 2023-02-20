@@ -13,10 +13,10 @@ import { Tilemap_Manager, Direction } from "../core/Tilemap_Manager";
 import { Pathfinder, Pathfinding_Result } from "../core/Pathfinding";
 
 import { Point2D, Rectangle } from '../interfaces';
-import { CustomObjectTypeName, Custom_Object } from "./Custom_Object";
+import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
 import { CustomObjectType } from "./Custom_Object_Base_Type";
 import { Game_State } from "../core/Game_View";
-import { Base_Object } from "./Base_Object";
+import { Base_Object_Data } from "./Base_Object";
 
 export type PathNodeWithDirection = {
 	position: Point2D,
@@ -294,13 +294,13 @@ export const Creature_ƒ = {
 		me: CreatureData,
 		TM: Tilemap_Manager,
 		offset_in_ms: number
-	): {new_state: CreatureData, spawnees: Array<Custom_Object> } => {
+	): {new_state: CreatureData, spawnees: Array<Custom_Object_Data> } => {
 
 		const new_obj = _.cloneDeep(me);
 
 		new_obj.pixel_pos = Creature_ƒ.yield_position_for_time_in_post_turn_animation(new_obj, TM, offset_in_ms)
 
-		const spawnees = ƒ.if(offset_in_ms >= 20 && offset_in_ms <= 100 && me.type_name == 'peasant', [new Custom_Object({
+		const spawnees = ƒ.if(offset_in_ms >= 20 && offset_in_ms <= 100 && me.type_name == 'peasant', [New_Custom_Object({
 			get_game_state: me.get_game_state,
 			pixel_pos: new_obj.pixel_pos,
 			type_name: 'shot' as CustomObjectTypeName,
