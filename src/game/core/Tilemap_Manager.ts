@@ -27,14 +27,14 @@ type TileMapKeys = keyof TileMaps;
 
 type TileMap = Array<Array<string>>;
 
-export enum Direction {
-	north_east,
-	east,
-	south_east,
-	north_west,
-	west,
-	south_west,
-}
+export type Direction = 
+	'north_east' |
+	'east' |
+	'south_east' |
+	'north_west' |
+	'west' |
+	'south_west';
+
 
 
 export class Tilemap_Manager {
@@ -332,21 +332,21 @@ export class Tilemap_Manager {
 	extract_direction_from_map_vector = (start_pos: Point2D, end_pos: Point2D):Direction => {
 		if( start_pos.y == end_pos.y ){
 			if(start_pos.x < end_pos.x){
-				return Direction.east;
+				return 'east';
 			} else {
-				return Direction.west;
+				return 'west';
 			}
 		} else if( start_pos.y >= end_pos.y  ){
 			if(start_pos.x < end_pos.x){
-				return Direction.north_east;
+				return 'north_east';
 			} else {
-				return Direction.north_west;
+				return 'north_west';
 			}
 		} else {
 			if(start_pos.x < end_pos.x){
-				return Direction.south_east;
+				return 'south_east';
 			} else {
-				return Direction.south_west;
+				return 'south_west';
 			}
 		}
 	}

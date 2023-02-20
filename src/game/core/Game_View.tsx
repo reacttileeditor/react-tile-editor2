@@ -246,9 +246,9 @@ class Game_Manager {
 	}
 	
 	get_flip_state_from_direction = ( direction: Direction ): boolean => (
-		ƒ.if(	direction == Direction.north_west ||
-				direction == Direction.west ||
-				direction == Direction.south_west,
+		ƒ.if(	direction == 'north_west' ||
+				direction == 'west' ||
+				direction == 'south_west',
 					true,
 					false
 		)

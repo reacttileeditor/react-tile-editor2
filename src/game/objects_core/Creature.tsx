@@ -71,7 +71,7 @@ export const New_Creature = (
 
 		//state	
 		tile_pos: p.tile_pos,
-		facing_direction: ƒ.if(p.direction !== undefined, p.direction, Direction.south_east),
+		facing_direction: ƒ.if(p.direction !== undefined, p.direction, 'south_east'),
 
 
 		//intended moves
@@ -243,21 +243,21 @@ export const Creature_ƒ = {
 
 		if( pixel_start_pos.y == pixel_end_pos.y ){
 			if(pixel_start_pos.x < pixel_end_pos.x){
-				return Direction.east;
+				return 'east';
 			} else {
-				return Direction.west;
+				return 'west';
 			}
 		} else if( pixel_start_pos.y >= pixel_end_pos.y  ){
 			if(pixel_start_pos.x < pixel_end_pos.x){
-				return Direction.north_east;
+				return 'north_east';
 			} else {
-				return Direction.north_west;
+				return 'north_west';
 			}
 		} else {
 			if(pixel_start_pos.x < pixel_end_pos.x){
-				return Direction.south_east;
+				return 'south_east';
 			} else {
-				return Direction.south_west;
+				return 'south_west';
 			}
 		}
 	},
@@ -339,7 +339,7 @@ export const Creature_ƒ = {
 				TODO -I don't really have the time to think through this - this comment's getting written during some test implementation.
 				We'll just return 'east' for now.
 			*/
-			return Direction.east;
+			return 'east';
 		} else {
 			return animation_segment.direction;
 		}
@@ -450,48 +450,27 @@ const CT_Hermit_ƒ: Creature_Delegate = {
 const CT_Peasant_ƒ: Creature_Delegate = {
 	...Creature_Delegate_Base_ƒ,
 
-	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => {
-		/*return {
-			Direction.north_east: 'peasant-ne-walk',
-			Direction.north_west:'peasant-ne-walk',
-			Direction.east: 'peasant-ne-walk',
-			Direction.south_east: 'peasant-se-walk',
-			Direction.west: 'peasant-se-walk',
-			Direction.south_west: 'peasant-se-walk',			
-		}[direction];*/
-
-		switch(direction){
-			case Direction.north_east:
-				return 'peasant-ne-walk'; break;
-			case Direction.north_west:
-				return 'peasant-ne-walk'; break;
-			case Direction.east:
-				return 'peasant-ne-walk'; break;
-			case Direction.south_east:
-				return 'peasant-se-walk'; break;
-			case Direction.west:
-				return 'peasant-se-walk'; break;
-			case Direction.south_west:
-				return 'peasant-se-walk'; break;
-		}
-	},
+	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
+		{
+			'north_east':	'peasant-ne-walk',
+			'north_west':	'peasant-ne-walk',
+			'east':			'peasant-ne-walk',
+			'south_east':	'peasant-se-walk',
+			'west':			'peasant-se-walk',
+			'south_west':	'peasant-se-walk',			
+		}[direction]
+	),
 	
-	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => {
-		switch(direction){
-			case Direction.north_east:
-				return 'peasant-ne'; break;
-			case Direction.north_west:
-				return 'peasant-ne'; break;
-			case Direction.east:
-				return 'peasant-ne'; break;
-			case Direction.south_east:
-				return 'peasant-se'; break;
-			case Direction.west:
-				return 'peasant-se'; break;
-			case Direction.south_west:
-				return 'peasant-se'; break;
-		}
-	},
+	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
+		{
+			'north_east':	'peasant-ne',
+			'north_west':	'peasant-ne',
+			'east':			'peasant-ne',
+			'south_east':	'peasant-se',
+			'west':			'peasant-se',
+			'south_west':	'peasant-se',			
+		}[direction]
+	),
 	
 
 	yield_moves_per_turn: () => 8,
