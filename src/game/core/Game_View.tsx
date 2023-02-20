@@ -536,7 +536,7 @@ class Game_Status_Display extends React.Component <Game_Status_Display_Props, {
 					(selected_creature !== undefined ?
 						<Label_and_Data_Pair
 							label={'Selected Unit:'}
-							data={`${Creature_ƒ.get_info(selected_creature).yield_prettyprint_name()}`}
+							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_prettyprint_name()}`}
 						/> :
 						<Label_and_Data_Pair
 							label={''}
@@ -558,21 +558,21 @@ class Game_Status_Display extends React.Component <Game_Status_Display_Props, {
 						<Tile_Palette_Element
 							asset_manager={this.props._Asset_Manager}
 							tile_name={''}
-							asset_name={`${Creature_ƒ.get_info(selected_creature).yield_creature_image()}`}
+							asset_name={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_creature_image()}`}
 							highlight={false}
 							handle_click={ ()=>{} }
 						/>
 						<Label_and_Data_Pair
 							label={'Hitpoints:'}
-							data={`${Creature_ƒ.get_info(selected_creature).yield_max_hitpoints()}`}
+							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_max_hitpoints()}`}
 						/>
 						<Label_and_Data_Pair
 							label={'Moves:'}
-							data={`${Creature_ƒ.get_info(selected_creature).yield_moves_per_turn()}`}
+							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_moves_per_turn()}`}
 						/>
 						<Label_and_Data_Pair
 							label={'Damage:'}
-							data={`${Creature_ƒ.get_info(selected_creature).yield_damage()}`}
+							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_damage()}`}
 						/>
 					</>
 				}

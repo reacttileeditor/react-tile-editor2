@@ -31,7 +31,6 @@ export type Creature_Data = {
 	//static values
 	type_name: CreatureTypeName;
 	team: number;
-	creature_basetype_delegate: CreatureType;
 
 	//state	
 	tile_pos: Point2D;
@@ -69,7 +68,6 @@ export const New_Creature = (
 		//static values
 		type_name: p.type_name,
 		team: p.team,
-		creature_basetype_delegate: Creature_ƒ.instantiate_basetype_delegate(p.type_name),
 
 		//state	
 		tile_pos: p.tile_pos,
@@ -92,24 +90,24 @@ export const New_Creature = (
 export const Creature_ƒ = {
 	
 	yield_move_cost_for_tile_type: (me: Creature_Data, tile_type: string): number|null => (
-		me.creature_basetype_delegate.yield_move_cost_for_tile_type(tile_type)
+		Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type)
 	),
 	
 	yield_moves_per_turn: (me: Creature_Data,): number => (
-		me.creature_basetype_delegate.yield_moves_per_turn()
+		Creature_ƒ.get_delegate(me.type_name).yield_moves_per_turn()
 	),
 	
 	yield_walk_asset_for_direction: (me: Creature_Data, direction: Direction):string => (
-		me.creature_basetype_delegate.yield_walk_asset_for_direction(direction)
+		Creature_ƒ.get_delegate(me.type_name).yield_walk_asset_for_direction(Creature_ƒ.get_delegate(me.type_name), direction)
 	),
 
 	yield_stand_asset_for_direction: (me: Creature_Data, direction: Direction):string => (
-		me.creature_basetype_delegate.yield_stand_asset_for_direction(direction)
+		Creature_ƒ.get_delegate(me.type_name).yield_stand_asset_for_direction(Creature_ƒ.get_delegate(me.type_name), direction)
 	),
 
 
 	yield_creature_image: (me: Creature_Data) => (
-		me.creature_basetype_delegate.yield_creature_image()
+		Creature_ƒ.get_delegate(me.type_name).yield_creature_image()
 	),
 
 
@@ -120,16 +118,12 @@ export const Creature_ƒ = {
 
 /*----------------------- basetype management -----------------------*/
 
-	get_info: (me: Creature_Data):CreatureType => (
-		me.creature_basetype_delegate
-	),
 
-
-	instantiate_basetype_delegate: (type_name: CreatureTypeName):CreatureType => {
+	get_delegate: (type_name: CreatureTypeName): Creature_Delegate => {
 		return {
-			hermit: new CT_Hermit(),
-			peasant: new CT_Peasant(),
-			skeleton: new CT_Skeleton(),
+			hermit: CT_Hermit_ƒ,
+			peasant: CT_Peasant_ƒ,
+			skeleton: CT_Skeleton_ƒ,
 		}[type_name];
 	},
 
@@ -398,14 +392,30 @@ type Anim_Schedule_Element = {
 }
 
 
-export type CreatureType = CT_Hermit | CT_Peasant | CT_Skeleton;
 
 
-class Creature_Base_Type {
-	yield_walk_asset_for_direction = (direction:Direction):string => ( this.yield_creature_image() )
-	yield_stand_asset_for_direction = (direction:Direction):string => ( this.yield_creature_image() )
+type Creature_Delegate = {
+	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction:Direction) => string,
+	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction) => string,
 
-	yield_move_cost_for_tile_type = (tile_type: string): number|null => {
+	yield_move_cost_for_tile_type: (tile_type: string) => number|null,
+
+	yield_prettyprint_name: () => string,
+
+
+	yield_creature_image: () => string,
+/*----------------------- stats -----------------------*/
+	yield_moves_per_turn: () => number,
+	yield_damage: () => number,
+	yield_max_hitpoints: () => number,
+}
+
+
+const Creature_Delegate_Base_ƒ: Creature_Delegate = {
+	yield_walk_asset_for_direction: (kind: Creature_Delegate,direction:Direction):string => ( kind.yield_creature_image() ),
+	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => ( kind.yield_creature_image() ),
+
+	yield_move_cost_for_tile_type: (tile_type: string): number|null => {
 		if(tile_type == 'menhir1' || tile_type == 'menhir2'){
 			return null;
 		} else if (tile_type == 'water'){
@@ -413,31 +423,34 @@ class Creature_Base_Type {
 		} else {
 			return 1;
 		}
-	}
+	},
 
-	yield_prettyprint_name = () => ( 'Generic Unit' )
+	yield_prettyprint_name: () => ( 'Generic Unit' ),
 
 
-	yield_creature_image = () => ( '' )
+	yield_creature_image: () => ( '' ),
 /*----------------------- stats -----------------------*/
-	yield_moves_per_turn = (): number => ( 1 )
-	yield_damage = (): number => ( 5 )
-	yield_max_hitpoints = (): number => ( 100 )
-
-
-}
-
-class CT_Hermit extends Creature_Base_Type {
-
-	yield_moves_per_turn = () => ( 5 )
-	yield_creature_image = () => ( 'hermit' )
-	yield_prettyprint_name = () => ( 'Hermit' )
+	yield_moves_per_turn: (): number => ( 1 ),
+	yield_damage: (): number => ( 5 ),
+	yield_max_hitpoints: (): number => ( 100 ),
 
 }
 
-class CT_Peasant extends Creature_Base_Type {
 
-	yield_walk_asset_for_direction = (direction:Direction):string => {
+
+const CT_Hermit_ƒ: Creature_Delegate = {
+	...Creature_Delegate_Base_ƒ,
+
+	yield_moves_per_turn: () =>  5,
+	yield_creature_image: () => 'hermit',
+	yield_prettyprint_name: () => 'Hermit',
+
+}
+
+const CT_Peasant_ƒ: Creature_Delegate = {
+	...Creature_Delegate_Base_ƒ,
+
+	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => {
 		/*return {
 			Direction.north_east: 'peasant-ne-walk',
 			Direction.north_west:'peasant-ne-walk',
@@ -461,9 +474,9 @@ class CT_Peasant extends Creature_Base_Type {
 			case Direction.south_west:
 				return 'peasant-se-walk'; break;
 		}
-	}
+	},
 	
-	yield_stand_asset_for_direction = (direction:Direction):string => {
+	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => {
 		switch(direction){
 			case Direction.north_east:
 				return 'peasant-ne'; break;
@@ -478,19 +491,19 @@ class CT_Peasant extends Creature_Base_Type {
 			case Direction.south_west:
 				return 'peasant-se'; break;
 		}
-	}
+	},
 	
 
-	yield_moves_per_turn = () => ( 8 )
-	yield_creature_image = () => ( 'peasant-se' )
-	yield_prettyprint_name = () => ( 'Peasant' )
-
+	yield_moves_per_turn: () => 8,
+	yield_creature_image: () => 'peasant-se',
+	yield_prettyprint_name: () => 'Peasant',
 }
 
-class CT_Skeleton extends Creature_Base_Type {
+const CT_Skeleton_ƒ: Creature_Delegate = {
+	...Creature_Delegate_Base_ƒ,
 
-	yield_moves_per_turn = () => ( 8 )
-	yield_creature_image = () => ( 'skeleton' )
-	yield_prettyprint_name = () => ( 'Skeleton' )
+	yield_moves_per_turn: () => 8,
+	yield_creature_image: () => 'skeleton',
+	yield_prettyprint_name: () => 'Skeleton',
 
 }

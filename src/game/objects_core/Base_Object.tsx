@@ -9,9 +9,6 @@ import { Tilemap_Manager, Direction } from "../core/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
 import { Game_State } from "../core/Game_View";
-import { CreatureType, CreatureTypeName } from "./Creature";
-import { CustomObjectTypeName } from "./Custom_Object";
-import { CustomObjectType } from "./Custom_Object_Base_Type";
 
 
 
