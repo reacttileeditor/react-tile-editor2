@@ -5,7 +5,7 @@ import _ from "lodash";
 import { Asset_Manager } from "./Asset_Manager";
 import { Blit_Manager } from "./Blit_Manager";
 import { Tilemap_Manager } from "./Tilemap_Manager";
-import { Point2D, Rectangle } from './interfaces';
+import { Point2D, Rectangle } from '../interfaces';
 
 
 interface Props {

@@ -21,7 +21,7 @@ interface State {
 	mousedown_pos?: Point2D,
 }
 
-import { Point2D, Rectangle } from './interfaces';
+import { Point2D, Rectangle } from '../interfaces';
 
 
 export class Canvas_View extends React.Component <Props, State> {

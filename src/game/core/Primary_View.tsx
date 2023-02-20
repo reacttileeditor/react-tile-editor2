@@ -9,7 +9,7 @@ import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Tilemap_Manager } from "./Tilemap_Manager";
 import { Game_View } from "./Game_View";
 import { Editor_View } from "./Editor_View";
-import { Point2D, Rectangle } from './interfaces';
+import { Point2D, Rectangle } from '../interfaces';
 
 import "./Primary_View.scss";
 

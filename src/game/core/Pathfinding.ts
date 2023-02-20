@@ -8,8 +8,8 @@ import { ƒ } from "./Utils";
 
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Tilemap_Manager } from "./Tilemap_Manager";
-import { CreatureData, Creature_ƒ } from "./Creature";
-import { Point2D, Rectangle } from './interfaces';
+import { CreatureData, Creature_ƒ } from "../objects_core/Creature";
+import { Point2D, Rectangle } from '../interfaces';
 
 interface tileViewState {
 	tileStatus: TileGrid,

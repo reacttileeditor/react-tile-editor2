@@ -1,6 +1,6 @@
 import _ from "lodash";
 import Prando from 'prando';
-import { Point2D, Rectangle } from './interfaces';
+import { Point2D, Rectangle } from '../interfaces';
 
 
 /*----------------------- utility functions -----------------------*/

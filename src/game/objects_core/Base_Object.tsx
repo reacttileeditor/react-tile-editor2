@@ -3,14 +3,15 @@ import ReactDOM from "react-dom";
 import _, { find } from "lodash";
 import { v4 as uuid } from "uuid";
 
-import { ƒ } from "./Utils";
+import { ƒ } from "../core/Utils";
 
-import { Tilemap_Manager, Direction } from "./Tilemap_Manager";
+import { Tilemap_Manager, Direction } from "../core/Tilemap_Manager";
 
-import { Point2D, Rectangle } from './interfaces';
-import { Game_State } from "./Game_View";
+import { Point2D, Rectangle } from '../interfaces';
+import { Game_State } from "../core/Game_View";
 import { CreatureType, CreatureTypeName } from "./Creature";
-import { CustomObjectType, CustomObjectTypeName } from "./Custom_Object";
+import { CustomObjectTypeName } from "./Custom_Object";
+import { CustomObjectType } from "./Custom_Object_Base_Type";
 
 type CombinedObjectTypes = CustomObjectTypeName | CreatureTypeName
 

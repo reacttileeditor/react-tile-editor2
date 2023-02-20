@@ -11,13 +11,13 @@ import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Tilemap_Manager, Direction } from "./Tilemap_Manager";
 import { Pathfinder } from "./Pathfinding";
 
-import { Creature_ƒ, NewCreature, CreatureData, PathNodeWithDirection } from "./Creature";
+import { Creature_ƒ, NewCreature, CreatureData, PathNodeWithDirection } from "../objects_core/Creature";
 
 import "./Primary_View.scss";
 import "./Game_Status_Display.scss";
 
-import { Point2D, Rectangle } from './interfaces';
-import { Custom_Object } from "./Custom_Object";
+import { Point2D, Rectangle } from '../interfaces';
+import { Custom_Object } from "../objects_core/Custom_Object";
 
 interface Game_View_Props {
 	_Asset_Manager: Asset_Manager,

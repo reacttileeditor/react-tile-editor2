@@ -3,18 +3,19 @@ import ReactDOM from "react-dom";
 import _, { find } from "lodash";
 import { v4 as uuid } from "uuid";
 
-import { ƒ } from "./Utils";
+import { ƒ } from "../core/Utils";
 
 // import { Canvas_View } from "./Canvas_View";
 // import { Asset_Manager } from "./Asset_Manager";
 // import { Blit_Manager } from "./Blit_Manager";
 // import { Tile_Palette_Element } from "./Tile_Palette_Element";
-import { Tilemap_Manager, Direction } from "./Tilemap_Manager";
-import { Pathfinder, Pathfinding_Result } from "./Pathfinding";
+import { Tilemap_Manager, Direction } from "../core/Tilemap_Manager";
+import { Pathfinder, Pathfinding_Result } from "../core/Pathfinding";
 
-import { Point2D, Rectangle } from './interfaces';
-import { CustomObjectType, CustomObjectTypeName, Custom_Object } from "./Custom_Object";
-import { Game_State } from "./Game_View";
+import { Point2D, Rectangle } from '../interfaces';
+import { CustomObjectTypeName, Custom_Object } from "./Custom_Object";
+import { CustomObjectType } from "./Custom_Object_Base_Type";
+import { Game_State } from "../core/Game_View";
 import { Base_Object } from "./Base_Object";
 
 export type PathNodeWithDirection = {

@@ -90,7 +90,7 @@ interface AutoTileRestrictionRowCenter extends Array<RegExp> { 0: RegExp; 1: Reg
 interface AutoTileRestrictionSample extends Array<AutoTileRestrictionRow|AutoTileRestrictionRowCenter> { 0: AutoTileRestrictionRow, 1: AutoTileRestrictionRowCenter, 2: AutoTileRestrictionRow };
 
 
-import { Point2D, Rectangle } from './interfaces';
+import { Point2D, Rectangle } from '../interfaces';
 
 let null_tile_comparator: TileComparatorSample =	[
 														['',''],
