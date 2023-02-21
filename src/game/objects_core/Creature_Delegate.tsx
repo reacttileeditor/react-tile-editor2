@@ -10,8 +10,8 @@ import { Point2D, Rectangle } from '../interfaces';
 
 
 export type Creature_Delegate = {
-	yield_walk_asset_for_direction: (direction:Direction) => string,
-	yield_stand_asset_for_direction: (direction:Direction) => string,
+	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction:Direction) => string,
+	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction) => string,
 
 	yield_move_cost_for_tile_type: (tile_type: string) => number|null,
 
@@ -25,68 +25,42 @@ export type Creature_Delegate = {
 	yield_max_hitpoints: () => number,
 }
 
-export type Creature_Delegate_Incomplete = {
-	yield_walk_asset_for_direction?: (direction:Direction) => string,
-	yield_stand_asset_for_direction?: (direction:Direction) => string,
 
-	yield_move_cost_for_tile_type?: (tile_type: string) => number|null,
+const Creature_Delegate_Base_ƒ: Creature_Delegate = {
+	yield_walk_asset_for_direction: (kind: Creature_Delegate,direction:Direction):string => ( kind.yield_creature_image() ),
+	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => ( kind.yield_creature_image() ),
 
-	yield_prettyprint_name?: () => string,
+	yield_move_cost_for_tile_type: (tile_type: string): number|null => {
+		if(tile_type == 'menhir1' || tile_type == 'menhir2'){
+			return null;
+		} else if (tile_type == 'water'){
+			return 10;
+		} else {
+			return 1;
+		}
+	},
+
+	yield_prettyprint_name: () => ( 'Generic Unit' ),
 
 
-	yield_creature_image?: () => string,
+	yield_creature_image: () => ( '' ),
 /*----------------------- stats -----------------------*/
-	yield_moves_per_turn?: () => number,
-	yield_damage?: () => number,
-	yield_max_hitpoints?: () => number,
-}
+	yield_moves_per_turn: (): number => ( 1 ),
+	yield_damage: (): number => ( 5 ),
+	yield_max_hitpoints: (): number => ( 100 ),
 
-/*
-	Doing a little funny-business here:
-
-	Since this is ONLY called from inside this context, we're making this very first function a sort of closure, to prebind whatever type the children are, so it can freely be referred to in the root type.
-*/
-
-const Creature_Delegate_Base_ƒ = (subclass: Creature_Delegate_Incomplete): Creature_Delegate => {
-
-	return _.assign(
-	
-		{
-			yield_walk_asset_for_direction: (direction:Direction):string => ( subclass.yield_creature_image() ),
-			yield_stand_asset_for_direction: (direction:Direction):string => ( subclass.yield_creature_image() ),
-
-			yield_move_cost_for_tile_type: (tile_type: string): number|null => {
-				if(tile_type == 'menhir1' || tile_type == 'menhir2'){
-					return null;
-				} else if (tile_type == 'water'){
-					return 10;
-				} else {
-					return 1;
-				}
-			},
-
-			yield_prettyprint_name: () => ( 'Generic Unit' ),
-
-
-			yield_creature_image: () => ( '' ),
-		/*----------------------- stats -----------------------*/
-			yield_moves_per_turn: (): number => ( 1 ),
-			yield_damage: (): number => ( 5 ),
-			yield_max_hitpoints: (): number => ( 100 ),
-		},
-		subclass,
-	)
 }
 
 
 
-export const CT_Hermit_ƒ: Creature_Delegate = 
-	Creature_Delegate_Base_ƒ({
-		yield_moves_per_turn: () =>  5,
-		yield_creature_image: () => 'hermit',
-		yield_prettyprint_name: () => 'Hermit',
-	});
+export const CT_Hermit_ƒ: Creature_Delegate = {
+	...Creature_Delegate_Base_ƒ,
 
+	yield_moves_per_turn: () =>  5,
+	yield_creature_image: () => 'hermit',
+	yield_prettyprint_name: () => 'Hermit',
+
+}
 
 export const CT_Peasant_ƒ: Creature_Delegate = {
 	...Creature_Delegate_Base_ƒ,
