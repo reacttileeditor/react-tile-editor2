@@ -10,7 +10,7 @@ import { Tilemap_Manager, Direction } from "../core/Tilemap_Manager";
 import { Point2D, Rectangle } from '../interfaces';
 import { Game_State } from "../core/Game_View";
 import { CreatureTypeName } from "./Creature";
-import { Custom_Object_Delegate, CO_Shot_ƒ } from "./Custom_Object_Base_Type";
+import { Custom_Object_Delegate, CO_Shot_ƒ } from "./Custom_Object_Delegate";
 import { Base_Object_Data, New_Base_Object } from "./Base_Object";
  
 
