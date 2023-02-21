@@ -25,6 +25,18 @@ export type PathNodeWithDirection = {
 
 export type CreatureTypeName = 'hermit' | 'peasant' | 'skeleton';
 
+type ChangeType = 
+	'add' |
+	'set';
+
+
+
+type ChangeEntity = {
+	type: ChangeType,
+	value: number,
+	target: 'string',
+};
+
 
 
 export type Creature_Data = {
@@ -35,6 +47,8 @@ export type Creature_Data = {
 	//state	
 	tile_pos: Point2D;
 	facing_direction: Direction;
+	remaining_action_points: number,
+	current_hitpoints: number,
 
 	//intended moves
 	planned_tile_pos: Point2D;
@@ -61,6 +75,8 @@ export const New_Creature = (
 		get_game_state:  () => Game_State,
 		tile_pos: Point2D,
 		direction?: Direction,
+		remaining_action_points?: number,
+		current_hitpoints?: number,
 		planned_tile_pos: Point2D,
 		type_name: CreatureTypeName,
 		team: number,
@@ -80,6 +96,11 @@ export const New_Creature = (
 		//state	
 		tile_pos: p.tile_pos,
 		facing_direction: ƒ.if(p.direction !== undefined, p.direction, 'south_east'),
+		remaining_action_points: ƒ.if(p.remaining_action_points !== undefined, p.remaining_action_points, 1),
+		current_hitpoints: ƒ.if(p.current_hitpoints !== undefined,
+			p.current_hitpoints,
+			Creature_ƒ.get_delegate(p.type_name).yield_max_hitpoints
+		),
 
 
 		//intended moves
@@ -312,18 +333,19 @@ export const Creature_ƒ = {
 			
 			//console.log( `distance between peasant and hermit: ${TM.get_tile_coord_distance_between(Creature_ƒ.get_current_mid_turn_tile_pos(new_obj, TM), Creature_ƒ.get_current_mid_turn_tile_pos(target,TM))} ${Creature_ƒ.get_current_mid_turn_tile_pos(new_obj, TM).x} ${Creature_ƒ.get_current_mid_turn_tile_pos(new_obj, TM).y} ${Creature_ƒ.get_current_mid_turn_tile_pos(target, TM).x} ${Creature_ƒ.get_current_mid_turn_tile_pos(target, TM).y}`)
 
+			if(me.remaining_action_points > 0){
+				console.error(new_obj.current_hitpoints)
+
+				new_obj.current_hitpoints = 5;
+				console.error(new_obj.current_hitpoints)
+				new_obj.remaining_action_points -=1;
+			}
 		}
 
 		return {
 			new_state: new_obj,
 			spawnees: spawnees
 		};
-		
-		/*
-			PLANS:
-			- calculate which tile we're moving into, so that we know where we end up "stopping"
-			- start doing rudimentary AI behavior, where we take shots at enemies if they're in-range.
-		*/
 	},
 
 

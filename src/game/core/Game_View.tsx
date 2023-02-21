@@ -564,7 +564,7 @@ class Game_Status_Display extends React.Component <Game_Status_Display_Props, {
 						/>
 						<Label_and_Data_Pair
 							label={'Hitpoints:'}
-							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_max_hitpoints()}`}
+							data={`${selected_creature.current_hitpoints} / ${Creature_ƒ.get_delegate(selected_creature.type_name).yield_max_hitpoints()}`}
 						/>
 						<Label_and_Data_Pair
 							label={'Moves:'}
