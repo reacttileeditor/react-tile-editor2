@@ -11,7 +11,7 @@ import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Tilemap_Manager, Direction } from "./Tilemap_Manager";
 import { Pathfinder } from "./Pathfinding";
 
-import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection } from "../objects_core/Creature";
+import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance } from "../objects_core/Creature";
 
 import "./Primary_View.scss";
 import "./Game_Status_Display.scss";
@@ -32,7 +32,6 @@ export interface Game_State {
 	current_turn: number,
 	selected_object_index?: number,
 	turn_list: Array<Individual_Game_Turn_State>,
-	prior_frame_state: Individual_Game_Turn_State,
 	current_frame_state: Individual_Game_Turn_State,
 }
 
@@ -50,7 +49,6 @@ const GameStateInit: Game_State = {
 	current_turn: 0,
 	selected_object_index: undefined,
 	turn_list: [],
-	prior_frame_state: Individual_Game_Turn_State_Init,
 	current_frame_state: Individual_Game_Turn_State_Init,
 };
 
@@ -130,7 +128,6 @@ class Game_Manager {
 			current_turn: 0,
 			selected_object_index: undefined,
 			turn_list: [first_turn_state_init],
-			prior_frame_state: Individual_Game_Turn_State_Init,
 			current_frame_state: Individual_Game_Turn_State_Init,
 		};
 		
@@ -212,7 +209,7 @@ class Game_Manager {
 			[new_turn_state]
 		);
 		console.log('setting state at end of turn')
-		this.game_state.prior_frame_state = this.get_previous_turn_state()
+		this.game_state.current_frame_state = this.get_previous_turn_state()
 
 
 		var date = new Date();
@@ -268,40 +265,47 @@ class Game_Manager {
 
 	do_live_game_processing = () => {
 		/*
-			Process all of the existing creatures, and collate a list of any Custom_Objects they're going to spawn.
+			Process all of the existing creatures.
+			
+			The result of this will give us two lists;  one is a list of any Custom_Objects they're going to spawn, the other is a list of changes we would like to apply to our list of creatures.
 		*/
 
-		const spawnees: Array<Custom_Object_Data> = [];
-		this.game_state.current_frame_state.creature_list = _.map( this.game_state.prior_frame_state.creature_list, (val,idx) => {
-			const processed_entity = Creature_ƒ.process_single_frame(val, this._Tilemap_Manager, this.get_time_offset());
+		let spawnees: Array<Custom_Object_Data> = [];
+		let master_change_list: Array<ChangeInstance> = [];
 
-			_.map(processed_entity.spawnees, (val)=>{ spawnees.push(val) });
+		_.map( this.game_state.current_frame_state.creature_list, (val,idx) => {
+			const processed_results = Creature_ƒ.process_single_frame(val, this._Tilemap_Manager, this.get_time_offset());
 
-			return processed_entity.new_state; 
+			_.map(processed_results.spawnees, (val)=>{ spawnees.push(val) });
+			_.map(processed_results.change_list, (val)=>{ master_change_list.push(val) });
+
 		});
 
 		/*
-			Add the new custom_objects to our existing list, and then process them.
+			Add the new custom_objects to our existing list, and then process all custom_objects (existing and new).
 		*/
-
-		
-
-		var objects = _.concat( _.cloneDeep(this.game_state.prior_frame_state.custom_object_list), _.cloneDeep(spawnees));
-		//console.log('spawnees', _.map( spawnees, (val)=>(val.pixel_pos.y)) )
-
-		//console.log('prev', _.map( this.game_state.prior_frame_state.custom_object_list, (val)=>(val.pixel_pos.y)) )
-
-		this.game_state.current_frame_state.custom_object_list = _.map( objects, (val,idx) => {
+		let all_objects = _.concat( _.cloneDeep(this.game_state.current_frame_state.custom_object_list), _.cloneDeep(spawnees));
+		let all_objects_processed = _.map( all_objects, (val,idx) => {
 			return (Custom_Object_ƒ.process_single_frame(val,this._Tilemap_Manager, this.get_time_offset()))
 		});
 
-		/*
-			Clear our "double-buffering" by replacing the old 'prior frame state' with our finished new frame.
-		*/
-	//	console.log('curr', _.map( this.game_state.current_frame_state.custom_object_list, (val)=>(val.pixel_pos.y)) )
+		let all_creatures_processed = _.map( this.game_state.current_frame_state.creature_list, (creature) => (
+			Creature_ƒ.apply_changes(
+				creature,
+				_.filter( master_change_list, (val)=> (
+					val.target_obj_uuid == creature.unique_id
+				))
+			)
+		))
 
-		this.game_state.prior_frame_state = _.cloneDeep(this.game_state.current_frame_state);
 
+		
+
+
+		this.game_state.current_frame_state = {
+			creature_list: all_creatures_processed,
+			custom_object_list: all_objects_processed,
+		}
 
 	}
 
@@ -475,10 +479,7 @@ class Game_Manager {
 	}
 }
 
-class Game_Turn_State {
-	/* state of an individual turn */
 
-}
 
 interface Game_Status_Display_Props {
 	_Game_Manager: Game_Manager,

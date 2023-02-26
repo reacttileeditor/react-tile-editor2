@@ -25,17 +25,26 @@ export type PathNodeWithDirection = {
 
 export type CreatureTypeName = 'hermit' | 'peasant' | 'skeleton';
 
-type ChangeType = 
+
+export type ChangeType = 
 	'add' |
 	'set';
 
 
 
-type ChangeEntity = {
+export type ChangeInstance = {
 	type: ChangeType,
-	value: number,
-	target: 'string',
+	value: number|string|Point2D,
+	target_variable: keyof Creature_Data,
+	target_obj_uuid: string, //uuid, actually
 };
+
+type CreatureKeys = keyof Creature_Data;
+
+export type VariableSpecificChangeInstance = {
+	type: ChangeType,
+	value: number|string|Point2D,
+}
 
 
 
@@ -301,19 +310,99 @@ export const Creature_ƒ = {
 		)
 	},
 
+
+/*----------------------- state management -----------------------*/
+	apply_changes: (
+		me: Creature_Data,
+		change_list: Array<ChangeInstance>,
+	): Creature_Data => {
+		//_.map( _.range( _.size(change_list) ), ()=> )
+
+		let unique_keys = _.uniq(_.map(change_list, (val)=>(
+			val.target_variable
+		)))
+
+		/*
+			The goal of this fairly -sweaty- function is to build a single object where each possible variable being affect is listed as a key.   Each key then will tally up an array of the potential changes we might be applying to an object — it might not be unreasonable, at all, to for example, have multiple other objects trying to change a target's hitpoints.
+
+			We then need to 'reduce' this using some kind of special, bespoke logic.
+		*/
+		
+		let collated_changes_by_key: { [key in CreatureKeys]?: Array<VariableSpecificChangeInstance> } = 
+		_.merge(  //this gives us a series of i.e:  { hitpoints:  Array<VariableSpecificChangeInstance> }, so we need to combine all of these into a single master object, with one key per variable affected.
+			_.map(unique_keys, (target_variable) => ({
+				[target_variable]: _.map(
+					_.filter(change_list, (changeVal) => (
+						changeVal.target_variable == target_variable
+					)),
+					(change_to_correct_variable) => ({
+						type: change_to_correct_variable.type,
+						value: change_to_correct_variable.value
+					})
+				)
+			}))
+		);
+
+		let reduced_changes_by_key = _.map( collated_changes_by_key as { [key in CreatureKeys]: Array<VariableSpecificChangeInstance> }, (val, key) => {
+			return { [key]: Creature_ƒ.reduce_individual_change_type(val) }
+		})
+
+		return _.merge(
+			_.cloneDeep(me),
+			reduced_changes_by_key
+		);
+
+
+	},
+
+	/*object_key_to_type: () => {
+		//do some run time type alleging here
+	}*/
+
+		//@ts-ignore
+	reduce_individual_change_type: (incoming_changes: Array<VariableSpecificChangeInstance>):number => (
+		_.reduce(incoming_changes, (a, b) => (
+			//@ts-ignore
+			a.value + b.value
+		))
+	),
+
+
+	apply_change: (
+		me: Creature_Data,
+		change: ChangeInstance,
+	): Creature_Data => ({
+		... _.cloneDeep(me),
+		//@ts-ignore
+		[change.target_variable]: ƒ.if( change.type == 'set', change.value, (me[change.target_variable] + change.value) )
+	}),
+
+
 	process_single_frame: (
 		me: Creature_Data,
 		TM: Tilemap_Manager,
 		offset_in_ms: number
-	): {new_state: Creature_Data, spawnees: Array<Custom_Object_Data> } => {
+	): {
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>
+	} => {
 
-		const new_obj = _.cloneDeep(me);
 
-		new_obj.pixel_pos = Creature_ƒ.yield_position_for_time_in_post_turn_animation(new_obj, TM, offset_in_ms)
+
+		let change_list: Array<ChangeInstance> = [];
+		let new_pos = Creature_ƒ.yield_position_for_time_in_post_turn_animation(me, TM, offset_in_ms);
+
+		change_list.push({
+			type: 'set',
+			value: new_pos,
+			target_variable: 'pixel_pos',
+			target_obj_uuid: me.unique_id,
+		});
+
 
 		const spawnees = ƒ.if(offset_in_ms >= 20 && offset_in_ms <= 100 && me.type_name == 'peasant', [New_Custom_Object({
 			get_game_state: me.get_game_state,
-			pixel_pos: new_obj.pixel_pos,
+			pixel_pos: new_pos,
 			type_name: 'shot' as CustomObjectTypeName,
 		})], []);
 
@@ -334,21 +423,37 @@ export const Creature_ƒ = {
 			//console.log( `distance between peasant and hermit: ${TM.get_tile_coord_distance_between(Creature_ƒ.get_current_mid_turn_tile_pos(new_obj, TM), Creature_ƒ.get_current_mid_turn_tile_pos(target,TM))} ${Creature_ƒ.get_current_mid_turn_tile_pos(new_obj, TM).x} ${Creature_ƒ.get_current_mid_turn_tile_pos(new_obj, TM).y} ${Creature_ƒ.get_current_mid_turn_tile_pos(target, TM).x} ${Creature_ƒ.get_current_mid_turn_tile_pos(target, TM).y}`)
 
 			if(me.remaining_action_points > 0){
-				console.error(new_obj.current_hitpoints)
+				//console.error(me.current_hitpoints)
 
-				new_obj.current_hitpoints = 5;
-				console.error(new_obj.current_hitpoints)
-				new_obj.remaining_action_points -=1;
+				//me.current_hitpoints = 5;
+				//console.error(me.current_hitpoints)
+				//me.remaining_action_points -=1;
+
+				change_list.push({
+					type: 'add',
+					value: -5,
+					target_variable: 'current_hitpoints',
+					target_obj_uuid: me.unique_id,
+				});
+
+				change_list.push({
+					type: 'add',
+					value: -1,
+					target_variable: 'remaining_action_points',
+					target_obj_uuid: me.unique_id,
+				});
+		
 			}
 		}
 
 		return {
-			new_state: new_obj,
+			change_list: change_list,
 			spawnees: spawnees
 		};
 	},
 
 
+/*----------------------- data reading -----------------------*/
 
 	yield_animation_segment_for_time_offset: (me: Creature_Data, offset_in_ms: number): Anim_Schedule_Element|undefined => (
 		_.find(me.animation_this_turn, (val) => {
