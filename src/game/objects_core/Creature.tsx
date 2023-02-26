@@ -327,10 +327,10 @@ export const Creature_ƒ = {
 
 			We then need to 'reduce' this using some kind of special, bespoke logic.
 		*/
-		
-		let collated_changes_by_key: { [key in CreatureKeys]?: Array<VariableSpecificChangeInstance> } = 
-		_.merge(  //this gives us a series of i.e:  { hitpoints:  Array<VariableSpecificChangeInstance> }, so we need to combine all of these into a single master object, with one key per variable affected.
-			_.map(unique_keys, (target_variable) => ({
+		//@ts-ignore
+		let separate_changes_by_key: { [key in CreatureKeys]?: Array<VariableSpecificChangeInstance> } = 
+			_.mapValues(unique_keys, (target_variable) => ({
+				//@ts-ignore
 				[target_variable]: _.map(
 					_.filter(change_list, (changeVal) => (
 						changeVal.target_variable == target_variable
@@ -341,17 +341,32 @@ export const Creature_ƒ = {
 					})
 				)
 			}))
-		);
 
-		let reduced_changes_by_key = _.map( collated_changes_by_key as { [key in CreatureKeys]: Array<VariableSpecificChangeInstance> }, (val, key) => {
-			return { [key]: Creature_ƒ.reduce_individual_change_type(val) }
-		})
+			//this gives us a series of i.e:  { hitpoints:  Array<VariableSpecificChangeInstance> }, so we need to combine all of these into a single master object, with one key per variable affected.
 
-		return _.merge(
+		let _collated_changes_by_key = _.reduce(separate_changes_by_key, (a,b)=>{
+			return _.assign(a,b);
+		});
+
+		let collated_changes_by_key = ƒ.if(_collated_changes_by_key != undefined,
+			_collated_changes_by_key,
+			{}
+		)
+
+		let reduced_changes_by_key = _.mapValues( collated_changes_by_key as { [key in CreatureKeys]: Array<VariableSpecificChangeInstance> },
+			(val, key: CreatureKeys) => {
+				return Creature_ƒ.reduce_individual_change_type(val, key)
+			});
+
+
+		 
+		
+		let final_value = _.merge(
 			_.cloneDeep(me),
 			reduced_changes_by_key
 		);
-
+			debugger;
+		return final_value;
 
 	},
 
@@ -360,7 +375,7 @@ export const Creature_ƒ = {
 	}*/
 
 		//@ts-ignore
-	reduce_individual_change_type: (incoming_changes: Array<VariableSpecificChangeInstance>):number => (
+	reduce_individual_change_type: (incoming_changes: Array<VariableSpecificChangeInstance>, key: CreatureKeys):number => (
 		_.reduce(incoming_changes, (a, b) => (
 			//@ts-ignore
 			a.value + b.value
