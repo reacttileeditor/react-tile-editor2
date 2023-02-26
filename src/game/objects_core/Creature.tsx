@@ -123,10 +123,31 @@ export const New_Creature = (
 }
 
 
+const Add_Point_2D = (a: Point2D, b: Point2D): Point2D => ({
+	x: a.x + b.x,
+	y: a.y + b.y
+})
 
 
 export const Creature_ƒ = {
-	
+/*----------------------- run time type guards -----------------------*/
+
+	isPoint2D: (value: Point2D | number | string): value is Point2D => {
+		return _.isObject(value) && (value as Point2D).x !== undefined && (value as Point2D).y !== undefined;
+	},
+
+	get_value_type: (value: Point2D | number | string): 'Point2D' | 'number' | 'string' => {
+		if( Creature_ƒ.isPoint2D(value) ){
+			return 'Point2D';
+		} else if ( _.isString(value) ){
+			return 'string';
+		} else {
+			return 'number';
+		}
+	},
+
+/*----------------------- getters -----------------------*/
+
 	yield_move_cost_for_tile_type: (me: Creature_Data, tile_type: string): number|null => (
 		Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type)
 	),
@@ -361,11 +382,10 @@ export const Creature_ƒ = {
 
 		 
 		
-		let final_value = _.merge(
+		let final_value = _.assign(
 			_.cloneDeep(me),
 			reduced_changes_by_key
 		);
-			debugger;
 		return final_value;
 
 	},
@@ -375,12 +395,18 @@ export const Creature_ƒ = {
 	}*/
 
 		//@ts-ignore
-	reduce_individual_change_type: (incoming_changes: Array<VariableSpecificChangeInstance>, key: CreatureKeys):number => (
-		_.reduce(incoming_changes, (a, b) => (
-			//@ts-ignore
-			a.value + b.value
+	reduce_individual_change_type: (incoming_changes: Array<VariableSpecificChangeInstance>, key: CreatureKeys):number => {
+		console.log(incoming_changes);
+
+		//@ts-ignore
+		return _.reduce(incoming_changes, (a, b) => (
+			{
+				string: (a.value as unknown as string) + (b.value as unknown as string),
+				number: (a.value as unknown as number) + (b.value as unknown as number),
+				Point2D: Add_Point_2D( (a.value as unknown as Point2D), (b.value as unknown as Point2D) )
+			}[Creature_ƒ.get_value_type(a.type)]
 		))
-	),
+	},
 
 
 	apply_change: (
