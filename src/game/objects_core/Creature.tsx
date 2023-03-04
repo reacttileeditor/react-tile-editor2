@@ -369,13 +369,13 @@ export const Creature_ƒ = {
 			return _.assign(a,b);
 		});
 
-		let collated_changes_by_key = ƒ.if(_collated_changes_by_key != undefined,
+		let collated_changes_by_key: { [key in CreatureKeys]: Array<VariableSpecificChangeInstance> } = ƒ.if(_collated_changes_by_key != undefined,
 			_collated_changes_by_key,
 			{}
 		)
 
-		let reduced_changes_by_key = _.mapValues( collated_changes_by_key as { [key in CreatureKeys]: Array<VariableSpecificChangeInstance> },
-			(val, key: CreatureKeys) => {
+		let reduced_changes_by_key: Partial<Creature_Data> = _.mapValues( collated_changes_by_key,
+			(val: Array<VariableSpecificChangeInstance>, key: CreatureKeys) => {
 				return Creature_ƒ.reduce_individual_change_type(val, key)
 			});
 
@@ -395,17 +395,19 @@ export const Creature_ƒ = {
 	}*/
 
 		//@ts-ignore
-	reduce_individual_change_type: (incoming_changes: Array<VariableSpecificChangeInstance>, key: CreatureKeys):number => {
+	reduce_individual_change_type: (incoming_changes: Array<VariableSpecificChangeInstance>, key: CreatureKeys):number|string|Point2D => {
 		console.log(incoming_changes);
 
 		//@ts-ignore
-		return _.reduce(incoming_changes, (a, b) => (
+		let reduced_values: VariableSpecificChangeInstance = _.reduce(incoming_changes, (a, b) => (
 			{
 				string: (a.value as unknown as string) + (b.value as unknown as string),
 				number: (a.value as unknown as number) + (b.value as unknown as number),
 				Point2D: Add_Point_2D( (a.value as unknown as Point2D), (b.value as unknown as Point2D) )
 			}[Creature_ƒ.get_value_type(a.type)]
 		))
+
+		return reduced_values.value;
 	},
 
 
