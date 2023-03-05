@@ -34,7 +34,7 @@ export type ChangeType =
 
 export type ChangeInstance = {
 	type: ChangeType,
-	value: number|string|Point2D,
+	value: ChangeValue,
 	target_variable: keyof Creature_Data,
 	target_obj_uuid: string, //uuid, actually
 };
@@ -43,9 +43,10 @@ type CreatureKeys = keyof Creature_Data;
 
 export type VariableSpecificChangeInstance = {
 	type: ChangeType,
-	value: number|string|Point2D,
+	value: ChangeValue,
 }
 
+type ChangeValue = (number|string|Point2D);
 
 
 export type Creature_Data = {
@@ -105,7 +106,7 @@ export const New_Creature = (
 		//state	
 		tile_pos: p.tile_pos,
 		facing_direction: ƒ.if(p.direction !== undefined, p.direction, 'south_east'),
-		remaining_action_points: ƒ.if(p.remaining_action_points !== undefined, p.remaining_action_points, 1),
+		remaining_action_points: ƒ.if(p.remaining_action_points !== undefined, p.remaining_action_points, 2),
 		current_hitpoints: ƒ.if(p.current_hitpoints !== undefined,
 			p.current_hitpoints,
 			Creature_ƒ.get_delegate(p.type_name).yield_max_hitpoints
@@ -396,29 +397,41 @@ export const Creature_ƒ = {
 
 		//@ts-ignore
 	reduce_individual_change_type: (incoming_changes: Array<VariableSpecificChangeInstance>, key: CreatureKeys):number|string|Point2D => {
-		console.log(incoming_changes);
 
-		//@ts-ignore
-		let reduced_values: VariableSpecificChangeInstance = _.reduce(incoming_changes, (a, b) => (
-			{
-				string: (a.value as unknown as string) + (b.value as unknown as string),
-				number: (a.value as unknown as number) + (b.value as unknown as number),
-				Point2D: Add_Point_2D( (a.value as unknown as Point2D), (b.value as unknown as Point2D) )
-			}[Creature_ƒ.get_value_type(a.type)]
-		))
+		/*
+			If we have a set operation on this frame, then it overwrites any changes made by an add op.  Make sure the set operations come after any add operations. 
+		*/
+		let sorted_values: Array<VariableSpecificChangeInstance> = _.sortBy(incoming_changes, (val)=>(
+			ƒ.if(val.type == 'add',
+				1,
+				2
+			)
+		)) 
+		
+		let reduced_values: VariableSpecificChangeInstance = _.reduce(sorted_values, (a, b) => {
+			return 	ƒ.if(b.type == 'add',
+				{
+					type: 'set', //we're passing this to satisfy the typechecker, but it's going to be ignored.
+					value: {
+						string: (b.value as unknown as string),
+						number: (b.value as unknown as number),
+						Point2D: (b.value as unknown as Point2D)
+					}[Creature_ƒ.get_value_type(a.type)]
+				},
+				{
+					type: 'add',
+					value: {
+						string: (a.value as unknown as string) + (b.value as unknown as string),
+						number: (a.value as unknown as number) + (b.value as unknown as number),
+						Point2D: Add_Point_2D( (a.value as unknown as Point2D), (b.value as unknown as Point2D) )
+					}[Creature_ƒ.get_value_type(a.type)]
+				}
+			);
+		}) as VariableSpecificChangeInstance;
 
 		return reduced_values.value;
 	},
 
-
-	apply_change: (
-		me: Creature_Data,
-		change: ChangeInstance,
-	): Creature_Data => ({
-		... _.cloneDeep(me),
-		//@ts-ignore
-		[change.target_variable]: ƒ.if( change.type == 'set', change.value, (me[change.target_variable] + change.value) )
-	}),
 
 
 	process_single_frame: (
@@ -469,7 +482,7 @@ export const Creature_ƒ = {
 				//console.error(me.current_hitpoints)
 
 				//me.current_hitpoints = 5;
-				//console.error(me.current_hitpoints)
+				console.error(me.current_hitpoints)
 				//me.remaining_action_points -=1;
 
 				change_list.push({
