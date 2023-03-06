@@ -463,10 +463,54 @@ export const Creature_ƒ = {
 		})], []);
 
 
+		/*
+			MOVEMENT:
+
+			Big bit of temporary bullshit here:  we're axing resolving moves at the end of the turn, so we need to do it here.  Doing it properly is going to be ugly/complicated/etc, so for now we're doing a huge copout/cheat, and just setting the final position.
+		*/
+		let new_position: PathNodeWithDirection | undefined =
+			_.find(
+				_.reverse(me.path_reachable_this_turn_with_directions),
+					/*ƒ.dump(_.slice( creature.path_this_turn,
+						0, //_.size(creature.path_this_turn) - creature.yield_moves_per_turn(),
+						creature.yield_moves_per_turn()
+					)),*/
+				() => true  //find literally the first available tile at the end of the path, don't give any hoot about whether it's occupied by another creature
+			);
+		
+			//debugger;
+		//if we didn't find *any* open slots, give up and remain at our current pos
+		if( new_position == undefined){
+			new_position = {
+				position: me.tile_pos,
+				direction: me.facing_direction,
+			};
+		}
+
+		change_list.push({
+			type: 'set',
+			value: new_position.position,
+			target_variable: 'tile_pos',
+			target_obj_uuid: me.unique_id,
+		});
+
+		change_list.push({
+			type: 'set',
+			value: new_position.direction,
+			target_variable: 'facing_direction',
+			target_obj_uuid: me.unique_id,
+		});
+		
+		
+		/*
+			DAMAGE:
+		*/
 		const target = find( me.get_game_state().current_frame_state.creature_list, (val) => (
 			val.type_name === 'hermit'
 		));
-				
+		
+
+
 		if( me.type_name == 'peasant' && target){
 
 

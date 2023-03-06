@@ -142,73 +142,91 @@ class Game_Manager {
  		this.update_game_state_for_ui = func;
 	}
 	
-	advance_turn = () => {
-		/*
-			First, sort the creatures by speed.  We'll store a concept called "reserved tiles", where basically the faster creatures will "take" a given tile they're planning to move to, and therefore, that tile is blocked (even though pathfinding will ignore this).
+	// advance_turn = () => {
+	// 	/*
+	// 		First, sort the creatures by speed.  We'll store a concept called "reserved tiles", where basically the faster creatures will "take" a given tile they're planning to move to, and therefore, that tile is blocked (even though pathfinding will ignore this).
 	
-			We'll then step backwards through the path for each subsequent creature in our speed-sorted list, and place it in the first "open spot" in its path, closest to its actual goal.
+	// 		We'll then step backwards through the path for each subsequent creature in our speed-sorted list, and place it in the first "open spot" in its path, closest to its actual goal.
 			
-			The next step after this will be enabling a concept of moving a limited number of tiles rather than an unlimited number, per turn.  You'll still pathfind as though you had infinite moves, you'll just move a subset of them (and recalc every turn).
+	// 		The next step after this will be enabling a concept of moving a limited number of tiles rather than an unlimited number, per turn.  You'll still pathfind as though you had infinite moves, you'll just move a subset of them (and recalc every turn).
 			
 			
-			There's a ton of stuff where this whole algorithm/approach will probably shit the bed, but since this whole game design is so experimental to begin with, we really cannot just follow a blueprint we know will work - we have to commit to something we can't trust will work out.  The biggest thing I envison is units lining up single file, and not correctly clustering around a goal, or moving around each other.
+	// 		There's a ton of stuff where this whole algorithm/approach will probably shit the bed, but since this whole game design is so experimental to begin with, we really cannot just follow a blueprint we know will work - we have to commit to something we can't trust will work out.  The biggest thing I envison is units lining up single file, and not correctly clustering around a goal, or moving around each other.
 			
-			We'll take this step by step.
-		*/
-		//creature.path_this_turn = this._Pathfinder.find_path_between_map_tiles( this._Tilemap_Manager, creature.tile_pos, new_pos, creature )
+	// 		We'll take this step by step.
+	// 	*/
+	// 	//creature.path_this_turn = this._Pathfinder.find_path_between_map_tiles( this._Tilemap_Manager, creature.tile_pos, new_pos, creature )
 		
-		const creature_movespeed = 5;
-		const reserved_tiles : Array<PathNodeWithDirection> = [];
+	// 	const creature_movespeed = 5;
+	// 	const reserved_tiles : Array<PathNodeWithDirection> = [];
 
-		//push a new turn onto the end of the turns array
-		const new_turn_state = {
-			/*
-				This new turn is functionally identical to the last turn, except that we go through the creatures in it, and "resolve" their moves - we change their "real" position to what their planned position had been, and we "clear out" their plans (i.e. make them identical to where they currently are).
+	// 	//push a new turn onto the end of the turns array
+	// 	const new_turn_state = {
+	// 		/*
+	// 			This new turn is functionally identical to the last turn, except that we go through the creatures in it, and "resolve" their moves - we change their "real" position to what their planned position had been, and we "clear out" their plans (i.e. make them identical to where they currently are).
 				
-				When we have other verbs, we'd add them here.
-			*/
-			creature_list: _.map( this.get_current_turn_state().creature_list, (creature, idx) => {
-				let new_position =
-					_.find(
-						_.reverse(creature.path_reachable_this_turn_with_directions),
-// 							ƒ.dump(_.slice( creature.path_this_turn,
-// 								0, //_.size(creature.path_this_turn) - creature.yield_moves_per_turn(),
-// 								creature.yield_moves_per_turn()
-// 							)),
-						(path_element) => {
-							return (_.find(reserved_tiles, path_element) === undefined); 
-						}
-					);
+	// 			When we have other verbs, we'd add them here.
+	// 		*/
+	// 		creature_list: _.map( this.get_current_turn_state().creature_list, (creature, idx) => {
+	// 			let new_position =
+	// 				_.find(
+	// 					_.reverse(creature.path_reachable_this_turn_with_directions),
+	// 						/*ƒ.dump(_.slice( creature.path_this_turn,
+	// 							0, //_.size(creature.path_this_turn) - creature.yield_moves_per_turn(),
+	// 							creature.yield_moves_per_turn()
+	// 						)),*/
+	// 					(path_element) => {
+	// 						return (_.find(reserved_tiles, path_element) === undefined); 
+	// 					}
+	// 				);
 		
-				if( new_position == undefined){ //if we didn't find *any* open slots, give up and remain at our current pos
-					new_position = {
-						position: creature.tile_pos,
-						direction: creature.facing_direction,
-					};
-				} else {
-					reserved_tiles.push(new_position);
-				}
+	// 			if( new_position == undefined){ //if we didn't find *any* open slots, give up and remain at our current pos
+	// 				new_position = {
+	// 					position: creature.tile_pos,
+	// 					direction: creature.facing_direction,
+	// 				};
+	// 			} else {
+	// 				reserved_tiles.push(new_position);
+	// 			}
 		
 		
-				return New_Creature({
-					get_game_state: this.get_game_state,
-					tile_pos: new_position.position,
-					direction: new_position.direction,
-					planned_tile_pos: new_position.position,
-					type_name: creature.type_name,
-					unique_id: creature.unique_id,
-					team: creature.team,
-				})
-			}),
+	// 			return New_Creature({
+	// 				get_game_state: this.get_game_state,
+	// 				tile_pos: new_position.position,
+	// 				direction: new_position.direction,
+	// 				planned_tile_pos: new_position.position,
+	// 				type_name: creature.type_name,
+	// 				unique_id: creature.unique_id,
+	// 				team: creature.team,
+	// 			})
+	// 		}),
 
-			custom_object_list: [], //<- probably persist it from the previous turn?
-		}
+	// 		custom_object_list: [], //<- probably persist it from the previous turn?
+	// 	}
 
-		this.game_state.turn_list = _.concat(
-			this.game_state.turn_list,
-			[new_turn_state]
-		);
-		console.log('setting state at end of turn')
+	// 	this.game_state.turn_list = _.concat(
+	// 		this.game_state.turn_list,
+	// 		[new_turn_state]
+	// 	);
+	// 	console.log('setting state at end of turn')
+	// 	this.game_state.current_frame_state = this.get_previous_turn_state()
+
+
+	// 	var date = new Date();
+	
+	// 	this.animation_state = {
+	// 		is_animating_turn_end: true,
+	// 		time_turn_end_anim_started__in_ms: date.getTime()
+	// 	};
+	
+	// 	this.game_state.current_turn += 1;
+	// }
+
+	advance_turn_start = () => {
+
+		
+
+		console.log(`beginning turn #${this.game_state.current_turn}`)
 		this.game_state.current_frame_state = this.get_previous_turn_state()
 
 
@@ -219,9 +237,31 @@ class Game_Manager {
 			time_turn_end_anim_started__in_ms: date.getTime()
 		};
 	
-		this.game_state.current_turn += 1;
 	}
+
+	advance_turn_finish = () => {
+		/*
+			All behavior is handled inside creature and custom object processing.  Impressing the current state of this into the array of turns is mostly being done as a snapshot.
+		*/
+		
+
+		const new_turn_state = _.cloneDeep(this.game_state.current_frame_state)
+
+		this.game_state.turn_list = _.concat(
+			this.game_state.turn_list,
+			[new_turn_state]
+		);
+		console.log(`finishing turn #${this.game_state.current_turn}`)
+
+
+		var date = new Date();
 	
+		this.animation_state.is_animating_turn_end = false;
+
+	
+		this.game_state.current_turn += 1;
+	}		
+
 	get_time_offset = () => {
 		var date = new Date();
 
@@ -270,80 +310,81 @@ class Game_Manager {
 			The result of this will give us two lists;  one is a list of any Custom_Objects they're going to spawn, the other is a list of changes we would like to apply to our list of creatures.
 		*/
 
-		let spawnees: Array<Custom_Object_Data> = [];
-		let master_change_list: Array<ChangeInstance> = [];
+		if(this.get_time_offset() > this.get_total_anim_duration() ){
+			this.advance_turn_finish();
+		} else {		
+			let spawnees: Array<Custom_Object_Data> = [];
+			let master_change_list: Array<ChangeInstance> = [];
 
-		_.map( this.game_state.current_frame_state.creature_list, (val,idx) => {
-			const processed_results = Creature_ƒ.process_single_frame(val, this._Tilemap_Manager, this.get_time_offset());
+			_.map( this.game_state.current_frame_state.creature_list, (val,idx) => {
+				const processed_results = Creature_ƒ.process_single_frame(val, this._Tilemap_Manager, this.get_time_offset());
 
-			_.map(processed_results.spawnees, (val)=>{ spawnees.push(val) });
-			_.map(processed_results.change_list, (val)=>{ master_change_list.push(val) });
+				_.map(processed_results.spawnees, (val)=>{ spawnees.push(val) });
+				_.map(processed_results.change_list, (val)=>{ master_change_list.push(val) });
 
-		});
+			});
 
-		/*
-			Add the new custom_objects to our existing list, and then process all custom_objects (existing and new).
-		*/
-		let all_objects = _.concat( _.cloneDeep(this.game_state.current_frame_state.custom_object_list), _.cloneDeep(spawnees));
-		let all_objects_processed = _.map( all_objects, (val,idx) => {
-			return (Custom_Object_ƒ.process_single_frame(val,this._Tilemap_Manager, this.get_time_offset()))
-		});
+			/*
+				Add the new custom_objects to our existing list, and then process all custom_objects (existing and new).
+			*/
+			let all_objects = _.concat( _.cloneDeep(this.game_state.current_frame_state.custom_object_list), _.cloneDeep(spawnees));
+			let all_objects_processed = _.map( all_objects, (val,idx) => {
+				return (Custom_Object_ƒ.process_single_frame(val,this._Tilemap_Manager, this.get_time_offset()))
+			});
 
-		let all_creatures_processed = _.map( this.game_state.current_frame_state.creature_list, (creature) => (
-			Creature_ƒ.apply_changes(
-				creature,
-				_.filter( master_change_list, (val)=> (
-					val.target_obj_uuid == creature.unique_id
-				))
-			)
-		))
-
-
-		
+			let all_creatures_processed = _.map( this.game_state.current_frame_state.creature_list, (creature) => (
+				Creature_ƒ.apply_changes(
+					creature,
+					_.filter( master_change_list, (val)=> (
+						val.target_obj_uuid == creature.unique_id
+					))
+				)
+			))
 
 
-		this.game_state.current_frame_state = {
-			creature_list: all_creatures_processed,
-			custom_object_list: all_objects_processed,
+			
+
+
+			this.game_state.current_frame_state = {
+				creature_list: all_creatures_processed,
+				custom_object_list: all_objects_processed,
+			}
 		}
-
 	}
 
 	do_live_game_rendering = () => {
 		/*
 			This is for when the game is "live" and actually progressing through time.  The player's set up their moves, and hit "go".
 		*/
-		if(this.get_time_offset() > this.get_total_anim_duration() ){
-			this.animation_state.is_animating_turn_end = false;
-		} else {
-			_.map( this.game_state.current_frame_state.creature_list, (val,idx) => {
-				const direction = Creature_ƒ.yield_direction_for_time_in_post_turn_animation(val, this.get_time_offset());
 
-				this._Asset_Manager.draw_image_for_asset_name({
-					asset_name:					Creature_ƒ.yield_walk_asset_for_direction( val, direction ), //i.e. 'peasant-se-walk',
-					_BM:						this._Blit_Manager,
-					pos:						val.pixel_pos, //yield_position_for_time_in_post_turn_animation( this._Tilemap_Manager, this.get_time_offset() ),
-					zorder:						12,
-					current_milliseconds:		this.get_time_offset(),
-					opacity:					1.0,
-					horizontally_flipped:		this.get_flip_state_from_direction(direction),
-					vertically_flipped:			false,
-				})
+		_.map( this.game_state.current_frame_state.creature_list, (val,idx) => {
+			const direction = Creature_ƒ.yield_direction_for_time_in_post_turn_animation(val, this.get_time_offset());
+
+			this._Asset_Manager.draw_image_for_asset_name({
+				asset_name:					Creature_ƒ.yield_walk_asset_for_direction( val, direction ), //i.e. 'peasant-se-walk',
+				_BM:						this._Blit_Manager,
+				pos:						val.pixel_pos, //yield_position_for_time_in_post_turn_animation( this._Tilemap_Manager, this.get_time_offset() ),
+				zorder:						12,
+				current_milliseconds:		this.get_time_offset(),
+				opacity:					1.0,
+				horizontally_flipped:		this.get_flip_state_from_direction(direction),
+				vertically_flipped:			false,
 			})
+		})
 
-			_.map( this.game_state.current_frame_state.custom_object_list, (val,idx) => {
-				this._Asset_Manager.draw_image_for_asset_name({
-					asset_name:					Custom_Object_ƒ.yield_image(val),
-					_BM:						this._Blit_Manager,
-					pos:						val.pixel_pos, //yield_position_for_time_in_post_turn_animation( this._Tilemap_Manager, this.get_time_offset() ),
-					zorder:						13,
-					current_milliseconds:		this.get_time_offset(),
-					opacity:					1.0,
-					horizontally_flipped:		false,
-					vertically_flipped:			false,
-				})
-			})			
-		}
+		_.map( this.game_state.current_frame_state.custom_object_list, (val,idx) => {
+			this._Asset_Manager.draw_image_for_asset_name({
+				asset_name:					Custom_Object_ƒ.yield_image(val),
+				_BM:						this._Blit_Manager,
+				pos:						val.pixel_pos, //yield_position_for_time_in_post_turn_animation( this._Tilemap_Manager, this.get_time_offset() ),
+				zorder:						13,
+				current_milliseconds:		this.get_time_offset(),
+				opacity:					1.0,
+				horizontally_flipped:		false,
+				vertically_flipped:			false,
+			})
+		})			
+		
 	}
 
 	do_paused_game_rendering = () => {
@@ -483,7 +524,7 @@ class Game_Manager {
 
 interface Game_Status_Display_Props {
 	_Game_Manager: Game_Manager,
-	advance_turn: Function,
+	advance_turn_start: Function,
 	_Asset_Manager: Asset_Manager;
 }
 
@@ -523,7 +564,7 @@ class Game_Status_Display extends React.Component <Game_Status_Display_Props, {
 				className="game_status_display"
 			>
 				<button
-					onClick={(evt)=>{this.props.advance_turn()}}
+					onClick={(evt)=>{this.props.advance_turn_start()}}
 				>
 					Next Turn
 				</button>
@@ -655,7 +696,7 @@ export class Game_View extends React.Component <Game_View_Props> {
 				ref={(node) => {this.gsd = node!;}}
 				_Game_Manager={this._Game_Manager}
 				_Asset_Manager={this.props._Asset_Manager}
-				advance_turn={this._Game_Manager.advance_turn}
+				advance_turn_start={this._Game_Manager.advance_turn_start}
 			/>
 		</div>;
 	}
