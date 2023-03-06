@@ -38,12 +38,11 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 		let addend = {x: 0, y: -1};
 
 		if(target){
-//			console.log(target.transient_state.pixel_pos)
+			//console.log(target.pixel_pos)
 			const target_pos = target.pixel_pos;
 
 			addend = { x: (target_pos.x - prior_pixel_pos.x) / 50.0, y: (target_pos.y - prior_pixel_pos.y) / 50.0 }
 		}
-
 
 		return {
 			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},

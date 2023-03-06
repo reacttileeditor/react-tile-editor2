@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _ from "lodash";
+import _, { size } from "lodash";
 
 import { ƒ } from "./Utils";
 
@@ -323,6 +323,7 @@ class Game_Manager {
 				_.map(processed_results.change_list, (val)=>{ master_change_list.push(val) });
 
 			});
+
 
 			/*
 				Add the new custom_objects to our existing list, and then process all custom_objects (existing and new).

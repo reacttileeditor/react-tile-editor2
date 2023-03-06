@@ -26,7 +26,7 @@ export type Base_Object_Data = {
 export const New_Base_Object = (
 	p: {
 		get_game_state: () => Game_State,
-		pixel_pos: Point2D,
+		pixel_pos?: Point2D,
 		unique_id?: string,
 	}): Base_Object_Data => {
 
@@ -38,7 +38,10 @@ export const New_Base_Object = (
 		),
 
 		//state	
-		pixel_pos: {x:0, y: 0},  //TODO use TM
+		pixel_pos: ƒ.if(p.pixel_pos != undefined,
+			p.pixel_pos,
+			{x:0, y: 0}
+		),  //TODO use TM
 
 		//accessors
 		get_game_state: p.get_game_state,

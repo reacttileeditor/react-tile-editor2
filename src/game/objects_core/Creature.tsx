@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _, { find } from "lodash";
+import _, { find, size } from "lodash";
 import { v4 as uuid } from "uuid";
 
 import { ƒ } from "../core/Utils";
@@ -455,13 +455,16 @@ export const Creature_ƒ = {
 			target_obj_uuid: me.unique_id,
 		});
 
+		if(me.type_name == 'peasant'){
+			console.log(`: ${new_pos.x} ${new_pos.y}`)
+		}
+
 
 		const spawnees = ƒ.if(offset_in_ms >= 20 && offset_in_ms <= 100 && me.type_name == 'peasant', [New_Custom_Object({
 			get_game_state: me.get_game_state,
 			pixel_pos: new_pos,
 			type_name: 'shot' as CustomObjectTypeName,
 		})], []);
-
 
 		/*
 			MOVEMENT:

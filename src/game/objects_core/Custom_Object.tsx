@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _, { find } from "lodash";
+import { cloneDeep, find } from "lodash";
 import { v4 as uuid } from "uuid";
 
 import { ƒ } from "../core/Utils";
@@ -32,11 +32,11 @@ export const New_Custom_Object = (
 	return {
 		...New_Base_Object({
 			get_game_state: p.get_game_state,
-			pixel_pos: p.pixel_pos,
+			pixel_pos: cloneDeep(p.pixel_pos),
 			unique_id: p.unique_id,
 		}),
 		type_name: p.type_name,
-	}	
+	}
 }
 
 export const Custom_Object_ƒ = {
@@ -57,11 +57,6 @@ export const Custom_Object_ƒ = {
 
 	process_single_frame: (me: Custom_Object_Data, _Tilemap_Manager: Tilemap_Manager, offset_in_ms: number): Custom_Object_Data => {
 
-		let newObj = _.cloneDeep(this);
-
-
-
-		//console.log(`old: ${this.pixel_pos.y}   new: ${newObj.pixel_pos.y}`)
 
 
 		return New_Custom_Object({
