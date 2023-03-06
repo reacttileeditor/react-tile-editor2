@@ -86,6 +86,6 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
 		}
 	},
-	yield_image: () => 'red_dot',
+	yield_image: () => '',
 }
 

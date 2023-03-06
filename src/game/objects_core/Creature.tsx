@@ -129,15 +129,16 @@ const Add_Point_2D = (a: Point2D, b: Point2D): Point2D => ({
 	y: a.y + b.y
 })
 
+type ValueOf<T> = T[keyof T];
 
 export const Creature_ƒ = {
 /*----------------------- run time type guards -----------------------*/
 
-	isPoint2D: (value: Point2D | number | string): value is Point2D => {
+	isPoint2D: (value: ValueOf<Creature_Data>): value is Point2D => {
 		return _.isObject(value) && (value as Point2D).x !== undefined && (value as Point2D).y !== undefined;
 	},
 
-	get_value_type: (value: Point2D | number | string): 'Point2D' | 'number' | 'string' => {
+	get_value_type: (value: ValueOf<Creature_Data>): 'Point2D' | 'number' | 'string' => {
 		if( Creature_ƒ.isPoint2D(value) ){
 			return 'Point2D';
 		} else if ( _.isString(value) ){
@@ -377,7 +378,7 @@ export const Creature_ƒ = {
 
 		let reduced_changes_by_key: Partial<Creature_Data> = _.mapValues( collated_changes_by_key,
 			(val: Array<VariableSpecificChangeInstance>, key: CreatureKeys) => {
-				return Creature_ƒ.reduce_individual_change_type(val, key)
+				return Creature_ƒ.reduce_individual_change_type(me, val, key)
 			});
 
 
@@ -396,8 +397,11 @@ export const Creature_ƒ = {
 	}*/
 
 		//@ts-ignore
-	reduce_individual_change_type: (incoming_changes: Array<VariableSpecificChangeInstance>, key: CreatureKeys):number|string|Point2D => {
-
+	reduce_individual_change_type: (
+		me: Creature_Data,
+		incoming_changes: Array<VariableSpecificChangeInstance>,
+		key: CreatureKeys
+	):number|string|Point2D => {
 		/*
 			If we have a set operation on this frame, then it overwrites any changes made by an add op.  Make sure the set operations come after any add operations. 
 		*/
@@ -408,26 +412,30 @@ export const Creature_ƒ = {
 			)
 		)) 
 		
-		let reduced_values: VariableSpecificChangeInstance = _.reduce(sorted_values, (a, b) => {
-			return 	ƒ.if(b.type == 'add',
-				{
-					type: 'set', //we're passing this to satisfy the typechecker, but it's going to be ignored.
-					value: {
-						string: (b.value as unknown as string),
-						number: (b.value as unknown as number),
-						Point2D: (b.value as unknown as Point2D)
-					}[Creature_ƒ.get_value_type(a.type)]
-				},
-				{
-					type: 'add',
-					value: {
-						string: (a.value as unknown as string) + (b.value as unknown as string),
-						number: (a.value as unknown as number) + (b.value as unknown as number),
-						Point2D: Add_Point_2D( (a.value as unknown as Point2D), (b.value as unknown as Point2D) )
-					}[Creature_ƒ.get_value_type(a.type)]
-				}
-			);
-		}) as VariableSpecificChangeInstance;
+		let reduced_values: VariableSpecificChangeInstance = _.reduce(
+			sorted_values,
+			(a, b) => {
+				return 	ƒ.if(b.type == 'set',
+					{
+						type: 'set', //we're passing this to satisfy the typechecker, but it's going to be ignored.
+						value: {
+							string: (b.value as unknown as string),
+							number: (b.value as unknown as number),
+							Point2D: (b.value as unknown as Point2D)
+						}[Creature_ƒ.get_value_type(a.value)]
+					},
+					{
+						type: 'add',
+						value: {
+							string: (a.value as unknown as string) + (b.value as unknown as string),
+							number: (a.value as unknown as number) + (b.value as unknown as number),
+							Point2D: Add_Point_2D( (a.value as unknown as Point2D), (b.value as unknown as Point2D) )
+						}[Creature_ƒ.get_value_type(a.value)]
+					}
+				);
+			},
+			{type: 'set', value: me[key]}
+		) as VariableSpecificChangeInstance;
 
 		return reduced_values.value;
 	},
