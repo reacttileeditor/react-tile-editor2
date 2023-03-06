@@ -1289,88 +1289,93 @@ export class Asset_Manager {
 		horizontally_flipped: boolean,
 		vertically_flipped: boolean,
 	}) => {
-		let { raw_image_list, image_data_list, assets_meta } = this.static_vals;
+		/*
+			Before we get started, we have a special 'magic name' used to make various objects (such as floating hp numbers) skip drawing a sprite entirely.
+		*/
+		if( p.asset_name !== 'omit_image' ){
+			let { raw_image_list, image_data_list, assets_meta } = this.static_vals;
 
-		let image = raw_image_list[ p.asset_name ]!;
-		let metadata = assets_meta[ p.asset_name ]!;
-		let image_data = _.find(image_data_list, {name: p.asset_name});
-		
-		if(image_data == undefined){
-			console.error(`Could not find an image in our image_data_list for the asset named ${p.asset_name}.`); 
-		} else {
-			let dim = metadata ? metadata.dim : { w: 20, h: 20 };  //safe-access
-
-			let frame_count = image_data.frames ? image_data.frames : 1;
-			let frame_duration = image_data.frame_duration ? image_data.frame_duration : 20;
-			let frame_padding = image_data.pad ? image_data.pad : 0;
-
-			/*
-				And this is where we get into the business of calculating the current frame.
-				We start by doing a pretty simple absolute division operation; check our current millisec timer, and see what that would be in frames.
-				This is the number we feed into our various formulas.
-			*/
-			let absolute_frame_num = Math.floor(p.current_milliseconds / frame_duration);
-			let current_frame_num;
+			let image = raw_image_list[ p.asset_name ]!;
+			let metadata = assets_meta[ p.asset_name ]!;
+			let image_data = _.find(image_data_list, {name: p.asset_name});
 			
-			/*
-				For relatively simple setups, like a straightforward 1,2,3 frame ordering, it's a piece of cake:
-			*/
-			if( !image_data.ping_pong ){
-				current_frame_num = Utils.modulo(absolute_frame_num, frame_count);
+			if(image_data == undefined){
+				console.error(`Could not find an image in our image_data_list for the asset named ${p.asset_name}.`); 
 			} else {
-				current_frame_num = this.calculate_pingpong_frame_num( absolute_frame_num, frame_count );	
-			}
+				let dim = metadata ? metadata.dim : { w: 20, h: 20 };  //safe-access
 
-			/*
-				This assumes the canvas is pre-translated so our draw position is at the final point, so we don't have to do any calculation for that, here.
+				let frame_count = image_data.frames ? image_data.frames : 1;
+				let frame_duration = image_data.frame_duration ? image_data.frame_duration : 20;
+				let frame_padding = image_data.pad ? image_data.pad : 0;
+
+				/*
+					And this is where we get into the business of calculating the current frame.
+					We start by doing a pretty simple absolute division operation; check our current millisec timer, and see what that would be in frames.
+					This is the number we feed into our various formulas.
+				*/
+				let absolute_frame_num = Math.floor(p.current_milliseconds / frame_duration);
+				let current_frame_num;
+				
+				/*
+					For relatively simple setups, like a straightforward 1,2,3 frame ordering, it's a piece of cake:
+				*/
+				if( !image_data.ping_pong ){
+					current_frame_num = Utils.modulo(absolute_frame_num, frame_count);
+				} else {
+					current_frame_num = this.calculate_pingpong_frame_num( absolute_frame_num, frame_count );	
+				}
+
+				/*
+					This assumes the canvas is pre-translated so our draw position is at the final point, so we don't have to do any calculation for that, here.
+				
+					This is the place where we do all 'spritesheet' handling, and also where we do all animation handling.
+				*/
 			
-				This is the place where we do all 'spritesheet' handling, and also where we do all animation handling.
-			*/
-		
-			if( !this.isAssetSpritesheet(metadata) ){
-				p._BM.queue_draw_op({
-					pos:					{ x: p.pos.x, y: p.pos.y },
-					z_index:				p.zorder,
-					opacity:				p.opacity,
-					horizontally_flipped:	p.horizontally_flipped,
-					vertically_flipped:		p.vertically_flipped,
-					drawing_data:			{
-												image_ref: image,
-												src_rect: {
-													x:	0,
-													y:	0,
-													w:	metadata.dim.w,
-													h:	metadata.dim.h,
-												},
-												dest_point: {
-													x:			-Math.floor(dim.w/2),
-													y:			-Math.floor(dim.h/2),
+				if( !this.isAssetSpritesheet(metadata) ){
+					p._BM.queue_draw_op({
+						pos:					{ x: p.pos.x, y: p.pos.y },
+						z_index:				p.zorder,
+						opacity:				p.opacity,
+						horizontally_flipped:	p.horizontally_flipped,
+						vertically_flipped:		p.vertically_flipped,
+						drawing_data:			{
+													image_ref: image,
+													src_rect: {
+														x:	0,
+														y:	0,
+														w:	metadata.dim.w,
+														h:	metadata.dim.h,
+													},
+													dest_point: {
+														x:			-Math.floor(dim.w/2),
+														y:			-Math.floor(dim.h/2),
+													}
 												}
-											}
-				});
-			} else {
-				p._BM.queue_draw_op({
-					pos:					{ x: p.pos.x, y: p.pos.y },
-					z_index:				p.zorder,
-					opacity:				p.opacity,
-					horizontally_flipped:	p.horizontally_flipped,
-					vertically_flipped:		p.vertically_flipped,
-					drawing_data:			{
-												image_ref: image,
-												src_rect: {
-													x:	metadata.bounds.x + (current_frame_num * metadata.bounds.w) + ((current_frame_num) * frame_padding),
-													y:	metadata.bounds.y,
-													w:	metadata.bounds.w,
-													h:	metadata.bounds.h,
-												},
-												dst_rect: {
-													x:	-Math.floor(metadata.bounds.w/2),
-													y:	-Math.floor(metadata.bounds.h/2),
-													w:	metadata.bounds.w,
-													h:	metadata.bounds.h,
-												},
-											}
-				});
+					});
+				} else {
+					p._BM.queue_draw_op({
+						pos:					{ x: p.pos.x, y: p.pos.y },
+						z_index:				p.zorder,
+						opacity:				p.opacity,
+						horizontally_flipped:	p.horizontally_flipped,
+						vertically_flipped:		p.vertically_flipped,
+						drawing_data:			{
+													image_ref: image,
+													src_rect: {
+														x:	metadata.bounds.x + (current_frame_num * metadata.bounds.w) + ((current_frame_num) * frame_padding),
+														y:	metadata.bounds.y,
+														w:	metadata.bounds.w,
+														h:	metadata.bounds.h,
+													},
+													dst_rect: {
+														x:	-Math.floor(metadata.bounds.w/2),
+														y:	-Math.floor(metadata.bounds.h/2),
+														w:	metadata.bounds.w,
+														h:	metadata.bounds.h,
+													},
+												}
+					});
+				}
 			}
 		}
 	}
