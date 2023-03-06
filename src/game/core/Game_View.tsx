@@ -128,7 +128,7 @@ class Game_Manager {
 			current_turn: 0,
 			selected_object_index: undefined,
 			turn_list: [first_turn_state_init],
-			current_frame_state: Individual_Game_Turn_State_Init,
+			current_frame_state: first_turn_state_init,
 		};
 		
 		this._Pathfinder = new Pathfinder();
@@ -227,7 +227,7 @@ class Game_Manager {
 		
 
 		console.log(`beginning turn #${this.game_state.current_turn}`)
-		this.game_state.current_frame_state = this.get_previous_turn_state()
+		this.game_state.current_frame_state = _.cloneDeep(this.get_current_turn_state())
 
 
 		var date = new Date();
@@ -269,10 +269,10 @@ class Game_Manager {
 	}
 	
 	get_total_anim_duration = ():number => {
-		if( _.size(this.get_previous_turn_state().creature_list) > 0){
+		if( _.size(this.get_current_turn_state().creature_list) > 0){
 			return _.reduce(
 				_.map(
-					this.get_previous_turn_state().creature_list,
+					this.get_current_turn_state().creature_list,
 					(val) => ( Creature_ƒ.calculate_total_anim_duration(val) )
 				),
 				(left, right) => ( ƒ.if( left > right, left, right) )
