@@ -138,9 +138,20 @@ export const Creature_ƒ = {
 		return _.isObject(value) && (value as Point2D).x !== undefined && (value as Point2D).y !== undefined;
 	},
 
-	get_value_type: (value: ValueOf<Creature_Data>): 'Point2D' | 'number' | 'string' => {
+	isDirection: (value: ValueOf<Creature_Data>): value is Direction => {
+		return value as Direction in ['north_east',
+		'east',
+		'south_east',
+		'north_west',
+		'west',
+		'south_west']
+	},
+
+	get_value_type: (value: ValueOf<Creature_Data>): 'Point2D' | 'Direction' | 'string' | 'number' => {
 		if( Creature_ƒ.isPoint2D(value) ){
 			return 'Point2D';
+		} else if ( Creature_ƒ.isDirection(value) ){
+			return 'Direction';
 		} else if ( _.isString(value) ){
 			return 'string';
 		} else {
@@ -421,6 +432,7 @@ export const Creature_ƒ = {
 						value: {
 							string: (b.value as unknown as string),
 							number: (b.value as unknown as number),
+							Direction: (b.value as unknown as Direction),
 							Point2D: (b.value as unknown as Point2D)
 						}[Creature_ƒ.get_value_type(a.value)]
 					},
@@ -429,6 +441,7 @@ export const Creature_ƒ = {
 						value: {
 							string: (a.value as unknown as string) + (b.value as unknown as string),
 							number: (a.value as unknown as number) + (b.value as unknown as number),
+							Direction: (b.value as unknown as Direction), //no coherent way to add Directions, so we treat it as 'set'
 							Point2D: Add_Point_2D( (a.value as unknown as Point2D), (b.value as unknown as Point2D) )
 						}[Creature_ƒ.get_value_type(a.value)]
 					}
