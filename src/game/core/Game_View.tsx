@@ -386,7 +386,7 @@ class Game_Manager {
 			})
 
 			this._Asset_Manager.draw_text({
-				text:					Custom_Object_ƒ.yield_text(val),
+				text:						Custom_Object_ƒ.yield_text(val),
 				_BM:						this._Blit_Manager,
 				pos:						val.pixel_pos,
 				zorder:						13,

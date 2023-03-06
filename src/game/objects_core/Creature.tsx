@@ -460,7 +460,7 @@ export const Creature_ƒ = {
 		}
 
 
-		const spawnees = ƒ.if(offset_in_ms >= 20 && offset_in_ms <= 100 && me.type_name == 'peasant', [New_Custom_Object({
+		const spawnees: Array<Custom_Object_Data> = ƒ.if(offset_in_ms >= 20 && offset_in_ms <= 100 && me.type_name == 'peasant', [New_Custom_Object({
 			get_game_state: me.get_game_state,
 			pixel_pos: new_pos,
 			type_name: 'shot' as CustomObjectTypeName,
@@ -538,6 +538,13 @@ export const Creature_ƒ = {
 					target_variable: 'current_hitpoints',
 					target_obj_uuid: me.unique_id,
 				});
+
+				spawnees.push(New_Custom_Object({
+					get_game_state: me.get_game_state,
+					pixel_pos: new_pos,
+					type_name: 'text_label' as CustomObjectTypeName,
+					text: '-5 hp'
+				}));
 
 				change_list.push({
 					type: 'add',

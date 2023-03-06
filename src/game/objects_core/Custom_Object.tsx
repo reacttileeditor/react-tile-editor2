@@ -10,14 +10,15 @@ import { Tilemap_Manager, Direction } from "../core/Tilemap_Manager";
 import { Point2D, Rectangle } from '../interfaces';
 import { Game_State } from "../core/Game_View";
 import { CreatureTypeName } from "./Creature";
-import { Custom_Object_Delegate, CO_Shot_ƒ } from "./Custom_Object_Delegate";
+import { Custom_Object_Delegate, CO_Shot_ƒ, CO_Text_Label_ƒ } from "./Custom_Object_Delegate";
 import { Base_Object_Data, New_Base_Object } from "./Base_Object";
  
 
-export type CustomObjectTypeName = 'shot';
+export type CustomObjectTypeName = 'shot' | 'text_label';
 
 export type Custom_Object_Data = {
 	type_name: CustomObjectTypeName,
+	text: string,
 } & Base_Object_Data;
 
 
@@ -27,6 +28,7 @@ export const New_Custom_Object = (
 		pixel_pos: Point2D,
 		type_name: CustomObjectTypeName,
 		unique_id?: string,
+		text?: string,
 	}): Custom_Object_Data => {
 
 	return {
@@ -36,6 +38,10 @@ export const New_Custom_Object = (
 			unique_id: p.unique_id,
 		}),
 		type_name: p.type_name,
+		text: ƒ.if(p.text != undefined,
+			p.text,
+			''
+		)
 	}
 }
 
@@ -46,6 +52,7 @@ export const Custom_Object_ƒ = {
 	get_delegate: (type_name: CustomObjectTypeName): Custom_Object_Delegate => {
 		return {
 			shot: CO_Shot_ƒ,
+			text_label: CO_Text_Label_ƒ,
 		}[type_name];
 	},
 
@@ -63,6 +70,7 @@ export const Custom_Object_ƒ = {
 			get_game_state: me.get_game_state,
 			pixel_pos: Custom_Object_ƒ.get_delegate(me.type_name).process_single_frame(me.pixel_pos, me.get_game_state).pixel_pos,
 			type_name: me.type_name,
+			text: me.text,
 			unique_id: me.unique_id
 		})
 	},
@@ -72,7 +80,7 @@ export const Custom_Object_ƒ = {
 	),
 
 	yield_text: (me: Custom_Object_Data) => (
-		'Yeah'
+		me.text
 	)
 }
 

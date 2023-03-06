@@ -31,6 +31,25 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 		get_game_state: () => Game_State,	
 	): { pixel_pos: Point2D } => {
 
+		return {
+			pixel_pos: prior_pixel_pos
+		}
+	},
+
+
+	yield_image: () => (
+		'red_dot'
+	)
+}
+
+export const CO_Shot_ƒ: Custom_Object_Delegate = {
+	...Custom_Object_Delegate_Base_ƒ,
+
+	process_single_frame: (
+		prior_pixel_pos: Point2D, 
+		get_game_state: () => Game_State,	
+	): { pixel_pos: Point2D } => {
+
 		const target = find( get_game_state().current_frame_state.creature_list, (val) => (
 			val.type_name === 'hermit'
 		));
@@ -48,16 +67,25 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
 		}
 	},
-
-
-	yield_image: () => (
-		'red_dot'
-	)
+	yield_image: () => 'red_dot',
 }
 
-export const CO_Shot_ƒ: Custom_Object_Delegate = {
+export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 	...Custom_Object_Delegate_Base_ƒ,
 
+	process_single_frame: (
+		prior_pixel_pos: Point2D, 
+		get_game_state: () => Game_State,	
+	): { pixel_pos: Point2D } => {
+
+
+
+		let addend = {x: 0, y: -1};
+
+		return {
+			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
+		}
+	},
 	yield_image: () => 'red_dot',
 }
 
