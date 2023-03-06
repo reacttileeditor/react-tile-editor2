@@ -377,7 +377,18 @@ class Game_Manager {
 			this._Asset_Manager.draw_image_for_asset_name({
 				asset_name:					Custom_Object_ƒ.yield_image(val),
 				_BM:						this._Blit_Manager,
-				pos:						val.pixel_pos, //yield_position_for_time_in_post_turn_animation( this._Tilemap_Manager, this.get_time_offset() ),
+				pos:						val.pixel_pos,
+				zorder:						13,
+				current_milliseconds:		this.get_time_offset(),
+				opacity:					1.0,
+				horizontally_flipped:		false,
+				vertically_flipped:			false,
+			})
+
+			this._Asset_Manager.draw_text({
+				text:					Custom_Object_ƒ.yield_text(val),
+				_BM:						this._Blit_Manager,
+				pos:						val.pixel_pos,
 				zorder:						13,
 				current_milliseconds:		this.get_time_offset(),
 				opacity:					1.0,

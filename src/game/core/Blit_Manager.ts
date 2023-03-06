@@ -16,7 +16,7 @@ interface DrawEntity {
 	opacity: number,
 	horizontally_flipped: boolean,
 	vertically_flipped: boolean,
-	drawing_data: DrawData|DrawDataNoBounds,
+	drawing_data: DrawDataTypes,
 }
 
 interface DrawData {
@@ -32,6 +32,13 @@ interface DrawDataNoBounds {
 	src_rect: Rectangle,
 	dest_point: Point2D
 }
+
+interface DrawDataText {
+	text: string,
+}
+
+type DrawDataTypes = DrawData|DrawDataNoBounds|DrawDataText;
+
 
 interface BlitManagerState {
 	//we've got two values here - we do a "intended" value for the viewport, but when we change the current camera position, we actually tween towards it gradually.  The current position we're *actually* aimed at gets stored in a different variable, since it either has to be derived from some sort of tweening function, or directly stored (if we did the tweeing function, the time-offset certainly would have to, so dimensionally this at least will always require one dimension of data storage).
@@ -126,7 +133,7 @@ export class Blit_Manager {
 		opacity:				number,
 		horizontally_flipped: 	boolean,
 		vertically_flipped: 	boolean,
-		drawing_data:			DrawData|DrawDataNoBounds
+		drawing_data:			DrawDataTypes
 	}) => {
 		this._Draw_List.push({
 			pos:					p.pos,
@@ -157,7 +164,23 @@ export class Blit_Manager {
 
 		//then blit it
 		_.map( sortedBlits, (value,index) => {
-			if( this.isDrawDataWithBounds(value.drawing_data) ){
+			if( this.isDrawDataOfText(value.drawing_data) ){
+				this.osb_ctx.save();
+				this.osb_ctx.imageSmoothingEnabled = false;
+				this.osb_ctx.font = '16px pixel, sans-serif';
+				this.osb_ctx.textAlign = 'center';
+		
+				this.osb_ctx.translate(
+					value.pos.x + this.state.actual_viewport_offset.x,
+					value.pos.y + this.state.actual_viewport_offset.y
+				);
+
+				this.osb_ctx.fillStyle = "#ffffff";
+				this.osb_ctx.textBaseline = 'middle';
+				this.osb_ctx.fillText(value.drawing_data.text, 0, 0);
+				this.osb_ctx.restore();
+
+			} else if( this.isDrawDataWithBounds(value.drawing_data) ){
 
 				this.osb_ctx.save();
 
@@ -235,11 +258,13 @@ export class Blit_Manager {
 		
 	}
 
-	isDrawDataWithBounds( data: DrawData | DrawDataNoBounds ): data is DrawData {
+	isDrawDataWithBounds( data: DrawDataTypes ): data is DrawData {
 		return (<DrawData>data).dst_rect !== undefined;
 	}
 
-
+	isDrawDataOfText( data: DrawDataTypes): data is DrawDataText {
+		return (<DrawDataText>data).text !== undefined;
+	}
 
 /*----------------------- tweening -----------------------*/
 	iterate_viewport_tween = () => {

@@ -69,6 +69,10 @@ export const Custom_Object_ƒ = {
 
 	yield_image: (me: Custom_Object_Data) => (
 		Custom_Object_ƒ.get_delegate(me.type_name).yield_image()
-	)	
+	),
+
+	yield_text: (me: Custom_Object_Data) => (
+		'Yeah'
+	)
 }
 

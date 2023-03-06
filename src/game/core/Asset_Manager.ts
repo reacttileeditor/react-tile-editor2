@@ -1374,6 +1374,30 @@ export class Asset_Manager {
 			}
 		}
 	}
+
+	draw_text = (p: {
+		text: string,
+		_BM: Blit_Manager,
+		pos: Point2D,
+		zorder: number,
+		current_milliseconds: number,
+		opacity: number,
+		horizontally_flipped: boolean,
+		vertically_flipped: boolean,
+	}) => {
+		p._BM.queue_draw_op({
+			pos:					{ x: p.pos.x, y: p.pos.y },
+			z_index:				p.zorder,
+			opacity:				p.opacity,
+			horizontally_flipped:	p.horizontally_flipped,
+			vertically_flipped:		p.vertically_flipped,
+			drawing_data:			{
+										text: p.text,
+									}
+		});
+	}
+
+
 /*----------------------- auto-tiling logic -----------------------*/
 	should_we_draw_this_tile_based_on_its_autotiling_restrictions = ( tile_data: TileComparatorSample, autotile_restrictions: AutoTileRestrictionSample ): boolean => {
 		/*
