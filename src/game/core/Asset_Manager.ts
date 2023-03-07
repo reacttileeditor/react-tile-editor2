@@ -627,6 +627,60 @@ export class Asset_Manager {
 					w: 54,
 					h: 34,
 				},
+			},{
+				url: "arrow-tiles.png",
+				name: "arrowhead-ne",
+				bounds: {
+					x: 1,
+					y: 181,
+					w: 54,
+					h: 34,
+				},
+			},{
+				url: "arrow-tiles.png",
+				name: "arrowhead-w",
+				bounds: {
+					x: 57,
+					y: 181,
+					w: 54,
+					h: 34,
+				},
+			},{
+				url: "arrow-tiles.png",
+				name: "arrowhead-nw",
+				bounds: {
+					x: 113,
+					y: 181,
+					w: 54,
+					h: 34,
+				},
+			},{
+				url: "arrow-tiles.png",
+				name: "arrowhead-sw",
+				bounds: {
+					x: 1,
+					y: 217,
+					w: 54,
+					h: 34,
+				},
+			},{
+				url: "arrow-tiles.png",
+				name: "arrowhead-e",
+				bounds: {
+					x: 57,
+					y: 217,
+					w: 54,
+					h: 34,
+				},
+			},{
+				url: "arrow-tiles.png",
+				name: "arrowhead-se",
+				bounds: {
+					x: 113,
+					y: 217,
+					w: 54,
+					h: 34,
+				},
 			}],
 
 
@@ -892,6 +946,62 @@ export class Asset_Manager {
 				},
 
 				{
+					name: "arrowhead-green",
+					omit_from_random_map_generation: true,
+					variants: [{
+						graphics: [{
+							id: 'arrowhead-e',
+							zorder: 12,
+							restrictions:	[
+														[/.*/, /.*/],
+													[/arrow/, /arrowhead/, /.*/],
+														[/.*/, /.*/]
+											]
+						},{
+							id: 'arrowhead-w',
+							zorder: 12,
+							restrictions:	[
+														[/.*/, /.*/],
+													[/.*/, /arrowhead/, /arrow/],
+														[/.*/, /.*/]
+											]
+						},{
+							id: 'arrowhead-sw',
+							zorder: 12,
+							restrictions:	[
+														[/.*/, /arrow/],
+													[/.*/, /arrowhead/, /.*/],
+														[/.*/, /.*/]
+											]
+						},{
+							id: 'arrowhead-se',
+							zorder: 12,
+							restrictions:	[
+														[/arrow/, /.*/],
+													[/.*/, /arrowhead/, /.*/],
+														[/.*/, /.*/]
+											]
+						},{
+							id: 'arrowhead-nw',
+							zorder: 12,
+							restrictions:	[
+														[/.*/, /.*/],
+													[/.*/, /arrowhead/, /.*/],
+														[/.*/, /arrow/]
+											]
+						},{
+							id: 'arrowhead-ne',
+							zorder: 12,
+							restrictions:	[
+														[/.*/, /.*/],
+													[/.*/, /arrowhead/, /.*/],
+														[/arrow/, /.*/]
+											]
+						}]
+					}]
+				},
+
+				{
 					name: "arrow-green",
 					omit_from_random_map_generation: true,
 					variants: [{
@@ -1015,17 +1125,7 @@ export class Asset_Manager {
 													[/^((?!(arrow)).)*$/, /arrow/, /arrow/],
 														[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
 											]
-						}
-						// ,{
-						// 	id: 'arrow-w-endcap',
-						// 	zorder: 12,
-						// 	restrictions:	[
-						// 								[/.*/, /.*/],
-						// 							[/.*/, /arrow/, /.*/],
-						// 								[/.*/, /.*/]
-						// 					]
-						// }
-						],
+						}],
 					}],
 				},				
 

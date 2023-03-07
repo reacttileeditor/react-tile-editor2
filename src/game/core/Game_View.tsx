@@ -452,7 +452,10 @@ class Game_Manager {
 					this._Tilemap_Manager.modify_tile_status(
 						path_val,
 						ƒ.if( includes(val.path_reachable_this_turn, path_val),
-							'arrow-green',
+							ƒ.if(path_val == last(val.path_reachable_this_turn),
+								'arrowhead-green',
+								'arrow-green',
+							),
 							'red-path-unreachable-dot'
 						),
 						'ui'
