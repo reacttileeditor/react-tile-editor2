@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { cloneDeep, concat, filter, findIndex, isNil, last, map, reduce, size } from "lodash";
+import { cloneDeep, concat, filter, findIndex, includes, isNil, last, map, reduce, size } from "lodash";
 
 import { ƒ } from "./Utils";
 
@@ -449,8 +449,17 @@ class Game_Manager {
 				this._Tilemap_Manager.clear_tile_map('ui');
 
 				map(val.path_this_turn, (path_val, path_idx) => {
-					this._Tilemap_Manager.modify_tile_status(path_val, 'arrow-green', 'ui');
+					this._Tilemap_Manager.modify_tile_status(
+						path_val,
+						ƒ.if( includes(val.path_reachable_this_turn, path_val),
+							'arrow-green',
+							'red-path-unreachable-dot'
+						),
+						'ui'
+					);
 				});
+
+				
 
 				/*map(val.path_this_turn, (path_val, path_idx) => {
 					let asset_name = ƒ.if( _.includes(val.path_reachable_this_turn, path_val),

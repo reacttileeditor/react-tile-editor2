@@ -618,6 +618,15 @@ export class Asset_Manager {
 					w: 54,
 					h: 34,
 				},
+			},{
+				url: "map-cursor-red-tiny.png",
+				name: "red-path-unreachable-dot",
+				bounds: {
+					x: 0,
+					y: 0,
+					w: 54,
+					h: 34,
+				},
 			}],
 
 
@@ -868,6 +877,15 @@ export class Asset_Manager {
 							zorder: 3,
 						},{
 							id: 'menhir3',
+							zorder: 12,
+						}],
+					}],
+				},{
+					name: "red-path-unreachable-dot",
+					omit_from_random_map_generation: true,
+					variants: [{
+						graphics: [{
+							id: 'red-path-unreachable-dot',
 							zorder: 12,
 						}],
 					}],
