@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _, { find, size } from "lodash";
+import _, { cloneDeep, find, size } from "lodash";
 import { v4 as uuid } from "uuid";
 
 import { ƒ } from "../core/Utils";
@@ -187,6 +187,21 @@ export const Creature_ƒ = {
 	get_current_mid_turn_tile_pos: (me: Creature_Data, TM: Tilemap_Manager): Point2D => (
 		TM.convert_pixel_coords_to_tile_coords(me.pixel_pos)
 	),
+/*----------------------- constructor/destructor stuff -----------------------*/
+
+	copy_for_new_turn: (me: Creature_Data): Creature_Data => (
+		cloneDeep({
+			...me,
+			remaining_action_points: 2,
+			planned_tile_pos: me.tile_pos,
+			path_this_turn: [],
+			path_this_turn_with_directions: [],
+			path_reachable_this_turn: [],
+			path_reachable_this_turn_with_directions: [],
+			animation_this_turn: [],
+		})
+	),
+
 
 /*----------------------- basetype management -----------------------*/
 

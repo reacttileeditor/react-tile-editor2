@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _, { size } from "lodash";
+import { cloneDeep, concat, filter, findIndex, isNil, last, map, reduce, size } from "lodash";
 
 import { ƒ } from "./Utils";
 
@@ -167,12 +167,12 @@ class Game_Manager {
 				
 	// 			When we have other verbs, we'd add them here.
 	// 		*/
-	// 		creature_list: _.map( this.get_current_turn_state().creature_list, (creature, idx) => {
+	// 		creature_list: map( this.get_current_turn_state().creature_list, (creature, idx) => {
 	// 			let new_position =
 	// 				_.find(
 	// 					_.reverse(creature.path_reachable_this_turn_with_directions),
 	// 						/*ƒ.dump(_.slice( creature.path_this_turn,
-	// 							0, //_.size(creature.path_this_turn) - creature.yield_moves_per_turn(),
+	// 							0, //size(creature.path_this_turn) - creature.yield_moves_per_turn(),
 	// 							creature.yield_moves_per_turn()
 	// 						)),*/
 	// 					(path_element) => {
@@ -204,7 +204,7 @@ class Game_Manager {
 	// 		custom_object_list: [], //<- probably persist it from the previous turn?
 	// 	}
 
-	// 	this.game_state.turn_list = _.concat(
+	// 	this.game_state.turn_list = concat(
 	// 		this.game_state.turn_list,
 	// 		[new_turn_state]
 	// 	);
@@ -227,7 +227,7 @@ class Game_Manager {
 		
 
 		console.log(`beginning turn #${this.game_state.current_turn}`)
-		this.game_state.current_frame_state = _.cloneDeep(this.get_current_turn_state())
+		this.game_state.current_frame_state = cloneDeep(this.get_current_turn_state())
 
 
 		var date = new Date();
@@ -245,9 +245,13 @@ class Game_Manager {
 		*/
 		
 
-		const new_turn_state = _.cloneDeep(this.game_state.current_frame_state)
+		let new_turn_state = cloneDeep(this.game_state.current_frame_state);
+		new_turn_state = {
+			creature_list: map(new_turn_state.creature_list, (val)=>( Creature_ƒ.copy_for_new_turn(val) )),
+			custom_object_list: new_turn_state.custom_object_list,
+		};
 
-		this.game_state.turn_list = _.concat(
+		this.game_state.turn_list = concat(
 			this.game_state.turn_list,
 			[new_turn_state]
 		);
@@ -269,9 +273,9 @@ class Game_Manager {
 	}
 	
 	get_total_anim_duration = ():number => {
-		if( _.size(this.get_current_turn_state().creature_list) > 0){
-			return _.reduce(
-				_.map(
+		if( size(this.get_current_turn_state().creature_list) > 0){
+			return reduce(
+				map(
 					this.get_current_turn_state().creature_list,
 					(val) => ( Creature_ƒ.calculate_total_anim_duration(val) )
 				),
@@ -316,11 +320,11 @@ class Game_Manager {
 			let spawnees: Array<Custom_Object_Data> = [];
 			let master_change_list: Array<ChangeInstance> = [];
 
-			_.map( this.game_state.current_frame_state.creature_list, (val,idx) => {
+			map( this.game_state.current_frame_state.creature_list, (val,idx) => {
 				const processed_results = Creature_ƒ.process_single_frame(val, this._Tilemap_Manager, this.get_time_offset());
 
-				_.map(processed_results.spawnees, (val)=>{ spawnees.push(val) });
-				_.map(processed_results.change_list, (val)=>{ master_change_list.push(val) });
+				map(processed_results.spawnees, (val)=>{ spawnees.push(val) });
+				map(processed_results.change_list, (val)=>{ master_change_list.push(val) });
 
 			});
 
@@ -328,15 +332,15 @@ class Game_Manager {
 			/*
 				Add the new custom_objects to our existing list, and then process all custom_objects (existing and new).
 			*/
-			let all_objects = _.concat( _.cloneDeep(this.game_state.current_frame_state.custom_object_list), _.cloneDeep(spawnees));
-			let all_objects_processed = _.map( all_objects, (val,idx) => {
+			let all_objects = concat( cloneDeep(this.game_state.current_frame_state.custom_object_list), cloneDeep(spawnees));
+			let all_objects_processed = map( all_objects, (val,idx) => {
 				return (Custom_Object_ƒ.process_single_frame(val,this._Tilemap_Manager, this.get_time_offset()))
 			});
 
-			let all_creatures_processed = _.map( this.game_state.current_frame_state.creature_list, (creature) => (
+			let all_creatures_processed = map( this.game_state.current_frame_state.creature_list, (creature) => (
 				Creature_ƒ.apply_changes(
 					creature,
-					_.filter( master_change_list, (val)=> (
+					filter( master_change_list, (val)=> (
 						val.target_obj_uuid == creature.unique_id
 					))
 				)
@@ -358,7 +362,7 @@ class Game_Manager {
 			This is for when the game is "live" and actually progressing through time.  The player's set up their moves, and hit "go".
 		*/
 
-		_.map( this.game_state.current_frame_state.creature_list, (val,idx) => {
+		map( this.game_state.current_frame_state.creature_list, (val,idx) => {
 			const direction = Creature_ƒ.yield_direction_for_time_in_post_turn_animation(val, this.get_time_offset());
 
 			this._Asset_Manager.draw_image_for_asset_name({
@@ -373,7 +377,7 @@ class Game_Manager {
 			})
 		})
 
-		_.map( this.game_state.current_frame_state.custom_object_list, (val,idx) => {
+		map( this.game_state.current_frame_state.custom_object_list, (val,idx) => {
 			this._Asset_Manager.draw_image_for_asset_name({
 				asset_name:					Custom_Object_ƒ.yield_image(val),
 				_BM:						this._Blit_Manager,
@@ -403,7 +407,7 @@ class Game_Manager {
 		/*
 			This particularly means "paused at end of turn".
 		*/
-		_.map( this.get_current_turn_state().creature_list, (val,idx) => {
+		map( this.get_current_turn_state().creature_list, (val,idx) => {
 			this._Asset_Manager.draw_image_for_asset_name({
 				asset_name:					Creature_ƒ.yield_stand_asset_for_direction(val, val.facing_direction),
 				_BM:						this._Blit_Manager,
@@ -444,11 +448,11 @@ class Game_Manager {
 
 				this._Tilemap_Manager.clear_tile_map('ui');
 
-				_.map(val.path_this_turn, (path_val, path_idx) => {
+				map(val.path_this_turn, (path_val, path_idx) => {
 					this._Tilemap_Manager.modify_tile_status(path_val, 'arrow-green', 'ui');
 				});
 
-				/*_.map(val.path_this_turn, (path_val, path_idx) => {
+				/*map(val.path_this_turn, (path_val, path_idx) => {
 					let asset_name = ƒ.if( _.includes(val.path_reachable_this_turn, path_val),
 						'cursor_green_small',
 						'cursor_red_small'
@@ -481,7 +485,7 @@ class Game_Manager {
 		const idx = this.game_state.selected_object_index;
 		
 		
-		const returnVal = ƒ.if(!_.isNil(idx),
+		const returnVal = ƒ.if(!isNil(idx),
 			this.get_current_turn_state().creature_list[idx as number],
 			undefined
 		)
@@ -490,13 +494,13 @@ class Game_Manager {
 	}
 
 	get_previous_turn_state = () => {
-		const state = this.game_state.turn_list[ _.size(this.game_state.turn_list) -2 ];
+		const state = this.game_state.turn_list[ size(this.game_state.turn_list) -2 ];
 	
 		return state ? state : Individual_Game_Turn_State_Init;
 	}
 	
 	get_current_turn_state = () => {
-		const state = _.last(this.game_state.turn_list);
+		const state = last(this.game_state.turn_list);
 	
 		return state ? state : Individual_Game_Turn_State_Init;
 	}
@@ -507,7 +511,7 @@ class Game_Manager {
 		*/
 		const new_pos = this._Tilemap_Manager.convert_pixel_coords_to_tile_coords( pos );
 		
-		const newly_selected_creature = _.findIndex( this.get_current_turn_state().creature_list, {
+		const newly_selected_creature = findIndex( this.get_current_turn_state().creature_list, {
 			tile_pos: new_pos
 		} );
 		
@@ -548,13 +552,13 @@ class Game_Status_Display extends React.Component <Game_Status_Display_Props, {
 		super( props );
 
 		this.state = {
-			game_state: _.cloneDeep(GameStateInit)
+			game_state: cloneDeep(GameStateInit)
 		};
 	}
 
 
 	update_game_state_for_ui = (game_state: Game_State) => {
-		this.setState({game_state: _.cloneDeep(game_state)});
+		this.setState({game_state: cloneDeep(game_state)});
 	}
 
 	get_selected_creature = (): Creature_Data|undefined => {
