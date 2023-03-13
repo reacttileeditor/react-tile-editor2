@@ -110,7 +110,6 @@ export class Tilemap_Manager {
 			this.draw_tiles_for_zorder(value);
 		})
 		
-		this._AM.TileRNG.reset();
 	}
 
 	draw_tiles_for_zorder = (zorder: number) => {
@@ -131,6 +130,8 @@ export class Tilemap_Manager {
 											);
 				});
 			});
+
+			this._AM.TileRNG.reset();
 		});
 	}
 
