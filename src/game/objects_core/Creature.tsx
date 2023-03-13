@@ -372,7 +372,7 @@ export const Creature_ƒ = {
 		)))
 
 		/*
-			The goal of this fairly -sweaty- function is to build a single object where each possible variable being affect is listed as a key.   Each key then will tally up an array of the potential changes we might be applying to an object — it might not be unreasonable, at all, to for example, have multiple other objects trying to change a target's hitpoints.
+			The goal of this fairly -sweaty- function is to build a single object where each possible variable being affected is listed as a key.   Each key then will tally up an array of the potential changes we might be applying to an object — it might not be unreasonable, at all, to for example, have multiple other objects trying to change a target's hitpoints.
 
 			We then need to 'reduce' this using some kind of special, bespoke logic.
 		*/
@@ -508,13 +508,13 @@ export const Creature_ƒ = {
 			Big bit of temporary bullshit here:  we're axing resolving moves at the end of the turn, so we need to do it here.  Doing it properly is going to be ugly/complicated/etc, so for now we're doing a huge copout/cheat, and just setting the final position.
 		*/
 		let new_position: PathNodeWithDirection | undefined =
-			_.find(
-				_.reverse(me.path_reachable_this_turn_with_directions),
+			_.last(
+				(me.path_reachable_this_turn_with_directions)
 					/*ƒ.dump(_.slice( creature.path_this_turn,
 						0, //_.size(creature.path_this_turn) - creature.yield_moves_per_turn(),
 						creature.yield_moves_per_turn()
 					)),*/
-				() => true  //find literally the first available tile at the end of the path, don't give any hoot about whether it's occupied by another creature
+				  //find literally the first available tile at the end of the path, don't give any hoot about whether it's occupied by another creature
 			);
 		
 			//debugger;
