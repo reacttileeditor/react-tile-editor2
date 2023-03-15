@@ -585,7 +585,7 @@ export const Creature_ƒ = {
 							get_game_state: me.get_game_state,
 							pixel_pos: target.pixel_pos,
 							type_name: 'text_label' as CustomObjectTypeName,
-							text: '-5 hp'
+							text: `-${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`
 						}));
 
 						change_list.push({
