@@ -666,14 +666,12 @@ export class Game_View extends React.Component <Game_View_Props> {
 	_Game_Manager: Game_Manager;
 	awaiting_render: boolean;
 	gsd!: Game_Status_Display;
-	current_tick: number;
 
 	constructor( props: Game_View_Props ) {
 		super( props );
 
 		this._Game_Manager = new Game_Manager(this.props._Blit_Manager, this.props._Asset_Manager, this.props._Tilemap_Manager);
 		this.awaiting_render = false;
-		this.current_tick = 0;
 	}
 
 
@@ -682,7 +680,11 @@ export class Game_View extends React.Component <Game_View_Props> {
 		this.awaiting_render = true;
 		this.render_loop_interval = window.setTimeout( this.render_canvas, 16.666 );
 
-		this.current_tick += 1;
+		/*
+			Whether this is an appropriate solution gets into some deep and hard questions about React that I'm not prepared to answer; in a lot of other paradigms, we'd seize full control over the event loop.  Here, we are, instead, opting to "sleep" until our setTimeout fires.
+
+			I suspect that because this setTimeout is initiated AFTER all of our rendering code finishes executing, that this solution will not cause the main failure state we're concerned about, which is a 'pileup'; a 'sorceror's apprentice' failure where callbacks are queued up faster than we can process them..
+		*/
 	}
 
 	render_canvas = () => {
