@@ -48,7 +48,18 @@ interface BlitManagerState {
 }
 
 
-interface fpsTrackerData {
+export const ticks_to_ms = (tick_val: number): number => (
+	Math.round( tick_val * (1000 / 60))
+)
+
+
+export const ms_to_ticks = (ms_val: number): number => (
+	Math.round( ms_val * (60 / 1000))
+)
+
+
+export interface TimeTrackerData {
+	current_tick: number;
 	current_second: number,
 	current_millisecond: number,
 	current_frame_count: number,
@@ -69,7 +80,7 @@ declare var OffscreenCanvas : any;
 
 export class Blit_Manager {
 	ctx: CanvasRenderingContext2D;
-	fps_tracker: fpsTrackerData;
+	time_tracker: TimeTrackerData;
 	state: BlitManagerState;
 	_Draw_List: Array<DrawEntity>;
 	_OffScreenBuffer: HTMLCanvasElement;
@@ -89,7 +100,8 @@ export class Blit_Manager {
 		this.show_info = show_info;
 		
 		this._Draw_List = [];
-		this.fps_tracker = {
+		this.time_tracker = {
+			current_tick: 0,
 			current_second: 0,
 			current_millisecond: 0,
 			current_frame_count: 0,
@@ -245,6 +257,8 @@ export class Blit_Manager {
 			}
 		})
 
+
+
 		//follow up with a few bits of utility-drawing:
 		if(this.show_info){
 			this.draw_fps();
@@ -252,7 +266,13 @@ export class Blit_Manager {
 
 		//var bitmap = this._OffScreenBuffer.transferToImageBitmap();
 		this.ctx.drawImage(this._OffScreenBuffer, 0, 0);
+
+		/*
+			Manage time tracking.  No matter how long it took, each frame is only considered "1 tick" long, and all animations are based on that metric, alone.
+		*/
+		this.time_tracker.current_tick += 1;
 		
+
 		//then clear it, because the next frame needs to start from scratch
 		this._Draw_List = [];
 		
@@ -298,19 +318,19 @@ export class Blit_Manager {
 	draw_fps = () => {
 		var date = new Date();
 		
-		this.fps_tracker.current_frame_count += 1;
+		this.time_tracker.current_frame_count += 1;
 		
-		if( this.fps_tracker.current_second < date.getSeconds() || (this.fps_tracker.current_second == 59 && date.getSeconds() == 0) ){
-			this.fps_tracker.prior_frame_count = this.fps_tracker.current_frame_count;
-			this.fps_tracker.current_frame_count = 0;
-			this.fps_tracker.current_second = date.getSeconds();
+		if( this.time_tracker.current_second < date.getSeconds() || (this.time_tracker.current_second == 59 && date.getSeconds() == 0) ){
+			this.time_tracker.prior_frame_count = this.time_tracker.current_frame_count;
+			this.time_tracker.current_frame_count = 0;
+			this.time_tracker.current_second = date.getSeconds();
 		} else {
 			
 		}
 		
-		this.fps_tracker.current_millisecond = date.getTime();
+		this.time_tracker.current_millisecond = date.getTime();
 		
-		this.draw_fps_text(this.fps_tracker.prior_frame_count);
+		this.draw_fps_text(this.time_tracker.prior_frame_count);
 	}
 
 	draw_fps_text = (value: number) => {

@@ -6,7 +6,7 @@ import { ƒ } from "./Utils";
 
 import { Canvas_View } from "./Canvas_View";
 import { Asset_Manager } from "./Asset_Manager";
-import { Blit_Manager } from "./Blit_Manager";
+import { Blit_Manager, ticks_to_ms } from "./Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Tilemap_Manager, Direction } from "./Tilemap_Manager";
 import { Pathfinder } from "./Pathfinding";
@@ -54,7 +54,7 @@ const GameStateInit: Game_State = {
 
 interface AnimationState {
 	is_animating_turn_end: boolean,
-	time_turn_end_anim_started__in_ms: number
+	time_turn_end_anim_started__in_ticks: number
 }
 
 
@@ -91,7 +91,7 @@ class Game_Manager {
 
 		this.animation_state = {
 			is_animating_turn_end: false,
-			time_turn_end_anim_started__in_ms: 0
+			time_turn_end_anim_started__in_ticks: 0
 		};
 
 		const first_turn_state_init = {
@@ -234,7 +234,7 @@ class Game_Manager {
 	
 		this.animation_state = {
 			is_animating_turn_end: true,
-			time_turn_end_anim_started__in_ms: date.getTime()
+			time_turn_end_anim_started__in_ticks: this._Blit_Manager.time_tracker.current_tick,
 		};
 	
 	}
@@ -258,7 +258,6 @@ class Game_Manager {
 		console.log(`finishing turn #${this.game_state.current_turn}`)
 
 
-		var date = new Date();
 	
 		this.animation_state.is_animating_turn_end = false;
 
@@ -267,9 +266,7 @@ class Game_Manager {
 	}		
 
 	get_time_offset = () => {
-		var date = new Date();
-
-		return (date.getTime() - this.animation_state.time_turn_end_anim_started__in_ms);
+		return ticks_to_ms(this._Blit_Manager.time_tracker.current_tick - this.animation_state.time_turn_end_anim_started__in_ticks)
 	}
 	
 	get_total_anim_duration = ():number => {
@@ -662,17 +659,21 @@ class Label_and_Data_Pair extends React.Component <{label: string, data: string}
 	)
 }
 
+
+
 export class Game_View extends React.Component <Game_View_Props> {
 	render_loop_interval: number|undefined;
 	_Game_Manager: Game_Manager;
 	awaiting_render: boolean;
 	gsd!: Game_Status_Display;
+	current_tick: number;
 
 	constructor( props: Game_View_Props ) {
 		super( props );
 
 		this._Game_Manager = new Game_Manager(this.props._Blit_Manager, this.props._Asset_Manager, this.props._Tilemap_Manager);
 		this.awaiting_render = false;
+		this.current_tick = 0;
 	}
 
 
@@ -680,6 +681,8 @@ export class Game_View extends React.Component <Game_View_Props> {
 	iterate_render_loop = () => {
 		this.awaiting_render = true;
 		this.render_loop_interval = window.setTimeout( this.render_canvas, 16.666 );
+
+		this.current_tick += 1;
 	}
 
 	render_canvas = () => {

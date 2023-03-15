@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import _, { Dictionary } from "lodash";
 
 import { Asset_Manager } from "./Asset_Manager";
-import { Blit_Manager } from "./Blit_Manager";
+import { Blit_Manager, ticks_to_ms } from "./Blit_Manager";
 import * as Utils from "./Utils";
 import { ƒ } from "./Utils";
 
@@ -152,7 +152,7 @@ export class Tilemap_Manager {
 						/* x */								(pos.x + 0) * consts.tile_width + universal_hex_offset,
 						/* y */								(pos.y + 0) * consts.tile_height,
 						/* comparator */					this.get_tile_comparator_sample_for_pos(pos, tilemap_name),
-															this._BM.fps_tracker.current_millisecond
+															ticks_to_ms(this._BM.time_tracker.current_tick)
 														);
 	}
 
