@@ -27,6 +27,8 @@ export const New_Custom_Object = (
 		get_game_state: () => Game_State,
 		pixel_pos: Point2D,
 		type_name: CustomObjectTypeName,
+		creation_timestamp: number,
+		should_remove: boolean,
 		unique_id?: string,
 		text?: string,
 	}): Custom_Object_Data => {
@@ -36,12 +38,14 @@ export const New_Custom_Object = (
 			get_game_state: p.get_game_state,
 			pixel_pos: cloneDeep(p.pixel_pos),
 			unique_id: p.unique_id,
+			creation_timestamp: p.creation_timestamp,
+			should_remove: p.should_remove,
 		}),
 		type_name: p.type_name,
 		text: ƒ.if(p.text != undefined,
 			p.text,
 			''
-		)
+		),
 	}
 }
 
@@ -64,12 +68,14 @@ export const Custom_Object_ƒ = {
 
 	process_single_frame: (me: Custom_Object_Data, _Tilemap_Manager: Tilemap_Manager, offset_in_ms: number): Custom_Object_Data => {
 
-
+		
 
 		return New_Custom_Object({
 			get_game_state: me.get_game_state,
 			pixel_pos: Custom_Object_ƒ.get_delegate(me.type_name).process_single_frame(me.pixel_pos, me.get_game_state).pixel_pos,
 			type_name: me.type_name,
+			creation_timestamp: me.creation_timestamp,
+			should_remove: ƒ.if( (offset_in_ms - me.creation_timestamp) > 900, true, false ),
 			text: me.text,
 			unique_id: me.unique_id
 		})

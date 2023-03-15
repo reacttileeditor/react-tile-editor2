@@ -15,9 +15,11 @@ import { Game_State } from "../core/Game_View";
 export type Base_Object_Data = {
 	//static values
 	unique_id: string;
+	creation_timestamp: number,
 
 	//state	
 	pixel_pos: Point2D;
+	should_remove: boolean,
 
 	//accessors
 	get_game_state: () => Game_State;
@@ -26,6 +28,8 @@ export type Base_Object_Data = {
 export const New_Base_Object = (
 	p: {
 		get_game_state: () => Game_State,
+		creation_timestamp: number,
+		should_remove: boolean,
 		pixel_pos?: Point2D,
 		unique_id?: string,
 	}): Base_Object_Data => {
@@ -36,7 +40,9 @@ export const New_Base_Object = (
 			p.unique_id,
 			uuid()
 		),
-
+		creation_timestamp: p.creation_timestamp,
+		should_remove: p.should_remove,
+		
 		//state	
 		pixel_pos: ƒ.if(p.pixel_pos != undefined,
 			p.pixel_pos,

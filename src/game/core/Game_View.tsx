@@ -102,6 +102,8 @@ class Game_Manager {
 				planned_tile_pos: {x: 0, y: 6},
 				type_name: 'hermit',
 				team: 1,
+				creation_timestamp: 0,
+				should_remove: false,
 			}), New_Creature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 2, y: 4},
@@ -109,6 +111,8 @@ class Game_Manager {
 				planned_tile_pos: {x: 2, y: 4},
 				type_name: 'peasant',
 				team: 1,
+				creation_timestamp: 0,
+				should_remove: false,
 			}), New_Creature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 4, y: 4},
@@ -116,6 +120,8 @@ class Game_Manager {
 				planned_tile_pos: {x: 4, y: 4},
 				type_name: 'skeleton',
 				team: 2,
+				creation_timestamp: 0,
+				should_remove: false,
 			}), New_Creature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 5, y: 8},
@@ -123,6 +129,8 @@ class Game_Manager {
 				planned_tile_pos: {x: 5, y: 8},
 				type_name: 'skeleton',
 				team: 2,
+				creation_timestamp: 0,
+				should_remove: false,
 			})],
 			custom_object_list: [],
 		};
@@ -256,6 +264,10 @@ class Game_Manager {
 				return (Custom_Object_ƒ.process_single_frame(val,this._Tilemap_Manager, this.get_time_offset()))
 			});
 
+			let all_objects_processed_and_culled = filter( all_objects_processed, (val)=>(
+				val.should_remove !== true
+			) );
+
 			let all_creatures_processed = map( this.game_state.current_frame_state.creature_list, (creature) => (
 				Creature_ƒ.apply_changes(
 					creature,
@@ -271,7 +283,7 @@ class Game_Manager {
 
 			this.game_state.current_frame_state = {
 				creature_list: all_creatures_processed,
-				custom_object_list: all_objects_processed,
+				custom_object_list: all_objects_processed_and_culled,
 			}
 		}
 	}
@@ -371,27 +383,35 @@ class Game_Manager {
 						'ui'
 					);
 				});
-
-				
-
-				/*map(val.path_this_turn, (path_val, path_idx) => {
-					let asset_name = ƒ.if( _.includes(val.path_reachable_this_turn, path_val),
-						'cursor_green_small',
-						'cursor_red_small'
-					);
-				
-					this._Asset_Manager.draw_image_for_asset_name ({
-						asset_name:					asset_name,
-						_BM:						this._Blit_Manager,
-						pos:						this._Tilemap_Manager.convert_tile_coords_to_pixel_coords(path_val),
-						zorder:						9,
-						current_milliseconds:		0,
-						opacity:					1.0,
-						horizontally_flipped:		false,
-						vertically_flipped:			false,
-					})
-				})*/
 			}
+
+
+			map( this.game_state.current_frame_state.custom_object_list, (val,idx) => {
+				this._Asset_Manager.draw_image_for_asset_name({
+					asset_name:					Custom_Object_ƒ.yield_image(val),
+					_BM:						this._Blit_Manager,
+					pos:						val.pixel_pos,
+					zorder:						13,
+					current_milliseconds:		this.get_time_offset(),
+					opacity:					1.0,
+					brightness:					1.0,
+					horizontally_flipped:		false,
+					vertically_flipped:			false,
+				})
+	
+				this._Asset_Manager.draw_text({
+					text:						Custom_Object_ƒ.yield_text(val),
+					_BM:						this._Blit_Manager,
+					pos:						val.pixel_pos,
+					zorder:						13,
+					current_milliseconds:		this.get_time_offset(),
+					opacity:					1.0,
+					brightness:					1.0,
+					horizontally_flipped:		false,
+					vertically_flipped:			false,
+				})
+			})	
+
 		})
 	}
 

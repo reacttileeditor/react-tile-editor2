@@ -94,12 +94,16 @@ export const New_Creature = (
 		type_name: CreatureTypeName,
 		team: number,
 		unique_id?: string,
+		creation_timestamp: number,
+		should_remove: boolean,
 	}): Creature_Data => {
 	return {
 		...New_Base_Object({
 			get_game_state: p.get_game_state,
 			pixel_pos: p.TM.convert_tile_coords_to_pixel_coords(p.tile_pos),
 			unique_id: p.unique_id,
+			should_remove: p.should_remove,
+			creation_timestamp: p.creation_timestamp,
 		}),
 
 		//static values
@@ -506,6 +510,8 @@ export const Creature_ƒ = {
 		const spawnees: Array<Custom_Object_Data> = ƒ.if(offset_in_ms >= 20 && offset_in_ms <= 100 && me.type_name == 'peasant', [New_Custom_Object({
 			get_game_state: me.get_game_state,
 			pixel_pos: new_pos,
+			creation_timestamp: offset_in_ms,
+			should_remove: false,
 			type_name: 'shot' as CustomObjectTypeName,
 		})], []);
 
@@ -585,6 +591,8 @@ export const Creature_ƒ = {
 							get_game_state: me.get_game_state,
 							pixel_pos: target.pixel_pos,
 							type_name: 'text_label' as CustomObjectTypeName,
+							creation_timestamp: offset_in_ms,
+							should_remove: false,
 							text: `-${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`
 						}));
 
