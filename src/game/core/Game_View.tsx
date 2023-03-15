@@ -98,24 +98,28 @@ class Game_Manager {
 			creature_list: [New_Creature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 1, y: 6},
+				TM: _Tilemap_Manager,
 				planned_tile_pos: {x: 0, y: 6},
 				type_name: 'hermit',
 				team: 1,
 			}), New_Creature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 2, y: 4},
+				TM: _Tilemap_Manager,
 				planned_tile_pos: {x: 2, y: 4},
 				type_name: 'peasant',
 				team: 1,
 			}), New_Creature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 4, y: 4},
+				TM: _Tilemap_Manager,
 				planned_tile_pos: {x: 4, y: 4},
 				type_name: 'skeleton',
 				team: 2,
 			}), New_Creature({
 				get_game_state: this.get_game_state,
 				tile_pos: {x: 5, y: 8},
+				TM: _Tilemap_Manager,
 				planned_tile_pos: {x: 5, y: 8},
 				type_name: 'skeleton',
 				team: 2,

@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _, { cloneDeep, find, size } from "lodash";
+import _, { cloneDeep, filter, find, map, size } from "lodash";
 import { v4 as uuid } from "uuid";
 
 import { ƒ } from "../core/Utils";
@@ -84,6 +84,7 @@ type Anim_Schedule_Element = {
 export const New_Creature = (
 	p: {
 		get_game_state:  () => Game_State,
+		TM: Tilemap_Manager,
 		tile_pos: Point2D,
 		direction?: Direction,
 		remaining_action_points?: number,
@@ -97,7 +98,7 @@ export const New_Creature = (
 	return {
 		...New_Base_Object({
 			get_game_state: p.get_game_state,
-			pixel_pos: {x:0, y: 0}, //TODO use TM
+			pixel_pos: p.TM.convert_tile_coords_to_pixel_coords(p.tile_pos),
 			unique_id: p.unique_id,
 		}),
 
@@ -108,14 +109,14 @@ export const New_Creature = (
 		//state	
 		tile_pos: p.tile_pos,
 		facing_direction: ƒ.if(p.direction !== undefined, p.direction, 'south_east'),
-		remaining_action_points: ƒ.if(p.remaining_action_points !== undefined, p.remaining_action_points, 2),
+		remaining_action_points: ƒ.if(p.remaining_action_points !== undefined, p.remaining_action_points, 1),
 		current_hitpoints: ƒ.if(p.current_hitpoints !== undefined,
 			p.current_hitpoints,
 			Creature_ƒ.get_delegate(p.type_name).yield_max_hitpoints
 		),
 		last_changed_hitpoints: ƒ.if(p.current_hitpoints !== undefined,
 			p.last_changed_hitpoints,
-			-50,
+			-200,
 		),
 
 
@@ -550,61 +551,53 @@ export const Creature_ƒ = {
 		/*
 			DAMAGE:
 		*/
-		const target = find( me.get_game_state().current_frame_state.creature_list, (val) => (
-			val.type_name === 'hermit'
+		const targets = filter( me.get_game_state().current_frame_state.creature_list, (val) => (
+			val.team !== me.team
 		));
 		
 
+		if( size(targets) ){
+			map(targets, (target)=>{
+				const distance = TM.get_tile_coord_distance_between(Creature_ƒ.get_current_mid_turn_tile_pos(me,TM), Creature_ƒ.get_current_mid_turn_tile_pos(target,TM));
 
-		if( me.type_name == 'peasant' && target){
+				console.log( `distance between ${me.type_name} and ${target.type_name}: ${distance}`)
 
 
-			//console.log(`test ${new_obj.pixel_pos.x} ${new_obj.pixel_pos.y}`)
-			//console.log(`test ${me.pixel_pos.x} ${me.pixel_pos.y}`)
+				if(me.remaining_action_points > 0){
 
-			//console.log( `distance between peasant and hermit: ${TM.get_tile_coord_distance_between(me.tile_pos, target.tile_pos)}`)
-			console.log( `distance between peasant and hermit: ${TM.get_tile_coord_distance_between(Creature_ƒ.get_current_mid_turn_tile_pos(me,TM), Creature_ƒ.get_current_mid_turn_tile_pos(target,TM))}`)
-			
-			//console.log( `distance between peasant and hermit: ${TM.get_tile_coord_distance_between(Creature_ƒ.get_current_mid_turn_tile_pos(new_obj, TM), Creature_ƒ.get_current_mid_turn_tile_pos(target,TM))} ${Creature_ƒ.get_current_mid_turn_tile_pos(new_obj, TM).x} ${Creature_ƒ.get_current_mid_turn_tile_pos(new_obj, TM).y} ${Creature_ƒ.get_current_mid_turn_tile_pos(target, TM).x} ${Creature_ƒ.get_current_mid_turn_tile_pos(target, TM).y}`)
+					if(distance <= 1 ){
+						change_list.push({
+							type: 'add',
+							value: -Creature_ƒ.get_delegate(me.type_name).yield_damage(),
+							target_variable: 'current_hitpoints',
+							target_obj_uuid: target.unique_id,
+						});
 
-			if(me.remaining_action_points > 0){
-				//console.error(me.current_hitpoints)
+						change_list.push({
+							type: 'set',
+							value: offset_in_ms,
+							target_variable: 'last_changed_hitpoints',
+							target_obj_uuid: target.unique_id,
+						});
+						
+						
+						spawnees.push(New_Custom_Object({
+							get_game_state: me.get_game_state,
+							pixel_pos: target.pixel_pos,
+							type_name: 'text_label' as CustomObjectTypeName,
+							text: '-5 hp'
+						}));
 
-				//me.current_hitpoints = 5;
-				console.error(me.current_hitpoints)
-				//me.remaining_action_points -=1;
-
-				change_list.push({
-					type: 'add',
-					value: -5,
-					target_variable: 'current_hitpoints',
-					target_obj_uuid: me.unique_id,
-				});
-
-				change_list.push({
-					type: 'set',
-					value: offset_in_ms,
-					target_variable: 'last_changed_hitpoints',
-					target_obj_uuid: me.unique_id,
-				});
-				
-				
-				spawnees.push(New_Custom_Object({
-					get_game_state: me.get_game_state,
-					pixel_pos: new_pos,
-					type_name: 'text_label' as CustomObjectTypeName,
-					text: '-5 hp'
-				}));
-
-				change_list.push({
-					type: 'add',
-					value: -1,
-					target_variable: 'remaining_action_points',
-					target_obj_uuid: me.unique_id,
-				});
-		
-			}
-		}
+						change_list.push({
+							type: 'add',
+							value: -1,
+							target_variable: 'remaining_action_points',
+							target_obj_uuid: me.unique_id,
+						});
+					}
+				}			
+			})
+		}	
 
 		return {
 			change_list: change_list,
