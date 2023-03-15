@@ -230,6 +230,7 @@ class Game_Manager {
 			this.do_live_game_processing();
 			this.do_live_game_rendering();
 		} else {
+			this.do_paused_game_processing();
 			this.do_paused_game_rendering();
 		}
 	}
@@ -287,6 +288,29 @@ class Game_Manager {
 			}
 		}
 	}
+
+	do_paused_game_processing = () => {
+		/*
+			This is considerably simpler; we just run existing custom objects through their processing.
+		*/
+
+		let all_objects = cloneDeep(this.game_state.current_frame_state.custom_object_list);
+		let all_objects_processed = map( all_objects, (val,idx) => {
+			return (Custom_Object_ƒ.process_single_frame(val,this._Tilemap_Manager, this.get_time_offset()))
+		});
+
+		let all_objects_processed_and_culled = filter( all_objects_processed, (val)=>(
+			val.should_remove !== true
+		) );
+
+
+
+		this.game_state.current_frame_state = {
+			creature_list: this.game_state.current_frame_state.creature_list,
+			custom_object_list: all_objects_processed_and_culled,
+		}		
+	}
+
 
 	do_live_game_rendering = () => {
 		/*
