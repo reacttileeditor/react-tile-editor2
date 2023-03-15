@@ -99,5 +99,6 @@ export const CT_Skeleton_ƒ: Creature_Delegate = {
 	yield_moves_per_turn: () => 8,
 	yield_creature_image: () => 'skeleton',
 	yield_prettyprint_name: () => 'Skeleton',
+	yield_damage: (): number => ( 2 ),
 
 }

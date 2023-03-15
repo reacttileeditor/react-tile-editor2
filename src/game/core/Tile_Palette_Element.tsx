@@ -87,6 +87,7 @@ export class Tile_Palette_Element extends React.Component <Props> {
 				zorder:						12,
 				current_milliseconds:		0,
 				opacity:					1.0,
+				brightness:					1.0,
 				horizontally_flipped:		false,
 				vertically_flipped:			false,
 			})

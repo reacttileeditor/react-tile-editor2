@@ -59,6 +59,7 @@ export type Creature_Data = {
 	facing_direction: Direction;
 	remaining_action_points: number,
 	current_hitpoints: number,
+	last_changed_hitpoints: number,
 
 	//intended moves
 	planned_tile_pos: Point2D;
@@ -87,6 +88,7 @@ export const New_Creature = (
 		direction?: Direction,
 		remaining_action_points?: number,
 		current_hitpoints?: number,
+		last_changed_hitpoints?: number,
 		planned_tile_pos: Point2D,
 		type_name: CreatureTypeName,
 		team: number,
@@ -110,6 +112,10 @@ export const New_Creature = (
 		current_hitpoints: ƒ.if(p.current_hitpoints !== undefined,
 			p.current_hitpoints,
 			Creature_ƒ.get_delegate(p.type_name).yield_max_hitpoints
+		),
+		last_changed_hitpoints: ƒ.if(p.current_hitpoints !== undefined,
+			p.last_changed_hitpoints,
+			-50,
 		),
 
 
@@ -575,6 +581,14 @@ export const Creature_ƒ = {
 					target_obj_uuid: me.unique_id,
 				});
 
+				change_list.push({
+					type: 'set',
+					value: offset_in_ms,
+					target_variable: 'last_changed_hitpoints',
+					target_obj_uuid: me.unique_id,
+				});
+				
+				
 				spawnees.push(New_Custom_Object({
 					get_game_state: me.get_game_state,
 					pixel_pos: new_pos,

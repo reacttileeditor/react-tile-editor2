@@ -1351,6 +1351,7 @@ export class Asset_Manager {
 					zorder:						zorder,
 					current_milliseconds:		current_milliseconds,
 					opacity:					1.0,
+					brightness:					1.0,
 					horizontally_flipped:		false,  //TODO - we may want to enable random, deterministic flipping of tiles for additional tile variety.  Only horizontal though.
 					vertically_flipped:			false,
 				});
@@ -1407,6 +1408,7 @@ export class Asset_Manager {
 		zorder: number,
 		current_milliseconds: number,
 		opacity: number,
+		brightness: number,
 		horizontally_flipped: boolean,
 		vertically_flipped: boolean,
 	}) => {
@@ -1457,6 +1459,7 @@ export class Asset_Manager {
 						pos:					{ x: p.pos.x, y: p.pos.y },
 						z_index:				p.zorder,
 						opacity:				p.opacity,
+						brightness:				p.brightness,
 						horizontally_flipped:	p.horizontally_flipped,
 						vertically_flipped:		p.vertically_flipped,
 						drawing_data:			{
@@ -1478,6 +1481,7 @@ export class Asset_Manager {
 						pos:					{ x: p.pos.x, y: p.pos.y },
 						z_index:				p.zorder,
 						opacity:				p.opacity,
+						brightness:				p.brightness,
 						horizontally_flipped:	p.horizontally_flipped,
 						vertically_flipped:		p.vertically_flipped,
 						drawing_data:			{
@@ -1508,6 +1512,7 @@ export class Asset_Manager {
 		zorder: number,
 		current_milliseconds: number,
 		opacity: number,
+		brightness: number,
 		horizontally_flipped: boolean,
 		vertically_flipped: boolean,
 	}) => {
@@ -1515,6 +1520,7 @@ export class Asset_Manager {
 			pos:					{ x: p.pos.x, y: p.pos.y },
 			z_index:				p.zorder,
 			opacity:				p.opacity,
+			brightness: 			p.brightness,
 			horizontally_flipped:	p.horizontally_flipped,
 			vertically_flipped:		p.vertically_flipped,
 			drawing_data:			{

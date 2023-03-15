@@ -14,6 +14,7 @@ interface DrawEntity {
 	pos: Point2D,
 	z_index: number,
 	opacity: number,
+	brightness: number,
 	horizontally_flipped: boolean,
 	vertically_flipped: boolean,
 	drawing_data: DrawDataTypes,
@@ -143,6 +144,7 @@ export class Blit_Manager {
 		pos:					Point2D,
 		z_index:				number,
 		opacity:				number,
+		brightness: 			number,
 		horizontally_flipped: 	boolean,
 		vertically_flipped: 	boolean,
 		drawing_data:			DrawDataTypes
@@ -151,6 +153,7 @@ export class Blit_Manager {
 			pos:					p.pos,
 			z_index:				p.z_index,
 			opacity:				p.opacity,
+			brightness: 			p.brightness,
 			horizontally_flipped:	p.horizontally_flipped,
 			vertically_flipped:		p.vertically_flipped,
 			drawing_data:			p.drawing_data
@@ -201,6 +204,14 @@ export class Blit_Manager {
 					value.pos.y + this.state.actual_viewport_offset.y
 				);
 				this.osb_ctx.globalAlpha = value.opacity;
+
+				if( value.brightness != 1.0){
+					/*
+						Warning:  this is obscenely slow.  We may want some alternate solution to this, or *something*; for our initial, extremely limited use of it (flashing enemies to show hits) it should be tolerable.
+					*/
+
+					this.osb_ctx.filter = `brightness(${ Math.round(value.brightness * 100)}%)`;
+				}
 
 				this.osb_ctx.scale(
 					ƒ.if(value.horizontally_flipped, -1, 1),

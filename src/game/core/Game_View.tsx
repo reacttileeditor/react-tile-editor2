@@ -369,6 +369,7 @@ class Game_Manager {
 				zorder:						12,
 				current_milliseconds:		this.get_time_offset(),
 				opacity:					1.0,
+				brightness:					ƒ.if( (this.get_time_offset() - val.last_changed_hitpoints) < 80, 3.0, 1.0),
 				horizontally_flipped:		this.get_flip_state_from_direction(direction),
 				vertically_flipped:			false,
 			})
@@ -382,6 +383,7 @@ class Game_Manager {
 				zorder:						13,
 				current_milliseconds:		this.get_time_offset(),
 				opacity:					1.0,
+				brightness:					1.0,
 				horizontally_flipped:		false,
 				vertically_flipped:			false,
 			})
@@ -393,6 +395,7 @@ class Game_Manager {
 				zorder:						13,
 				current_milliseconds:		this.get_time_offset(),
 				opacity:					1.0,
+				brightness:					1.0,
 				horizontally_flipped:		false,
 				vertically_flipped:			false,
 			})
@@ -412,24 +415,11 @@ class Game_Manager {
 				zorder:						12,
 				current_milliseconds:		0,
 				opacity:					1.0,
+				brightness:					1.0,
 				horizontally_flipped:		this.get_flip_state_from_direction(val.facing_direction),
 				vertically_flipped:			false,
 			})
 
-			/*
-				Draw the "ghost" image of the position the unit will be in at the end of their move.
-			*/
-			this._Asset_Manager.draw_image_for_asset_name({
-				asset_name:					Creature_ƒ.yield_stand_asset_for_direction(val, val.facing_direction),
-				_BM:						this._Blit_Manager,
-				pos:						this._Tilemap_Manager.convert_tile_coords_to_pixel_coords(val.planned_tile_pos),
-				zorder:						12,
-				current_milliseconds:		0,
-				opacity:					0.5,
-				horizontally_flipped:		this.get_flip_state_from_direction(val.facing_direction),
-				vertically_flipped:			false,
-			})			
-	
 	
 			if(this.game_state.selected_object_index == idx){
 				this._Asset_Manager.draw_image_for_asset_name ({
@@ -439,6 +429,7 @@ class Game_Manager {
 					zorder:						10,
 					current_milliseconds:		0,
 					opacity:					1.0,
+					brightness:					1.0,
 					horizontally_flipped:		false,
 					vertically_flipped:			false,
 				})
