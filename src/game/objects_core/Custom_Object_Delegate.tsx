@@ -13,6 +13,10 @@ import { Game_State } from "../core/Game_View";
 
 export type CustomObjectTypeName = 'shot';
 
+export type CO_Shot_State = {
+	target_obj: string, //uuid
+	source_obj: string,
+}
 
 
 
@@ -21,6 +25,8 @@ export type Custom_Object_Delegate = {
 		prior_pixel_pos: Point2D, 
 		get_game_state: () => Game_State,	
 	) => { pixel_pos: Point2D },
+
+	new_state: unknown,
 
 	yield_image: () => string,
 }
@@ -36,6 +42,7 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 		}
 	},
 
+	new_state: () => null,
 
 	yield_image: () => (
 		'red_dot'
@@ -44,6 +51,10 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 
 export const CO_Shot_ƒ: Custom_Object_Delegate = {
 	...Custom_Object_Delegate_Base_ƒ,
+
+	new_state: (p: {target_obj: string, source_obj: string}): CO_Shot_State => ({
+		...p
+	}),
 
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
