@@ -33,16 +33,15 @@ export interface Game_State {
 	selected_object_index?: number,
 	turn_list: Array<Individual_Game_Turn_State>,
 	current_frame_state: Individual_Game_Turn_State,
+	custom_object_list: Array<Custom_Object_Data>,
 }
 
 interface Individual_Game_Turn_State {
 	creature_list: Array<Creature_Data>,
-	custom_object_list: Array<Custom_Object_Data>,
 }
 
 const Individual_Game_Turn_State_Init = {
 	creature_list: [],
-	custom_object_list: [],
 }
 
 const GameStateInit: Game_State = {
@@ -50,6 +49,7 @@ const GameStateInit: Game_State = {
 	selected_object_index: undefined,
 	turn_list: [],
 	current_frame_state: Individual_Game_Turn_State_Init,
+	custom_object_list: [],
 };
 
 interface AnimationState {
@@ -141,6 +141,7 @@ class Game_Manager {
 			selected_object_index: undefined,
 			turn_list: [first_turn_state_init],
 			current_frame_state: first_turn_state_init,
+			custom_object_list: [],
 		};
 		
 		this._Pathfinder = new Pathfinder();
@@ -178,7 +179,6 @@ class Game_Manager {
 		let new_turn_state = cloneDeep(this.game_state.current_frame_state);
 		new_turn_state = {
 			creature_list: map(new_turn_state.creature_list, (val)=>( Creature_ƒ.copy_for_new_turn(val) )),
-			custom_object_list: new_turn_state.custom_object_list,
 		};
 
 		this.game_state.turn_list = concat(
@@ -260,7 +260,7 @@ class Game_Manager {
 			/*
 				Add the new custom_objects to our existing list, and then process all custom_objects (existing and new).
 			*/
-			let all_objects = concat( cloneDeep(this.game_state.current_frame_state.custom_object_list), cloneDeep(spawnees));
+			let all_objects = concat( cloneDeep(this.game_state.custom_object_list), cloneDeep(spawnees));
 			let all_objects_processed = map( all_objects, (val,idx) => {
 				return (Custom_Object_ƒ.process_single_frame(val,this._Tilemap_Manager, this.get_time_offset()))
 			});
@@ -284,8 +284,9 @@ class Game_Manager {
 
 			this.game_state.current_frame_state = {
 				creature_list: all_creatures_processed,
-				custom_object_list: all_objects_processed_and_culled,
 			}
+
+			this.game_state.custom_object_list = all_objects_processed_and_culled
 		}
 	}
 
@@ -294,7 +295,7 @@ class Game_Manager {
 			This is considerably simpler; we just run existing custom objects through their processing.
 		*/
 
-		let all_objects = cloneDeep(this.game_state.current_frame_state.custom_object_list);
+		let all_objects = cloneDeep(this.game_state.custom_object_list);
 		let all_objects_processed = map( all_objects, (val,idx) => {
 			return (Custom_Object_ƒ.process_single_frame(val,this._Tilemap_Manager, this.get_time_offset()))
 		});
@@ -304,11 +305,7 @@ class Game_Manager {
 		) );
 
 
-
-		this.game_state.current_frame_state = {
-			creature_list: this.game_state.current_frame_state.creature_list,
-			custom_object_list: all_objects_processed_and_culled,
-		}		
+		this.game_state.custom_object_list = all_objects_processed_and_culled
 	}
 
 
@@ -333,7 +330,7 @@ class Game_Manager {
 			})
 		})
 
-		map( this.game_state.current_frame_state.custom_object_list, (val,idx) => {
+		map( this.game_state.custom_object_list, (val,idx) => {
 			this._Asset_Manager.draw_image_for_asset_name({
 				asset_name:					Custom_Object_ƒ.yield_image(val),
 				_BM:						this._Blit_Manager,
@@ -410,7 +407,7 @@ class Game_Manager {
 			}
 
 
-			map( this.game_state.current_frame_state.custom_object_list, (val,idx) => {
+			map( this.game_state.custom_object_list, (val,idx) => {
 				this._Asset_Manager.draw_image_for_asset_name({
 					asset_name:					Custom_Object_ƒ.yield_image(val),
 					_BM:						this._Blit_Manager,
