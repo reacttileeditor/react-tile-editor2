@@ -13,6 +13,8 @@ import { Game_State } from "../core/Game_View";
 
 export type CustomObjectTypeName = 'shot';
 
+export type Custom_Object_Delegate_States = {} | CO_Shot_State;
+
 export type CO_Shot_State = {
 	target_obj: string, //uuid
 	source_obj: string,
@@ -24,9 +26,11 @@ export type Custom_Object_Delegate = {
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
 		get_game_state: () => Game_State,	
-	) => { pixel_pos: Point2D },
-
-	new_state: unknown,
+		prior_delegate_state: Custom_Object_Delegate_States,
+	) => {
+		pixel_pos: Point2D,
+		delegate_state: Custom_Object_Delegate_States,
+	},
 
 	yield_image: () => string,
 }
@@ -35,14 +39,17 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
 		get_game_state: () => Game_State,	
-	): { pixel_pos: Point2D } => {
+		prior_delegate_state: Custom_Object_Delegate_States,
+	): {
+		pixel_pos: Point2D,
+		delegate_state: Custom_Object_Delegate_States,
+	} => {
 
 		return {
-			pixel_pos: prior_pixel_pos
+			pixel_pos: prior_pixel_pos,
+			delegate_state: prior_delegate_state,
 		}
 	},
-
-	new_state: () => null,
 
 	yield_image: () => (
 		'red_dot'
@@ -52,17 +59,19 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 export const CO_Shot_ƒ: Custom_Object_Delegate = {
 	...Custom_Object_Delegate_Base_ƒ,
 
-	new_state: (p: {target_obj: string, source_obj: string}): CO_Shot_State => ({
-		...p
-	}),
-
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
-		get_game_state: () => Game_State,	
-	): { pixel_pos: Point2D } => {
+		get_game_state: () => Game_State,
+		prior_delegate_state: Custom_Object_Delegate_States,
+	): {
+		pixel_pos: Point2D,
+		delegate_state: CO_Shot_State,
+	} => {
+		const _prior_delegate_state = prior_delegate_state as CO_Shot_State;
+
 
 		const target = find( get_game_state().current_frame_state.creature_list, (val) => (
-			val.type_name === 'hermit'
+			val.unique_id === _prior_delegate_state.target_obj
 		));
 
 		let addend = {x: 0, y: -1};
@@ -76,6 +85,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 
 		return {
 			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
+			delegate_state: _prior_delegate_state,
 		}
 	},
 	yield_image: () => 'attack_icon',
@@ -87,7 +97,11 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
 		get_game_state: () => Game_State,	
-	): { pixel_pos: Point2D } => {
+		prior_delegate_state: Custom_Object_Delegate_States,
+	): {
+		pixel_pos: Point2D,
+		delegate_state: {},
+	} => {
 
 
 
@@ -95,6 +109,7 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 
 		return {
 			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
+			delegate_state: prior_delegate_state,
 		}
 	},
 	yield_image: () => 'omit_image',

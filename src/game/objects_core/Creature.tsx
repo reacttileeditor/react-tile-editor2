@@ -506,14 +506,14 @@ export const Creature_ƒ = {
 			console.log(`: ${new_pos.x} ${new_pos.y}`)
 		}
 
-
-		const spawnees: Array<Custom_Object_Data> = ƒ.if(offset_in_ms >= 20 && offset_in_ms <= 100 && me.type_name == 'peasant', [New_Custom_Object({
+		const spawnees: Array<Custom_Object_Data> = [];
+		/*const spawnees: Array<Custom_Object_Data> = ƒ.if(offset_in_ms >= 20 && offset_in_ms <= 100 && me.type_name == 'peasant', [New_Custom_Object({
 			get_game_state: me.get_game_state,
 			pixel_pos: new_pos,
 			creation_timestamp: offset_in_ms,
 			should_remove: false,
 			type_name: 'shot' as CustomObjectTypeName,
-		})], []);
+		})], []);*/
 
 		/*
 			MOVEMENT:
@@ -586,6 +586,20 @@ export const Creature_ƒ = {
 							target_obj_uuid: target.unique_id,
 						});
 						
+
+						spawnees.push(New_Custom_Object({
+							get_game_state: me.get_game_state,
+							pixel_pos: target.pixel_pos,
+							type_name: 'shot' as CustomObjectTypeName,
+							creation_timestamp: offset_in_ms,
+							should_remove: false,
+							text: `-${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
+							delegate_state: {
+								target_obj: target.unique_id,
+								source_obj: me.unique_id,
+							},
+						}));
+						
 						
 						spawnees.push(New_Custom_Object({
 							get_game_state: me.get_game_state,
@@ -593,7 +607,8 @@ export const Creature_ƒ = {
 							type_name: 'text_label' as CustomObjectTypeName,
 							creation_timestamp: offset_in_ms,
 							should_remove: false,
-							text: `-${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`
+							text: `-${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
+							delegate_state: {},
 						}));
 
 						change_list.push({
