@@ -76,11 +76,18 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 
 		let addend = {x: 0, y: -1};
 
+
+
+
 		if(target){
 			//console.log(target.pixel_pos)
 			const target_pos = target.pixel_pos;
 
-			addend = { x: (target_pos.x - prior_pixel_pos.x) / 50.0, y: (target_pos.y - prior_pixel_pos.y) / 50.0 }
+			const angle = Math.atan2(  prior_pixel_pos.y - target_pos.y , prior_pixel_pos.x - target_pos.x )
+
+			const magnitude = 0.5;
+
+			addend = { x: magnitude * Math.cos(angle), y: magnitude * Math.sin(angle) }
 		}
 
 		return {

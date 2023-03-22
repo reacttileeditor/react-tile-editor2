@@ -1,4 +1,5 @@
 @import './normalize.css';
+@import './backgrounds.scss';
 @font-face {
 	font-family: 'pixel';
 	src:	url('~/src/fonts/Monaco.woff2') format('woff2'), /* Modern Browsers */
@@ -9,8 +10,25 @@
 
 
 body {
-	background: #dedede;
+	background: #5a5458;
+
+
 }
+
+@mixin stone-border {
+	border-image: url('~/src/assets/ui-border.png') round;
+	border-image-slice: 15 10 15 10 fill;
+	border-image-width: 30px 20px;
+	border-image-outset: 6px;
+	image-rendering: pixelated;
+}
+
+@mixin stone-bg {
+	background: url('~/src/assets/ui-bg-texture.png');
+	background-size: 80px 80px;
+	color:rgb(188, 190, 186)
+}
+
 
 #root {
 	display: flex;
@@ -36,16 +54,37 @@ body {
 		.editor_node, .game_node {
 			display: flex;
 			flex-flow: row nowrap;
+			justify-content: space-between;
 		}
 
 
 		.canvas_holder {
+			position: relative;
+
+			&:after {
+				pointer-events: none;
+				content: "";
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				bottom: 0px;
+				right: 0px;
+				width: 100%;
+				height: 100%;
+				@include stone-border;
+
+				box-sizing: border-box;
+			}
+
 			canvas {
 				box-shadow: darkslategrey 0px 4px 8px;
 				image-rendering: pixelated;
 				image-rendering: crisp-edges;
 				width: calc(567px * 2);
 				height: calc(325px * 2);
+
+
+
 			}
 		}
 
@@ -55,8 +94,10 @@ body {
 			width: calc(100px + 23px + 1.5rem);
 			margin-left: 50px;
 
-			border: 3px solid black;
-			border-radius: 3px;
+			//border: 3px solid black;
+			//border-radius: 3px;
+			@include stone-border;
+			@include stone-bg;
 		
 			
 			flex-shrink: 0;
@@ -64,7 +105,9 @@ body {
 			display: flex;
 			flex-flow: column nowrap;
 			align-items: center;
-			overflow-y: scroll;
+			overflow-y: auto;
+			overflow-x: hidden;
+			
 			
 			.tile_cell {
 				width: 100px;
@@ -73,9 +116,40 @@ body {
 				margin: 12px;
 				margin-bottom: 0px;
 				background: aliceblue;
-				
+				position: relative;
+
+				&:after {
+					pointer-events: none;
+					content: "";
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					bottom: 0px;
+					right: 0px;
+					width: 100%;
+					height: 100%;
+	
+					box-shadow: inset 0px 5px 8px 0px rgb(67 71 64);
+					border: 2px solid rgb(96,89,105);
+				}
+				//
+
+
 				&.active {
-					box-shadow: darkslategrey 0px 4px 8px;
+					&:after {
+						pointer-events: none;
+						content: "";
+						position: absolute;
+						top: 0px;
+						left: 0px;
+						bottom: 0px;
+						right: 0px;
+						width: 100%;
+						height: 100%;
+		
+						box-shadow: inset 0px 5px 8px 0px rgb(114, 120, 110);
+						border: 2px solid rgb(136, 127, 148);
+					}
 				}
 				
 				&:last-of-type {
@@ -88,6 +162,11 @@ body {
 			font-family: 'pixel';
 			font-size: 1.5rem;
 			margin-top: 1rem;
+			padding: 2rem;
+			box-sizing: content-box;
+
+			@include stone-border;
+			@include stone-bg;
 		}
 
 	}
@@ -95,25 +174,24 @@ body {
 	* {
 
 		&::-webkit-scrollbar-thumb{
-			background-color: rgba(#777, 0.35);
-			transition: all 0.25s ease-in-out;
-			border-radius: 0.75rem;
-			border: 0.25rem solid white;
+			background-color: rgb(124 121 121);
+			transition: background-color 0.5s ease-in-out;
+			border-radius: 0.2rem;
 		}
 		&::-webkit-scrollbar-track {
-			background-color: rgba(#ddd, 0.35);
-			transition: all 0.25s ease-in-out;
-			border-radius: 0.75rem;
-			border: 0.25rem solid white;
+			background-color: rgb(55 51 51 / 59%);
+			transition: background-color 0.5s ease-in-out;
+			border-radius: 0.2rem;
+			border: 0.2rem solid rgb(111 111 111 / 79%);
 		}
 	
 		&:focus-within,
 		&:hover {
 			&::-webkit-scrollbar-thumb{
-				background-color: rgba(#777, 1);
+				background-color: rgba(#9c9898, 1);
 			}
 			&::-webkit-scrollbar-track {
-				background-color: rgba(#ddd, 1);
+				background-color: rgba(#2b2b2b, 1);
 			}
 		}
 	
@@ -123,9 +201,10 @@ body {
 	
 	
 		&::-webkit-scrollbar {
-			width: 1.5rem;
-			height: 1.5rem;
-			border-radius: 0.75rem;
+			width: 1.2rem;
+			height: 1.2rem;
+			margin: 0.2rem;
+			border-radius: 0.2rem;
 			background-color: transparent;
 		}
 	}
