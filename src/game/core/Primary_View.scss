@@ -74,6 +74,7 @@ body {
 				@include stone-border;
 
 				box-sizing: border-box;
+				box-shadow: inset 0px 5px 9px 4px rgb(0 0 0);
 			}
 
 			canvas {
@@ -132,7 +133,6 @@ body {
 					box-shadow: inset 0px 5px 8px 0px rgb(67 71 64);
 					border: 2px solid rgb(96,89,105);
 				}
-				//
 
 
 				&.active {
