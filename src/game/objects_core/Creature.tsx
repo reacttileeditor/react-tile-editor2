@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _, { cloneDeep, filter, find, map, size } from "lodash";
+import _, { cloneDeep, filter, find, isBoolean, map, size } from "lodash";
 import { v4 as uuid } from "uuid";
 
 import { ƒ } from "../core/Utils";
@@ -39,14 +39,14 @@ export type ChangeInstance = {
 	target_obj_uuid: string, //uuid, actually
 };
 
-type CreatureKeys = keyof Creature_Data;
+type CreatureKeys = keyof Creature_Data & keyof Base_Object_Data;
 
 export type VariableSpecificChangeInstance = {
 	type: ChangeType,
 	value: ChangeValue,
 }
 
-type ChangeValue = (number|string|Point2D);
+type ChangeValue = (number|string|Point2D|boolean);
 
 
 export type Creature_Data = {
@@ -158,8 +158,10 @@ export const Creature_ƒ = {
 		'south_west']
 	},
 
-	get_value_type: (value: ValueOf<Creature_Data>): 'Point2D' | 'Direction' | 'string' | 'number' => {
-		if( Creature_ƒ.isPoint2D(value) ){
+	get_value_type: (value: ValueOf<Creature_Data>): 'Point2D' | 'Direction' | 'string' | 'number' | 'boolean' => {
+		if( isBoolean(value) ){
+			return 'boolean';
+		} else if( Creature_ƒ.isPoint2D(value) ){
 			return 'Point2D';
 		} else if ( Creature_ƒ.isDirection(value) ){
 			return 'Direction';
@@ -438,7 +440,7 @@ export const Creature_ƒ = {
 		me: Creature_Data,
 		incoming_changes: Array<VariableSpecificChangeInstance>,
 		key: CreatureKeys
-	):number|string|Point2D => {
+	):number|string|Point2D|boolean|Direction => {
 		/*
 			If we have a set operation on this frame, then it overwrites any changes made by an add op.  Make sure the set operations come after any add operations. 
 		*/
@@ -459,7 +461,8 @@ export const Creature_ƒ = {
 							string: (b.value as unknown as string),
 							number: (b.value as unknown as number),
 							Direction: (b.value as unknown as Direction),
-							Point2D: (b.value as unknown as Point2D)
+							Point2D: (b.value as unknown as Point2D),
+							boolean: (b.value as unknown as boolean)
 						}[Creature_ƒ.get_value_type(a.value)]
 					},
 					{
@@ -468,7 +471,8 @@ export const Creature_ƒ = {
 							string: (a.value as unknown as string) + (b.value as unknown as string),
 							number: (a.value as unknown as number) + (b.value as unknown as number),
 							Direction: (b.value as unknown as Direction), //no coherent way to add Directions, so we treat it as 'set'
-							Point2D: Add_Point_2D( (a.value as unknown as Point2D), (b.value as unknown as Point2D) )
+							Point2D: Add_Point_2D( (a.value as unknown as Point2D), (b.value as unknown as Point2D) ),
+							boolean: (a.value as unknown as boolean) && (b.value as unknown as boolean)
 						}[Creature_ƒ.get_value_type(a.value)]
 					}
 				);
@@ -632,6 +636,15 @@ export const Creature_ƒ = {
 				text: ``,
 				delegate_state: {},
 			}));
+
+
+			change_list.push({
+				type: 'set',
+				value: true,
+				target_variable: 'should_remove',
+				target_obj_uuid: me.unique_id,
+			});
+
 		}
 
 		return {

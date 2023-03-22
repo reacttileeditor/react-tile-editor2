@@ -278,12 +278,15 @@ class Game_Manager {
 				)
 			))
 
-
+			let all_creatures_processed_and_culled = filter( all_creatures_processed, (val)=>(
+				val.should_remove !== true
+			) );
+			
 			
 
 
 			this.game_state.current_frame_state = {
-				creature_list: all_creatures_processed,
+				creature_list: all_creatures_processed_and_culled,
 			}
 
 			this.game_state.custom_object_list = all_objects_processed_and_culled
