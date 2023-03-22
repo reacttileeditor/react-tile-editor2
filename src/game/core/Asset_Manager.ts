@@ -171,6 +171,9 @@ export class Asset_Manager {
 				url: "attack_icon.png",
 				name: "attack_icon",
 			},{
+				url: "deaths_head.png",
+				name: "deaths_head",
+			},{
 				url: "char2-se-walk.png",
 				name: "peasant-se-walk",
 				frames: 8,

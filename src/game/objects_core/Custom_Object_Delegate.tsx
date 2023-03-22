@@ -122,3 +122,27 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 	yield_image: () => 'omit_image',
 }
 
+export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
+	...Custom_Object_Delegate_Base_ƒ,
+
+	process_single_frame: (
+		prior_pixel_pos: Point2D, 
+		get_game_state: () => Game_State,	
+		prior_delegate_state: Custom_Object_Delegate_States,
+	): {
+		pixel_pos: Point2D,
+		delegate_state: {},
+	} => {
+
+
+
+		let addend = {x: 0, y: 0};
+
+		return {
+			pixel_pos: prior_pixel_pos,
+			delegate_state: prior_delegate_state,
+		}
+	},
+	yield_image: () => 'deaths_head',
+}
+

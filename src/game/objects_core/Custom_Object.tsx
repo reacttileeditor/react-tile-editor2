@@ -10,11 +10,11 @@ import { Tilemap_Manager, Direction } from "../core/Tilemap_Manager";
 import { Point2D, Rectangle } from '../interfaces';
 import { Game_State } from "../core/Game_View";
 import { CreatureTypeName } from "./Creature";
-import { Custom_Object_Delegate, CO_Shot_ƒ, CO_Text_Label_ƒ, Custom_Object_Delegate_States, CO_Shot_State } from "./Custom_Object_Delegate";
+import { Custom_Object_Delegate, CO_Shot_ƒ, CO_Text_Label_ƒ, Custom_Object_Delegate_States, CO_Shot_State, CO_Skull_Icon_ƒ } from "./Custom_Object_Delegate";
 import { Base_Object_Data, New_Base_Object } from "./Base_Object";
  
 
-export type CustomObjectTypeName = 'shot' | 'text_label';
+export type CustomObjectTypeName = 'shot' | 'text_label' | 'skull_icon';
 
 export type Custom_Object_Data = {
 	type_name: CustomObjectTypeName,
@@ -61,6 +61,7 @@ export const Custom_Object_ƒ = {
 		return {
 			shot: CO_Shot_ƒ,
 			text_label: CO_Text_Label_ƒ,
+			skull_icon: CO_Skull_Icon_ƒ,
 		}[type_name];
 	},
 
@@ -68,6 +69,7 @@ export const Custom_Object_ƒ = {
 		return {
 			shot: p as CO_Shot_State,
 			text_label: p as {},
+			skull_icon: p as {},
 		}[type_name];
 	},
 

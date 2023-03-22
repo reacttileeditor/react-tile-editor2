@@ -593,7 +593,7 @@ export const Creature_ƒ = {
 							type_name: 'shot' as CustomObjectTypeName,
 							creation_timestamp: offset_in_ms,
 							should_remove: false,
-							text: `-${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
+							text: ``,
 							delegate_state: {
 								target_obj: target.unique_id,
 								source_obj: me.unique_id,
@@ -620,7 +620,19 @@ export const Creature_ƒ = {
 					}
 				}			
 			})
-		}	
+		}
+
+		if( me.current_hitpoints <= 0 ) {
+			spawnees.push(New_Custom_Object({
+				get_game_state: me.get_game_state,
+				pixel_pos: me.pixel_pos,
+				type_name: 'skull_icon' as CustomObjectTypeName,
+				creation_timestamp: offset_in_ms,
+				should_remove: false,
+				text: ``,
+				delegate_state: {},
+			}));
+		}
 
 		return {
 			change_list: change_list,

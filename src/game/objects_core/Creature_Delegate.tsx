@@ -88,6 +88,7 @@ export const CT_Peasant_ƒ: Creature_Delegate = {
 	),
 	
 
+	yield_damage: (): number => ( 25 ),
 	yield_moves_per_turn: () => 8,
 	yield_creature_image: () => 'peasant-se',
 	yield_prettyprint_name: () => 'Peasant',
