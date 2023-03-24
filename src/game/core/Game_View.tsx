@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { cloneDeep, concat, filter, findIndex, includes, isNil, last, map, reduce, size } from "lodash";
+import { cloneDeep, concat, filter, findIndex, includes, isNil, last, map, reduce, size, uniq } from "lodash";
 
 import { ƒ } from "./Utils";
 
@@ -30,6 +30,8 @@ interface Game_View_Props {
 
 export interface Game_State {
 	current_turn: number,
+	objective_type: ObjectiveTypes,
+	objective_text: string,
 	selected_object_index?: number,
 	turn_list: Array<Individual_Game_Turn_State>,
 	current_frame_state: Individual_Game_Turn_State,
@@ -46,6 +48,8 @@ const Individual_Game_Turn_State_Init = {
 
 const GameStateInit: Game_State = {
 	current_turn: 0,
+	objective_type: 'extermination',
+	objective_text: '',
 	selected_object_index: undefined,
 	turn_list: [],
 	current_frame_state: Individual_Game_Turn_State_Init,
@@ -56,6 +60,8 @@ interface AnimationState {
 	is_animating_turn_end: boolean,
 	time_turn_end_anim_started__in_ticks: number
 }
+
+type ObjectiveTypes = 'extermination' | 'decapitation';
 
 
 class Game_Manager {
@@ -139,6 +145,8 @@ class Game_Manager {
 		this.game_state = {
 			current_turn: 0,
 			selected_object_index: undefined,
+			objective_type: 'extermination',
+			objective_text: '',
 			turn_list: [first_turn_state_init],
 			current_frame_state: first_turn_state_init,
 			custom_object_list: [],
@@ -156,6 +164,42 @@ class Game_Manager {
 	}
 	
 
+/*----------------------- objective management -----------------------*/
+	validate_objectives = ( _game_state: Game_State ): {
+		is_won: boolean,
+		team_winner: number, 
+	} => {
+		//TODO:  since we don't have a concept of a 'leader' unit, we're using elimination as our only placeholder for now.  However, it, at least, can be written out, fully.
+
+		let extract_team_numbers: Array<number> = uniq(map(this.get_current_turn_state().creature_list, (val)=>(
+			val.team
+		)));
+
+
+		return {
+			is_won: size(extract_team_numbers) == 1,
+			team_winner: ƒ.if( size(extract_team_numbers) == 1, extract_team_numbers[0], 0), 
+		}
+	}
+
+	describe_objectives = (objective_type: ObjectiveTypes): string => (
+		{
+			'extermination': `Kill off all units on the enemy team.`,
+			'decapitation': `Kill the leaders of the enemy team.`,
+		}[objective_type]
+	)
+
+	write_full_objective_text = (objective_type: ObjectiveTypes, _game_state: Game_State): string => (
+		`The game will be won by the first team to: ${this.describe_objectives(objective_type)}\n${
+			ƒ.if( this.validate_objectives(_game_state).is_won,
+				`Team #${this.validate_objectives(_game_state).team_winner} has won the game!`,
+				`No team has won the game, yet.`
+			)
+		}`
+	)
+
+/*----------------------- turn management -----------------------*/
+
 	advance_turn_start = () => {
 		console.log(`beginning turn #${this.game_state.current_turn}`)
 		this.game_state.current_frame_state = cloneDeep(this.get_current_turn_state())
@@ -168,6 +212,7 @@ class Game_Manager {
 			time_turn_end_anim_started__in_ticks: this._Blit_Manager.time_tracker.current_tick,
 		};
 	
+		this.game_state.objective_text = this.write_full_objective_text(this.get_game_state().objective_type, this.get_game_state());
 	}
 
 	advance_turn_finish = () => {
@@ -194,6 +239,9 @@ class Game_Manager {
 	
 		this.game_state.current_turn += 1;
 	}		
+
+
+/*----------------------- animation management -----------------------*/
 
 	get_time_offset = () => {
 		return ticks_to_ms(this._Blit_Manager.time_tracker.current_tick - this.animation_state.time_turn_end_anim_started__in_ticks)
@@ -554,6 +602,16 @@ class Game_Status_Display extends React.Component <Game_Status_Display_Props, {
 					label={'Turn #:'}
 					data={`${_GS.current_turn}`}
 				/>
+				<Label_and_Data_Pair
+					label={'Objectives:'}
+					data={``}
+				/>
+				<Label_and_Data_Pair
+					label={''}
+					data={`${_GS.objective_text}`}
+				/>
+				<br />
+				<hr />
 				<br />
 				<>
 				{
