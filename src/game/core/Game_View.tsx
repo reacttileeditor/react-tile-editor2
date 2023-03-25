@@ -235,6 +235,7 @@ class Game_Manager {
 
 	
 		this.animation_state.is_animating_turn_end = false;
+		this.game_state.objective_text = this.write_full_objective_text(this.get_game_state().objective_type, this.get_game_state());
 
 	
 		this.game_state.current_turn += 1;
