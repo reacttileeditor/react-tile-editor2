@@ -38,7 +38,12 @@ interface DrawDataText {
 	text: string,
 }
 
-type DrawDataTypes = DrawData|DrawDataNoBounds|DrawDataText;
+interface DrawDataHitpoints {
+	portion: number, //normalized (0.0 to 1.0)
+}
+
+
+type DrawDataTypes = DrawData|DrawDataNoBounds|DrawDataText|DrawDataHitpoints;
 
 
 interface BlitManagerState {
@@ -179,7 +184,7 @@ export class Blit_Manager {
 
 		//then blit it
 		_.map( sortedBlits, (value,index) => {
-			if( this.isDrawDataOfText(value.drawing_data) ){
+			if( this.isDrawDataForText(value.drawing_data) ){
 				this.osb_ctx.save();
 				this.osb_ctx.imageSmoothingEnabled = false;
 				this.osb_ctx.font = '16px pixel, sans-serif';
@@ -193,6 +198,27 @@ export class Blit_Manager {
 				this.osb_ctx.fillStyle = "#ffffff";
 				this.osb_ctx.textBaseline = 'middle';
 				this.osb_ctx.fillText(value.drawing_data.text, 0, 0);
+				this.osb_ctx.restore();
+
+			} else if ( this.isDrawDataForHitpoints(value.drawing_data)){
+
+				this.osb_ctx.save();
+
+				this.osb_ctx.translate(
+					value.pos.x + this.state.actual_viewport_offset.x,
+					value.pos.y + this.state.actual_viewport_offset.y - 50
+				);
+				this.osb_ctx.globalAlpha = value.opacity;
+
+				this.osb_ctx.fillStyle = '#0005'
+				this.osb_ctx.fillRect( -15, 2, 30, 1);
+				
+				this.osb_ctx.fillStyle = '#000'
+				this.osb_ctx.fillRect( -15, -2, 30, 4);
+
+				this.osb_ctx.fillStyle = '#32a852';
+				this.osb_ctx.fillRect( -15, -2, 30 * value.drawing_data.portion, 4);
+
 				this.osb_ctx.restore();
 
 			} else if( this.isDrawDataWithBounds(value.drawing_data) ){
@@ -293,9 +319,14 @@ export class Blit_Manager {
 		return (<DrawData>data).dst_rect !== undefined;
 	}
 
-	isDrawDataOfText( data: DrawDataTypes): data is DrawDataText {
+	isDrawDataForText( data: DrawDataTypes): data is DrawDataText {
 		return (<DrawDataText>data).text !== undefined;
 	}
+
+	isDrawDataForHitpoints( data: DrawDataTypes): data is DrawDataHitpoints {
+		return (<DrawDataHitpoints>data).portion !== undefined;
+	}
+
 
 /*----------------------- tweening -----------------------*/
 	iterate_viewport_tween = () => {

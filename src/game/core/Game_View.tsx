@@ -427,6 +427,14 @@ class Game_Manager {
 				vertically_flipped:			false,
 			})
 
+			this._Asset_Manager.draw_hitpoints({
+				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
+				_BM:						this._Blit_Manager,
+				pos:						this._Tilemap_Manager.convert_tile_coords_to_pixel_coords(val.tile_pos),
+				zorder:						12,
+				current_milliseconds:		0,
+				opacity:					1.0,
+			})			
 	
 			if(this.game_state.selected_object_index == idx){
 				this._Asset_Manager.draw_image_for_asset_name ({

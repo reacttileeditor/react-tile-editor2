@@ -1532,6 +1532,27 @@ export class Asset_Manager {
 		});
 	}
 
+	draw_hitpoints = (p: {
+		portion: number,
+		_BM: Blit_Manager,
+		pos: Point2D,
+		zorder: number,
+		current_milliseconds: number,
+		opacity: number,
+	}) => {
+		p._BM.queue_draw_op({
+			pos:					{ x: p.pos.x, y: p.pos.y },
+			z_index:				p.zorder,
+			opacity:				p.opacity,
+			brightness: 			1.0,
+			horizontally_flipped:	false,
+			vertically_flipped:		false,
+			drawing_data:			{
+										portion: p.portion,
+									}
+		});
+	}
+
 
 /*----------------------- auto-tiling logic -----------------------*/
 	should_we_draw_this_tile_based_on_its_autotiling_restrictions = ( tile_data: TileComparatorSample, autotile_restrictions: AutoTileRestrictionSample ): boolean => {
