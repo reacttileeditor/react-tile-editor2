@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _ from "lodash";
+import _, { reduce, zip, zipWith } from "lodash";
 
 import { ƒ } from "./Utils";
 import { Asset_Manager } from "./Asset_Manager";
@@ -201,7 +201,6 @@ export class Blit_Manager {
 				this.osb_ctx.restore();
 
 			} else if ( this.isDrawDataForHitpoints(value.drawing_data)){
-
 				this.osb_ctx.save();
 
 				this.osb_ctx.translate(
@@ -210,17 +209,52 @@ export class Blit_Manager {
 				);
 				this.osb_ctx.globalAlpha = value.opacity;
 
-				this.osb_ctx.fillStyle = '#0005'
-				this.osb_ctx.fillRect( -15, 2, 30, 1);
+				this.osb_ctx.fillStyle = '#0009'
+				this.osb_ctx.fillRect( -12, 1, 24, 1);
 				
 				this.osb_ctx.fillStyle = '#000'
-				this.osb_ctx.fillRect( -15, -2, 30, 4);
+				this.osb_ctx.fillRect( -12, -2, 24, 3);
 
-				this.osb_ctx.fillStyle = '#32a852';
-				this.osb_ctx.fillRect( -15, -2, 30 * value.drawing_data.portion, 4);
+				const fill_color_tween_set: Array<[number, number, number, number]> = [
+					[ 59, 247,  65, 255],
+					[137, 242,  53, 255],
+					[209, 249,  93, 255],
+					[242, 255,  29, 255],
+					[255, 208, 102, 255],
+					[255, 158, 110, 255],
+					[255, 117, 107, 255],
+					[255,   0,  50, 255],
+				];
+
+				//const get_interpolated_color = (number tween_point) -> [decimal]
+				//([decimal] <- lib.math.interpolate(color_list, fraction));
+
+				const constrain = (min: number, value: number, max: number): number => (
+					ƒ.if(min > max, (min+max)/2, ƒ.if(min > value, min, ƒ.if(max < value, max, value)))
+				);
+
+				const tween = (color_list: Array<[number, number, number, number]>, percent_raw: number):  [number, number, number, number] => {
+					//combine each element of both lists weighted by percent.
+
+					//@ts-ignore  Who knows why it can't figure out this is the right type.
+					return reduce(color_list, (color_one: [number, number, number, number], color_two: [number, number, number, number]) => {
+						return zipWith(color_one, color_two, (a,b)=>{
+							const percent = constrain(0, percent_raw, 1);
+
+							return a*percent + b*(1.0-percent);
+						})
+					})
+				}
+
+				
+
+				const final_color = tween(fill_color_tween_set, value.drawing_data.portion); //The base case, where we just tween between the two.
+				
+
+				this.osb_ctx.fillStyle = `rgba(${final_color[0]}, ${final_color[1]}, ${final_color[2]}, ${final_color[3]})`;//'#32a852';
+				this.osb_ctx.fillRect( -12, -2, Math.round(24 * value.drawing_data.portion), 3);
 
 				this.osb_ctx.restore();
-
 			} else if( this.isDrawDataWithBounds(value.drawing_data) ){
 
 				this.osb_ctx.save();
