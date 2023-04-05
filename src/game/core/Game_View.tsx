@@ -295,6 +295,26 @@ class Game_Manager {
 		}
 	}
 
+	draw_cursor = () => {
+		//const pos = this._Tilemap_Manager.convert_tile_coords_to_pixel_coords(0,4); 
+
+		this._Asset_Manager.draw_image_for_asset_name({
+			asset_name:					'cursor',
+			_BM:						this._Blit_Manager,
+			pos:						this._Tilemap_Manager.convert_tile_coords_to_pixel_coords(
+				this._Tilemap_Manager.convert_pixel_coords_to_tile_coords(
+					this.cursor_pos
+				)
+			),
+			zorder:						12,
+			current_milliseconds:		0,
+			opacity:					1.0,
+			brightness:					1.0,
+			horizontally_flipped:		false,
+			vertically_flipped:			false,
+		})
+	}
+
 	do_live_game_processing = () => {
 		/*
 			Process all of the existing creatures.
@@ -418,7 +438,7 @@ class Game_Manager {
 				vertically_flipped:			false,
 			})
 		})			
-		
+		this.draw_cursor();
 	}
 
 	do_paused_game_rendering = () => {
@@ -505,6 +525,8 @@ class Game_Manager {
 			})	
 
 		})
+		this.draw_cursor();
+
 	}
 
 
