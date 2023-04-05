@@ -71,8 +71,10 @@ class Game_Manager {
 	animation_state: AnimationState;
 	game_state: Game_State;
 	update_game_state_for_ui: Function;
+	update_tooltip_state: Function;
 	_Pathfinder: Pathfinder;
-	
+	cursor_pos: Point2D;
+
 	/*
 		We need to handle individual turns progressing, so we'll need something to track modality.  We'll need a set of flags indicating what our mode is - are we watching a turn be animated, are we watching the enemy do a move?  Are we watching the player do their move?
 		
@@ -94,6 +96,8 @@ class Game_Manager {
 		this._Asset_Manager = _Asset_Manager;
 		this._Tilemap_Manager = _Tilemap_Manager;
 		this.update_game_state_for_ui = ()=>{};
+		this.update_tooltip_state = ()=>{};
+		this.cursor_pos = {x: 0, y: 0};
 
 		this.animation_state = {
 			is_animating_turn_end: false,
@@ -162,7 +166,14 @@ class Game_Manager {
 	set_update_function = (func: Function) => {
  		this.update_game_state_for_ui = func;
 	}
-	
+
+	set_tooltip_update_function = (func: Function) => {
+		this.update_tooltip_state = func;
+	}
+
+	set_cursor_pos = (coords: Point2D) => {
+		this.cursor_pos = coords;
+	}
 
 /*----------------------- objective management -----------------------*/
 	validate_objectives = ( _game_state: Game_State ): {
@@ -273,7 +284,7 @@ class Game_Manager {
 
 	do_one_frame_of_rendering_and_processing = () => {
 		this.update_game_state_for_ui(this.game_state);
-		
+		this.update_tooltip_state( this.cursor_pos );
 		
 		if(this.animation_state.is_animating_turn_end){
 			this.do_live_game_processing();
@@ -683,20 +694,64 @@ class Label_and_Data_Pair extends React.Component <{label: string, data: string}
 	)
 }
 
+const Map_Tooltip = (props: {pos: Point2D}) => {
+	return <div
+		className="map-tooltip"
+		style={{
+			left: `${props.pos.x * 2}px`,
+			top: `${props.pos.y * 2}px`
+		}}
+	>
+		{`${props.pos.x}, ${props.pos.y}`}
+	</div>
+}
+
+class Tooltip_Manager extends React.Component<{},TooltipData> {
+	
+	constructor (props: {}) {
+		super( props );
+
+		this.state = { pos: {x:0,y:0} };
+	}
+
+	update_tooltip_data = (pos: Point2D) => {
+		this.setState({ pos: pos });
+	}
+
+	render = () => (
+		<div className="map-tooltip-anchor">
+			<Map_Tooltip
+				pos={this.state.pos}
+			/>
+		</div>
+	)
+}
+
+type TooltipData = { pos: Point2D };
 
 
-export class Game_View extends React.Component <Game_View_Props> {
+
+
+export class Game_View extends React.Component <Game_View_Props, {pos: Point2D}> {
 	render_loop_interval: number|undefined;
 	_Game_Manager: Game_Manager;
 	awaiting_render: boolean;
 	gsd!: Game_Status_Display;
+	tooltip_manager!: Tooltip_Manager;
+	
 
 	constructor( props: Game_View_Props ) {
 		super( props );
 
-		this._Game_Manager = new Game_Manager(this.props._Blit_Manager, this.props._Asset_Manager, this.props._Tilemap_Manager);
+		this._Game_Manager = new Game_Manager(
+			this.props._Blit_Manager,
+			this.props._Asset_Manager,
+			this.props._Tilemap_Manager,
+		);
 		this.awaiting_render = false;
+		this.state = { pos: {x:0,y:0}};
 	}
+
 
 
 /*----------------------- core drawing routines -----------------------*/
@@ -711,6 +766,10 @@ export class Game_View extends React.Component <Game_View_Props> {
 		*/
 	}
 
+	set_tooltip_data = (pos: Point2D) => {
+		this.setState({ pos: pos});
+	}
+
 	render_canvas = () => {
 		if(this.awaiting_render){
 			this.props._Tilemap_Manager.do_one_frame_of_rendering();
@@ -722,8 +781,13 @@ export class Game_View extends React.Component <Game_View_Props> {
 		}
 	}
 
+	handle_canvas_mouse_move = (mouse_pos: Point2D) => {
+		this._Game_Manager.set_cursor_pos(mouse_pos);
+	}
+
 	componentDidMount() {
 		this._Game_Manager.set_update_function( this.gsd.update_game_state_for_ui );
+		this._Game_Manager.set_tooltip_update_function( this.tooltip_manager.update_tooltip_data );
 		if(this.props.assets_loaded){
 			this.iterate_render_loop();
 		}
@@ -747,7 +811,10 @@ export class Game_View extends React.Component <Game_View_Props> {
 				dimensions={this.props.dimensions}
 				handle_canvas_click={ this._Game_Manager.handle_click }
 				handle_canvas_keys_down={ ()=>{ /*console.log('game_keydown')*/} }
-				handle_canvas_mouse_move={ ()=>{ /*console.log('game_mouse_move')*/} }
+				handle_canvas_mouse_move={this.handle_canvas_mouse_move}
+			/>
+			<Tooltip_Manager
+				ref={(node) => {this.tooltip_manager = node!;}}
 			/>
 			<Game_Status_Display
 				ref={(node) => {this.gsd = node!;}}

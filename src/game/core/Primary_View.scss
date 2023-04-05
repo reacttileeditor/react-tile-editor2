@@ -57,6 +57,33 @@ body {
 			justify-content: space-between;
 		}
 
+		.game_node {
+			position: relative;
+
+			.map-tooltip-anchor {
+				pointer-events: none;
+				position: absolute;
+				top: 0;
+				left: 0;
+
+				width: calc(567px * 2);
+				height: calc(325px * 2);
+				
+				.map-tooltip {
+					font-family: 'pixel';
+					font-size: 1.5rem;
+					transform: translateX(-50%);
+					padding: 0.5rem 1.0rem;
+					margin-top: 0.5rem;
+					background: rgba(0, 0, 0, 0.75);
+					color: white;
+					border-radius: 0.5rem;
+					position: relative;
+					display: inline-block;
+				}
+			}
+		}
+
 
 		.canvas_holder {
 			position: relative;
