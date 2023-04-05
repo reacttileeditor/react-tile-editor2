@@ -284,7 +284,13 @@ class Game_Manager {
 
 	do_one_frame_of_rendering_and_processing = () => {
 		this.update_game_state_for_ui(this.game_state);
-		this.update_tooltip_state( this.cursor_pos );
+		this.update_tooltip_state( {
+			pos: this.cursor_pos,
+			tile_name: this._Tilemap_Manager.get_tile_name_for_pos(
+				this._Tilemap_Manager.convert_pixel_coords_to_tile_coords( this.cursor_pos ),
+				'terrain',
+			)
+		});
 		
 		if(this.animation_state.is_animating_turn_end){
 			this.do_live_game_processing();
@@ -716,7 +722,7 @@ class Label_and_Data_Pair extends React.Component <{label: string, data: string}
 	)
 }
 
-const Map_Tooltip = (props: {pos: Point2D}) => {
+const Map_Tooltip = (props: TooltipData) => {
 	return <div
 		className="map-tooltip"
 		style={{
@@ -724,7 +730,8 @@ const Map_Tooltip = (props: {pos: Point2D}) => {
 			top: `${props.pos.y * 2}px`
 		}}
 	>
-		{`${props.pos.x}, ${props.pos.y}`}
+		<div>{`${props.pos.x}, ${props.pos.y}`}</div>
+		<div>{`${props.tile_name}`}</div>
 	</div>
 }
 
@@ -733,23 +740,23 @@ class Tooltip_Manager extends React.Component<{},TooltipData> {
 	constructor (props: {}) {
 		super( props );
 
-		this.state = { pos: {x:0,y:0} };
+		this.state = { pos: {x:0,y:0}, tile_name: '' };
 	}
 
-	update_tooltip_data = (pos: Point2D) => {
-		this.setState({ pos: pos });
+	update_tooltip_data = (p: TooltipData) => {
+		this.setState(p);
 	}
 
 	render = () => (
 		<div className="map-tooltip-anchor">
 			<Map_Tooltip
-				pos={this.state.pos}
+				{...this.state}
 			/>
 		</div>
 	)
 }
 
-type TooltipData = { pos: Point2D };
+type TooltipData = { pos: Point2D, tile_name: string };
 
 
 
