@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { cloneDeep, concat, filter, findIndex, includes, isNil, last, map, reduce, size, uniq } from "lodash";
+import { cloneDeep, concat, filter, findIndex, includes, isNil, isNumber, last, map, reduce, size, uniq } from "lodash";
 
 import { ƒ } from "./Utils";
 
@@ -71,7 +71,7 @@ class Game_Manager {
 	animation_state: AnimationState;
 	game_state: Game_State;
 	update_game_state_for_ui: Function;
-	update_tooltip_state: Function;
+	update_tooltip_state: (p: TooltipData) => void;
 	_Pathfinder: Pathfinder;
 	cursor_pos: Point2D;
 
@@ -167,7 +167,7 @@ class Game_Manager {
  		this.update_game_state_for_ui = func;
 	}
 
-	set_tooltip_update_function = (func: Function) => {
+	set_tooltip_update_function = (func: (p: TooltipData) => void) => {
 		this.update_tooltip_state = func;
 	}
 
@@ -282,6 +282,21 @@ class Game_Manager {
 		)
 	)
 
+	get_current_creatures_move_cost = (): string => {
+		const selected_creature = this.get_selected_creature();
+
+		if(selected_creature){
+			const tile_type = this._Tilemap_Manager.get_tile_name_for_pos(
+				selected_creature.tile_pos,
+				'terrain',
+			);
+
+			return `${ Creature_ƒ.get_delegate(selected_creature.type_name).yield_move_cost_for_tile_type( tile_type ) }`
+		} else {
+			return '';
+		}
+	}
+
 	do_one_frame_of_rendering_and_processing = () => {
 		this.update_game_state_for_ui(this.game_state);
 		this.update_tooltip_state( {
@@ -289,7 +304,8 @@ class Game_Manager {
 			tile_name: this._Tilemap_Manager.get_tile_name_for_pos(
 				this._Tilemap_Manager.convert_pixel_coords_to_tile_coords( this.cursor_pos ),
 				'terrain',
-			)
+			),
+			tile_cost: `${this.get_current_creatures_move_cost()}`
 		});
 		
 		if(this.animation_state.is_animating_turn_end){
@@ -529,7 +545,6 @@ class Game_Manager {
 					vertically_flipped:			false,
 				})
 			})	
-
 		})
 		this.draw_cursor();
 
@@ -732,6 +747,7 @@ const Map_Tooltip = (props: TooltipData) => {
 	>
 		<div>{`${props.pos.x}, ${props.pos.y}`}</div>
 		<div>{`${props.tile_name}`}</div>
+		<div>{`${props.tile_cost}`}</div>
 	</div>
 }
 
@@ -740,7 +756,7 @@ class Tooltip_Manager extends React.Component<{},TooltipData> {
 	constructor (props: {}) {
 		super( props );
 
-		this.state = { pos: {x:0,y:0}, tile_name: '' };
+		this.state = { pos: {x:0,y:0}, tile_name: '', tile_cost: '' };
 	}
 
 	update_tooltip_data = (p: TooltipData) => {
@@ -756,7 +772,11 @@ class Tooltip_Manager extends React.Component<{},TooltipData> {
 	)
 }
 
-type TooltipData = { pos: Point2D, tile_name: string };
+type TooltipData = {
+	pos: Point2D,
+	tile_name: string,
+	tile_cost: string,
+};
 
 
 
