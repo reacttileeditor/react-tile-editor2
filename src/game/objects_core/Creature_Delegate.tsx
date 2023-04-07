@@ -31,13 +31,23 @@ const Creature_Delegate_Base_ƒ: Creature_Delegate = {
 	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => ( kind.yield_creature_image() ),
 
 	yield_move_cost_for_tile_type: (tile_type: string): number|null => {
-		if(tile_type == 'menhir1' || tile_type == 'menhir2'){
-			return null;
-		} else if (tile_type == 'water'){
-			return 10;
-		} else {
-			return 1;
-		}
+		const speed = {
+			'menhir1':			null,
+			'menhir2':			null,
+			'water':			10,
+			'water-placid':		10,
+			'dirt':				1,
+			'sandy-dirt':		1,
+			'sand':				2,
+			'scrub-dirt':		3,
+			'grass-and-scree':	3,
+			'scrub-dirt-tall':	4,
+		}[tile_type];
+
+		return ƒ.if(speed === undefined,
+			1,
+			speed
+		)
 	},
 
 	yield_prettyprint_name: () => ( 'Generic Unit' ),
