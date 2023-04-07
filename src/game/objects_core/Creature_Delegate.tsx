@@ -37,11 +37,11 @@ const Creature_Delegate_Base_ƒ: Creature_Delegate = {
 			'water':			10,
 			'water-placid':		10,
 			'dirt':				1,
-			'sandy-dirt':		1,
-			'sand':				2,
-			'scrub-dirt':		3,
-			'grass-and-scree':	3,
-			'scrub-dirt-tall':	4,
+			'sandy-dirt':		1.3,
+			'sand':				1.3,
+			'scrub-dirt':		2,
+			'grass-and-scree':	2.5,
+			'scrub-dirt-tall':	2.5,
 		}[tile_type];
 
 		return ƒ.if(speed === undefined,
