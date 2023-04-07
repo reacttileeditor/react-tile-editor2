@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { cloneDeep, concat, filter, findIndex, includes, isNil, isNumber, last, map, reduce, size, uniq } from "lodash";
+import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumber, last, map, reduce, size, uniq } from "lodash";
 
 import { ƒ } from "./Utils";
 
@@ -287,11 +287,12 @@ class Game_Manager {
 
 		if(selected_creature){
 			const tile_type = this._Tilemap_Manager.get_tile_name_for_pos(
-				selected_creature.tile_pos,
+				this._Tilemap_Manager.convert_pixel_coords_to_tile_coords( this.cursor_pos ), //selected_creature.tile_pos,
 				'terrain',
 			);
 
 			return `${ Creature_ƒ.get_delegate(selected_creature.type_name).yield_move_cost_for_tile_type( tile_type ) }`
+			//return `${ Creature_ƒ.get_delegate(selected_creature.type_name).yield_prettyprint_name() }`
 		} else {
 			return '';
 		}
@@ -745,11 +746,17 @@ const Map_Tooltip = (props: TooltipData) => {
 			top: `${props.pos.y * 2}px`
 		}}
 	>
-		<div>{`${props.pos.x}, ${props.pos.y}`}</div>
-		<div>{`${props.tile_name}`}</div>
-		<div>{`${props.tile_cost}`}</div>
+		<div className="data-row">{`${props.tile_name}`}</div>
+		{
+			!isEmpty(props.tile_cost) && !isNil(props.tile_cost)
+			&&
+			<div className="data-row"> {`${props.tile_cost}`}<img src={Foot_Icon}/></div>
+		}
 	</div>
 }
+
+import Foot_Icon from '../../assets/feet-icon.png';
+
 
 class Tooltip_Manager extends React.Component<{},TooltipData> {
 	

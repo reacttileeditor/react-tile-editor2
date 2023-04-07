@@ -80,6 +80,16 @@ body {
 					border-radius: 0.5rem;
 					position: relative;
 					display: inline-block;
+
+					.data-row {
+						display: flex;
+						justify-content: flex-start;
+						align-items: center;
+
+						img {
+							padding-left: 0.25em;
+						}
+					}
 				}
 			}
 		}
