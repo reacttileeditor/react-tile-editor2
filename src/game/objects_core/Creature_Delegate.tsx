@@ -82,7 +82,7 @@ export const CT_Peasant_ƒ: Creature_Delegate = {
 			'east':			'peasant-ne-walk',
 			'south_east':	'peasant-se-walk',
 			'west':			'peasant-se-walk',
-			'south_west':	'peasant-se-walk',			
+			'south_west':	'peasant-se-walk',	
 		}[direction]
 	),
 	
@@ -93,7 +93,7 @@ export const CT_Peasant_ƒ: Creature_Delegate = {
 			'east':			'peasant-ne',
 			'south_east':	'peasant-se',
 			'west':			'peasant-se',
-			'south_west':	'peasant-se',			
+			'south_west':	'peasant-se',	
 		}[direction]
 	),
 	
@@ -108,8 +108,31 @@ export const CT_Skeleton_ƒ: Creature_Delegate = {
 	...Creature_Delegate_Base_ƒ,
 
 	yield_moves_per_turn: () => 8,
-	yield_creature_image: () => 'skeleton',
+	yield_creature_image: () => 'skeleton-se',
 	yield_prettyprint_name: () => 'Skeleton',
 	yield_damage: (): number => ( 2 ),
+
+	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
+		{
+			'north_east':	'skeleton-ne',
+			'north_west':	'skeleton-ne',
+			'east':			'skeleton-ne',
+			'south_east':	'skeleton-se',
+			'west':			'skeleton-se',
+			'south_west':	'skeleton-se',	
+		}[direction]
+	),
+
+	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
+		{
+			'north_east':	'skeleton-ne',
+			'north_west':	'skeleton-ne',
+			'east':			'skeleton-ne',
+			'south_east':	'skeleton-se',
+			'west':			'skeleton-se',
+			'south_west':	'skeleton-se',	
+		}[direction]
+	),
+	
 
 }

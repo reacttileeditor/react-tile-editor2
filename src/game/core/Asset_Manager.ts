@@ -162,8 +162,11 @@ export class Asset_Manager {
 				url: "char2.png",
 				name: "peasant-se",
 			},{
+				url: "char3-ne.png",
+				name: "skeleton-ne",
+			},{
 				url: "char3.png",
-				name: "skeleton",
+				name: "skeleton-se",
 			},{
 				url: "red_dot.png",
 				name: "red_dot",
