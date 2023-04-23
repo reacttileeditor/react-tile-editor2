@@ -125,12 +125,12 @@ export const CT_Skeleton_ƒ: Creature_Delegate = {
 
 	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
 		{
-			'north_east':	'skeleton-ne',
-			'north_west':	'skeleton-ne',
-			'east':			'skeleton-ne',
-			'south_east':	'skeleton-se',
-			'west':			'skeleton-se',
-			'south_west':	'skeleton-se',	
+			'north_east':	'skeleton-ne-walk',
+			'north_west':	'skeleton-ne-walk',
+			'east':			'skeleton-ne-walk',
+			'south_east':	'skeleton-se-walk',
+			'west':			'skeleton-se-walk',
+			'south_west':	'skeleton-se-walk',	
 		}[direction]
 	),
 	

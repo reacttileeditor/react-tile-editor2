@@ -203,6 +203,32 @@ export class Asset_Manager {
 					h: 118,
 				},
 			},{
+				url: "char3-ne-walk.png",
+				name: "skeleton-ne-walk",
+				frames: 8,
+				frame_duration: 100,
+				ping_pong: false,
+				pad: 2,
+				bounds: {
+					x: 1,
+					y: 1,
+					w: 60,
+					h: 120,
+				},
+			},{
+				url: "char3-se-walk.png",
+				name: "skeleton-se-walk",
+				frames: 8,
+				frame_duration: 100,
+				ping_pong: false,
+				pad: 2,
+				bounds: {
+					x: 1,
+					y: 1,
+					w: 60,
+					h: 120,
+				},
+			},{
 				url: "hex-tile-experiment-tiles.png",
 				name: "menhir1",
 				bounds: {
