@@ -219,6 +219,7 @@ export class Game_View extends React.Component <Game_View_Props, {pos: Point2D}>
 			_Blit_Manager: this.props._Blit_Manager,
 			_Asset_Manager: this.props._Asset_Manager,
 			_Tilemap_Manager: this.props._Tilemap_Manager,
+			get_GM_instance: ()=>( this._Game_Manager_Data ),
 		});
 		this.awaiting_render = false;
 		this.state = { pos: {x:0,y:0}};

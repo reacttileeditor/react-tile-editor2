@@ -22,12 +22,12 @@ export type Base_Object_Data = {
 	should_remove: boolean,
 
 	//accessors
-	GM: Game_Manager_Data;
+	get_GM_instance: () => Game_Manager_Data;
 }
 
 export const New_Base_Object = (
 	p: {
-		GM: Game_Manager_Data,
+		get_GM_instance: () => Game_Manager_Data;
 		creation_timestamp: number,
 		should_remove: boolean,
 		pixel_pos?: Point2D,
@@ -50,7 +50,7 @@ export const New_Base_Object = (
 		),  //TODO use TM
 
 		//accessors
-		GM: p.GM,
+		get_GM_instance: p.get_GM_instance,
 	}	
 }
 

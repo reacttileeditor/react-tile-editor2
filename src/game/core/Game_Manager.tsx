@@ -85,6 +85,7 @@ export const New_Game_Manager = (p: {
 	_Blit_Manager: Blit_Manager,
 	_Asset_Manager: Asset_Manager,
 	_Tilemap_Manager: Tilemap_Manager,
+	get_GM_instance: ()=> Game_Manager_Data,
 }): Game_Manager_Data => {
 
 
@@ -111,7 +112,7 @@ export const New_Game_Manager = (p: {
 
 	const first_turn_state_init = {
 		creature_list: [New_Creature({
-			GM: game_manager,
+			get_GM_instance: p.get_GM_instance,
 			tile_pos: {x: 1, y: 6},
 			TM: p._Tilemap_Manager,
 			planned_tile_pos: {x: 0, y: 6},
@@ -120,7 +121,7 @@ export const New_Game_Manager = (p: {
 			creation_timestamp: 0,
 			should_remove: false,
 		}), New_Creature({
-			GM: game_manager,
+			get_GM_instance: p.get_GM_instance,
 			tile_pos: {x: 2, y: 4},
 			TM: p._Tilemap_Manager,
 			planned_tile_pos: {x: 2, y: 4},
@@ -129,7 +130,7 @@ export const New_Game_Manager = (p: {
 			creation_timestamp: 0,
 			should_remove: false,
 		}), New_Creature({
-			GM: game_manager,
+			get_GM_instance: p.get_GM_instance,
 			tile_pos: {x: 4, y: 4},
 			TM: p._Tilemap_Manager,
 			planned_tile_pos: {x: 4, y: 4},
@@ -138,7 +139,7 @@ export const New_Game_Manager = (p: {
 			creation_timestamp: 0,
 			should_remove: false,
 		}), New_Creature({
-			GM: game_manager,
+			get_GM_instance: p.get_GM_instance,
 			tile_pos: {x: 5, y: 8},
 			TM: p._Tilemap_Manager,
 			planned_tile_pos: {x: 5, y: 8},

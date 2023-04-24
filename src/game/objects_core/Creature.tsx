@@ -83,7 +83,7 @@ type Anim_Schedule_Element = {
 
 export const New_Creature = (
 	p: {
-		GM:  Game_Manager_Data,
+		get_GM_instance: () => Game_Manager_Data;
 		TM: Tilemap_Manager,
 		tile_pos: Point2D,
 		direction?: Direction,
@@ -99,7 +99,7 @@ export const New_Creature = (
 	}): Creature_Data => {
 	return {
 		...New_Base_Object({
-			GM: p.GM,
+			get_GM_instance: p.get_GM_instance,
 			pixel_pos: p.TM.convert_tile_coords_to_pixel_coords(p.tile_pos),
 			unique_id: p.unique_id,
 			should_remove: p.should_remove,
@@ -561,7 +561,7 @@ export const Creature_ƒ = {
 		/*
 			DAMAGE:
 		*/
-		const targets = filter( Game_Manager_ƒ.get_game_state(me.GM).current_frame_state.creature_list, (val) => (
+		const targets = filter( Game_Manager_ƒ.get_game_state(me.get_GM_instance()).current_frame_state.creature_list, (val) => (
 			val.team !== me.team
 		));
 		
@@ -592,7 +592,7 @@ export const Creature_ƒ = {
 						
 
 						spawnees.push(New_Custom_Object({
-							GM: me.GM,
+							get_GM_instance: me.get_GM_instance,
 							pixel_pos: target.pixel_pos,
 							type_name: 'shot' as CustomObjectTypeName,
 							creation_timestamp: offset_in_ms,
@@ -606,7 +606,7 @@ export const Creature_ƒ = {
 						
 						
 						spawnees.push(New_Custom_Object({
-							GM: me.GM,
+							get_GM_instance: me.get_GM_instance,
 							pixel_pos: target.pixel_pos,
 							type_name: 'text_label' as CustomObjectTypeName,
 							creation_timestamp: offset_in_ms,
@@ -628,7 +628,7 @@ export const Creature_ƒ = {
 
 		if( me.current_hitpoints <= 0 ) {
 			spawnees.push(New_Custom_Object({
-				GM: me.GM,
+				get_GM_instance: me.get_GM_instance,
 				pixel_pos: me.pixel_pos,
 				type_name: 'skull_icon' as CustomObjectTypeName,
 				creation_timestamp: offset_in_ms,

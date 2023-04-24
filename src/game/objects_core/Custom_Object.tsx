@@ -26,7 +26,7 @@ export type Custom_Object_Data = {
 
 export const New_Custom_Object = (
 	p: {
-		GM: Game_Manager_Data,
+		get_GM_instance: () => Game_Manager_Data;
 		pixel_pos: Point2D,
 		type_name: CustomObjectTypeName,
 		creation_timestamp: number,
@@ -38,7 +38,7 @@ export const New_Custom_Object = (
 
 	return {
 		...New_Base_Object({
-			GM: p.GM,
+			get_GM_instance: p.get_GM_instance,
 			pixel_pos: cloneDeep(p.pixel_pos),
 			unique_id: p.unique_id,
 			creation_timestamp: p.creation_timestamp,
@@ -83,12 +83,12 @@ export const Custom_Object_ƒ = {
 
 		const processed_object = Custom_Object_ƒ.get_delegate(me.type_name).process_single_frame(
 			me.pixel_pos,
-			me.GM,
+			me.get_GM_instance(),
 			me.delegate_state
 		);
 
 		return New_Custom_Object({
-			GM: me.GM,
+			get_GM_instance: me.get_GM_instance,
 			pixel_pos: processed_object.pixel_pos,
 			type_name: me.type_name,
 			creation_timestamp: me.creation_timestamp,
