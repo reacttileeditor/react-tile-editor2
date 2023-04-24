@@ -8,7 +8,7 @@ import { ƒ } from "../core/Utils";
 import { Tilemap_Manager, Direction } from "../core/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
-import { Game_State } from "../core/Game_View";
+import { Game_Manager_Data } from "../core/Game_Manager";
 
 
 
@@ -22,12 +22,12 @@ export type Base_Object_Data = {
 	should_remove: boolean,
 
 	//accessors
-	get_game_state: () => Game_State;
+	GM: Game_Manager_Data;
 }
 
 export const New_Base_Object = (
 	p: {
-		get_game_state: () => Game_State,
+		GM: Game_Manager_Data,
 		creation_timestamp: number,
 		should_remove: boolean,
 		pixel_pos?: Point2D,
@@ -50,7 +50,7 @@ export const New_Base_Object = (
 		),  //TODO use TM
 
 		//accessors
-		get_game_state: p.get_game_state,
+		GM: p.GM,
 	}	
 }
 

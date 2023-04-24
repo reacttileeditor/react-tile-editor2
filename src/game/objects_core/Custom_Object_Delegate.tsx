@@ -8,7 +8,7 @@ import { ƒ } from "../core/Utils";
 import { Tilemap_Manager, Direction } from "../core/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
-import { Game_State } from "../core/Game_View";
+import { Game_Manager_Data, Game_Manager_ƒ } from "../core/Game_Manager";
 
 
 export type CustomObjectTypeName = 'shot';
@@ -25,7 +25,7 @@ export type CO_Shot_State = {
 export type Custom_Object_Delegate = {
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
-		get_game_state: () => Game_State,	
+		GM: Game_Manager_Data,	
 		prior_delegate_state: Custom_Object_Delegate_States,
 	) => {
 		pixel_pos: Point2D,
@@ -38,7 +38,7 @@ export type Custom_Object_Delegate = {
 const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
-		get_game_state: () => Game_State,	
+		GM: Game_Manager_Data,		
 		prior_delegate_state: Custom_Object_Delegate_States,
 	): {
 		pixel_pos: Point2D,
@@ -61,7 +61,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
-		get_game_state: () => Game_State,
+		GM: Game_Manager_Data,	
 		prior_delegate_state: Custom_Object_Delegate_States,
 	): {
 		pixel_pos: Point2D,
@@ -70,7 +70,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 		const _prior_delegate_state = prior_delegate_state as CO_Shot_State;
 
 
-		const target = find( get_game_state().current_frame_state.creature_list, (val) => (
+		const target = find( Game_Manager_ƒ.get_game_state(GM).current_frame_state.creature_list, (val) => (
 			val.unique_id === _prior_delegate_state.target_obj
 		));
 
@@ -103,7 +103,7 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
-		get_game_state: () => Game_State,	
+		GM: Game_Manager_Data,	
 		prior_delegate_state: Custom_Object_Delegate_States,
 	): {
 		pixel_pos: Point2D,
@@ -127,7 +127,7 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
 
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
-		get_game_state: () => Game_State,	
+		GM: Game_Manager_Data,
 		prior_delegate_state: Custom_Object_Delegate_States,
 	): {
 		pixel_pos: Point2D,

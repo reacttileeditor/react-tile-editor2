@@ -14,9 +14,9 @@ import { Pathfinder, Pathfinding_Result } from "../core/Pathfinding";
 
 import { Point2D, Rectangle } from '../interfaces';
 import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
-import { Game_State } from "../core/Game_View";
 import { Base_Object_Data, New_Base_Object } from "./Base_Object";
 import { Creature_Delegate, CT_Hermit_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ } from "./Creature_Delegate";
+import { Game_Manager_Data, Game_Manager_ƒ } from "../core/Game_Manager";
 
 export type PathNodeWithDirection = {
 	position: Point2D,
@@ -83,7 +83,7 @@ type Anim_Schedule_Element = {
 
 export const New_Creature = (
 	p: {
-		get_game_state:  () => Game_State,
+		GM:  Game_Manager_Data,
 		TM: Tilemap_Manager,
 		tile_pos: Point2D,
 		direction?: Direction,
@@ -99,7 +99,7 @@ export const New_Creature = (
 	}): Creature_Data => {
 	return {
 		...New_Base_Object({
-			get_game_state: p.get_game_state,
+			GM: p.GM,
 			pixel_pos: p.TM.convert_tile_coords_to_pixel_coords(p.tile_pos),
 			unique_id: p.unique_id,
 			should_remove: p.should_remove,
@@ -561,7 +561,7 @@ export const Creature_ƒ = {
 		/*
 			DAMAGE:
 		*/
-		const targets = filter( me.get_game_state().current_frame_state.creature_list, (val) => (
+		const targets = filter( Game_Manager_ƒ.get_game_state(me.GM).current_frame_state.creature_list, (val) => (
 			val.team !== me.team
 		));
 		
@@ -592,7 +592,7 @@ export const Creature_ƒ = {
 						
 
 						spawnees.push(New_Custom_Object({
-							get_game_state: me.get_game_state,
+							GM: me.GM,
 							pixel_pos: target.pixel_pos,
 							type_name: 'shot' as CustomObjectTypeName,
 							creation_timestamp: offset_in_ms,
@@ -606,7 +606,7 @@ export const Creature_ƒ = {
 						
 						
 						spawnees.push(New_Custom_Object({
-							get_game_state: me.get_game_state,
+							GM: me.GM,
 							pixel_pos: target.pixel_pos,
 							type_name: 'text_label' as CustomObjectTypeName,
 							creation_timestamp: offset_in_ms,
@@ -628,7 +628,7 @@ export const Creature_ƒ = {
 
 		if( me.current_hitpoints <= 0 ) {
 			spawnees.push(New_Custom_Object({
-				get_game_state: me.get_game_state,
+				GM: me.GM,
 				pixel_pos: me.pixel_pos,
 				type_name: 'skull_icon' as CustomObjectTypeName,
 				creation_timestamp: offset_in_ms,
