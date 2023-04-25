@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _, { Dictionary } from "lodash";
+import _, { Dictionary, isArray } from "lodash";
 
 import { Asset_Manager } from "./Asset_Manager";
 import { Blit_Manager, ticks_to_ms } from "./Blit_Manager";
@@ -14,7 +14,10 @@ import { Point2D, Rectangle, PointCubic } from '../interfaces';
 interface tileViewState {
 	tile_maps: TileMaps,
 	initialized: boolean,
+	cache_of_tile_comparators: _TileMaps<TileComparatorMap>,
 }
+
+type TileComparatorMap = Array<Array<TileComparatorSample|undefined>>;
 
 interface _TileMaps<T> {
 	terrain: T,
@@ -36,6 +39,11 @@ export type Direction =
 	'south_west';
 
 
+const tile_comparator_cache_init = {
+	terrain: [[]],
+	ui: [[]],
+};
+
 
 export class Tilemap_Manager {
 	state: tileViewState;
@@ -50,6 +58,7 @@ export class Tilemap_Manager {
 				terrain: [['']],
 				ui: [['']],
 			},
+			cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
 			initialized: false,
 		};
 		
@@ -75,6 +84,9 @@ export class Tilemap_Manager {
 		this.state.initialized = true;
 	}
 
+	clear_cache = () => {
+		this.state.cache_of_tile_comparators = _.cloneDeep(tile_comparator_cache_init);
+	}
 
 /*----------------------- state mutation -----------------------*/
 	modify_tile_status = ( pos: Point2D, selected_tile_type: string, tilemap_name: TileMapKeys ): void => {
@@ -85,6 +97,8 @@ export class Tilemap_Manager {
 		){
 			if(selected_tile_type && selected_tile_type != ''){
 				this.state.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
+
+				this.clear_cache();
 			}
 		}
 	}
@@ -97,6 +111,8 @@ export class Tilemap_Manager {
 				return ''
 			});
 		});			
+
+		this.clear_cache();
 	}
 
 
@@ -179,16 +195,30 @@ export class Tilemap_Manager {
 
 
 	get_tile_comparator_sample_for_pos = ( pos: Point2D, tilemap_name: TileMapKeys ): TileComparatorSample => {
-		const tpc = this.get_tile_position_comparator_for_pos(pos);
-		
-		const val = _.map(tpc, (row_val, row_idx) => {
-			return _.map(row_val, (col_val, col_idx) => {
-				return this.get_tile_name_for_pos( col_val, tilemap_name )
-			})
-		});
-		
-		return (val as TileComparatorSample); //casting this because Typescript is being extra insistent that the tuple lengths match, but we can't guarantee this without dramatically complicating our code in a particularly bad way.
-		//https://github.com/microsoft/TypeScript/issues/11312
+		const cached_value = this.state.cache_of_tile_comparators[tilemap_name]?.[pos.y]?.[pos.x];
+
+		if( cached_value != undefined ){
+			return cached_value;
+		} else {
+			const tpc = this.get_tile_position_comparator_for_pos(pos);
+			
+			const val = _.map(tpc, (row_val, row_idx) => {
+				return _.map(row_val, (col_val, col_idx) => {
+					return this.get_tile_name_for_pos( col_val, tilemap_name )
+				})
+			});
+			
+			//some funny-business to cache it:
+			if( !isArray(this.state.cache_of_tile_comparators[tilemap_name][pos.y]) ){
+				this.state.cache_of_tile_comparators[tilemap_name][pos.y] = [];
+				this.state.cache_of_tile_comparators[tilemap_name][pos.y][pos.x] = (val as TileComparatorSample);
+			} else {
+				this.state.cache_of_tile_comparators[tilemap_name][pos.y][pos.x] = (val as TileComparatorSample);
+			}
+
+			return (val as TileComparatorSample); //casting this because Typescript is being extra insistent that the tuple lengths match, but we can't guarantee this without dramatically complicating our code in a particularly bad way.
+			//https://github.com/microsoft/TypeScript/issues/11312
+		}
 	}
 	
 	get_tile_position_comparator_for_pos = ( pos: Point2D ): TilePositionComparatorSample => {
