@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
 
-import { Asset_Manager } from "./Asset_Manager";
+import { Asset_Manager_Data } from "./Asset_Manager";
 import { Tilemap_Manager_Data } from "./Tilemap_Manager";
 import * as Utils from "./Utils";
 

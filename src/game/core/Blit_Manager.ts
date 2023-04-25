@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import _, { reduce, zip, zipWith } from "lodash";
 
 import { ƒ } from "./Utils";
-import { Asset_Manager } from "./Asset_Manager";
+import { Asset_Manager_Data } from "./Asset_Manager";
 
 
 import { TileComparatorSample } from "./Asset_Manager";

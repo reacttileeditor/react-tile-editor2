@@ -2,14 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
 
-import { Asset_Manager } from "./Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, New_Blit_Manager } from "./Blit_Manager";
 import { New_Tilemap_Manager, Tilemap_Manager_Data } from "./Tilemap_Manager";
 import { Point2D, Rectangle } from '../interfaces';
 
 
 interface Props {
-	asset_manager: Asset_Manager,
+	asset_manager: Asset_Manager_Data,
 	highlight: boolean,
 	tile_name: string,
 	asset_name: string,
@@ -66,7 +66,8 @@ export class Tile_Palette_Element extends React.Component <Props> {
 		Blit_Manager_ƒ.fill_canvas_with_solid_color(this._Blit_Manager);
 
 		if(  _.size(this.props.tile_name) > 0 ){
-			this.props.asset_manager.draw_all_assets_for_tile_type(
+			Asset_Manager_ƒ.draw_all_assets_for_tile_type(
+				this.props.asset_manager,
 				this.props.tile_name,
 				this._Blit_Manager,
 				{
@@ -77,7 +78,8 @@ export class Tile_Palette_Element extends React.Component <Props> {
 		}
 
 		if( _.size(this.props.asset_name) > 0 ){
-			this.props.asset_manager.draw_image_for_asset_name({
+			Asset_Manager_ƒ.draw_image_for_asset_name({
+				_AM:						this.props.asset_manager,
 				asset_name:					this.props.asset_name,
 				_BM:						this._Blit_Manager,
 				pos:						{

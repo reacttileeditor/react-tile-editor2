@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import _ from "lodash";
 
 import { Canvas_View } from "./Canvas_View";
-import { Asset_Manager } from "./Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "./Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
@@ -13,7 +13,7 @@ import { Point2D, Rectangle } from '../interfaces';
 
 
 interface Editor_View_Props {
-	_Asset_Manager: Asset_Manager,
+	_Asset_Manager: Asset_Manager_Data,
 	_Blit_Manager: Blit_Manager_Data,
 	assets_loaded: boolean,
 	initialize_tilemap_manager: Function,
@@ -49,7 +49,8 @@ export class Editor_View extends React.Component <Editor_View_Props, Editor_View
 	draw_cursor = () => {
 		//const pos = this._Tilemap_Manager.convert_tile_coords_to_pixel_coords(0,4); 
 
-		this.props._Asset_Manager.draw_image_for_asset_name({
+		Asset_Manager_ƒ.draw_image_for_asset_name({
+			_AM:						this.props._Asset_Manager,
 			asset_name:					'cursor',
 			_BM:						this.props._Blit_Manager,
 			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( this.props._Tilemap_Manager, this.state.cursor_pos ),
@@ -151,7 +152,7 @@ export class Editor_View extends React.Component <Editor_View_Props, Editor_View
 			{
 				this.props.assets_loaded
 				&&
-				this.props._Asset_Manager.yield_tile_name_list().map( (value, index) => {
+				Asset_Manager_ƒ.yield_tile_name_list(this.props._Asset_Manager).map( (value, index) => {
 					return	<Tile_Palette_Element
 								asset_manager={this.props._Asset_Manager}
 								tile_name={value}

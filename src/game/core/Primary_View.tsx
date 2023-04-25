@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import _ from "lodash";
 
 import { Canvas_View } from "./Canvas_View";
-import { Asset_Manager } from "./Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, New_Asset_Manager } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, New_Blit_Manager } from "./Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { New_Tilemap_Manager, Tilemap_Manager_Data } from "./Tilemap_Manager";
@@ -23,7 +23,7 @@ interface State {
 
 
 export class Primary_View extends React.Component <Props, State> {
-	_Asset_Manager: Asset_Manager;
+	_Asset_Manager: Asset_Manager_Data;
 	_Blit_Manager!: Blit_Manager_Data;
 	_Tilemap_Manager!: Tilemap_Manager_Data;
 	default_canvas_size: Point2D;
@@ -38,8 +38,9 @@ export class Primary_View extends React.Component <Props, State> {
 			is_edit_mode: true,
 		};
 		
-		this._Asset_Manager = new Asset_Manager();
-		this._Asset_Manager.launch_app( 
+		this._Asset_Manager = New_Asset_Manager();
+		Asset_Manager_ƒ.launch_app(
+			this._Asset_Manager,
 			() => { this.setState({assets_loaded: true}); }
 		);
 		

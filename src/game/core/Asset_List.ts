@@ -1,5 +1,11 @@
 import { StaticValues } from "./Asset_Manager";
 
+/*
+		special notes on this horrifying "negative match" regex:
+		https://stackoverflow.com/questions/6449131/javascript-regular-expression-to-not-match-a-word
+		https://stackoverflow.com/questions/406230/regular-expression-to-match-a-line-that-doesnt-contain-a-word
+*/
+
 export const asset_list: StaticValues = {
 	image_data_list: [{
 		url: "map-cursor.png",

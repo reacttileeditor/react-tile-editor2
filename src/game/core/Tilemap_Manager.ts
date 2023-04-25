@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import _, { Dictionary, isArray } from "lodash";
 
-import { Asset_Manager } from "./Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
 import * as Utils from "./Utils";
 import { ƒ } from "./Utils";
@@ -48,12 +48,12 @@ const tile_comparator_cache_init = {
 
 export type Tilemap_Manager_Data = {
 	state: tileViewState;
-	_AM: Asset_Manager;
+	_AM: Asset_Manager_Data;
 	_BM: Blit_Manager_Data;
 }
 
 export const New_Tilemap_Manager = (p: {
-	_AM: Asset_Manager,
+	_AM: Asset_Manager_Data,
 	_BM: Blit_Manager_Data,
 }): Tilemap_Manager_Data => {
 	
@@ -77,13 +77,13 @@ export const Tilemap_Manager_ƒ = {
 /*----------------------- initialization and asset loading -----------------------*/
 
 	initialize_tiles: (me: Tilemap_Manager_Data,) => {
-		let { consts, yield_tile_name_list, static_vals } = me._AM;
+		let { consts, static_vals } = me._AM;
 
 
 		me.state.tile_maps.terrain = _.range(consts.col_height).map( (row_value, row_index) => {
 			return _.range(consts.row_length).map( (col_value, col_index) => {
-				return yield_tile_name_list()[
-					Utils.dice( _.size( yield_tile_name_list() ) ) -1 
+				return Asset_Manager_ƒ.yield_tile_name_list(me._AM)[
+					Utils.dice( _.size( Asset_Manager_ƒ.yield_tile_name_list(me._AM) ) ) -1 
 				];
 			});
 		});
@@ -113,7 +113,7 @@ export const Tilemap_Manager_ƒ = {
 	},
 
 	clear_tile_map: (me: Tilemap_Manager_Data, tilemap_name: TileMapKeys ) => {
-		let { consts, yield_tile_name_list, static_vals } = me._AM;
+		let { consts, static_vals } = me._AM;
 
 		me.state.tile_maps[tilemap_name] = _.range(consts.col_height).map( (row_value, row_index) => {
 			return _.range(consts.row_length).map( (col_value, col_index) => {
@@ -129,7 +129,7 @@ export const Tilemap_Manager_ƒ = {
 
 	
 	draw_tiles: (me: Tilemap_Manager_Data) => {
-		let zorder_list = me._AM.yield_full_zorder_list();
+		let zorder_list = Asset_Manager_ƒ.yield_full_zorder_list(me._AM);
 
 		zorder_list.map( (value,index) => {
 			Tilemap_Manager_ƒ.draw_tiles_for_zorder(me, value);
@@ -170,7 +170,8 @@ export const Tilemap_Manager_ƒ = {
 			let universal_hex_offset = Utils.modulo(pos.y, 2) == 1 ? Math.floor(consts.tile_width / 2) : 0;
 
 								
-			me._AM.draw_image_for_tile_type_at_zorder_and_pos	(
+			Asset_Manager_ƒ.draw_image_for_tile_type_at_zorder_and_pos	(
+															me._AM,
 															tile_name,
 															me._BM,
 															zorder,

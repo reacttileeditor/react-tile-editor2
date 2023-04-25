@@ -5,7 +5,7 @@ import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumbe
 import { ƒ } from "./Utils";
 
 import { Canvas_View } from "./Canvas_View";
-import { Asset_Manager } from "./Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager";
 import { Blit_Manager_Data, ticks_to_ms } from "./Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
@@ -21,7 +21,7 @@ import { Custom_Object_Data, Custom_Object_ƒ } from "../objects_core/Custom_Obj
 import { TooltipData } from "./Game_View";
 
 interface Game_View_Props {
-	_Asset_Manager: Asset_Manager,
+	_Asset_Manager: Asset_Manager_Data,
 	_Blit_Manager: Blit_Manager_Data,
 	assets_loaded: boolean,
 	initialize_tilemap_manager: Function,
@@ -70,7 +70,7 @@ type ObjectiveTypes = 'extermination' | 'decapitation';
 
 export type Game_Manager_Data = {
 	_Blit_Manager: Blit_Manager_Data;
-	_Asset_Manager: Asset_Manager;
+	_Asset_Manager: Asset_Manager_Data;
 	_TM: Tilemap_Manager_Data;
 	animation_state: AnimationState;
 	game_state: Game_State;
@@ -83,7 +83,7 @@ export type Game_Manager_Data = {
 
 export const New_Game_Manager = (p: {
 	_Blit_Manager: Blit_Manager_Data,
-	_Asset_Manager: Asset_Manager,
+	_Asset_Manager: Asset_Manager_Data,
 	_TM: Tilemap_Manager_Data,
 	get_GM_instance: ()=> Game_Manager_Data,
 }): Game_Manager_Data => {
@@ -329,7 +329,8 @@ export const Game_Manager_ƒ = {
 	draw_cursor: (me: Game_Manager_Data) => {
 		//const pos = this._TM.convert_tile_coords_to_pixel_coords(0,4); 
 
-		me._Asset_Manager.draw_image_for_asset_name({
+		Asset_Manager_ƒ.draw_image_for_asset_name({
+			_AM:						me._Asset_Manager,
 			asset_name:					'cursor',
 			_BM:						me._Blit_Manager,
 			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
@@ -433,7 +434,8 @@ export const Game_Manager_ƒ = {
 		map( me.game_state.current_frame_state.creature_list, (val,idx) => {
 			const direction = Creature_ƒ.yield_direction_for_time_in_post_turn_animation(val, Game_Manager_ƒ.get_time_offset(me));
 
-			me._Asset_Manager.draw_image_for_asset_name({
+			Asset_Manager_ƒ.draw_image_for_asset_name({
+				_AM:						me._Asset_Manager,
 				asset_name:					Creature_ƒ.yield_walk_asset_for_direction( val, direction ), //i.e. 'peasant-se-walk',
 				_BM:						me._Blit_Manager,
 				pos:						val.pixel_pos, //yield_position_for_time_in_post_turn_animation( this._TM, this.get_time_offset() ),
@@ -447,7 +449,8 @@ export const Game_Manager_ƒ = {
 		})
 
 		map( me.game_state.custom_object_list, (val,idx) => {
-			me._Asset_Manager.draw_image_for_asset_name({
+			Asset_Manager_ƒ.draw_image_for_asset_name({
+				_AM:						me._Asset_Manager,
 				asset_name:					Custom_Object_ƒ.yield_image(val),
 				_BM:						me._Blit_Manager,
 				pos:						val.pixel_pos,
@@ -459,7 +462,7 @@ export const Game_Manager_ƒ = {
 				vertically_flipped:			false,
 			})
 
-			me._Asset_Manager.draw_text({
+			Asset_Manager_ƒ.draw_text({
 				text:						Custom_Object_ƒ.yield_text(val),
 				_BM:						me._Blit_Manager,
 				pos:						val.pixel_pos,
@@ -479,7 +482,8 @@ export const Game_Manager_ƒ = {
 			This particularly means "paused at end of turn".
 		*/
 		map( Game_Manager_ƒ.get_current_turn_state(me).creature_list, (val,idx) => {
-			me._Asset_Manager.draw_image_for_asset_name({
+			Asset_Manager_ƒ.draw_image_for_asset_name({
+				_AM:						me._Asset_Manager,
 				asset_name:					Creature_ƒ.yield_stand_asset_for_direction(val, val.facing_direction),
 				_BM:						me._Blit_Manager,
 				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM, val.tile_pos),
@@ -491,7 +495,7 @@ export const Game_Manager_ƒ = {
 				vertically_flipped:			false,
 			})
 
-			me._Asset_Manager.draw_hitpoints({
+			Asset_Manager_ƒ.draw_hitpoints({
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
 				_BM:						me._Blit_Manager,
 				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM, val.tile_pos),
@@ -501,7 +505,8 @@ export const Game_Manager_ƒ = {
 			})			
 	
 			if(me.game_state.selected_object_index == idx){
-				me._Asset_Manager.draw_image_for_asset_name ({
+				Asset_Manager_ƒ.draw_image_for_asset_name ({
+					_AM:						me._Asset_Manager,
 					asset_name:					'cursor_green',
 					_BM:						me._Blit_Manager,
 					pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM, val.tile_pos),
@@ -533,7 +538,8 @@ export const Game_Manager_ƒ = {
 
 
 			map( me.game_state.custom_object_list, (val,idx) => {
-				me._Asset_Manager.draw_image_for_asset_name({
+				Asset_Manager_ƒ.draw_image_for_asset_name({
+					_AM:						me._Asset_Manager,
 					asset_name:					Custom_Object_ƒ.yield_image(val),
 					_BM:						me._Blit_Manager,
 					pos:						val.pixel_pos,
@@ -545,7 +551,7 @@ export const Game_Manager_ƒ = {
 					vertically_flipped:			false,
 				})
 	
-				me._Asset_Manager.draw_text({
+				Asset_Manager_ƒ.draw_text({
 					text:						Custom_Object_ƒ.yield_text(val),
 					_BM:						me._Blit_Manager,
 					pos:						val.pixel_pos,
