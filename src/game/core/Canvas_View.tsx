@@ -3,13 +3,13 @@ import ReactDOM from "react-dom";
 import _ from "lodash";
 
 import { Asset_Manager } from "./Asset_Manager";
-import { Tilemap_Manager } from "./Tilemap_Manager";
+import { Tilemap_Manager_Data } from "./Tilemap_Manager";
 import * as Utils from "./Utils";
 
 interface Props {
 	assets_loaded: boolean,
 	initialize_tilemap_manager: Function,
-	_Tilemap_Manager: Tilemap_Manager,
+	_Tilemap_Manager: Tilemap_Manager_Data,
 	dimensions: Point2D,
 	
 	handle_canvas_click: Function,

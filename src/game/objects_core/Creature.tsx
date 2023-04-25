@@ -9,7 +9,7 @@ import { ƒ } from "../core/Utils";
 // import { Asset_Manager } from "./Asset_Manager";
 // import { Blit_Manager } from "./Blit_Manager";
 // import { Tile_Palette_Element } from "./Tile_Palette_Element";
-import { Tilemap_Manager, Direction } from "../core/Tilemap_Manager";
+import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/Tilemap_Manager";
 import { Pathfinder, Pathfinding_Result } from "../core/Pathfinding";
 
 import { Point2D, Rectangle } from '../interfaces';
@@ -84,7 +84,7 @@ type Anim_Schedule_Element = {
 export const New_Creature = (
 	p: {
 		get_GM_instance: () => Game_Manager_Data;
-		TM: Tilemap_Manager,
+		_TM: Tilemap_Manager_Data,
 		tile_pos: Point2D,
 		direction?: Direction,
 		remaining_action_points?: number,
@@ -100,7 +100,7 @@ export const New_Creature = (
 	return {
 		...New_Base_Object({
 			get_GM_instance: p.get_GM_instance,
-			pixel_pos: p.TM.convert_tile_coords_to_pixel_coords(p.tile_pos),
+			pixel_pos: Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(p._TM, p.tile_pos),
 			unique_id: p.unique_id,
 			should_remove: p.should_remove,
 			creation_timestamp: p.creation_timestamp,
@@ -197,8 +197,8 @@ export const Creature_ƒ = {
 
 
 
-	get_current_mid_turn_tile_pos: (me: Creature_Data, TM: Tilemap_Manager): Point2D => (
-		TM.convert_pixel_coords_to_tile_coords(me.pixel_pos)
+	get_current_mid_turn_tile_pos: (me: Creature_Data, _TM: Tilemap_Manager_Data): Point2D => (
+		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, me.pixel_pos)
 	),
 /*----------------------- constructor/destructor stuff -----------------------*/
 
@@ -229,14 +229,14 @@ export const Creature_ƒ = {
 
 /*----------------------- movement -----------------------*/
 
-	set_path: (me: Creature_Data, new_path: Array<Point2D>, _Tilemap_Manager: Tilemap_Manager) => {
+	set_path: (me: Creature_Data, new_path: Array<Point2D>, _TM: Tilemap_Manager_Data) => {
 		me.path_this_turn = new_path;
 		me.path_reachable_this_turn = Creature_ƒ.yield_path_reachable_this_turn(me,new_path);
 		
 		me.path_this_turn_with_directions = Creature_ƒ.build_directional_path_from_path(
 			me,
 			me.path_this_turn,
-			_Tilemap_Manager
+			_TM
 		);
 
 		me.path_reachable_this_turn_with_directions = Creature_ƒ.yield_directional_path_reachable_this_turn(me, me.path_this_turn_with_directions);
@@ -244,7 +244,7 @@ export const Creature_ƒ = {
 
 		//console.log("directional path", me.path_this_turn_with_directions)
 
-		Creature_ƒ.build_anim_from_path(me,_Tilemap_Manager);
+		Creature_ƒ.build_anim_from_path(me,_TM);
 
 		//console.log('anim:', me.animation_this_turn)
 	},
@@ -280,7 +280,7 @@ export const Creature_ƒ = {
 	},
 
 	
-	build_anim_from_path: (me: Creature_Data, _Tilemap_Manager: Tilemap_Manager) => {
+	build_anim_from_path: (me: Creature_Data, _TM: Tilemap_Manager_Data) => {
 		var time_so_far = 0;
 		me.animation_this_turn = [];
 
@@ -291,7 +291,7 @@ export const Creature_ƒ = {
 						me,
 						val,
 						me.path_reachable_this_turn[idx + 1],
-						_Tilemap_Manager
+						_TM
 					),
 					duration: 300,
 					start_time: time_so_far,
@@ -307,7 +307,7 @@ export const Creature_ƒ = {
 	build_directional_path_from_path: (
 		me: Creature_Data,
 		raw_path: Array<Point2D>,
-		_Tilemap_Manager: Tilemap_Manager
+		_TM: Tilemap_Manager_Data
 	): Array<PathNodeWithDirection> => (
 
 		_.map( raw_path, (val, idx) => {
@@ -325,7 +325,7 @@ export const Creature_ƒ = {
 						me,
 						raw_path[idx - 1],
 						raw_path[idx],
-						_Tilemap_Manager
+						_TM
 					)
 				}
 			}
@@ -336,10 +336,10 @@ export const Creature_ƒ = {
 		me: Creature_Data,
 		start_pos: Point2D,
 		end_pos: Point2D,
-		_Tilemap_Manager: Tilemap_Manager
+		_TM: Tilemap_Manager_Data
 	):Direction => {
-		const pixel_start_pos = _Tilemap_Manager.convert_tile_coords_to_pixel_coords(start_pos);
-		const pixel_end_pos = _Tilemap_Manager.convert_tile_coords_to_pixel_coords(end_pos);
+		const pixel_start_pos = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, start_pos);
+		const pixel_end_pos = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, end_pos);
 
 		if( pixel_start_pos.y == pixel_end_pos.y ){
 			if(pixel_start_pos.x < pixel_end_pos.x){
@@ -487,7 +487,7 @@ export const Creature_ƒ = {
 
 	process_single_frame: (
 		me: Creature_Data,
-		TM: Tilemap_Manager,
+		_TM: Tilemap_Manager_Data,
 		offset_in_ms: number
 	): {
 		change_list: Array<ChangeInstance>,
@@ -497,7 +497,7 @@ export const Creature_ƒ = {
 
 
 		let change_list: Array<ChangeInstance> = [];
-		let new_pos = Creature_ƒ.yield_position_for_time_in_post_turn_animation(me, TM, offset_in_ms);
+		let new_pos = Creature_ƒ.yield_position_for_time_in_post_turn_animation(me, _TM, offset_in_ms);
 
 		change_list.push({
 			type: 'set',
@@ -568,7 +568,10 @@ export const Creature_ƒ = {
 
 		if( size(targets) ){
 			map(targets, (target)=>{
-				const distance = TM.get_tile_coord_distance_between(Creature_ƒ.get_current_mid_turn_tile_pos(me,TM), Creature_ƒ.get_current_mid_turn_tile_pos(target,TM));
+				const distance = Tilemap_Manager_ƒ.get_tile_coord_distance_between(
+					Creature_ƒ.get_current_mid_turn_tile_pos(me, _TM),
+					Creature_ƒ.get_current_mid_turn_tile_pos(target, _TM)
+				);
 
 				console.log( `distance between ${me.type_name} and ${target.type_name}: ${distance}`)
 
@@ -681,7 +684,7 @@ export const Creature_ƒ = {
 		}
 	},
 	
-	yield_position_for_time_in_post_turn_animation: (me: Creature_Data, _Tilemap_Manager: Tilemap_Manager, offset_in_ms: number):Point2D => {
+	yield_position_for_time_in_post_turn_animation: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number):Point2D => {
 //		console.log(me.animation_this_turn);
 		var animation_segment = Creature_ƒ.yield_animation_segment_for_time_offset(me, offset_in_ms);
 		
@@ -695,9 +698,9 @@ export const Creature_ƒ = {
 			*/
 
 			if(offset_in_ms >= Creature_ƒ.calculate_total_anim_duration(me) ){
-				return _Tilemap_Manager.convert_tile_coords_to_pixel_coords(me.planned_tile_pos)
+				return Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, me.planned_tile_pos)
 			} else {
-				return _Tilemap_Manager.convert_tile_coords_to_pixel_coords(me.tile_pos)
+				return Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, me.tile_pos)
 			}
 		} else {
 			//cheating for some test code - first we'll just do the start pos; then we'll linearly interpolate.   We want to linearly interpolate here, because any "actual" easing function should happen over the whole animation, not one segment (otherwise we'll have a very 'stuttery' movement pattern.
@@ -707,8 +710,8 @@ export const Creature_ƒ = {
 			
             return ƒ.round_point_to_nearest_pixel( 
                 ƒ.tween_points(
-                    _Tilemap_Manager.convert_tile_coords_to_pixel_coords( animation_segment.start_pos ),
-                    _Tilemap_Manager.convert_tile_coords_to_pixel_coords( animation_segment.end_pos ),
+                    Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, animation_segment.start_pos ),
+                    Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, animation_segment.end_pos ),
                     time_offset_normalized
                 )
             );

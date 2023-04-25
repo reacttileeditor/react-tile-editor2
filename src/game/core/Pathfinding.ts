@@ -7,7 +7,7 @@ import { PriorityQueue } from 'ts-pq';
 import { ƒ } from "./Utils";
 
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
-import { Tilemap_Manager } from "./Tilemap_Manager";
+import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
 import { Creature_Data, Creature_ƒ } from "../objects_core/Creature";
 import { Point2D, Rectangle } from '../interfaces';
 
@@ -42,10 +42,10 @@ export type Pathfinding_Result = {
 
 
 export class Node_Graph_Generator {
-	_TM: Tilemap_Manager;
+	_TM: Tilemap_Manager_Data;
 	_Creature: Creature_Data;
 
-	constructor( _TM: Tilemap_Manager, _Creature: Creature_Data ) {
+	constructor( _TM: Tilemap_Manager_Data, _Creature: Creature_Data ) {
 		
 		this._TM = _TM;
 		this._Creature = _Creature;
@@ -69,7 +69,7 @@ export class Node_Graph_Generator {
 			If the tile we're checking is out of bounds, then it's blocked.
 			If the tile we're checking is open, it's a valid node connection, so we return it (so we can add it to the graph).
 		*/
-		if( this._TM.is_within_map_bounds( _coords ) ){
+		if( Tilemap_Manager_ƒ.is_within_map_bounds( this._TM, _coords ) ){
 			let weight = this.move_cost_for_coords( _grid, _coords );
 		
 			if( weight !== null ){
@@ -87,7 +87,7 @@ export class Node_Graph_Generator {
 
 
 	check_adjacencies = ( _grid: TileGrid, _coords: Point2D ): Array<WeightedNode> => {
-		const tile_data: TilePositionComparatorSample = this._TM.get_tile_position_comparator_for_pos(_coords);
+		const tile_data: TilePositionComparatorSample = Tilemap_Manager_ƒ.get_tile_position_comparator_for_pos(this._TM, _coords);
 		var adjacent_nodes: Array<WeightedNode> = [];
 
 		/*
@@ -240,7 +240,7 @@ export class Pathfinder {
 		
 	}
 
-	find_path_between_map_tiles = (_TM: Tilemap_Manager, _start_coords: Point2D, _end_coords: Point2D, _Creature: Creature_Data) => {
+	find_path_between_map_tiles = (_TM: Tilemap_Manager_Data, _start_coords: Point2D, _end_coords: Point2D, _Creature: Creature_Data) => {
 		/*
 			We're going to go ahead and pass in the creature as a constructor argument; the idea here is that we can't really "reuse" an existing node graph generator and just pass in a new creature type; the moment anything changes about the creature we're using, we need to completely rebuild the node graph from scratch.  So there's no sense in pipelining it into the whole function tree inside the class - we have to nuke and rebuild anyways, so why not make the interface a bit simpler?
 		*/

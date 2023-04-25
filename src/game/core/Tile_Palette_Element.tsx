@@ -4,7 +4,7 @@ import _ from "lodash";
 
 import { Asset_Manager } from "./Asset_Manager";
 import { Blit_Manager } from "./Blit_Manager";
-import { Tilemap_Manager } from "./Tilemap_Manager";
+import { New_Tilemap_Manager, Tilemap_Manager_Data } from "./Tilemap_Manager";
 import { Point2D, Rectangle } from '../interfaces';
 
 
@@ -21,7 +21,7 @@ export class Tile_Palette_Element extends React.Component <Props> {
 	ctx!: CanvasRenderingContext2D;
 	canvas!: HTMLCanvasElement;
 	_Blit_Manager!: Blit_Manager;
-	_Tilemap_Manager!: Tilemap_Manager;
+	_Tilemap_Manager!: Tilemap_Manager_Data;
 	default_canvas_size: Point2D;
 
 /*----------------------- initialization and asset loading -----------------------*/
@@ -50,7 +50,7 @@ export class Tile_Palette_Element extends React.Component <Props> {
 	initialize_tilemap_manager = (ctx: CanvasRenderingContext2D) => {
 		if( !this._Tilemap_Manager ){
 			this._Blit_Manager = new Blit_Manager(ctx, this.default_canvas_size, false);
-			this._Tilemap_Manager = new Tilemap_Manager(this.props.asset_manager, this._Blit_Manager);
+			this._Tilemap_Manager = New_Tilemap_Manager({_AM: this.props.asset_manager, _BM: this._Blit_Manager});
 		} else {
 			this._Blit_Manager.reset_context(ctx);
 		}

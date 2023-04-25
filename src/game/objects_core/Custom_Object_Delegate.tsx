@@ -5,7 +5,7 @@ import { v4 as uuid } from "uuid";
 
 import { ƒ } from "../core/Utils";
 
-import { Tilemap_Manager, Direction } from "../core/Tilemap_Manager";
+import { Direction } from "../core/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/Game_Manager";

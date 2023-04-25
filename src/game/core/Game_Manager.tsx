@@ -8,7 +8,7 @@ import { Canvas_View } from "./Canvas_View";
 import { Asset_Manager } from "./Asset_Manager";
 import { Blit_Manager, ticks_to_ms } from "./Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
-import { Tilemap_Manager, Direction } from "./Tilemap_Manager";
+import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
 import { Pathfinder } from "./Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance } from "../objects_core/Creature";
@@ -25,7 +25,7 @@ interface Game_View_Props {
 	_Blit_Manager: Blit_Manager,
 	assets_loaded: boolean,
 	initialize_tilemap_manager: Function,
-	_Tilemap_Manager: Tilemap_Manager,
+	_Tilemap_Manager: Tilemap_Manager_Data,
 	dimensions: Point2D,
 }
 
@@ -71,7 +71,7 @@ type ObjectiveTypes = 'extermination' | 'decapitation';
 export type Game_Manager_Data = {
 	_Blit_Manager: Blit_Manager;
 	_Asset_Manager: Asset_Manager;
-	_Tilemap_Manager: Tilemap_Manager;
+	_TM: Tilemap_Manager_Data;
 	animation_state: AnimationState;
 	game_state: Game_State;
 	update_game_state_for_ui: Function;
@@ -84,7 +84,7 @@ export type Game_Manager_Data = {
 export const New_Game_Manager = (p: {
 	_Blit_Manager: Blit_Manager,
 	_Asset_Manager: Asset_Manager,
-	_Tilemap_Manager: Tilemap_Manager,
+	_TM: Tilemap_Manager_Data,
 	get_GM_instance: ()=> Game_Manager_Data,
 }): Game_Manager_Data => {
 
@@ -92,7 +92,7 @@ export const New_Game_Manager = (p: {
 	const game_manager: Game_Manager_Data = {
 		_Blit_Manager: p._Blit_Manager,
 		_Asset_Manager: p._Asset_Manager,
-		_Tilemap_Manager: p._Tilemap_Manager,
+		_TM: p._TM,
 		update_game_state_for_ui: ()=>{},
 		update_tooltip_state: ()=>{},
 		cursor_pos: {x: 0, y: 0},
@@ -114,7 +114,7 @@ export const New_Game_Manager = (p: {
 		creature_list: [New_Creature({
 			get_GM_instance: p.get_GM_instance,
 			tile_pos: {x: 1, y: 6},
-			TM: p._Tilemap_Manager,
+			_TM: p._TM,
 			planned_tile_pos: {x: 0, y: 6},
 			type_name: 'hermit',
 			team: 1,
@@ -123,7 +123,7 @@ export const New_Game_Manager = (p: {
 		}), New_Creature({
 			get_GM_instance: p.get_GM_instance,
 			tile_pos: {x: 2, y: 4},
-			TM: p._Tilemap_Manager,
+			_TM: p._TM,
 			planned_tile_pos: {x: 2, y: 4},
 			type_name: 'peasant',
 			team: 1,
@@ -132,7 +132,7 @@ export const New_Game_Manager = (p: {
 		}), New_Creature({
 			get_GM_instance: p.get_GM_instance,
 			tile_pos: {x: 4, y: 4},
-			TM: p._Tilemap_Manager,
+			_TM: p._TM,
 			planned_tile_pos: {x: 4, y: 4},
 			type_name: 'skeleton',
 			team: 2,
@@ -141,7 +141,7 @@ export const New_Game_Manager = (p: {
 		}), New_Creature({
 			get_GM_instance: p.get_GM_instance,
 			tile_pos: {x: 5, y: 8},
-			TM: p._Tilemap_Manager,
+			_TM: p._TM,
 			planned_tile_pos: {x: 5, y: 8},
 			type_name: 'skeleton',
 			team: 2,
@@ -292,8 +292,9 @@ export const Game_Manager_ƒ = {
 		const selected_creature = Game_Manager_ƒ.get_selected_creature(me);
 
 		if(selected_creature){
-			const tile_type = me._Tilemap_Manager.get_tile_name_for_pos(
-				me._Tilemap_Manager.convert_pixel_coords_to_tile_coords( me.cursor_pos ), //selected_creature.tile_pos,
+			const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
+				me._TM,
+				Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( me._TM, me.cursor_pos ), //selected_creature.tile_pos,
 				'terrain',
 			);
 
@@ -308,8 +309,9 @@ export const Game_Manager_ƒ = {
 		me.update_game_state_for_ui(me.game_state);
 		me.update_tooltip_state( {
 			pos: me.cursor_pos,
-			tile_name: me._Tilemap_Manager.get_tile_name_for_pos(
-				me._Tilemap_Manager.convert_pixel_coords_to_tile_coords( me.cursor_pos ),
+			tile_name: Tilemap_Manager_ƒ.get_tile_name_for_pos(
+				me._TM,
+				Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( me._TM, me.cursor_pos ),
 				'terrain',
 			),
 			tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me)}`
@@ -325,13 +327,15 @@ export const Game_Manager_ƒ = {
 	},
 
 	draw_cursor: (me: Game_Manager_Data) => {
-		//const pos = this._Tilemap_Manager.convert_tile_coords_to_pixel_coords(0,4); 
+		//const pos = this._TM.convert_tile_coords_to_pixel_coords(0,4); 
 
 		me._Asset_Manager.draw_image_for_asset_name({
 			asset_name:					'cursor',
 			_BM:						me._Blit_Manager,
-			pos:						me._Tilemap_Manager.convert_tile_coords_to_pixel_coords(
-				me._Tilemap_Manager.convert_pixel_coords_to_tile_coords(
+			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
+				me._TM,
+				Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(
+					me._TM,
 					me.cursor_pos
 				)
 			),
@@ -358,7 +362,7 @@ export const Game_Manager_ƒ = {
 			let master_change_list: Array<ChangeInstance> = [];
 
 			map( me.game_state.current_frame_state.creature_list, (val,idx) => {
-				const processed_results = Creature_ƒ.process_single_frame(val, me._Tilemap_Manager, Game_Manager_ƒ.get_time_offset(me));
+				const processed_results = Creature_ƒ.process_single_frame(val, me._TM, Game_Manager_ƒ.get_time_offset(me));
 
 				map(processed_results.spawnees, (val)=>{ spawnees.push(val) });
 				map(processed_results.change_list, (val)=>{ master_change_list.push(val) });
@@ -371,7 +375,7 @@ export const Game_Manager_ƒ = {
 			*/
 			let all_objects = concat( cloneDeep(me.game_state.custom_object_list), cloneDeep(spawnees));
 			let all_objects_processed = map( all_objects, (val,idx) => {
-				return (Custom_Object_ƒ.process_single_frame(val, me._Tilemap_Manager, Game_Manager_ƒ.get_time_offset(me)))
+				return (Custom_Object_ƒ.process_single_frame(val, me._TM, Game_Manager_ƒ.get_time_offset(me)))
 			});
 
 			let all_objects_processed_and_culled = filter( all_objects_processed, (val)=>(
@@ -409,7 +413,7 @@ export const Game_Manager_ƒ = {
 
 		let all_objects = cloneDeep(me.game_state.custom_object_list);
 		let all_objects_processed = map( all_objects, (val,idx) => {
-			return (Custom_Object_ƒ.process_single_frame(val, me._Tilemap_Manager, Game_Manager_ƒ.get_time_offset(me)))
+			return (Custom_Object_ƒ.process_single_frame(val, me._TM, Game_Manager_ƒ.get_time_offset(me)))
 		});
 
 		let all_objects_processed_and_culled = filter( all_objects_processed, (val)=>(
@@ -432,7 +436,7 @@ export const Game_Manager_ƒ = {
 			me._Asset_Manager.draw_image_for_asset_name({
 				asset_name:					Creature_ƒ.yield_walk_asset_for_direction( val, direction ), //i.e. 'peasant-se-walk',
 				_BM:						me._Blit_Manager,
-				pos:						val.pixel_pos, //yield_position_for_time_in_post_turn_animation( this._Tilemap_Manager, this.get_time_offset() ),
+				pos:						val.pixel_pos, //yield_position_for_time_in_post_turn_animation( this._TM, this.get_time_offset() ),
 				zorder:						12,
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
 				opacity:					1.0,
@@ -478,7 +482,7 @@ export const Game_Manager_ƒ = {
 			me._Asset_Manager.draw_image_for_asset_name({
 				asset_name:					Creature_ƒ.yield_stand_asset_for_direction(val, val.facing_direction),
 				_BM:						me._Blit_Manager,
-				pos:						me._Tilemap_Manager.convert_tile_coords_to_pixel_coords(val.tile_pos),
+				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM, val.tile_pos),
 				zorder:						12,
 				current_milliseconds:		0,
 				opacity:					1.0,
@@ -490,7 +494,7 @@ export const Game_Manager_ƒ = {
 			me._Asset_Manager.draw_hitpoints({
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
 				_BM:						me._Blit_Manager,
-				pos:						me._Tilemap_Manager.convert_tile_coords_to_pixel_coords(val.tile_pos),
+				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM, val.tile_pos),
 				zorder:						12,
 				current_milliseconds:		0,
 				opacity:					1.0,
@@ -500,7 +504,7 @@ export const Game_Manager_ƒ = {
 				me._Asset_Manager.draw_image_for_asset_name ({
 					asset_name:					'cursor_green',
 					_BM:						me._Blit_Manager,
-					pos:						me._Tilemap_Manager.convert_tile_coords_to_pixel_coords(val.tile_pos),
+					pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM, val.tile_pos),
 					zorder:						10,
 					current_milliseconds:		0,
 					opacity:					1.0,
@@ -509,10 +513,11 @@ export const Game_Manager_ƒ = {
 					vertically_flipped:			false,
 				})
 
-				me._Tilemap_Manager.clear_tile_map('ui');
+				Tilemap_Manager_ƒ.clear_tile_map(me._TM, 'ui');
 
 				map(val.path_this_turn, (path_val, path_idx) => {
-					me._Tilemap_Manager.modify_tile_status(
+					Tilemap_Manager_ƒ.modify_tile_status(
+						me._TM,
 						path_val,
 						ƒ.if( includes(val.path_reachable_this_turn, path_val),
 							ƒ.if(path_val == last(val.path_reachable_this_turn),
@@ -560,7 +565,7 @@ export const Game_Manager_ƒ = {
 
 	handle_click: (me: Game_Manager_Data, pos: Point2D) => {
 // 		this.game_state.creature_list = [{
-// 			tile_pos: this._Tilemap_Manager.convert_pixel_coords_to_tile_coords( pos )
+// 			tile_pos: this._TM.convert_pixel_coords_to_tile_coords( pos )
 // 		}]
 		Game_Manager_ƒ.select_object_based_on_tile_click(me, pos);
 	},
@@ -593,7 +598,7 @@ export const Game_Manager_ƒ = {
 		/*
 			This handles two "modes" simultaneously.  If we click on an object, then we change the current selected object to be the one we clicked on (its position is occupied, and ostensibly can't be moved into - this might need to change with our game rules being what they are, but we'll cross that bridge later).  If we click on the ground, then we're intending to move the current object to that location.
 		*/
-		const new_pos = me._Tilemap_Manager.convert_pixel_coords_to_tile_coords( pos );
+		const new_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( me._TM, pos );
 		
 		const newly_selected_creature = findIndex( Game_Manager_ƒ.get_current_turn_state(me).creature_list, {
 			tile_pos: new_pos
@@ -607,8 +612,8 @@ export const Game_Manager_ƒ = {
 				
 				Creature_ƒ.set_path(
 					creature,
-					me._Pathfinder.find_path_between_map_tiles( me._Tilemap_Manager, creature.tile_pos, new_pos, creature ).successful_path,
-					me._Tilemap_Manager
+					me._Pathfinder.find_path_between_map_tiles( me._TM, creature.tile_pos, new_pos, creature ).successful_path,
+					me._TM
 				);
 			}
 		} else if(newly_selected_creature === me.game_state.selected_object_index ) {

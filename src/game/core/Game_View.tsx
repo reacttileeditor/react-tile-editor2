@@ -8,7 +8,7 @@ import { Canvas_View } from "./Canvas_View";
 import { Asset_Manager } from "./Asset_Manager";
 import { Blit_Manager, ticks_to_ms } from "./Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
-import { Tilemap_Manager, Direction } from "./Tilemap_Manager";
+import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
 import { Pathfinder } from "./Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance } from "../objects_core/Creature";
@@ -24,7 +24,7 @@ interface Game_View_Props {
 	_Blit_Manager: Blit_Manager,
 	assets_loaded: boolean,
 	initialize_tilemap_manager: Function,
-	_Tilemap_Manager: Tilemap_Manager,
+	_Tilemap_Manager: Tilemap_Manager_Data,
 	dimensions: Point2D,
 }
 
@@ -218,7 +218,7 @@ export class Game_View extends React.Component <Game_View_Props, {pos: Point2D}>
 		this._Game_Manager_Data = New_Game_Manager({
 			_Blit_Manager: this.props._Blit_Manager,
 			_Asset_Manager: this.props._Asset_Manager,
-			_Tilemap_Manager: this.props._Tilemap_Manager,
+			_TM: this.props._Tilemap_Manager,
 			get_GM_instance: ()=>( this._Game_Manager_Data ),
 		});
 		this.awaiting_render = false;
@@ -245,7 +245,7 @@ export class Game_View extends React.Component <Game_View_Props, {pos: Point2D}>
 
 	render_canvas = () => {
 		if(this.awaiting_render){
-			this.props._Tilemap_Manager.do_one_frame_of_rendering();
+			Tilemap_Manager_ƒ.do_one_frame_of_rendering(this.props._Tilemap_Manager);
 			Game_Manager_ƒ.do_one_frame_of_rendering_and_processing(this._Game_Manager_Data);
 			this.awaiting_render = false;
 			this.iterate_render_loop();

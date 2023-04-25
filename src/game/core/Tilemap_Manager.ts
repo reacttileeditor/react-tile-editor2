@@ -45,33 +45,42 @@ const tile_comparator_cache_init = {
 };
 
 
-export class Tilemap_Manager {
+
+export type Tilemap_Manager_Data = {
 	state: tileViewState;
 	_AM: Asset_Manager;
 	_BM: Blit_Manager;
+}
 
-/*----------------------- initialization and asset loading -----------------------*/
-	constructor(_Asset_Manager: Asset_Manager, _Blit_Manager : Blit_Manager ) {
-		
-		this.state = {
+export const New_Tilemap_Manager = (p: {
+	_AM: Asset_Manager,
+	_BM: Blit_Manager,
+}): Tilemap_Manager_Data => {
+	
+	return {
+		state: {
 			tile_maps: {
 				terrain: [['']],
 				ui: [['']],
 			},
 			cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
 			initialized: false,
-		};
-		
-		this._AM = _Asset_Manager;
-		this._BM = _Blit_Manager;
+		},
+		_AM: p._AM,
+		_BM: p._BM,
 	}
+}
 
 
-	initialize_tiles = () => {
-		let { consts, yield_tile_name_list, static_vals } = this._AM;
+export const Tilemap_Manager_ƒ = {
+
+/*----------------------- initialization and asset loading -----------------------*/
+
+	initialize_tiles: (me: Tilemap_Manager_Data,) => {
+		let { consts, yield_tile_name_list, static_vals } = me._AM;
 
 
-		this.state.tile_maps.terrain = _.range(consts.col_height).map( (row_value, row_index) => {
+		me.state.tile_maps.terrain = _.range(consts.col_height).map( (row_value, row_index) => {
 			return _.range(consts.row_length).map( (col_value, col_index) => {
 				return yield_tile_name_list()[
 					Utils.dice( _.size( yield_tile_name_list() ) ) -1 
@@ -79,65 +88,66 @@ export class Tilemap_Manager {
 			});
 		});
 
-		this.clear_tile_map('ui');	
+		Tilemap_Manager_ƒ.clear_tile_map(me,'ui');	
 
-		this.state.initialized = true;
-	}
+		me.state.initialized = true;
+	},
 
-	clear_cache = () => {
-		this.state.cache_of_tile_comparators = _.cloneDeep(tile_comparator_cache_init);
-	}
+	clear_cache: (me: Tilemap_Manager_Data) => {
+		me.state.cache_of_tile_comparators = _.cloneDeep(tile_comparator_cache_init);
+	},
 
 /*----------------------- state mutation -----------------------*/
-	modify_tile_status = ( pos: Point2D, selected_tile_type: string, tilemap_name: TileMapKeys ): void => {
-		let { consts, static_vals } = this._AM;
+	modify_tile_status: (me: Tilemap_Manager_Data, pos: Point2D, selected_tile_type: string, tilemap_name: TileMapKeys ): void => {
+		let { consts, static_vals } = me._AM;
 		
 		if(
-			this.is_within_map_bounds( pos )
+			Tilemap_Manager_ƒ.is_within_map_bounds( me, pos )
 		){
 			if(selected_tile_type && selected_tile_type != ''){
-				this.state.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
+				me.state.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
 
-				this.clear_cache();
+				Tilemap_Manager_ƒ.clear_cache(me);
 			}
 		}
-	}
+	},
 
-	clear_tile_map = ( tilemap_name: TileMapKeys ) => {
-		let { consts, yield_tile_name_list, static_vals } = this._AM;
+	clear_tile_map: (me: Tilemap_Manager_Data, tilemap_name: TileMapKeys ) => {
+		let { consts, yield_tile_name_list, static_vals } = me._AM;
 
-		this.state.tile_maps[tilemap_name] = _.range(consts.col_height).map( (row_value, row_index) => {
+		me.state.tile_maps[tilemap_name] = _.range(consts.col_height).map( (row_value, row_index) => {
 			return _.range(consts.row_length).map( (col_value, col_index) => {
 				return ''
 			});
 		});			
 
-		this.clear_cache();
-	}
+		Tilemap_Manager_ƒ.clear_cache(me);
+	},
 
 
 /*----------------------- draw ops -----------------------*/
 
 	
-	draw_tiles = () => {
-		let zorder_list = this._AM.yield_full_zorder_list();
+	draw_tiles: (me: Tilemap_Manager_Data) => {
+		let zorder_list = me._AM.yield_full_zorder_list();
 
 		zorder_list.map( (value,index) => {
-			this.draw_tiles_for_zorder(value);
+			Tilemap_Manager_ƒ.draw_tiles_for_zorder(me, value);
 		})
 		
-	}
+	},
 
-	draw_tiles_for_zorder = (zorder: number) => {
+	draw_tiles_for_zorder: (me: Tilemap_Manager_Data, zorder: number) => {
 
-		_.map(this.state.tile_maps as unknown as Dictionary<TileMap>, (tile_map, tilemap_name) => {
+		_.map(me.state.tile_maps as unknown as Dictionary<TileMap>, (tile_map, tilemap_name) => {
 			tile_map.map( (row_value, row_index) => {
 				row_value.map( (tile_name, col_index) => {
 
 					let pos = {x: col_index, y: row_index};
 					
 
-					this.draw_tile_at_coords(
+					Tilemap_Manager_ƒ.draw_tile_at_coords(
+												me,
 												pos,
 												tile_name,
 												zorder,
@@ -146,13 +156,13 @@ export class Tilemap_Manager {
 				});
 			});
 
-			this._AM.TileRNG.reset();
+			me._AM.TileRNG.reset();
 		});
-	}
+	},
 
 	
-	draw_tile_at_coords = ( pos: Point2D, tile_name: string, zorder: number, tilemap_name: TileMapKeys) => {
-		let { consts } = this._AM;
+	draw_tile_at_coords: ( me: Tilemap_Manager_Data, pos: Point2D, tile_name: string, zorder: number, tilemap_name: TileMapKeys) => {
+		let { consts } = me._AM;
 
 			/*
 				This is the special bit of logic which makes the different rows (since we're hex tiles) be offset from each other by "half" a tile.
@@ -160,67 +170,67 @@ export class Tilemap_Manager {
 			let universal_hex_offset = Utils.modulo(pos.y, 2) == 1 ? Math.floor(consts.tile_width / 2) : 0;
 
 								
-			this._AM.draw_image_for_tile_type_at_zorder_and_pos	(
+			me._AM.draw_image_for_tile_type_at_zorder_and_pos	(
 															tile_name,
-															this._BM,
+															me._BM,
 															zorder,
 						/* x */								(pos.x + 0) * consts.tile_width + universal_hex_offset,
 						/* y */								(pos.y + 0) * consts.tile_height,
-						/* comparator */					this.get_tile_comparator_sample_for_pos(pos, tilemap_name),
-															ticks_to_ms(this._BM.time_tracker.current_tick)
+						/* comparator */					Tilemap_Manager_ƒ.get_tile_comparator_sample_for_pos(me, pos, tilemap_name),
+															ticks_to_ms(me._BM.time_tracker.current_tick)
 														);
-	}
+	},
 
 	
-	do_one_frame_of_rendering = () => {
-		if(this.state.initialized){
-			this._BM.fill_canvas_with_solid_color();
-			this.draw_tiles();
-			this._BM.draw_entire_frame();
+	do_one_frame_of_rendering: (me: Tilemap_Manager_Data) => {
+		if(me.state.initialized){
+			me._BM.fill_canvas_with_solid_color();
+			Tilemap_Manager_ƒ.draw_tiles(me);
+			me._BM.draw_entire_frame();
 		} else {
-			this.initialize_tiles();
+			Tilemap_Manager_ƒ.initialize_tiles(me);
 		}
-	}
+	},
 	
 	
 /*----------------------- info ops -----------------------*/
-	is_within_map_bounds = ( pos: Point2D ): boolean => (
+	is_within_map_bounds: (me: Tilemap_Manager_Data, pos: Point2D ): boolean => (
 		pos.x >= 0 &&
 		pos.y >= 0 && 
-		pos.x < this._AM.consts.row_length &&
-		pos.y < this._AM.consts.col_height 
-	)
+		pos.x < me._AM.consts.row_length &&
+		pos.y < me._AM.consts.col_height 
+	),
 
 
 
-	get_tile_comparator_sample_for_pos = ( pos: Point2D, tilemap_name: TileMapKeys ): TileComparatorSample => {
-		const cached_value = this.state.cache_of_tile_comparators[tilemap_name]?.[pos.y]?.[pos.x];
+	get_tile_comparator_sample_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ): TileComparatorSample => {
+		const cached_value = me.state.cache_of_tile_comparators[tilemap_name]?.[pos.y]?.[pos.x];
 
 		if( cached_value != undefined ){
 			return cached_value;
 		} else {
-			const tpc = this.get_tile_position_comparator_for_pos(pos);
+			const tpc = Tilemap_Manager_ƒ.get_tile_position_comparator_for_pos(me, pos);
 			
 			const val = _.map(tpc, (row_val, row_idx) => {
 				return _.map(row_val, (col_val, col_idx) => {
-					return this.get_tile_name_for_pos( col_val, tilemap_name )
+					return Tilemap_Manager_ƒ.get_tile_name_for_pos( me, col_val, tilemap_name )
 				})
 			});
 			
 			//some funny-business to cache it:
-			if( !isArray(this.state.cache_of_tile_comparators[tilemap_name][pos.y]) ){
-				this.state.cache_of_tile_comparators[tilemap_name][pos.y] = [];
-				this.state.cache_of_tile_comparators[tilemap_name][pos.y][pos.x] = (val as TileComparatorSample);
+			if( !isArray(me.state.cache_of_tile_comparators[tilemap_name][pos.y]) ){
+				me.state.cache_of_tile_comparators[tilemap_name][pos.y] = [];
+				me.state.cache_of_tile_comparators[tilemap_name][pos.y][pos.x] = (val as TileComparatorSample);
 			} else {
-				this.state.cache_of_tile_comparators[tilemap_name][pos.y][pos.x] = (val as TileComparatorSample);
+				me.state.cache_of_tile_comparators[tilemap_name][pos.y][pos.x] = (val as TileComparatorSample);
 			}
 
 			return (val as TileComparatorSample); //casting this because Typescript is being extra insistent that the tuple lengths match, but we can't guarantee this without dramatically complicating our code in a particularly bad way.
 			//https://github.com/microsoft/TypeScript/issues/11312
 		}
-	}
+	},
 	
-	get_tile_position_comparator_for_pos = ( pos: Point2D ): TilePositionComparatorSample => {
+	get_tile_position_comparator_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D ): TilePositionComparatorSample => {
 		/*
 			This would simply grab all 8 adjacent tiles (and ourselves, for a total of 9 tiles) as a square sample.  The problem here is that, although our tiles are in fact stored as "square" data in an array, we're actually a hex grid.  Because we're a hex grid, we're actually just looking for 7 tiles, so we'll need to adjust the result.  Depending on whether we're on an even or odd row, we need to lop off the first (or last) member of the first and last rows. 	
 		*/
@@ -242,29 +252,29 @@ export class Tilemap_Manager {
 				return {x: col_value, y: row_value};
 			});
 		}) as TilePositionComparatorSample;
-	}
+	},
 	
-	get_tile_name_for_pos = ( pos: Point2D, tilemap_name: TileMapKeys ) => {
+	get_tile_name_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ) => {
 		/*
 			This enforces "safe access", and will always return a string.  If it's outside the bounds of the tile map, we return an empty string.
 		*/
 		if(
-			pos.y > (_.size(this.state.tile_maps[tilemap_name]) - 1) ||
+			pos.y > (_.size(me.state.tile_maps[tilemap_name]) - 1) ||
 			pos.y < 0 ||
-			pos.x > (_.size(this.state.tile_maps[tilemap_name][pos.y]) - 1) ||
+			pos.x > (_.size(me.state.tile_maps[tilemap_name][pos.y]) - 1) ||
 			pos.x < 0
 		){
 			return '';
 		} else {
-			return this.state.tile_maps[tilemap_name][pos.y][pos.x];
+			return me.state.tile_maps[tilemap_name][pos.y][pos.x];
 		}
-	}
+	},
 	
 
 
-	convert_pixel_coords_to_tile_coords = (pos: Point2D) => {
-		let { consts } = this._AM;
-		let position = this._BM.yield_world_coords_for_absolute_coords({x: pos.x, y: pos.y});
+	convert_pixel_coords_to_tile_coords: ( me: Tilemap_Manager_Data, pos: Point2D) => {
+		let { consts } = me._AM;
+		let position = me._BM.yield_world_coords_for_absolute_coords({x: pos.x, y: pos.y});
 
 		let odd_row_offset = Utils.modulo(
 			Math.floor((
@@ -293,13 +303,13 @@ export class Tilemap_Manager {
 		};
 		
 		return tile_coords_revised;
-	}
+	},
 	
-	convert_tile_coords_to_pixel_coords = (pos : Point2D) => ({
-		x:	pos.x * this._AM.consts.tile_width +
-			(( Utils.modulo(pos.y, 2) == 1) ? Math.floor(this._AM.consts.tile_width / 2) : 0),
-		y:	pos.y * this._AM.consts.tile_height
-	})
+	convert_tile_coords_to_pixel_coords: (me: Tilemap_Manager_Data, pos : Point2D) => ({
+		x:	pos.x * me._AM.consts.tile_width +
+			(( Utils.modulo(pos.y, 2) == 1) ? Math.floor(me._AM.consts.tile_width / 2) : 0),
+		y:	pos.y * me._AM.consts.tile_height
+	}),
 
 
 
@@ -312,12 +322,12 @@ export class Tilemap_Manager {
 		Our tile system, in this page's lingo, is "pointy topped" and "odd-r" (shoves odd rows by +1/2 tile to the right).
 	*/
 
-	cubic_to_cartesian = ( cubeCoords: PointCubic): Point2D => ({
+	cubic_to_cartesian: ( cubeCoords: PointCubic): Point2D => ({
 		x: cubeCoords.q + (cubeCoords.r + (cubeCoords.r & 1)) / 2,
 		y: cubeCoords.r,
-	})
+	}),
 
-	cartesian_to_cubic = ( cartCoords: Point2D ): PointCubic => {
+	cartesian_to_cubic: ( cartCoords: Point2D ): PointCubic => {
 		const q = cartCoords.x - (cartCoords.y + (cartCoords.y & 1)) / 2;
 		const r = cartCoords.y;
 		
@@ -326,29 +336,29 @@ export class Tilemap_Manager {
 			r: r,
 			s: (-q - r),
 		}
-	}
+	},
 
-	cubic_subtraction = ( a: PointCubic, b: PointCubic ): PointCubic => ({
+	cubic_subtraction: ( a: PointCubic, b: PointCubic ): PointCubic => ({
 		q: a.q - b.q,
 		r: a.r - b.r,
 		s: a.s - b.s,
-	})
+	}),
 
-	cubic_distance = ( a: PointCubic, b: PointCubic ): Number => {
-		const vector = this.cubic_subtraction(a, b);
+	cubic_distance: ( a: PointCubic, b: PointCubic ): Number => {
+		const vector = Tilemap_Manager_ƒ.cubic_subtraction(a, b);
 
 		return Math.max( Math.abs(vector.q), Math.abs(vector.r), Math.abs(vector.s));
-	}
+	},
 
 
 
-	get_tile_coord_distance_between = ( startPos: Point2D, endPos: Point2D ) => Number (
-		this.cubic_distance( this.cartesian_to_cubic(startPos), this.cartesian_to_cubic(endPos) )
-	)
+	get_tile_coord_distance_between: ( startPos: Point2D, endPos: Point2D ) => Number (
+		Tilemap_Manager_ƒ.cubic_distance( Tilemap_Manager_ƒ.cartesian_to_cubic(startPos), Tilemap_Manager_ƒ.cartesian_to_cubic(endPos) )
+	),
 
 /*----------------------- direction handling -----------------------*/
 
-	extract_direction_from_map_vector = (start_pos: Point2D, end_pos: Point2D):Direction => {
+	extract_direction_from_map_vector: (start_pos: Point2D, end_pos: Point2D):Direction => {
 		if( start_pos.y == end_pos.y ){
 			if(start_pos.x < end_pos.x){
 				return 'east';
