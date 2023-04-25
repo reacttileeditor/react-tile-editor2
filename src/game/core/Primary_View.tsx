@@ -4,7 +4,7 @@ import _ from "lodash";
 
 import { Canvas_View } from "./Canvas_View";
 import { Asset_Manager } from "./Asset_Manager";
-import { Blit_Manager } from "./Blit_Manager";
+import { Blit_Manager_Data, Blit_Manager_ƒ, New_Blit_Manager } from "./Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { New_Tilemap_Manager, Tilemap_Manager_Data } from "./Tilemap_Manager";
 import { Game_View } from "./Game_View";
@@ -24,7 +24,7 @@ interface State {
 
 export class Primary_View extends React.Component <Props, State> {
 	_Asset_Manager: Asset_Manager;
-	_Blit_Manager!: Blit_Manager;
+	_Blit_Manager!: Blit_Manager_Data;
 	_Tilemap_Manager!: Tilemap_Manager_Data;
 	default_canvas_size: Point2D;
 
@@ -48,10 +48,10 @@ export class Primary_View extends React.Component <Props, State> {
 
 	initialize_tilemap_manager = (ctx: CanvasRenderingContext2D) => {
 		if( !this._Tilemap_Manager ){
-			this._Blit_Manager = new Blit_Manager(ctx, this.default_canvas_size, true);
+			this._Blit_Manager = New_Blit_Manager(ctx, this.default_canvas_size, true);
 			this._Tilemap_Manager = New_Tilemap_Manager({_AM: this._Asset_Manager, _BM: this._Blit_Manager});
 		} else {
-			this._Blit_Manager.reset_context(ctx);
+			Blit_Manager_ƒ.reset_context(this._Blit_Manager, ctx);
 		}
 	}
 

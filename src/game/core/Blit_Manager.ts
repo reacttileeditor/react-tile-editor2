@@ -83,8 +83,7 @@ declare var OffscreenCanvas : any;
 */
 
 
-
-export class Blit_Manager {
+export type Blit_Manager_Data = {
 	ctx: CanvasRenderingContext2D;
 	time_tracker: TimeTrackerData;
 	state: BlitManagerState;
@@ -93,59 +92,70 @@ export class Blit_Manager {
 	osb_ctx: CanvasRenderingContext2D;
 	_dimensions: Point2D;
 	show_info: boolean;
+};
 
-/*----------------------- initialization and asset loading -----------------------*/
-	constructor( ctx: CanvasRenderingContext2D, dimensions: Point2D, show_info: boolean ) {
-		this.ctx = ctx;
+export const New_Blit_Manager = ( ctx: CanvasRenderingContext2D, dimensions: Point2D, show_info: boolean ): Blit_Manager_Data => {
+
+	const osb = document.createElement('canvas');
+	osb.width = dimensions.x;
+	osb.height = dimensions.y;
+
+	return {
+		ctx: ctx,
+			
+		_dimensions: _.cloneDeep(dimensions),
+		_OffScreenBuffer: osb,
 		
-		this._dimensions = _.cloneDeep(dimensions);
-		this._OffScreenBuffer = document.createElement('canvas');
-		this._OffScreenBuffer.width = dimensions.x;
-		this._OffScreenBuffer.height = dimensions.y;
-		this.osb_ctx = (this._OffScreenBuffer.getContext("2d") as CanvasRenderingContext2D);
-		this.show_info = show_info;
+		osb_ctx: (osb.getContext("2d") as CanvasRenderingContext2D),
+		show_info: show_info,
 		
-		this._Draw_List = [];
-		this.time_tracker = {
+		_Draw_List: [],
+		time_tracker: {
 			current_tick: 0,
 			current_second: 0,
 			current_millisecond: 0,
 			current_frame_count: 0,
 			prior_frame_count: 0,
-		};
+		},
 
-		this.state = {
+		state: {
 			viewport_tween_progress: 0,
 			intended_viewport_offset: {x: 0, y: 0},
 			actual_viewport_offset: {x: 0, y: 0},
-		};
+		}
 	}
+}
 
-	reset_context = ( ctx: CanvasRenderingContext2D ) => {
-		this.ctx = ctx;
-	}
+
+
+export const Blit_Manager_ƒ = {
+
+	reset_context: ( me: Blit_Manager_Data, ctx: CanvasRenderingContext2D ) => {
+		me.ctx = ctx;
+	},
 
 /*----------------------- state manipulation -----------------------*/
-	adjust_viewport_pos = (x: number, y: number) => {
-		this.state.viewport_tween_progress = ƒ.if(this.state.viewport_tween_progress == 1.0,
+	adjust_viewport_pos: ( me: Blit_Manager_Data, x: number, y: number) => {
+		me.state.viewport_tween_progress = ƒ.if(me.state.viewport_tween_progress == 1.0,
 			0.0,
-			this.state.viewport_tween_progress * 0.3
+			me.state.viewport_tween_progress * 0.3
 		);
-		this.state.intended_viewport_offset = {
-			x: this.state.intended_viewport_offset.x + x,
-			y: this.state.intended_viewport_offset.y + y
+		me.state.intended_viewport_offset = {
+			x: me.state.intended_viewport_offset.x + x,
+			y: me.state.intended_viewport_offset.y + y
 		};
-	}
+	},
 
-	yield_world_coords_for_absolute_coords = (pos: Point2D) => {
+	yield_world_coords_for_absolute_coords: ( me: Blit_Manager_Data, pos: Point2D) => {
 		return {
-			x: pos.x - this.state.intended_viewport_offset.x,
-			y: pos.y - this.state.intended_viewport_offset.y
+			x: pos.x - me.state.intended_viewport_offset.x,
+			y: pos.y - me.state.intended_viewport_offset.y
 		}
-	} 
+	},
 
 /*----------------------- draw ops -----------------------*/
-	queue_draw_op = (p: {
+	queue_draw_op: (p: {
+		_BM:					Blit_Manager_Data,
 		pos:					Point2D,
 		z_index:				number,
 		opacity:				number,
@@ -154,7 +164,7 @@ export class Blit_Manager {
 		vertically_flipped: 	boolean,
 		drawing_data:			DrawDataTypes
 	}) => {
-		this._Draw_List.push({
+		p._BM._Draw_List.push({
 			pos:					p.pos,
 			z_index:				p.z_index,
 			opacity:				p.opacity,
@@ -163,18 +173,18 @@ export class Blit_Manager {
 			vertically_flipped:		p.vertically_flipped,
 			drawing_data:			p.drawing_data
 		});
-	}
+	},
 	
 	
-	draw_entire_frame = () => {
-		this.iterate_viewport_tween();
-// 		console.log(this.state.actual_viewport_offset);
+	draw_entire_frame: ( me: Blit_Manager_Data ) => {
+		Blit_Manager_ƒ.iterate_viewport_tween(me);
+// 		console.log(me.state.actual_viewport_offset);
 	
 		//sort it all by painter's algorithm
 		const sortedBlits =	_.sortBy(
 							_.sortBy(
 								_.sortBy(
-									this._Draw_List,
+									me._Draw_List,
 									(val_x)=>( val_x.pos.x )
 								),
 								(val_y)=>( val_y.pos.y )
@@ -184,36 +194,36 @@ export class Blit_Manager {
 
 		//then blit it
 		_.map( sortedBlits, (value,index) => {
-			if( this.isDrawDataForText(value.drawing_data) ){
-				this.osb_ctx.save();
-				this.osb_ctx.imageSmoothingEnabled = false;
-				this.osb_ctx.font = '16px pixel, sans-serif';
-				this.osb_ctx.textAlign = 'center';
+			if( Blit_Manager_ƒ.isDrawDataForText(value.drawing_data) ){
+				me.osb_ctx.save();
+				me.osb_ctx.imageSmoothingEnabled = false;
+				me.osb_ctx.font = '16px pixel, sans-serif';
+				me.osb_ctx.textAlign = 'center';
 		
-				this.osb_ctx.translate(
-					value.pos.x + this.state.actual_viewport_offset.x,
-					value.pos.y + this.state.actual_viewport_offset.y
+				me.osb_ctx.translate(
+					value.pos.x + me.state.actual_viewport_offset.x,
+					value.pos.y + me.state.actual_viewport_offset.y
 				);
 
-				this.osb_ctx.fillStyle = "#ffffff";
-				this.osb_ctx.textBaseline = 'middle';
-				this.osb_ctx.fillText(value.drawing_data.text, 0, 0);
-				this.osb_ctx.restore();
+				me.osb_ctx.fillStyle = "#ffffff";
+				me.osb_ctx.textBaseline = 'middle';
+				me.osb_ctx.fillText(value.drawing_data.text, 0, 0);
+				me.osb_ctx.restore();
 
-			} else if ( this.isDrawDataForHitpoints(value.drawing_data)){
-				this.osb_ctx.save();
+			} else if ( Blit_Manager_ƒ.isDrawDataForHitpoints(value.drawing_data)){
+				me.osb_ctx.save();
 
-				this.osb_ctx.translate(
-					value.pos.x + this.state.actual_viewport_offset.x,
-					value.pos.y + this.state.actual_viewport_offset.y - 50
+				me.osb_ctx.translate(
+					value.pos.x + me.state.actual_viewport_offset.x,
+					value.pos.y + me.state.actual_viewport_offset.y - 50
 				);
-				this.osb_ctx.globalAlpha = value.opacity;
+				me.osb_ctx.globalAlpha = value.opacity;
 
-				this.osb_ctx.fillStyle = '#0009'
-				this.osb_ctx.fillRect( -12, 1, 24, 1);
+				me.osb_ctx.fillStyle = '#0009'
+				me.osb_ctx.fillRect( -12, 1, 24, 1);
 				
-				this.osb_ctx.fillStyle = '#000'
-				this.osb_ctx.fillRect( -12, -2, 24, 3);
+				me.osb_ctx.fillStyle = '#000'
+				me.osb_ctx.fillRect( -12, -2, 24, 3);
 
 				const fill_color_tween_set: Array<[number, number, number, number]> = [
 					[ 59, 247,  65, 255],
@@ -251,34 +261,34 @@ export class Blit_Manager {
 				const final_color = tween(fill_color_tween_set, value.drawing_data.portion); //The base case, where we just tween between the two.
 				
 
-				this.osb_ctx.fillStyle = `rgba(${final_color[0]}, ${final_color[1]}, ${final_color[2]}, ${final_color[3]})`;//'#32a852';
-				this.osb_ctx.fillRect( -12, -2, Math.round(24 * value.drawing_data.portion), 3);
+				me.osb_ctx.fillStyle = `rgba(${final_color[0]}, ${final_color[1]}, ${final_color[2]}, ${final_color[3]})`;//'#32a852';
+				me.osb_ctx.fillRect( -12, -2, Math.round(24 * value.drawing_data.portion), 3);
 
-				this.osb_ctx.restore();
-			} else if( this.isDrawDataWithBounds(value.drawing_data) ){
+				me.osb_ctx.restore();
+			} else if( Blit_Manager_ƒ.isDrawDataWithBounds(value.drawing_data) ){
 
-				this.osb_ctx.save();
+				me.osb_ctx.save();
 
-				this.osb_ctx.translate(
-					value.pos.x + this.state.actual_viewport_offset.x,
-					value.pos.y + this.state.actual_viewport_offset.y
+				me.osb_ctx.translate(
+					value.pos.x + me.state.actual_viewport_offset.x,
+					value.pos.y + me.state.actual_viewport_offset.y
 				);
-				this.osb_ctx.globalAlpha = value.opacity;
+				me.osb_ctx.globalAlpha = value.opacity;
 
 				if( value.brightness != 1.0){
 					/*
 						Warning:  this is obscenely slow.  We may want some alternate solution to this, or *something*; for our initial, extremely limited use of it (flashing enemies to show hits) it should be tolerable.
 					*/
 
-					this.osb_ctx.filter = `brightness(${ Math.round(value.brightness * 100)}%)`;
+					me.osb_ctx.filter = `brightness(${ Math.round(value.brightness * 100)}%)`;
 				}
 
-				this.osb_ctx.scale(
+				me.osb_ctx.scale(
 					ƒ.if(value.horizontally_flipped, -1, 1),
 					ƒ.if(value.vertically_flipped, -1, 1),
 				);
 				
-				this.osb_ctx.drawImage	(
+				me.osb_ctx.drawImage	(
 					/* file */			value.drawing_data.image_ref,
 
 									
@@ -293,18 +303,18 @@ export class Blit_Manager {
 					/* dst wh */		value.drawing_data.dst_rect.w,
 										value.drawing_data.dst_rect.h,
 									);
-				this.osb_ctx.restore();
+				me.osb_ctx.restore();
 			} else {
 
-				this.osb_ctx.save();
+				me.osb_ctx.save();
 
-				this.osb_ctx.translate(
-					value.pos.x + this.state.actual_viewport_offset.x + value.drawing_data.dest_point.x,
-					value.pos.y + this.state.actual_viewport_offset.y + value.drawing_data.dest_point.y
+				me.osb_ctx.translate(
+					value.pos.x + me.state.actual_viewport_offset.x + value.drawing_data.dest_point.x,
+					value.pos.y + me.state.actual_viewport_offset.y + value.drawing_data.dest_point.y
 				);
-				this.osb_ctx.globalAlpha = value.opacity;
+				me.osb_ctx.globalAlpha = value.opacity;
 
-				this.osb_ctx.scale(
+				me.osb_ctx.scale(
 					ƒ.if(value.horizontally_flipped, -1, 1),
 					ƒ.if(value.vertically_flipped, -1, 1),
 				);
@@ -313,7 +323,7 @@ export class Blit_Manager {
 					The following transforms essentially exist so that flipped images will draw in their intended position, rather than a full image size increment in the opposite cardinal direction.
 				*/
 
-				this.osb_ctx.drawImage	(
+				me.osb_ctx.drawImage	(
 					/* file */				value.drawing_data.image_ref,
 					/* dst upper-left x */	ƒ.if(value.horizontally_flipped,
 												-value.drawing_data.src_rect.w,
@@ -324,106 +334,106 @@ export class Blit_Manager {
 												0
 											),
 									);
-				this.osb_ctx.restore();
+				me.osb_ctx.restore();
 			}
 		})
 
 
 
 		//follow up with a few bits of utility-drawing:
-		if(this.show_info){
-			this.draw_fps();
+		if(me.show_info){
+			Blit_Manager_ƒ.draw_fps(me);
 		}
 
-		//var bitmap = this._OffScreenBuffer.transferToImageBitmap();
-		this.ctx.drawImage(this._OffScreenBuffer, 0, 0);
+		//var bitmap = me._OffScreenBuffer.transferToImageBitmap();
+		me.ctx.drawImage(me._OffScreenBuffer, 0, 0);
 
 		/*
 			Manage time tracking.  No matter how long it took, each frame is only considered "1 tick" long, and all animations are based on that metric, alone.
 		*/
-		this.time_tracker.current_tick += 1;
+		me.time_tracker.current_tick += 1;
 		
 
 		//then clear it, because the next frame needs to start from scratch
-		this._Draw_List = [];
+		me._Draw_List = [];
 		
-	}
+	},
 
 	isDrawDataWithBounds( data: DrawDataTypes ): data is DrawData {
 		return (<DrawData>data).dst_rect !== undefined;
-	}
+	},
 
 	isDrawDataForText( data: DrawDataTypes): data is DrawDataText {
 		return (<DrawDataText>data).text !== undefined;
-	}
+	},
 
 	isDrawDataForHitpoints( data: DrawDataTypes): data is DrawDataHitpoints {
 		return (<DrawDataHitpoints>data).portion !== undefined;
-	}
+	},
 
 
 /*----------------------- tweening -----------------------*/
-	iterate_viewport_tween = () => {
-		const { viewport_tween_progress, intended_viewport_offset, actual_viewport_offset } = this.state;
+	iterate_viewport_tween: ( me: Blit_Manager_Data ) => {
+		const { viewport_tween_progress, intended_viewport_offset, actual_viewport_offset } = me.state;
 	
 		if( viewport_tween_progress < 1.0 ){
-			this.state.viewport_tween_progress += 0.02;
-			this.state.actual_viewport_offset = {
+			me.state.viewport_tween_progress += 0.02;
+			me.state.actual_viewport_offset = {
 				x: Math.floor(actual_viewport_offset.x + viewport_tween_progress * ( intended_viewport_offset.x - actual_viewport_offset.x )),
 				y: Math.floor(actual_viewport_offset.y + viewport_tween_progress * ( intended_viewport_offset.y - actual_viewport_offset.y )),
 			};
 		} else {
-			this.state.viewport_tween_progress = 1.0;
-			this.state.actual_viewport_offset = {
+			me.state.viewport_tween_progress = 1.0;
+			me.state.actual_viewport_offset = {
 				x: intended_viewport_offset.x,
 				y: intended_viewport_offset.y,
 			};
 		}
-	};
+	},
 
 
 
 /*----------------------- utility draw ops -----------------------*/
-	fill_canvas_with_solid_color = () => {
-		this.osb_ctx.save();
-	    this.osb_ctx.fillStyle = "#000000";
-		this.osb_ctx.fillRect(0,0, this.ctx.canvas.width, this.ctx.canvas.height);
-		this.osb_ctx.restore();
-	}
+	fill_canvas_with_solid_color: ( me: Blit_Manager_Data ) => {
+		me.osb_ctx.save();
+	    me.osb_ctx.fillStyle = "#000000";
+		me.osb_ctx.fillRect(0,0, me.ctx.canvas.width, me.ctx.canvas.height);
+		me.osb_ctx.restore();
+	},
 
-	draw_fps = () => {
+	draw_fps: ( me: Blit_Manager_Data ) => {
 		var date = new Date();
 		
-		this.time_tracker.current_frame_count += 1;
+		me.time_tracker.current_frame_count += 1;
 		
-		if( this.time_tracker.current_second < date.getSeconds() || (this.time_tracker.current_second == 59 && date.getSeconds() == 0) ){
-			this.time_tracker.prior_frame_count = this.time_tracker.current_frame_count;
-			this.time_tracker.current_frame_count = 0;
-			this.time_tracker.current_second = date.getSeconds();
+		if( me.time_tracker.current_second < date.getSeconds() || (me.time_tracker.current_second == 59 && date.getSeconds() == 0) ){
+			me.time_tracker.prior_frame_count = me.time_tracker.current_frame_count;
+			me.time_tracker.current_frame_count = 0;
+			me.time_tracker.current_second = date.getSeconds();
 		} else {
 			
 		}
 		
-		this.time_tracker.current_millisecond = date.getTime();
+		me.time_tracker.current_millisecond = date.getTime();
 		
-		this.draw_fps_text(this.time_tracker.prior_frame_count);
-	}
+		Blit_Manager_ƒ.draw_fps_text(me, me.time_tracker.prior_frame_count);
+	},
 
-	draw_fps_text = (value: number) => {
-		this.osb_ctx.save();
-		this.osb_ctx.imageSmoothingEnabled = false;
-		this.osb_ctx.font = '16px pixel, sans-serif';
-		this.osb_ctx.textAlign = 'left';
+	draw_fps_text: ( me: Blit_Manager_Data, value: number) => {
+		me.osb_ctx.save();
+		me.osb_ctx.imageSmoothingEnabled = false;
+		me.osb_ctx.font = '16px pixel, sans-serif';
+		me.osb_ctx.textAlign = 'left';
 
 		// for later reference:  https://stackoverflow.com/questions/4261090/html5-canvas-and-anti-aliasing/4261139
-		//this.osb_ctx.shadowColor = "rgba(255, 0, 0, 0.5)";
-	    //this.osb_ctx.shadowOffsetY = 2;
-	    //this.osb_ctx.shadowBlur = 3;
-	    this.osb_ctx.fillStyle = "#ffffff";
-		this.osb_ctx.textBaseline = 'middle';
-		this.osb_ctx.fillText(`FPS: ${value.toString()}`, (this.osb_ctx.canvas.width - 40), 10);
-		this.osb_ctx.restore();
-	}
+		//me.osb_ctx.shadowColor = "rgba(255, 0, 0, 0.5)";
+	    //me.osb_ctx.shadowOffsetY = 2;
+	    //me.osb_ctx.shadowBlur = 3;
+	    me.osb_ctx.fillStyle = "#ffffff";
+		me.osb_ctx.textBaseline = 'middle';
+		me.osb_ctx.fillText(`FPS: ${value.toString()}`, (me.osb_ctx.canvas.width - 40), 10);
+		me.osb_ctx.restore();
+	},
 
 
 }

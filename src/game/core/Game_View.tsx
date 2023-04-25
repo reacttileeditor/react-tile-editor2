@@ -6,7 +6,7 @@ import { ƒ } from "./Utils";
 
 import { Canvas_View } from "./Canvas_View";
 import { Asset_Manager } from "./Asset_Manager";
-import { Blit_Manager, ticks_to_ms } from "./Blit_Manager";
+import { Blit_Manager_Data, ticks_to_ms } from "./Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
 import { Pathfinder } from "./Pathfinding";
@@ -21,7 +21,7 @@ import { Custom_Object_Data, Custom_Object_ƒ } from "../objects_core/Custom_Obj
 
 interface Game_View_Props {
 	_Asset_Manager: Asset_Manager,
-	_Blit_Manager: Blit_Manager,
+	_Blit_Manager: Blit_Manager_Data,
 	assets_loaded: boolean,
 	initialize_tilemap_manager: Function,
 	_Tilemap_Manager: Tilemap_Manager_Data,

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import _, { Dictionary, isArray } from "lodash";
 
 import { Asset_Manager } from "./Asset_Manager";
-import { Blit_Manager, ticks_to_ms } from "./Blit_Manager";
+import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
 import * as Utils from "./Utils";
 import { ƒ } from "./Utils";
 
@@ -49,12 +49,12 @@ const tile_comparator_cache_init = {
 export type Tilemap_Manager_Data = {
 	state: tileViewState;
 	_AM: Asset_Manager;
-	_BM: Blit_Manager;
+	_BM: Blit_Manager_Data;
 }
 
 export const New_Tilemap_Manager = (p: {
 	_AM: Asset_Manager,
-	_BM: Blit_Manager,
+	_BM: Blit_Manager_Data,
 }): Tilemap_Manager_Data => {
 	
 	return {
@@ -184,9 +184,9 @@ export const Tilemap_Manager_ƒ = {
 	
 	do_one_frame_of_rendering: (me: Tilemap_Manager_Data) => {
 		if(me.state.initialized){
-			me._BM.fill_canvas_with_solid_color();
+			Blit_Manager_ƒ.fill_canvas_with_solid_color(me._BM);
 			Tilemap_Manager_ƒ.draw_tiles(me);
-			me._BM.draw_entire_frame();
+			Blit_Manager_ƒ.draw_entire_frame(me._BM);
 		} else {
 			Tilemap_Manager_ƒ.initialize_tiles(me);
 		}
@@ -274,7 +274,7 @@ export const Tilemap_Manager_ƒ = {
 
 	convert_pixel_coords_to_tile_coords: ( me: Tilemap_Manager_Data, pos: Point2D) => {
 		let { consts } = me._AM;
-		let position = me._BM.yield_world_coords_for_absolute_coords({x: pos.x, y: pos.y});
+		let position = Blit_Manager_ƒ.yield_world_coords_for_absolute_coords(me._BM, {x: pos.x, y: pos.y});
 
 		let odd_row_offset = Utils.modulo(
 			Math.floor((

@@ -4,7 +4,7 @@ import _ from "lodash";
 
 import { Canvas_View } from "./Canvas_View";
 import { Asset_Manager } from "./Asset_Manager";
-import { Blit_Manager } from "./Blit_Manager";
+import { Blit_Manager_Data, Blit_Manager_ƒ } from "./Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
 
@@ -14,7 +14,7 @@ import { Point2D, Rectangle } from '../interfaces';
 
 interface Editor_View_Props {
 	_Asset_Manager: Asset_Manager,
-	_Blit_Manager: Blit_Manager,
+	_Blit_Manager: Blit_Manager_Data,
 	assets_loaded: boolean,
 	initialize_tilemap_manager: Function,
 	_Tilemap_Manager: Tilemap_Manager_Data,
@@ -130,7 +130,7 @@ export class Editor_View extends React.Component <Editor_View_Props, Editor_View
 			move.x += 40;
 		}
 
-		this.props._Blit_Manager.adjust_viewport_pos(move.x, move.y);
+		Blit_Manager_ƒ.adjust_viewport_pos(this.props._Blit_Manager, move.x, move.y);
 
 	}
 

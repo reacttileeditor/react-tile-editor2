@@ -6,7 +6,7 @@ import { ƒ } from "./Utils";
 
 import { Canvas_View } from "./Canvas_View";
 import { Asset_Manager } from "./Asset_Manager";
-import { Blit_Manager, ticks_to_ms } from "./Blit_Manager";
+import { Blit_Manager_Data, ticks_to_ms } from "./Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
 import { Pathfinder } from "./Pathfinding";
@@ -22,7 +22,7 @@ import { TooltipData } from "./Game_View";
 
 interface Game_View_Props {
 	_Asset_Manager: Asset_Manager,
-	_Blit_Manager: Blit_Manager,
+	_Blit_Manager: Blit_Manager_Data,
 	assets_loaded: boolean,
 	initialize_tilemap_manager: Function,
 	_Tilemap_Manager: Tilemap_Manager_Data,
@@ -69,7 +69,7 @@ type ObjectiveTypes = 'extermination' | 'decapitation';
 
 
 export type Game_Manager_Data = {
-	_Blit_Manager: Blit_Manager;
+	_Blit_Manager: Blit_Manager_Data;
 	_Asset_Manager: Asset_Manager;
 	_TM: Tilemap_Manager_Data;
 	animation_state: AnimationState;
@@ -82,7 +82,7 @@ export type Game_Manager_Data = {
 
 
 export const New_Game_Manager = (p: {
-	_Blit_Manager: Blit_Manager,
+	_Blit_Manager: Blit_Manager_Data,
 	_Asset_Manager: Asset_Manager,
 	_TM: Tilemap_Manager_Data,
 	get_GM_instance: ()=> Game_Manager_Data,

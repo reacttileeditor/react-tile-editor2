@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import _ from "lodash";
 
 import { Asset_Manager } from "./Asset_Manager";
-import { Blit_Manager } from "./Blit_Manager";
+import { Blit_Manager_Data, Blit_Manager_ƒ, New_Blit_Manager } from "./Blit_Manager";
 import { New_Tilemap_Manager, Tilemap_Manager_Data } from "./Tilemap_Manager";
 import { Point2D, Rectangle } from '../interfaces';
 
@@ -20,7 +20,7 @@ interface Props {
 export class Tile_Palette_Element extends React.Component <Props> {
 	ctx!: CanvasRenderingContext2D;
 	canvas!: HTMLCanvasElement;
-	_Blit_Manager!: Blit_Manager;
+	_Blit_Manager!: Blit_Manager_Data;
 	_Tilemap_Manager!: Tilemap_Manager_Data;
 	default_canvas_size: Point2D;
 
@@ -49,10 +49,10 @@ export class Tile_Palette_Element extends React.Component <Props> {
 
 	initialize_tilemap_manager = (ctx: CanvasRenderingContext2D) => {
 		if( !this._Tilemap_Manager ){
-			this._Blit_Manager = new Blit_Manager(ctx, this.default_canvas_size, false);
+			this._Blit_Manager = New_Blit_Manager(ctx, this.default_canvas_size, false);
 			this._Tilemap_Manager = New_Tilemap_Manager({_AM: this.props.asset_manager, _BM: this._Blit_Manager});
 		} else {
-			this._Blit_Manager.reset_context(ctx);
+			Blit_Manager_ƒ.reset_context(this._Blit_Manager, ctx);
 		}
 	}
 
@@ -63,7 +63,7 @@ export class Tile_Palette_Element extends React.Component <Props> {
 	draw_canvas = () => {
 		let { consts } = this.props.asset_manager;
 
-		this._Blit_Manager.fill_canvas_with_solid_color();
+		Blit_Manager_ƒ.fill_canvas_with_solid_color(this._Blit_Manager);
 
 		if(  _.size(this.props.tile_name) > 0 ){
 			this.props.asset_manager.draw_all_assets_for_tile_type(
@@ -93,7 +93,7 @@ export class Tile_Palette_Element extends React.Component <Props> {
 			})
 		}
 
-		this._Blit_Manager.draw_entire_frame();
+		Blit_Manager_ƒ.draw_entire_frame(this._Blit_Manager);
 	}
 	
 	handle_mouse_click = (e: React.MouseEvent<HTMLCanvasElement>) => {

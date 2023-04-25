@@ -5,7 +5,7 @@ import _ from "lodash";
 import Prando from 'prando';
 
 var PATH_PREFIX = "./assets/"
-import { Blit_Manager } from "./Blit_Manager";
+import { Blit_Manager_Data, Blit_Manager_ƒ } from "./Blit_Manager";
 import * as Utils from "./Utils";
 
 
@@ -298,7 +298,7 @@ export class Asset_Manager {
 	}
 
 	
-	draw_all_assets_for_tile_type = (tile_name: string, _BM: Blit_Manager, pos: Point2D) => {
+	draw_all_assets_for_tile_type = (tile_name: string, _BM: Blit_Manager_Data, pos: Point2D) => {
 		let zorders = this.yield_zorder_list_for_tile(tile_name); 
 	
 		zorders.map( (value,index) => {
@@ -308,7 +308,7 @@ export class Asset_Manager {
 	
 	draw_image_for_tile_type_at_zorder_and_pos = (
 			tile_name: string,
-			_BM: Blit_Manager,
+			_BM: Blit_Manager_Data,
 			zorder: number,
 			pos_x: number,
 			pos_y: number,
@@ -390,7 +390,7 @@ export class Asset_Manager {
 	
 	draw_image_for_asset_name = (p: {
 		asset_name: string,
-		_BM: Blit_Manager,
+		_BM: Blit_Manager_Data,
 		pos: Point2D,
 		zorder: number,
 		current_milliseconds: number,
@@ -442,7 +442,8 @@ export class Asset_Manager {
 				*/
 			
 				if( !this.isAssetSpritesheet(metadata) ){
-					p._BM.queue_draw_op({
+					Blit_Manager_ƒ.queue_draw_op({
+						_BM:					p._BM,
 						pos:					{ x: p.pos.x, y: p.pos.y },
 						z_index:				p.zorder,
 						opacity:				p.opacity,
@@ -464,7 +465,8 @@ export class Asset_Manager {
 												}
 					});
 				} else {
-					p._BM.queue_draw_op({
+					Blit_Manager_ƒ.queue_draw_op({
+						_BM:					p._BM,
 						pos:					{ x: p.pos.x, y: p.pos.y },
 						z_index:				p.zorder,
 						opacity:				p.opacity,
@@ -494,7 +496,7 @@ export class Asset_Manager {
 
 	draw_text = (p: {
 		text: string,
-		_BM: Blit_Manager,
+		_BM: Blit_Manager_Data,
 		pos: Point2D,
 		zorder: number,
 		current_milliseconds: number,
@@ -503,7 +505,8 @@ export class Asset_Manager {
 		horizontally_flipped: boolean,
 		vertically_flipped: boolean,
 	}) => {
-		p._BM.queue_draw_op({
+		Blit_Manager_ƒ.queue_draw_op({
+			_BM:					p._BM,
 			pos:					{ x: p.pos.x, y: p.pos.y },
 			z_index:				p.zorder,
 			opacity:				p.opacity,
@@ -518,13 +521,14 @@ export class Asset_Manager {
 
 	draw_hitpoints = (p: {
 		portion: number,
-		_BM: Blit_Manager,
+		_BM: Blit_Manager_Data,
 		pos: Point2D,
 		zorder: number,
 		current_milliseconds: number,
 		opacity: number,
 	}) => {
-		p._BM.queue_draw_op({
+		Blit_Manager_ƒ.queue_draw_op({
+			_BM:					p._BM,
 			pos:					{ x: p.pos.x, y: p.pos.y },
 			z_index:				p.zorder,
 			opacity:				p.opacity,
