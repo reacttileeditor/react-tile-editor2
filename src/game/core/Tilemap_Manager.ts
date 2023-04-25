@@ -132,9 +132,8 @@ export class Tilemap_Manager {
 
 		_.map(this.state.tile_maps as unknown as Dictionary<TileMap>, (tile_map, tilemap_name) => {
 			tile_map.map( (row_value, row_index) => {
-				row_value.map( (col_value, col_index) => {
+				row_value.map( (tile_name, col_index) => {
 
-					let tile_name = this.get_tile_name_for_tile_at_pos_with_data( {x: row_index, y: col_index}, col_value);
 					let pos = {x: col_index, y: row_index};
 					
 
@@ -261,18 +260,7 @@ export class Tilemap_Manager {
 		}
 	}
 	
-	
-	
-	get_tile_name_for_tile_at_pos_with_data = ( pos: Point2D, tile_entry: string ) => {
-		/*
-			Tile_entry is whatever mnemonic or other indicator is stored at that position in the array. 
-			Currently we're just doing 1 0 values because we're in the midst of hacking, but we'll decide on a more 'real' markup later.
-			
-			We may have to transition away from having this passed in, since auto-tiling (if/when it comes) may require us to query adjacent tiles.
-		*/
-		return tile_entry;
-	}
-	
+
 
 	convert_pixel_coords_to_tile_coords = (pos: Point2D) => {
 		let { consts } = this._AM;
