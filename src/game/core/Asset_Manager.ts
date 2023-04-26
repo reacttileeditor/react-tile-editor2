@@ -1,13 +1,10 @@
-import React from "react";
-import ReactDOM from "react-dom";
 import _, { isEmpty, map } from "lodash";
-
 import Prando from 'prando';
-
-var PATH_PREFIX = "./assets/"
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "./Blit_Manager";
 import * as Utils from "./Utils";
-
+import { Point2D, Rectangle } from '../interfaces';
+import { asset_list } from "./Asset_List";
+import { ƒ } from "./Utils";
 
 interface ImageData {
 	url: string,
@@ -89,10 +86,21 @@ interface AutoTileRestrictionRow extends Array<RegExp> { 0: RegExp; 1: RegExp; }
 interface AutoTileRestrictionRowCenter extends Array<RegExp> { 0: RegExp; 1: RegExp; 2: RegExp; }
 interface AutoTileRestrictionSample extends Array<AutoTileRestrictionRow|AutoTileRestrictionRowCenter> { 0: AutoTileRestrictionRow, 1: AutoTileRestrictionRowCenter, 2: AutoTileRestrictionRow };
 
+export type ImageListCache = Array<string|null>;
 
-import { Point2D, Rectangle } from '../interfaces';
-import { asset_list } from "./Asset_List";
-import { ƒ } from "./Utils";
+
+
+
+
+
+
+
+
+
+
+
+
+var PATH_PREFIX = "./assets/"
 
 let null_tile_comparator: TileComparatorSample =	[
 														['',''],
@@ -354,7 +362,7 @@ export const Asset_Manager_ƒ = {
 		pos: Point2D,
 		tile_name: string,
 		comparator: TileComparatorSample,
-	}): Array<string|null> => {
+	}): ImageListCache => {
 
 		let asset_data_array = Asset_Manager_ƒ.get_asset_data_for_tile_at_zorder(p._AM, p.tile_name, p.zorder);
 
@@ -378,7 +386,7 @@ export const Asset_Manager_ƒ = {
 		_BM: Blit_Manager_Data,
 		zorder: number,
 		pos: Point2D,
-		image_list: Array<string|null>,
+		image_list: ImageListCache,
 		current_milliseconds: number
 	}) => {
 		map(p.image_list, (value) => {
