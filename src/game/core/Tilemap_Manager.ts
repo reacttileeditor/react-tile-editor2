@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import _, { Dictionary, isArray } from "lodash";
 
-import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
 import * as Utils from "./Utils";
 import { ƒ } from "./Utils";
@@ -15,6 +15,9 @@ interface tileViewState {
 	tile_maps: TileMaps,
 	initialized: boolean,
 	cache_of_tile_comparators: _TileMaps<TileComparatorMap>,
+	cache_of_image_lists: {
+		[index: string]: ImageListCache
+	}
 }
 
 type TileComparatorMap = Array<Array<TileComparatorSample|undefined>>;
@@ -64,6 +67,7 @@ export const New_Tilemap_Manager = (p: {
 				ui: [['']],
 			},
 			cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
+			cache_of_image_lists: _.cloneDeep({}),
 			initialized: false,
 		},
 		_AM: p._AM,
@@ -95,6 +99,7 @@ export const Tilemap_Manager_ƒ = {
 
 	clear_cache: (me: Tilemap_Manager_Data) => {
 		me.state.cache_of_tile_comparators = _.cloneDeep(tile_comparator_cache_init);
+		me.state.cache_of_image_lists = _.cloneDeep({});
 	},
 
 /*----------------------- state mutation -----------------------*/
@@ -173,15 +178,25 @@ export const Tilemap_Manager_ƒ = {
 			y: (pos.y + 0) * consts.tile_height
 		};
 
-		const image_list = Asset_Manager_ƒ.get_images_for_tile_type_at_zorder_and_pos({
-			_AM: me._AM,
-			_BM: me._BM,
-			zorder: zorder,
-			pos: real_pos,
-			tile_name: tile_name,
-			comparator: Tilemap_Manager_ƒ.get_tile_comparator_sample_for_pos(me, pos, tilemap_name),
-		});
 
+		const cache_hash = `{x: ${pos.x}, y: ${pos.y}, tile_name: ${tile_name}, zorder: ${zorder}}`;
+		const cached_value = me.state.cache_of_image_lists[cache_hash];
+
+		const image_list: ImageListCache = ƒ.if( cached_value != undefined,
+			cached_value,
+			Asset_Manager_ƒ.get_images_for_tile_type_at_zorder_and_pos({
+				_AM: me._AM,
+				_BM: me._BM,
+				zorder: zorder,
+				pos: real_pos,
+				tile_name: tile_name,
+				comparator: Tilemap_Manager_ƒ.get_tile_comparator_sample_for_pos(me, pos, tilemap_name),
+			})
+		);
+
+		if( !cached_value ){
+			me.state.cache_of_image_lists[cache_hash] = image_list;
+		}
 
 		Asset_Manager_ƒ.draw_images_at_zorder_and_pos({
 			_AM: me._AM,
