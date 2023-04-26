@@ -164,22 +164,33 @@ export const Tilemap_Manager_ƒ = {
 	draw_tile_at_coords: ( me: Tilemap_Manager_Data, pos: Point2D, tile_name: string, zorder: number, tilemap_name: TileMapKeys) => {
 		let { consts } = me._AM;
 
-			/*
-				This is the special bit of logic which makes the different rows (since we're hex tiles) be offset from each other by "half" a tile.
-			*/
-			let universal_hex_offset = Utils.modulo(pos.y, 2) == 1 ? Math.floor(consts.tile_width / 2) : 0;
+		/*
+			This is the special bit of logic which makes the different rows (since we're hex tiles) be offset from each other by "half" a tile.
+		*/
+		let universal_hex_offset = Utils.modulo(pos.y, 2) == 1 ? Math.floor(consts.tile_width / 2) : 0;
+		let real_pos: Point2D = {
+			x: (pos.x + 0) * consts.tile_width + universal_hex_offset,
+			y: (pos.y + 0) * consts.tile_height
+		};
 
-								
-			Asset_Manager_ƒ.draw_image_for_tile_type_at_zorder_and_pos	(
-															me._AM,
-															tile_name,
-															me._BM,
-															zorder,
-						/* x */								(pos.x + 0) * consts.tile_width + universal_hex_offset,
-						/* y */								(pos.y + 0) * consts.tile_height,
-						/* comparator */					Tilemap_Manager_ƒ.get_tile_comparator_sample_for_pos(me, pos, tilemap_name),
-															ticks_to_ms(me._BM.time_tracker.current_tick)
-														);
+		const image_list = Asset_Manager_ƒ.get_images_for_tile_type_at_zorder_and_pos({
+			_AM: me._AM,
+			_BM: me._BM,
+			zorder: zorder,
+			pos: real_pos,
+			tile_name: tile_name,
+			comparator: Tilemap_Manager_ƒ.get_tile_comparator_sample_for_pos(me, pos, tilemap_name),
+		});
+
+
+		Asset_Manager_ƒ.draw_images_at_zorder_and_pos({
+			_AM: me._AM,
+			_BM: me._BM,
+			zorder: zorder,
+			pos: real_pos,
+			image_list: image_list,
+			current_milliseconds: ticks_to_ms(me._BM.time_tracker.current_tick)
+		})			
 	},
 
 	

@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _ from "lodash";
+import _, { isEmpty, map } from "lodash";
 
 import Prando from 'prando';
 
@@ -92,6 +92,7 @@ interface AutoTileRestrictionSample extends Array<AutoTileRestrictionRow|AutoTil
 
 import { Point2D, Rectangle } from '../interfaces';
 import { asset_list } from "./Asset_List";
+import { ƒ } from "./Utils";
 
 let null_tile_comparator: TileComparatorSample =	[
 														['',''],
@@ -345,6 +346,59 @@ export const Asset_Manager_ƒ = {
 		});
 		//_BM.ctx.restore();	
 	},
+
+	get_images_for_tile_type_at_zorder_and_pos: (p: {
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		zorder: number,
+		pos: Point2D,
+		tile_name: string,
+		comparator: TileComparatorSample,
+	}): Array<string|null> => {
+
+		let asset_data_array = Asset_Manager_ƒ.get_asset_data_for_tile_at_zorder(p._AM, p.tile_name, p.zorder);
+
+		var allow_drawing = true;
+		
+		return asset_data_array.map( (value, index) => {
+		
+			if(  Asset_Manager_ƒ.isGraphicAutotiled(value) ){
+				allow_drawing = Asset_Manager_ƒ.should_we_draw_this_tile_based_on_its_autotiling_restrictions(p.comparator, value.restrictions);
+			}
+
+			return ƒ.if( !isEmpty(value.id) && allow_drawing,
+				value.id,
+				null
+			)
+		});
+	},
+
+	draw_images_at_zorder_and_pos: (p: {
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		zorder: number,
+		pos: Point2D,
+		image_list: Array<string|null>,
+		current_milliseconds: number
+	}) => {
+		map(p.image_list, (value) => {
+			if( value !== null ){
+				Asset_Manager_ƒ.draw_image_for_asset_name({
+					_AM:						p._AM,
+					asset_name: 				value,
+					_BM:						p._BM,
+					pos:						p.pos,
+					zorder:						p.zorder,
+					current_milliseconds:		p.current_milliseconds,
+					opacity:					1.0,
+					brightness:					1.0,
+					horizontally_flipped:		false,  //TODO - we may want to enable random, deterministic flipping of tiles for additional tile variety.  Only horizontal though.
+					vertically_flipped:			false,
+				});
+			}
+		});
+	},
+
 
 /*----------------------- generic draw ops -----------------------*/
 	calculate_pingpong_frame_num: (absolute_frame_num: number, count: number) => {
