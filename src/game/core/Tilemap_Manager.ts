@@ -179,7 +179,7 @@ export const Tilemap_Manager_ƒ = {
 		};
 
 
-		const cache_hash = `{x: ${pos.x}, y: ${pos.y}, tile_name: ${tile_name}, zorder: ${zorder}}`;
+		const cache_hash = `${pos.x}_${pos.y}_${tile_name}_${zorder}}`;
 		const cached_value = me.state.cache_of_image_lists[cache_hash];
 
 		const image_list: ImageListCache = ƒ.if( cached_value != undefined,
