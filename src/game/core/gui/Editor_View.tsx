@@ -3,13 +3,13 @@ import ReactDOM from "react-dom";
 import _ from "lodash";
 
 import { Canvas_View } from "./Canvas_View";
-import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager";
-import { Blit_Manager_Data, Blit_Manager_ƒ } from "./Blit_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager";
+import { Blit_Manager_Data, Blit_Manager_ƒ } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
-import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
+import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager";
 
 import "./Primary_View.scss";
-import { Point2D, Rectangle } from '../interfaces';
+import { Point2D, Rectangle } from '../../interfaces';
 
 
 interface Editor_View_Props {

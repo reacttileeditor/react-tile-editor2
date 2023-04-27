@@ -2,9 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
 
-import { Asset_Manager_Data } from "./Asset_Manager";
-import { Tilemap_Manager_Data } from "./Tilemap_Manager";
-import * as Utils from "./Utils";
+import { Asset_Manager_Data } from "../engine/Asset_Manager";
+import { Tilemap_Manager_Data } from "../engine/Tilemap_Manager";
+import * as Utils from "../engine/Utils";
 
 interface Props {
 	assets_loaded: boolean,
@@ -21,7 +21,7 @@ interface State {
 	mousedown_pos?: Point2D,
 }
 
-import { Point2D, Rectangle } from '../interfaces';
+import { Point2D, Rectangle } from '../../interfaces';
 
 
 export class Canvas_View extends React.Component <Props, State> {

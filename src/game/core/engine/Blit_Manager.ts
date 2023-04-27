@@ -8,7 +8,7 @@ import { Asset_Manager_Data } from "./Asset_Manager";
 
 import { TileComparatorSample } from "./Asset_Manager";
 
-import { Point2D, Rectangle } from '../interfaces';
+import { Point2D, Rectangle } from '../../interfaces';
 
 interface DrawEntity {
 	pos: Point2D,

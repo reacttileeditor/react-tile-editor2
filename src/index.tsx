@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Primary_View } from "./game/core/Primary_View";
+import { Primary_View } from "./game/core/gui/Primary_View";
 
 //import reportWebVitals from './reportWebVitals';
 

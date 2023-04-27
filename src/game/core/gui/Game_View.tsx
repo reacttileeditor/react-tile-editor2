@@ -2,22 +2,22 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumber, last, map, reduce, size, uniq } from "lodash";
 
-import { ƒ } from "./Utils";
+import { ƒ } from "../engine/Utils";
 
 import { Canvas_View } from "./Canvas_View";
-import { Asset_Manager_Data } from "./Asset_Manager";
-import { Blit_Manager_Data, ticks_to_ms } from "./Blit_Manager";
+import { Asset_Manager_Data } from "../engine/Asset_Manager";
+import { Blit_Manager_Data, ticks_to_ms } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
-import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
-import { Pathfinder } from "./Pathfinding";
+import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager";
+import { Pathfinder } from "../engine/Pathfinding";
 
-import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance } from "../objects_core/Creature";
+import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance } from "../../objects_core/Creature";
 
 import "./Primary_View.scss";
 import "./Game_Status_Display.scss";
 
-import { Point2D, Rectangle } from '../interfaces';
-import { Custom_Object_Data, Custom_Object_ƒ } from "../objects_core/Custom_Object";
+import { Point2D, Rectangle } from '../../interfaces';
+import { Custom_Object_Data, Custom_Object_ƒ } from "../../objects_core/Custom_Object";
 
 interface Game_View_Props {
 	_Asset_Manager: Asset_Manager_Data,
@@ -177,8 +177,8 @@ const Map_Tooltip = (props: TooltipData) => {
 	</div>
 }
 
-import Foot_Icon from '../../assets/feet-icon.png';
-import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game_Manager } from "./Game_Manager";
+import Foot_Icon from '../../../assets/feet-icon.png';
+import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game_Manager } from "../engine/Game_Manager";
 
 
 class Tooltip_Manager extends React.Component<{},TooltipData> {

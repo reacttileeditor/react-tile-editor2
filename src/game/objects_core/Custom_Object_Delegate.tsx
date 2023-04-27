@@ -3,12 +3,12 @@ import ReactDOM from "react-dom";
 import _, { find } from "lodash";
 import { v4 as uuid } from "uuid";
 
-import { ƒ } from "../core/Utils";
+import { ƒ } from "../core/engine/Utils";
 
-import { Direction } from "../core/Tilemap_Manager";
+import { Direction } from "../core/engine/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
-import { Game_Manager_Data, Game_Manager_ƒ } from "../core/Game_Manager";
+import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 
 
 export type CustomObjectTypeName = 'shot';

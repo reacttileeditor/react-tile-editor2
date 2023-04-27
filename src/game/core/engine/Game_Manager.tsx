@@ -4,21 +4,18 @@ import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumbe
 
 import { ƒ } from "./Utils";
 
-import { Canvas_View } from "./Canvas_View";
+import { Canvas_View } from "../gui/Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager";
 import { Blit_Manager_Data, ticks_to_ms } from "./Blit_Manager";
-import { Tile_Palette_Element } from "./Tile_Palette_Element";
+import { Tile_Palette_Element } from "../gui/Tile_Palette_Element";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
 import { Pathfinder } from "./Pathfinding";
 
-import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance } from "../objects_core/Creature";
+import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance } from "../../objects_core/Creature";
 
-import "./Primary_View.scss";
-import "./Game_Status_Display.scss";
-
-import { Point2D, Rectangle } from '../interfaces';
-import { Custom_Object_Data, Custom_Object_ƒ } from "../objects_core/Custom_Object";
-import { TooltipData } from "./Game_View";
+import { Point2D, Rectangle } from '../../interfaces';
+import { Custom_Object_Data, Custom_Object_ƒ } from "../../objects_core/Custom_Object";
+import { TooltipData } from "../gui/Game_View";
 
 interface Game_View_Props {
 	_Asset_Manager: Asset_Manager_Data,

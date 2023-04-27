@@ -3,12 +3,12 @@ import ReactDOM from "react-dom";
 import _, { find } from "lodash";
 import { v4 as uuid } from "uuid";
 
-import { ƒ } from "../core/Utils";
+import { ƒ } from "../core/engine/Utils";
 
-import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/Tilemap_Manager";
+import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
-import { Game_Manager_Data } from "../core/Game_Manager";
+import { Game_Manager_Data } from "../core/engine/Game_Manager";
 
 
 

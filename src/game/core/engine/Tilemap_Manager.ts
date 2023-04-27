@@ -9,7 +9,7 @@ import { ƒ } from "./Utils";
 
 
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
-import { Point2D, Rectangle, PointCubic } from '../interfaces';
+import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 
 interface tileViewState {
 	tile_maps: TileMaps,

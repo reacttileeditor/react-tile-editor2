@@ -3,15 +3,15 @@ import ReactDOM from "react-dom";
 import { cloneDeep, find } from "lodash";
 import { v4 as uuid } from "uuid";
 
-import { ƒ } from "../core/Utils";
+import { ƒ } from "../core/engine/Utils";
 
-import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../core/Tilemap_Manager";
+import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
 import { CreatureTypeName } from "./Creature";
 import { Custom_Object_Delegate, CO_Shot_ƒ, CO_Text_Label_ƒ, Custom_Object_Delegate_States, CO_Shot_State, CO_Skull_Icon_ƒ } from "./Custom_Object_Delegate";
 import { Base_Object_Data, New_Base_Object } from "./Base_Object";
-import { Game_Manager_Data, Game_Manager_ƒ } from "../core/Game_Manager";
+import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
  
 
 export type CustomObjectTypeName = 'shot' | 'text_label' | 'skull_icon';
