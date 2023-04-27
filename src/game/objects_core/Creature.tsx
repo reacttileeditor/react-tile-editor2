@@ -344,68 +344,7 @@ export const Creature_ƒ = {
 
 
 
-/*----------------------- data reading -----------------------*/
 
-	yield_animation_segment_for_time_offset: (me: Creature_Data, offset_in_ms: number): Anim_Schedule_Element|undefined => (
-		_.find(me.animation_this_turn, (val) => {
-			//			console.log(`start ${val.start_time}, offset ${offset_in_ms}, end ${val.start_time + val.duration}`);
-		
-			return val.start_time <= offset_in_ms
-			&&
-			offset_in_ms < (val.start_time + val.duration)
-		})
-	),
-
-
-	yield_direction_for_time_in_post_turn_animation: (me: Creature_Data, offset_in_ms: number ):Direction => {
-		var animation_segment = Creature_ƒ.yield_animation_segment_for_time_offset(me, offset_in_ms);
-
-		if(animation_segment == undefined){
-			/*
-				TODO -I don't really have the time to think through this - this comment's getting written during some test implementation.
-				We'll just return 'east' for now.
-			*/
-			return 'east';
-		} else {
-			return animation_segment.direction;
-		}
-	},
-	
-	yield_position_for_time_in_post_turn_animation: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number):Point2D => {
-//		console.log(me.animation_this_turn);
-		var animation_segment = Creature_ƒ.yield_animation_segment_for_time_offset(me, offset_in_ms);
-		
-		if(animation_segment == undefined){
-			/*
-				There are a few reasons we might not be able to find a corresponding animation segment.
-				If the desired time is off the end of the animation, return our final position.
-				
-				If it's absolutely anything else, then let's just return the initial starting position.  The most common case for this would be one where we just don't really have an animation.
-				(Nominally this would include "before the start of the animation", but as much as that's an error case, it makes no sense why we'd end up there)
-			*/
-
-			if(offset_in_ms >= Creature_ƒ.calculate_total_anim_duration(me) ){
-				return Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, me.planned_tile_pos)
-			} else {
-				return Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, me.tile_pos)
-			}
-		} else {
-			//cheating for some test code - first we'll just do the start pos; then we'll linearly interpolate.   We want to linearly interpolate here, because any "actual" easing function should happen over the whole animation, not one segment (otherwise we'll have a very 'stuttery' movement pattern.
-			
-			let time_offset_in_anim_segment = (offset_in_ms - animation_segment.start_time);
-			let time_offset_normalized = 1.0 - (time_offset_in_anim_segment / animation_segment.duration)
-			
-            return ƒ.round_point_to_nearest_pixel( 
-                ƒ.tween_points(
-                    Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, animation_segment.start_pos ),
-                    Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, animation_segment.end_pos ),
-                    time_offset_normalized
-                )
-            );
-			
-			//return _Tilemap_Manager.convert_tile_coords_to_pixel_coords(animation_segment.start_pos);
-		}
-	},
 }
 
 
