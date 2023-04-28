@@ -1,16 +1,9 @@
-import React from "react";
-import ReactDOM from "react-dom";
 import _, { cloneDeep, filter, find, isBoolean, map, size } from "lodash";
 import { v4 as uuid } from "uuid";
 
 import { ƒ } from "../core/engine/Utils";
 
-// import { Canvas_View } from "./Canvas_View";
-// import { Asset_Manager } from "./Asset_Manager";
-// import { Blit_Manager } from "./Blit_Manager";
-// import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager";
-import { Pathfinder, Pathfinding_Result } from "../core/engine/Pathfinding";
 
 import { Point2D, Rectangle } from '../interfaces';
 import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";

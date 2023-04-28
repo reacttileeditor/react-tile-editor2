@@ -9,7 +9,6 @@ import { Asset_Manager_Data } from "../engine/Asset_Manager";
 import { Blit_Manager_Data, ticks_to_ms } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager";
-import { Pathfinder } from "../engine/Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance } from "../../objects_core/Creature";
 

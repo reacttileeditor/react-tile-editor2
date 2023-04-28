@@ -4,7 +4,7 @@ import _, { cloneDeep, filter, find, isBoolean, map, size } from "lodash";
 import { ƒ } from "../core/engine/Utils";
 
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager";
-import { Pathfinder, Pathfinding_Result } from "../core/engine/Pathfinding";
+import { Pathfinder_ƒ } from "../core/engine/Pathfinding";
 
 import { Point2D, Rectangle } from '../interfaces';
 import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
@@ -180,15 +180,15 @@ export const Creature_Behavior_ƒ = {
 
 			Big bit of temporary bullshit here:  we're axing resolving moves at the end of the turn, so we need to do it here.  Doing it properly is going to be ugly/complicated/etc, so for now we're doing a huge copout/cheat, and just setting the final position.
 		*/
-		let new_position: PathNodeWithDirection | undefined =
+/*		let new_position: PathNodeWithDirection | undefined =
 			_.last(
 				(me.path_reachable_this_turn_with_directions)
-					/*ƒ.dump(_.slice( creature.path_this_turn,
+*/					/*ƒ.dump(_.slice( creature.path_this_turn,
 						0, //_.size(creature.path_this_turn) - creature.yield_moves_per_turn(),
 						creature.yield_moves_per_turn()
 					)),*/
 				  //find literally the first available tile at the end of the path, don't give any hoot about whether it's occupied by another creature
-			);
+/*			);
 		
 			//debugger;
 		//if we didn't find *any* open slots, give up and remain at our current pos
@@ -198,21 +198,55 @@ export const Creature_Behavior_ƒ = {
 				direction: me.facing_direction,
 			};
 		}
+*/
+		/*
+			If we are at a different tile position, we need to renegotiate our path — in the act of attempting to move to a new tile, we can assume that the next tile will be guaranteed to be open for movement (this is a temporary lie we're adopting to expedite development; we'll need to reconsider this, possibly on a per-frame basis of checking the tile we're moving towards and seeing if it's occupied, and thus, we're "bumped").
 
-		change_list.push({
-			type: 'set',
-			value: new_position.position,
-			target_variable: 'tile_pos',
-			target_obj_uuid: me.unique_id,
-		});
+			Once we're at the new tile, though, we must reassess everything about what our plan of action is.  In the future, we'll reassess whether we're even walking further at all (perhaps we switch to attacking if available), but for now, we retain our "intended destination", and continue to walk towards it. 
+		*/
+		let current_tile_pos = Creature_ƒ.get_current_mid_turn_tile_pos(me, _TM);
 
-		change_list.push({
-			type: 'set',
-			value: new_position.direction,
-			target_variable: 'facing_direction',
-			target_obj_uuid: me.unique_id,
-		});
+		if( current_tile_pos != me.tile_pos) {
+			//we're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
+
+			Creature_ƒ.set_path(
+				me,
+				Pathfinder_ƒ.find_path_between_map_tiles( _TM, current_tile_pos, me.planned_tile_pos, me ).successful_path,
+				_TM
+			);
+
+			/*
+				Because we want not *merely* a tile, but also a direction, grab the first element from our new path.  We already know the tile (we had to to calculate the path), but this gives us the direction as well.
+			*/ 
+			let new_position: PathNodeWithDirection | undefined =
+				_.first(
+					(me.path_reachable_this_turn_with_directions)
+				);
+
+			//There actually should be no circumstance in which this fires, since pathfinding should always return at least ONE tile, but the type system isn't aware of that subtlety.  This code basically just says: give up and remain at our current pos
+			if( new_position == undefined){
+				new_position = {
+					position: me.tile_pos,
+					direction: me.facing_direction,
+				};
+			}				
+
+
+			change_list.push({
+				type: 'set',
+				value: new_position.position,
+				target_variable: 'tile_pos',
+				target_obj_uuid: me.unique_id,
+			});
 	
+			change_list.push({
+				type: 'set',
+				value: new_position.direction,
+				target_variable: 'facing_direction',
+				target_obj_uuid: me.unique_id,
+			});	
+		}
+
 	},
 	
 	process_single_frame__damage: (

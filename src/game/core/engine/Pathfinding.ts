@@ -235,12 +235,8 @@ const a_star_search = ( _graph: NodeGraph, _start_coords: Point2D, _end_coords: 
 
 
 
-export class Pathfinder {
-	constructor(  ) {
-		
-	}
-
-	find_path_between_map_tiles = (_TM: Tilemap_Manager_Data, _start_coords: Point2D, _end_coords: Point2D, _Creature: Creature_Data) => {
+export const Pathfinder_ƒ = {
+	find_path_between_map_tiles: (_TM: Tilemap_Manager_Data, _start_coords: Point2D, _end_coords: Point2D, _Creature: Creature_Data) => {
 		/*
 			We're going to go ahead and pass in the creature as a constructor argument; the idea here is that we can't really "reuse" an existing node graph generator and just pass in a new creature type; the moment anything changes about the creature we're using, we need to completely rebuild the node graph from scratch.  So there's no sense in pipelining it into the whole function tree inside the class - we have to nuke and rebuild anyways, so why not make the interface a bit simpler?
 		*/

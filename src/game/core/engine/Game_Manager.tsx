@@ -9,7 +9,7 @@ import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager";
 import { Blit_Manager_Data, ticks_to_ms } from "./Blit_Manager";
 import { Tile_Palette_Element } from "../gui/Tile_Palette_Element";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
-import { Pathfinder } from "./Pathfinding";
+import { Pathfinder_ƒ } from "./Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance } from "../../objects_core/Creature";
 
@@ -73,7 +73,6 @@ export type Game_Manager_Data = {
 	game_state: Game_State;
 	update_game_state_for_ui: Function;
 	update_tooltip_state: (p: TooltipData) => void;
-	_Pathfinder: Pathfinder;
 	cursor_pos: Point2D;
 }
 
@@ -103,8 +102,6 @@ export const New_Game_Manager = (p: {
 
 
 		game_state: GameStateInit,
-	
-		_Pathfinder: new Pathfinder(),
 	}
 
 	const first_turn_state_init = {
@@ -615,7 +612,7 @@ export const Game_Manager_ƒ = {
 				
 				Creature_ƒ.set_path(
 					creature,
-					me._Pathfinder.find_path_between_map_tiles( me._TM, creature.tile_pos, new_pos, creature ).successful_path,
+					Pathfinder_ƒ.find_path_between_map_tiles( me._TM, creature.tile_pos, new_pos, creature ).successful_path,
 					me._TM
 				);
 			}
