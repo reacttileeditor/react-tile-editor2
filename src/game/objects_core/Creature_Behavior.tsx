@@ -168,41 +168,13 @@ export const Creature_Behavior_ƒ = {
 
 
 /*----------------------- turn processing management -----------------------*/
-
-	process_single_frame: (
+	process_single_frame__movement: (
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
-		offset_in_ms: number
-	): {
+		offset_in_ms: number,
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>
-	} => {
-
-
-
-		let change_list: Array<ChangeInstance> = [];
-		let new_pos = Creature_ƒ.yield_position_for_time_in_post_turn_animation(me, _TM, offset_in_ms);
-
-		change_list.push({
-			type: 'set',
-			value: new_pos,
-			target_variable: 'pixel_pos',
-			target_obj_uuid: me.unique_id,
-		});
-
-		if(me.type_name == 'peasant'){
-			console.log(`: ${new_pos.x} ${new_pos.y}`)
-		}
-
-		const spawnees: Array<Custom_Object_Data> = [];
-		/*const spawnees: Array<Custom_Object_Data> = ƒ.if(offset_in_ms >= 20 && offset_in_ms <= 100 && me.type_name == 'peasant', [New_Custom_Object({
-			get_game_state: me.get_game_state,
-			pixel_pos: new_pos,
-			creation_timestamp: offset_in_ms,
-			should_remove: false,
-			type_name: 'shot' as CustomObjectTypeName,
-		})], []);*/
-
+	) => {
 		/*
 			MOVEMENT:
 
@@ -240,8 +212,16 @@ export const Creature_Behavior_ƒ = {
 			target_variable: 'facing_direction',
 			target_obj_uuid: me.unique_id,
 		});
-		
-		
+	
+	},
+	
+	process_single_frame__damage: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		offset_in_ms: number,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>
+	) => {
 		/*
 			DAMAGE:
 		*/
@@ -333,6 +313,49 @@ export const Creature_Behavior_ƒ = {
 			});
 
 		}
+	},
+
+	process_single_frame: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		offset_in_ms: number
+	): {
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>
+	} => {
+		let change_list: Array<ChangeInstance> = [];
+		const spawnees: Array<Custom_Object_Data> = [];
+
+		/*-------- Updating pixel position --------*/
+		let new_pos = Creature_ƒ.yield_position_for_time_in_post_turn_animation(me, _TM, offset_in_ms);
+
+		change_list.push({
+			type: 'set',
+			value: new_pos,
+			target_variable: 'pixel_pos',
+			target_obj_uuid: me.unique_id,
+		});
+
+
+
+		/*-------- Delegating the actual work to sub-functions --------*/
+		Creature_ƒ.process_single_frame__movement(
+			me,
+			_TM,
+			offset_in_ms,
+			change_list,
+			spawnees
+		);
+
+		Creature_ƒ.process_single_frame__damage(
+			me,
+			_TM,
+			offset_in_ms,
+			change_list,
+			spawnees
+		);
+		
+
 
 		return {
 			change_list: change_list,
