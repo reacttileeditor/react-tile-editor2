@@ -23,7 +23,7 @@ export const Creature_Behavior_ƒ = {
 
 	set_path: (me: Creature_Data, new_path: Array<Point2D>, _TM: Tilemap_Manager_Data) => {
 		me.path_this_turn = new_path;
-		me.path_reachable_this_turn = Creature_ƒ.yield_path_reachable_this_turn(me,new_path);
+		me.path_reachable_this_turn = Creature_ƒ.yield_path_reachable_this_turn(me, _TM, new_path);
 		
 		me.path_this_turn_with_directions = Creature_ƒ.build_directional_path_from_path(
 			me,
@@ -31,22 +31,29 @@ export const Creature_Behavior_ƒ = {
 			_TM
 		);
 
-		me.path_reachable_this_turn_with_directions = Creature_ƒ.yield_directional_path_reachable_this_turn(me, me.path_this_turn_with_directions);
+		me.path_reachable_this_turn_with_directions = Creature_ƒ.yield_directional_path_reachable_this_turn(me, _TM, me.path_this_turn_with_directions);
 
 
 		//console.log("directional path", me.path_this_turn_with_directions)
 
-		Creature_ƒ.build_anim_from_path(me,_TM);
+		//Creature_ƒ.build_anim_from_path(me,_TM);
 
 		//console.log('anim:', me.animation_this_turn)
 	},
 	
-	yield_path_reachable_this_turn: (me: Creature_Data, new_path: Array<Point2D>):Array<Point2D> => {
+	yield_path_reachable_this_turn: (me: Creature_Data, _TM: Tilemap_Manager_Data, new_path: Array<Point2D>):Array<Point2D> => {
 		let moves_remaining = Creature_ƒ.yield_moves_per_turn(me);
 		let final_path: Array<Point2D> = [];
 	
 		_.map( new_path, (val) => {
-			moves_remaining = moves_remaining - 1;
+			const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
+				_TM,
+				val,
+				'terrain',
+			);
+			const move_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type) ?? 1;
+
+			moves_remaining = moves_remaining - move_cost;
 			
 			if(moves_remaining > 0){
 				final_path.push(val);
@@ -56,12 +63,19 @@ export const Creature_Behavior_ƒ = {
 		return final_path;
 	},
 
-	yield_directional_path_reachable_this_turn: (me: Creature_Data, new_path: Array<PathNodeWithDirection>):Array<PathNodeWithDirection> => {
+	yield_directional_path_reachable_this_turn: (me: Creature_Data, _TM: Tilemap_Manager_Data, new_path: Array<PathNodeWithDirection>):Array<PathNodeWithDirection> => {
 		let moves_remaining = Creature_ƒ.yield_moves_per_turn(me);
 		let final_path: Array<PathNodeWithDirection> = [];
 	
 		_.map( new_path, (val) => {
-			moves_remaining = moves_remaining - 1;
+			const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
+				_TM,
+				val.position,
+				'terrain',
+			);
+			const move_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type) ?? 1;
+
+			moves_remaining = moves_remaining - move_cost;
 			
 			if(moves_remaining > 0){
 				final_path.push(val);
@@ -90,7 +104,11 @@ export const Creature_Behavior_ƒ = {
 					start_pos: val,
 					end_pos: me.path_reachable_this_turn[idx + 1],
 				})
-				
+				if(idx == 1){
+					me.next_anim_reconsideration_timestamp = initial_time_so_far + 300;
+				}
+
+
 				time_so_far = time_so_far + 300;
 			}
 		})
@@ -206,8 +224,10 @@ export const Creature_Behavior_ƒ = {
 		*/
 		let current_tile_pos = Creature_ƒ.get_current_mid_turn_tile_pos(me, _TM);
 
-		if( !isEqual(current_tile_pos, me.tile_pos)) {
-			//we're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
+		
+		//if( !isEqual(current_tile_pos, me.tile_pos)) {
+		if( offset_in_ms >= me.next_anim_reconsideration_timestamp ) {
+				//we're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
 
 			if(size(me.path_this_turn) > 0){
 				console.log('BEFORE', me.animation_this_turn)

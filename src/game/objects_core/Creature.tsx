@@ -54,6 +54,7 @@ export type Creature_Data = {
 	remaining_action_points: number,
 	current_hitpoints: number,
 	last_changed_hitpoints: number,
+	next_anim_reconsideration_timestamp: number,
 
 	//intended moves
 	planned_tile_pos: Point2D;
@@ -84,6 +85,7 @@ export const New_Creature = (
 		remaining_action_points?: number,
 		current_hitpoints?: number,
 		last_changed_hitpoints?: number,
+		next_anim_reconsideration_timestamp?: number,
 		planned_tile_pos: Point2D,
 		type_name: CreatureTypeName,
 		team: number,
@@ -115,6 +117,10 @@ export const New_Creature = (
 		last_changed_hitpoints: ƒ.if(p.current_hitpoints !== undefined,
 			p.last_changed_hitpoints,
 			-200,
+		),
+		next_anim_reconsideration_timestamp: ƒ.if(p.next_anim_reconsideration_timestamp !== undefined,
+			p.next_anim_reconsideration_timestamp,
+			0,
 		),
 
 
@@ -203,6 +209,7 @@ export const Creature_ƒ = {
 	copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		cloneDeep({
 			...me,
+			next_anim_reconsideration_timestamp: 0,
 			remaining_action_points: 2,
 			planned_tile_pos: me.tile_pos,
 			path_this_turn: [],
