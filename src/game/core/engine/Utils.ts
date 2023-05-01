@@ -4,15 +4,15 @@ import { Point2D, Rectangle } from '../../interfaces';
 
 
 /*----------------------- utility functions -----------------------*/
-export const dice = (sides: number) => (
+export const dice = (sides: number): number => (
 	Math.floor( Math.random() * sides ) + 1
 )
 
-export const dice_anchored_on_specific_random_seed = (sides: number, seed: Prando) => (
+export const dice_anchored_on_specific_random_seed = (sides: number, seed: Prando): number => (
 	Math.floor( seed.next() * sides ) + 1
 )
 
-export const is_even = (value : number) => (
+export const is_even = (value : number): boolean => (
 	modulo(value, 2) == 0
 )
 
@@ -37,14 +37,14 @@ export const ƒ = {
 			}
 		}
 	},
-	dump: (expr: any):any => {
+	dump: <T>(expr: T): T => {
 		console.log(expr);
 		return expr;
 	},
-	tween: (thing_one: number, thing_two: number, proportion: number) => (
+	tween: (thing_one: number, thing_two: number, proportion: number): number => (
 		thing_one*(proportion) + thing_two*(1.0-proportion)
 	),
-	tween_points: (thing_one: Point2D, thing_two: Point2D, proportion: number) => (
+	tween_points: (thing_one: Point2D, thing_two: Point2D, proportion: number): Point2D => (
 		{
 			x: ƒ.tween(thing_one.x, thing_two.x, proportion),
 			y: ƒ.tween(thing_one.y, thing_two.y, proportion)
