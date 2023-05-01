@@ -426,8 +426,6 @@ export const Game_Manager_ƒ = {
 		*/
 
 		map( me.game_state.current_frame_state.creature_list, (val,idx) => {
-			const direction = Creature_ƒ.yield_direction_for_time_in_post_turn_animation(val, Game_Manager_ƒ.get_time_offset(me));
-
 			Asset_Manager_ƒ.draw_image_for_asset_name({
 				_AM:						me._Asset_Manager,
 				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, me._TM, Game_Manager_ƒ.get_time_offset(me)),
@@ -437,7 +435,7 @@ export const Game_Manager_ƒ = {
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
 				opacity:					1.0,
 				brightness:					ƒ.if( (Game_Manager_ƒ.get_time_offset(me) - val.last_changed_hitpoints) < 80, 3.0, 1.0),
-				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(direction),
+				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
 				vertically_flipped:			false,
 			})
 		})

@@ -377,13 +377,36 @@ export const Tilemap_Manager_ƒ = {
 		return Math.max( Math.abs(vector.q), Math.abs(vector.r), Math.abs(vector.s));
 	},
 
+	cubic_direction: ( a: PointCubic, b: PointCubic ): Direction => {
+		const vector = Tilemap_Manager_ƒ.cubic_subtraction(a, b);
 
+		/*
+			All cubic directions can be expressed as a "sign" of the 3 components; this curiously will "round" them to the nearest "whole tile" direction; if we wanted subtler directions, we'd want to not apply Math.sign() here, but we're doing this primarily to yield animation directions, so that's ideal for our use-case. 
+		*/
+		const vector_to_string = `${Math.sign(vector.q)}${Math.sign(vector.r)}${Math.sign(vector.s)}`;
+		debugger;
+
+		return {
+			'10-1': 'east',
+			'1-10': 'north_east',
+			'0-11': 'north_west',
+			'01-1': 'south_east',
+			'-110': 'south_west',
+			'-101': 'west',
+		}[vector_to_string] as Direction;
+	},
 
 	get_tile_coord_distance_between: ( startPos: Point2D, endPos: Point2D ) => Number (
 		Tilemap_Manager_ƒ.cubic_distance( Tilemap_Manager_ƒ.cartesian_to_cubic(startPos), Tilemap_Manager_ƒ.cartesian_to_cubic(endPos) )
 	),
 
 /*----------------------- direction handling -----------------------*/
+	extract_direction_from_map_vectorCubic: (start_pos: Point2D, end_pos: Point2D):Direction => {
+		return Tilemap_Manager_ƒ.cubic_direction(
+			Tilemap_Manager_ƒ.cartesian_to_cubic(start_pos),
+			Tilemap_Manager_ƒ.cartesian_to_cubic(end_pos)
+		);
+	},
 
 	extract_direction_from_map_vector: (start_pos: Point2D, end_pos: Point2D):Direction => {
 		if( start_pos.y == end_pos.y ){

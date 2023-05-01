@@ -171,7 +171,19 @@ export const Creature_Behavior_ƒ = {
 			}
 		}
 	},
+	// extract_direction_from_map_vectorCubic: (
+	// 	me: Creature_Data,
+	// 	start_pos: Point2D,
+	// 	end_pos: Point2D,
+	// 	_TM: Tilemap_Manager_Data
+	// ):Direction => {
+	// 	const pixel_start_pos = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, start_pos);
+	// 	const pixel_end_pos = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, end_pos);
+
+	// 	return Tilemap_Manager_ƒ.extract_direction_from_map_vector(start_pos,end_pos);
+	// },
 	
+
 	calculate_total_anim_duration: (me: Creature_Data): number => {
 		return ƒ.if( _.size(me.animation_this_turn) > 0,
 			_.reduce(
@@ -229,9 +241,9 @@ export const Creature_Behavior_ƒ = {
 		if( offset_in_ms >= me.next_anim_reconsideration_timestamp ) {
 				//we're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
 
-			if(size(me.path_this_turn) > 0){
-				console.log('BEFORE', me.animation_this_turn)
-			}
+			// if(size(me.path_this_turn) > 0){
+			// 	console.log('BEFORE', me.animation_this_turn)
+			// }
 			Creature_ƒ.set_path(
 				me,
 				Pathfinder_ƒ.find_path_between_map_tiles( _TM, current_tile_pos, me.planned_tile_pos, me ).successful_path,
@@ -239,15 +251,15 @@ export const Creature_Behavior_ƒ = {
 			);
 
 			Creature_ƒ.build_anim_from_path(me,_TM, offset_in_ms);
-			if(size(me.path_this_turn) > 0){
-				console.log('AFTER',me.animation_this_turn)
-			}
+			// if(size(me.path_this_turn) > 0){
+			// 	console.log('AFTER',me.animation_this_turn)
+			// }
 			/*
 				Because we want not *merely* a tile, but also a direction, grab the first element from our new path.  We already know the tile (we had to to calculate the path), but this gives us the direction as well.
 			*/ 
 			let new_position: PathNodeWithDirection | undefined =
 				_.first(
-					(me.path_reachable_this_turn_with_directions)
+					ƒ.dump(me.path_reachable_this_turn_with_directions)
 				);
 
 			//There actually should be no circumstance in which this fires, since pathfinding should always return at least ONE tile, but the type system isn't aware of that subtlety.  This code basically just says: give up and remain at our current pos
