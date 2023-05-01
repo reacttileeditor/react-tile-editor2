@@ -32,13 +32,6 @@ export const Creature_Behavior_ƒ = {
 		);
 
 		me.path_reachable_this_turn_with_directions = Creature_ƒ.yield_directional_path_reachable_this_turn(me, _TM, me.path_this_turn_with_directions);
-
-
-		//console.log("directional path", me.path_this_turn_with_directions)
-
-		//Creature_ƒ.build_anim_from_path(me,_TM);
-
-		//console.log('anim:', me.animation_this_turn)
 	},
 	
 	yield_path_reachable_this_turn: (me: Creature_Data, _TM: Tilemap_Manager_Data, new_path: Array<Point2D>):Array<Point2D> => {
@@ -90,19 +83,14 @@ export const Creature_Behavior_ƒ = {
 		var time_so_far = initial_time_so_far;
 		me.animation_this_turn = [];
 
-		_.map(me.path_reachable_this_turn, (val,idx) => {
+		_.map(me.path_reachable_this_turn_with_directions, (val,idx) => {
 			if(idx != _.size(me.path_reachable_this_turn) - 1){
 				me.animation_this_turn.push({
-					direction: Creature_ƒ.extract_direction_from_map_vector(
-						me,
-						val,
-						me.path_reachable_this_turn[idx + 1],
-						_TM
-					),
+					direction: val.direction,
 					duration: 300,
 					start_time: time_so_far,
-					start_pos: val,
-					end_pos: me.path_reachable_this_turn[idx + 1],
+					start_pos: val.position,
+					end_pos: me.path_reachable_this_turn_with_directions[idx + 1].position,
 				})
 				if(idx == 1){
 					me.next_anim_reconsideration_timestamp = initial_time_so_far + 300;
@@ -118,29 +106,42 @@ export const Creature_Behavior_ƒ = {
 		me: Creature_Data,
 		raw_path: Array<Point2D>,
 		_TM: Tilemap_Manager_Data
-	): Array<PathNodeWithDirection> => (
+	): Array<PathNodeWithDirection> => {
+		if( size(raw_path) > 1 ){
+			return _.map( raw_path, (val, idx) => {
+				if( idx == (size(raw_path) -1) ){
+					return {
+						position: raw_path[idx],
+						direction: Creature_ƒ.extract_direction_from_map_vector(
+							me,
+							raw_path[idx - 1],
+							raw_path[idx],
+							_TM
+						)
+					}
+				} else {
+					return {
+						position: raw_path[idx],
+						direction: Creature_ƒ.extract_direction_from_map_vector(
+							me,
+							raw_path[idx],
+							raw_path[idx + 1],
+							_TM
+						)
+					}
+				}
 
-		_.map( raw_path, (val, idx) => {
-
-
-			if( idx == 0){
+			} )
+		} else {
+			//we have a single-tile path.  We shouldn't have to calculate this, but some code path might hit it.
+			return _.map( raw_path, (val, idx) => {
 				return {
 					position: raw_path[idx],
 					direction: me.facing_direction
 				}
-			} else {
-				return {
-					position: raw_path[idx],
-					direction: Creature_ƒ.extract_direction_from_map_vector(
-						me,
-						raw_path[idx - 1],
-						raw_path[idx],
-						_TM
-					)
-				}
-			}
-		} )
-	),
+			});
+		}
+	},
 
 	extract_direction_from_map_vector: (
 		me: Creature_Data,
