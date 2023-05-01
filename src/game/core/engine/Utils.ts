@@ -1,6 +1,8 @@
 import _ from "lodash";
 import Prando from 'prando';
 import { Point2D, Rectangle } from '../../interfaces';
+import { PRNG } from './prng';
+import 'perlin-simplex';
 
 
 /*----------------------- utility functions -----------------------*/
@@ -76,3 +78,18 @@ export const convert_bitmask_to_array_of_individual_bit_values = (byteVal: any) 
 
 	return res;
 }
+
+//Initialize the simplex noise with a constant random value, vs the default
+//random random value. This way, we'll always get the same noise.
+//4: Chosen by fair dice roll. Guaranteed to be random.
+const perlin = new SimplexNoise({random: new PRNG(4).float});
+
+/// Returns a perlin-noise-based frameOffset at hex X/Y, useful for things like water.
+/// maxFrameOffset: The most frames we can offset. Exclusive, so 3 would yield offsets of 0, 1, and 2.
+/// hexX / hexY: The hex tile coordinates.
+/// scale: Optional. A larger scale yields rougher noise. Defaults to 0.15, which seems nice?
+export const waterCycleFrameOffset = (maxFrameOffset: number, hexX:number, hexY:number, scale=0.15) => 
+	Math.floor((perlin.noise(
+		scale * (hexX + hexY % 2 * 0.5),
+		scale * hexY,
+	) + 1) / 2 * maxFrameOffset)
