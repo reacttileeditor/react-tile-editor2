@@ -430,9 +430,9 @@ export const Game_Manager_ƒ = {
 
 			Asset_Manager_ƒ.draw_image_for_asset_name({
 				_AM:						me._Asset_Manager,
-				asset_name:					Creature_ƒ.yield_walk_asset_for_direction( val, direction ), //i.e. 'peasant-se-walk',
+				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, me._TM, Game_Manager_ƒ.get_time_offset(me)),
 				_BM:						me._Blit_Manager,
-				pos:						val.pixel_pos, //yield_position_for_time_in_post_turn_animation( this._TM, this.get_time_offset() ),
+				pos:						val.pixel_pos, 
 				zorder:						12,
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
 				opacity:					1.0,

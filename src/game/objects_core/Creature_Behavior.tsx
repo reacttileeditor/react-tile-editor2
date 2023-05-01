@@ -425,7 +425,7 @@ export const Creature_Behavior_ƒ = {
 	},
 
 
-/*----------------------- data reading -----------------------*/
+/*----------------------- animation — walking parts -----------------------*/
 
 	yield_animation_segment_for_time_offset: (me: Creature_Data, offset_in_ms: number): Anim_Schedule_Element|undefined => (
 		_.find(me.animation_this_turn, (val) => {
@@ -443,10 +443,9 @@ export const Creature_Behavior_ƒ = {
 
 		if(animation_segment == undefined){
 			/*
-				TODO -I don't really have the time to think through this - this comment's getting written during some test implementation.
-				We'll just return 'east' for now.
+				If we don't have an animation queued up, then assume that we're standing idle.  Return our facing direction.
 			*/
-			return 'east';
+			return me.facing_direction;
 		} else {
 			return animation_segment.direction;
 		}
@@ -486,6 +485,27 @@ export const Creature_Behavior_ƒ = {
 			
 			//return _Tilemap_Manager.convert_tile_coords_to_pixel_coords(animation_segment.start_pos);
 		}
+	},
+
+/*----------------------- animation — full info -----------------------*/
+	yield_current_animation_type: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number): 'stand'|'walk'|'attack' => {
+		if( Creature_ƒ.yield_animation_segment_for_time_offset( me, offset_in_ms) != undefined ){
+			return 'walk';
+		} else if (false){
+			return 'attack';
+		} else {
+			return 'stand';
+		}
+	},
+
+	yield_animation_asset_for_time: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number):  string => {
+		const anim_type = Creature_ƒ.yield_current_animation_type( me, _TM, offset_in_ms);
+
+		return {
+			walk: Creature_ƒ.yield_walk_asset_for_direction( me, me.facing_direction ),
+			attack: Creature_ƒ.yield_stand_asset_for_direction( me, me.facing_direction ),
+			stand: Creature_ƒ.yield_stand_asset_for_direction( me, me.facing_direction ),
+		}[anim_type];
 	},
 }
 
