@@ -220,8 +220,6 @@ export const Asset_Manager_ƒ = {
 		*/
 
 		if( _.size( me.static_vals.image_data_list ) == _.size( me.static_vals.raw_image_list ) ) {
-			console.log( me.static_vals.assets_meta );
-
 			do_once_app_ready();
 		}
 	},

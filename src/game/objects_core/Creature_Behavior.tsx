@@ -1,5 +1,5 @@
 
-import _, { cloneDeep, filter, find, isBoolean, map, size } from "lodash";
+import _, { cloneDeep, filter, find, isBoolean, isEqual, map, size } from "lodash";
 
 import { ƒ } from "../core/engine/Utils";
 
@@ -72,8 +72,8 @@ export const Creature_Behavior_ƒ = {
 	},
 
 	
-	build_anim_from_path: (me: Creature_Data, _TM: Tilemap_Manager_Data) => {
-		var time_so_far = 0;
+	build_anim_from_path: (me: Creature_Data, _TM: Tilemap_Manager_Data, initial_time_so_far: number = 0) => {
+		var time_so_far = initial_time_so_far;
 		me.animation_this_turn = [];
 
 		_.map(me.path_reachable_this_turn, (val,idx) => {
@@ -206,15 +206,22 @@ export const Creature_Behavior_ƒ = {
 		*/
 		let current_tile_pos = Creature_ƒ.get_current_mid_turn_tile_pos(me, _TM);
 
-		if( current_tile_pos != me.tile_pos) {
+		if( !isEqual(current_tile_pos, me.tile_pos)) {
 			//we're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
 
+			if(size(me.path_this_turn) > 0){
+				console.log('BEFORE', me.animation_this_turn)
+			}
 			Creature_ƒ.set_path(
 				me,
 				Pathfinder_ƒ.find_path_between_map_tiles( _TM, current_tile_pos, me.planned_tile_pos, me ).successful_path,
 				_TM
 			);
 
+			Creature_ƒ.build_anim_from_path(me,_TM, offset_in_ms);
+			if(size(me.path_this_turn) > 0){
+				console.log('AFTER',me.animation_this_turn)
+			}
 			/*
 				Because we want not *merely* a tile, but also a direction, grab the first element from our new path.  We already know the tile (we had to to calculate the path), but this gives us the direction as well.
 			*/ 
@@ -271,7 +278,7 @@ export const Creature_Behavior_ƒ = {
 					Creature_ƒ.get_current_mid_turn_tile_pos(target, _TM)
 				);
 
-				console.log( `distance between ${me.type_name} and ${target.type_name}: ${distance}`)
+				//console.log( `distance between ${me.type_name} and ${target.type_name}: ${distance}`)
 
 
 				if(me.remaining_action_points > 0){
