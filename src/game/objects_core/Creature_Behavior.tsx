@@ -183,18 +183,6 @@ export const Creature_Behavior_ƒ = {
 	// },
 	
 
-	calculate_total_anim_duration: (me: Creature_Data): number => {
-		return ƒ.if( _.size(me.animation_this_turn) > 0,
-			_.reduce(
-				_.map(me.animation_this_turn, (val)=> (val.duration)),
-				(left,right) => (left + right)
-			) as number,
-			0
-		)
-	},
-
-
-
 
 /*----------------------- turn processing management -----------------------*/
 	process_single_frame__movement: (
@@ -229,6 +217,13 @@ export const Creature_Behavior_ƒ = {
 			if( size(me.path_reachable_this_turn_with_directions) > 1){
 				Creature_ƒ.calculate_next_anim_segment(me, _TM, offset_in_ms);
 				next_tile_pos = me.path_reachable_this_turn_with_directions[1].position;
+			} else {
+				change_list.push({
+					type: 'set',
+					value: true,
+					target_variable: 'is_done_with_turn',
+					target_obj_uuid: me.unique_id,
+				});
 			}
 
 

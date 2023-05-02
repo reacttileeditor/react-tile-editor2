@@ -56,6 +56,7 @@ export type Creature_Data = {
 	last_changed_hitpoints: number,
 	next_behavior_reconsideration_timestamp: number,
 	current_walk_anim_segment?: Anim_Schedule_Element,
+	is_done_with_turn: boolean,
 
 	//intended moves
 	planned_tile_pos: Point2D;
@@ -88,6 +89,7 @@ export const New_Creature = (
 		last_changed_hitpoints?: number,
 		next_behavior_reconsideration_timestamp?: number,
 		current_walk_anim_segment?: Anim_Schedule_Element,
+		is_done_with_turn: boolean,
 		planned_tile_pos: Point2D,
 		type_name: CreatureTypeName,
 		team: number,
@@ -125,6 +127,7 @@ export const New_Creature = (
 			0,
 		),
 		current_walk_anim_segment: p.current_walk_anim_segment,
+		is_done_with_turn: p.is_done_with_turn,
 
 
 		//intended moves
@@ -149,6 +152,22 @@ export const Creature_ƒ = {
 /*----------------------- function imports -----------------------*/
 	...Creature_Behavior_ƒ,
 
+/*----------------------- constructor/destructor stuff -----------------------*/
+
+copy_for_new_turn: (me: Creature_Data): Creature_Data => (
+	cloneDeep({
+		...me,
+		next_behavior_reconsideration_timestamp: 0,
+		remaining_action_points: 2,
+		planned_tile_pos: me.tile_pos,
+		path_this_turn: [],
+		path_this_turn_with_directions: [],
+		path_reachable_this_turn: [],
+		path_reachable_this_turn_with_directions: [],
+		animation_this_turn: [],
+		is_done_with_turn: false,
+	})
+),
 
 /*----------------------- run time type guards -----------------------*/
 
@@ -206,21 +225,6 @@ export const Creature_ƒ = {
 
 	get_current_mid_turn_tile_pos: (me: Creature_Data, _TM: Tilemap_Manager_Data): Point2D => (
 		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, me.pixel_pos)
-	),
-/*----------------------- constructor/destructor stuff -----------------------*/
-
-	copy_for_new_turn: (me: Creature_Data): Creature_Data => (
-		cloneDeep({
-			...me,
-			next_behavior_reconsideration_timestamp: 0,
-			remaining_action_points: 2,
-			planned_tile_pos: me.tile_pos,
-			path_this_turn: [],
-			path_this_turn_with_directions: [],
-			path_reachable_this_turn: [],
-			path_reachable_this_turn_with_directions: [],
-			animation_this_turn: [],
-		})
 	),
 
 
