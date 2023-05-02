@@ -268,10 +268,10 @@ export const Game_Manager_ƒ = {
 
 		if( size(creatures) > 0){
 			return reduce(
-				ƒ.dump(map(
+				map(
 					creatures,
 					(val) => ( val.is_done_with_turn )
-				)),
+				),
 				(left, right) => ( left && right )
 			) as boolean;
 		} else {
@@ -356,7 +356,7 @@ export const Game_Manager_ƒ = {
 			The result of this will give us two lists;  one is a list of any Custom_Objects they're going to spawn, the other is a list of changes we would like to apply to our list of creatures.
 		*/
 
-		if( ƒ.dump(Game_Manager_ƒ.is_turn_finished(me)) ){
+		if( Game_Manager_ƒ.is_turn_finished(me) ){
 			Game_Manager_ƒ.advance_turn_finish(me);
 		} else {		
 			let spawnees: Array<Custom_Object_Data> = [];

@@ -230,7 +230,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 
 
 
-	get_current_mid_turn_tile_pos: (me: Creature_Data, _TM: Tilemap_Manager_Data): Point2D => (
+	get_current_tile_pos_from_pixel_pos: (me: Creature_Data, _TM: Tilemap_Manager_Data): Point2D => (
 		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, me.pixel_pos)
 	),
 

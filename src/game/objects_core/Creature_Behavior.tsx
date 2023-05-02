@@ -44,9 +44,9 @@ export const Creature_Behavior_ƒ = {
 				val,
 				'terrain',
 			);
-			const move_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type) ?? 1;
+			const move_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type) ?? 100000000000000;
 
-			moves_remaining = moves_remaining - move_cost;
+			moves_remaining = Math.max(moves_remaining - move_cost,0);
 			
 			if(moves_remaining > 0){
 				final_path.push(val);
@@ -66,9 +66,9 @@ export const Creature_Behavior_ƒ = {
 				val.position,
 				'terrain',
 			);
-			const move_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type) ?? 1;
+			const move_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type) ?? 100000000000000;
 
-			moves_remaining = moves_remaining - move_cost;
+			moves_remaining = Math.max(moves_remaining - move_cost,0);
 			
 			if(moves_remaining > 0){
 				final_path.push(val);
@@ -201,9 +201,8 @@ export const Creature_Behavior_ƒ = {
 
 			Once we're at the new tile, though, we must reassess everything about what our plan of action is.  In the future, we'll reassess whether we're even walking further at all (perhaps we switch to attacking if available), but for now, we retain our "intended destination", and continue to walk towards it. 
 		*/
-		let current_tile_pos = Creature_ƒ.get_current_mid_turn_tile_pos(me, _TM);
+		//let current_tile_pos = Creature_ƒ.get_current_tile_pos_from_pixel_pos(me, _TM);
 
-		console.log(me.is_done_with_turn);
 		if( offset_in_ms >= me.next_behavior_reconsideration_timestamp ) {
 			console.log(me.remaining_move_points, me.is_done_with_turn);
 
@@ -237,15 +236,17 @@ export const Creature_Behavior_ƒ = {
 
 			Creature_ƒ.set_path(
 				me,
-				Pathfinder_ƒ.find_path_between_map_tiles( _TM, current_tile_pos, me.planned_tile_pos, me ).successful_path,
+				Pathfinder_ƒ.find_path_between_map_tiles( _TM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
 				_TM
 			);
 
-			let next_tile_pos = current_tile_pos;
+			let next_tile_pos = me.tile_pos;
 			if( size(me.path_reachable_this_turn_with_directions) > 1){
 				Creature_ƒ.calculate_next_anim_segment(me, _TM, offset_in_ms);
 				next_tile_pos = me.path_reachable_this_turn_with_directions[1].position;
-			} 
+			} else {
+				me.current_walk_anim_segment = undefined;
+			}
 
 			if(me.remaining_move_points - prior_tile_cost < 0){
 				change_list.push({
@@ -312,8 +313,8 @@ export const Creature_Behavior_ƒ = {
 		if( size(targets) ){
 			map(targets, (target)=>{
 				const distance = Tilemap_Manager_ƒ.get_tile_coord_distance_between(
-					Creature_ƒ.get_current_mid_turn_tile_pos(me, _TM),
-					Creature_ƒ.get_current_mid_turn_tile_pos(target, _TM)
+					Creature_ƒ.get_current_tile_pos_from_pixel_pos(me, _TM),
+					Creature_ƒ.get_current_tile_pos_from_pixel_pos(target, _TM)
 				);
 
 				//console.log( `distance between ${me.type_name} and ${target.type_name}: ${distance}`)
