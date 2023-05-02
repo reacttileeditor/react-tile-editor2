@@ -52,6 +52,7 @@ export type Creature_Data = {
 	tile_pos: Point2D;
 	facing_direction: Direction;
 	remaining_action_points: number,
+	remaining_move_points: number,
 	current_hitpoints: number,
 	last_changed_hitpoints: number,
 	next_behavior_reconsideration_timestamp: number,
@@ -85,6 +86,7 @@ export const New_Creature = (
 		tile_pos: Point2D,
 		direction?: Direction,
 		remaining_action_points?: number,
+		remaining_move_points?: number,
 		current_hitpoints?: number,
 		last_changed_hitpoints?: number,
 		next_behavior_reconsideration_timestamp?: number,
@@ -114,9 +116,13 @@ export const New_Creature = (
 		tile_pos: p.tile_pos,
 		facing_direction: ƒ.if(p.direction !== undefined, p.direction, 'south_east'),
 		remaining_action_points: ƒ.if(p.remaining_action_points !== undefined, p.remaining_action_points, 1),
+		remaining_move_points: ƒ.if(p.remaining_move_points !== undefined,
+			p.remaining_move_points,
+			Creature_ƒ.get_delegate(p.type_name).yield_moves_per_turn()
+		),
 		current_hitpoints: ƒ.if(p.current_hitpoints !== undefined,
 			p.current_hitpoints,
-			Creature_ƒ.get_delegate(p.type_name).yield_max_hitpoints
+			Creature_ƒ.get_delegate(p.type_name).yield_max_hitpoints()
 		),
 		last_changed_hitpoints: ƒ.if(p.current_hitpoints !== undefined,
 			p.last_changed_hitpoints,
@@ -166,6 +172,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		path_reachable_this_turn_with_directions: [],
 		animation_this_turn: [],
 		is_done_with_turn: false,
+		remaining_move_points: Creature_ƒ.get_delegate(me.type_name).yield_moves_per_turn()
 	})
 ),
 

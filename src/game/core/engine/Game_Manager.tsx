@@ -264,12 +264,14 @@ export const Game_Manager_ƒ = {
 	},
 	
 	is_turn_finished: (me: Game_Manager_Data):boolean => {
-		if( size(Game_Manager_ƒ.get_current_turn_state(me).creature_list) > 0){
+		const creatures = me.game_state.current_frame_state.creature_list;
+
+		if( size(creatures) > 0){
 			return reduce(
-				map(
-					Game_Manager_ƒ.get_current_turn_state(me).creature_list,
+				ƒ.dump(map(
+					creatures,
 					(val) => ( val.is_done_with_turn )
-				),
+				)),
 				(left, right) => ( left && right )
 			) as boolean;
 		} else {
@@ -354,7 +356,7 @@ export const Game_Manager_ƒ = {
 			The result of this will give us two lists;  one is a list of any Custom_Objects they're going to spawn, the other is a list of changes we would like to apply to our list of creatures.
 		*/
 
-		if( Game_Manager_ƒ.is_turn_finished(me) ){
+		if( ƒ.dump(Game_Manager_ƒ.is_turn_finished(me)) ){
 			Game_Manager_ƒ.advance_turn_finish(me);
 		} else {		
 			let spawnees: Array<Custom_Object_Data> = [];
@@ -617,7 +619,7 @@ export const Game_Manager_ƒ = {
 					Pathfinder_ƒ.find_path_between_map_tiles( me._TM, creature.tile_pos, new_pos, creature ).successful_path,
 					me._TM
 				);
-				Creature_ƒ.calculate_next_anim_segment(creature, me._TM, 0);
+				//Creature_ƒ.calculate_next_anim_segment(creature, me._TM, 0);
 
 			}
 		} else if(newly_selected_creature === me.game_state.selected_object_index ) {

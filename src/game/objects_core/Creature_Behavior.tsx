@@ -35,7 +35,7 @@ export const Creature_Behavior_ƒ = {
 	},
 	
 	yield_path_reachable_this_turn: (me: Creature_Data, _TM: Tilemap_Manager_Data, new_path: Array<Point2D>):Array<Point2D> => {
-		let moves_remaining = Creature_ƒ.yield_moves_per_turn(me);
+		let moves_remaining = cloneDeep(me.remaining_move_points);
 		let final_path: Array<Point2D> = [];
 	
 		_.map( new_path, (val) => {
@@ -57,7 +57,7 @@ export const Creature_Behavior_ƒ = {
 	},
 
 	yield_directional_path_reachable_this_turn: (me: Creature_Data, _TM: Tilemap_Manager_Data, new_path: Array<PathNodeWithDirection>):Array<PathNodeWithDirection> => {
-		let moves_remaining = Creature_ƒ.yield_moves_per_turn(me);
+		let moves_remaining = cloneDeep(me.remaining_move_points);
 		let final_path: Array<PathNodeWithDirection> = [];
 	
 		_.map( new_path, (val) => {
@@ -203,9 +203,37 @@ export const Creature_Behavior_ƒ = {
 		*/
 		let current_tile_pos = Creature_ƒ.get_current_mid_turn_tile_pos(me, _TM);
 
-		
+		console.log(me.is_done_with_turn);
 		if( offset_in_ms >= me.next_behavior_reconsideration_timestamp ) {
-			//we're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
+			console.log(me.remaining_move_points, me.is_done_with_turn);
+
+			/*
+				We're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
+
+				First, however, deduct the cost of our current tile from our existing move_points:
+			*/
+			const prior_tile_pos = first(me.path_reachable_this_turn);
+			let current_tile_type = '';
+			if( prior_tile_pos != undefined) {
+				current_tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
+					_TM,
+					prior_tile_pos as Point2D,
+					'terrain',
+				)
+			}
+
+			let prior_tile_cost = 0;
+			if( current_tile_type != undefined) {
+				prior_tile_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(current_tile_type) as number;
+			}
+
+
+			change_list.push({
+				type: 'add',
+				value: -prior_tile_cost,
+				target_variable: 'remaining_move_points',
+				target_obj_uuid: me.unique_id,
+			});
 
 			Creature_ƒ.set_path(
 				me,
@@ -217,7 +245,9 @@ export const Creature_Behavior_ƒ = {
 			if( size(me.path_reachable_this_turn_with_directions) > 1){
 				Creature_ƒ.calculate_next_anim_segment(me, _TM, offset_in_ms);
 				next_tile_pos = me.path_reachable_this_turn_with_directions[1].position;
-			} else {
+			} 
+
+			if(me.remaining_move_points - prior_tile_cost < 0){
 				change_list.push({
 					type: 'set',
 					value: true,
