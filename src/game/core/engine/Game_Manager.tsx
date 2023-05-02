@@ -613,7 +613,7 @@ export const Game_Manager_ƒ = {
 					Pathfinder_ƒ.find_path_between_map_tiles( me._TM, creature.tile_pos, new_pos, creature ).successful_path,
 					me._TM
 				);
-				Creature_ƒ.build_anim_from_path(creature,me._TM);
+				Creature_ƒ.calculate_next_anim_segment(creature, me._TM, 0);
 
 			}
 		} else if(newly_selected_creature === me.game_state.selected_object_index ) {

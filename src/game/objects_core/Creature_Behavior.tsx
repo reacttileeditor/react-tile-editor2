@@ -1,5 +1,5 @@
 
-import _, { cloneDeep, filter, find, isBoolean, isEqual, map, size } from "lodash";
+import _, { cloneDeep, filter, find, first, isBoolean, isEqual, map, size } from "lodash";
 
 import { ƒ } from "../core/engine/Utils";
 
@@ -79,28 +79,26 @@ export const Creature_Behavior_ƒ = {
 	},
 
 	
-	build_anim_from_path: (me: Creature_Data, _TM: Tilemap_Manager_Data, initial_time_so_far: number = 0) => {
+
+
+	calculate_next_anim_segment: (me: Creature_Data, _TM: Tilemap_Manager_Data, initial_time_so_far: number = 0) => {
 		var time_so_far = initial_time_so_far;
-		me.animation_this_turn = [];
 
-		_.map(me.path_reachable_this_turn_with_directions, (val,idx) => {
-			if(idx != _.size(me.path_reachable_this_turn) - 1){
-				me.animation_this_turn.push({
-					direction: val.direction,
-					duration: 300,
-					start_time: time_so_far,
-					start_pos: val.position,
-					end_pos: me.path_reachable_this_turn_with_directions[idx + 1].position,
-				})
-				if(idx == 1){
-					me.next_anim_reconsideration_timestamp = initial_time_so_far + 300;
-				}
+		const first_tile = first(me.path_reachable_this_turn_with_directions);
+		const second_tile = me.path_reachable_this_turn_with_directions[1];
 
-
-				time_so_far = time_so_far + 300;
-			}
-		})
+		me.current_walk_anim_segment = ƒ.if((first_tile != undefined) && (second_tile != undefined),
+			{
+				direction: (first_tile as PathNodeWithDirection).direction,
+				duration: 300,
+				start_time: time_so_far,
+				start_pos: (first_tile as PathNodeWithDirection).position,
+				end_pos: (second_tile as PathNodeWithDirection).position,
+			},
+			undefined
+		);
 	},
+
 
 	build_directional_path_from_path: (
 		me: Creature_Data,
@@ -208,28 +206,8 @@ export const Creature_Behavior_ƒ = {
 	) => {
 		/*
 			MOVEMENT:
-
-			Big bit of temporary bullshit here:  we're axing resolving moves at the end of the turn, so we need to do it here.  Doing it properly is going to be ugly/complicated/etc, so for now we're doing a huge copout/cheat, and just setting the final position.
 		*/
-/*		let new_position: PathNodeWithDirection | undefined =
-			_.last(
-				(me.path_reachable_this_turn_with_directions)
-*/					/*ƒ.dump(_.slice( creature.path_this_turn,
-						0, //_.size(creature.path_this_turn) - creature.yield_moves_per_turn(),
-						creature.yield_moves_per_turn()
-					)),*/
-				  //find literally the first available tile at the end of the path, don't give any hoot about whether it's occupied by another creature
-/*			);
-		
-			//debugger;
-		//if we didn't find *any* open slots, give up and remain at our current pos
-		if( new_position == undefined){
-			new_position = {
-				position: me.tile_pos,
-				direction: me.facing_direction,
-			};
-		}
-*/
+
 		/*
 			If we are at a different tile position, we need to renegotiate our path — in the act of attempting to move to a new tile, we can assume that the next tile will be guaranteed to be open for movement (this is a temporary lie we're adopting to expedite development; we'll need to reconsider this, possibly on a per-frame basis of checking the tile we're moving towards and seeing if it's occupied, and thus, we're "bumped").
 
@@ -238,39 +216,41 @@ export const Creature_Behavior_ƒ = {
 		let current_tile_pos = Creature_ƒ.get_current_mid_turn_tile_pos(me, _TM);
 
 		
-		//if( !isEqual(current_tile_pos, me.tile_pos)) {
-		if( offset_in_ms >= me.next_anim_reconsideration_timestamp ) {
-				//we're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
+		if( offset_in_ms >= me.next_behavior_reconsideration_timestamp ) {
+			//we're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
 
-			// if(size(me.path_this_turn) > 0){
-			// 	console.log('BEFORE', me.animation_this_turn)
-			// }
 			Creature_ƒ.set_path(
 				me,
 				Pathfinder_ƒ.find_path_between_map_tiles( _TM, current_tile_pos, me.planned_tile_pos, me ).successful_path,
 				_TM
 			);
 
-			Creature_ƒ.build_anim_from_path(me,_TM, offset_in_ms);
-			// if(size(me.path_this_turn) > 0){
-			// 	console.log('AFTER',me.animation_this_turn)
-			// }
+			let next_tile_pos = current_tile_pos;
+			if( size(me.path_reachable_this_turn_with_directions) > 1){
+				Creature_ƒ.calculate_next_anim_segment(me, _TM, offset_in_ms);
+				next_tile_pos = me.path_reachable_this_turn_with_directions[1].position;
+			}
+
+
 			/*
 				Because we want not *merely* a tile, but also a direction, grab the first element from our new path.  We already know the tile (we had to to calculate the path), but this gives us the direction as well.
 			*/ 
-			let new_position: PathNodeWithDirection | undefined =
-				_.first(
-					ƒ.dump(me.path_reachable_this_turn_with_directions)
-				);
 
-			//There actually should be no circumstance in which this fires, since pathfinding should always return at least ONE tile, but the type system isn't aware of that subtlety.  This code basically just says: give up and remain at our current pos
-			if( new_position == undefined){
-				new_position = {
-					position: me.tile_pos,
-					direction: me.facing_direction,
-				};
-			}				
+			const new_position = {
+				position: next_tile_pos,
+				direction: ƒ.if(me.current_walk_anim_segment != undefined,
+					me.current_walk_anim_segment?.direction,
+					me.facing_direction
+				),
+			};
+			
 
+			change_list.push({
+				type: 'set',
+				value: offset_in_ms + 300,
+				target_variable: 'next_behavior_reconsideration_timestamp',
+				target_obj_uuid: me.unique_id,
+			});
 
 			change_list.push({
 				type: 'set',
@@ -401,7 +381,7 @@ export const Creature_Behavior_ƒ = {
 		const spawnees: Array<Custom_Object_Data> = [];
 
 		/*-------- Updating pixel position --------*/
-		let new_pos = Creature_ƒ.yield_position_for_time_in_post_turn_animation(me, _TM, offset_in_ms);
+		let new_pos = Creature_ƒ.yield_walk_anim_position(me, _TM, offset_in_ms);
 
 		change_list.push({
 			type: 'set',
@@ -440,69 +420,30 @@ export const Creature_Behavior_ƒ = {
 
 /*----------------------- animation — walking parts -----------------------*/
 
-	yield_animation_segment_for_time_offset: (me: Creature_Data, offset_in_ms: number): Anim_Schedule_Element|undefined => (
-		_.find(me.animation_this_turn, (val) => {
-			//			console.log(`start ${val.start_time}, offset ${offset_in_ms}, end ${val.start_time + val.duration}`);
-		
-			return val.start_time <= offset_in_ms
-			&&
-			offset_in_ms < (val.start_time + val.duration)
-		})
-	),
+	yield_walk_anim_position: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number):Point2D => {
+		const animation_segment = me.current_walk_anim_segment;
 
-
-	yield_direction_for_time_in_post_turn_animation: (me: Creature_Data, offset_in_ms: number ):Direction => {
-		var animation_segment = Creature_ƒ.yield_animation_segment_for_time_offset(me, offset_in_ms);
-
-		if(animation_segment == undefined){
-			/*
-				If we don't have an animation queued up, then assume that we're standing idle.  Return our facing direction.
-			*/
-			return me.facing_direction;
-		} else {
-			return animation_segment.direction;
-		}
-	},
-	
-	yield_position_for_time_in_post_turn_animation: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number):Point2D => {
-//		console.log(me.animation_this_turn);
-		var animation_segment = Creature_ƒ.yield_animation_segment_for_time_offset(me, offset_in_ms);
-		
-		if(animation_segment == undefined){
-			/*
-				There are a few reasons we might not be able to find a corresponding animation segment.
-				If the desired time is off the end of the animation, return our final position.
-				
-				If it's absolutely anything else, then let's just return the initial starting position.  The most common case for this would be one where we just don't really have an animation.
-				(Nominally this would include "before the start of the animation", but as much as that's an error case, it makes no sense why we'd end up there)
-			*/
-
-			if(offset_in_ms >= Creature_ƒ.calculate_total_anim_duration(me) ){
-				return Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, me.planned_tile_pos)
-			} else {
-				return Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, me.tile_pos)
-			}
-		} else {
-			//cheating for some test code - first we'll just do the start pos; then we'll linearly interpolate.   We want to linearly interpolate here, because any "actual" easing function should happen over the whole animation, not one segment (otherwise we'll have a very 'stuttery' movement pattern.
-			
+		if( animation_segment ){
 			let time_offset_in_anim_segment = (offset_in_ms - animation_segment.start_time);
 			let time_offset_normalized = 1.0 - (time_offset_in_anim_segment / animation_segment.duration)
 			
-            return ƒ.round_point_to_nearest_pixel( 
-                ƒ.tween_points(
-                    Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, animation_segment.start_pos ),
-                    Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, animation_segment.end_pos ),
-                    time_offset_normalized
-                )
-            );
-			
-			//return _Tilemap_Manager.convert_tile_coords_to_pixel_coords(animation_segment.start_pos);
+			return ƒ.round_point_to_nearest_pixel( 
+				ƒ.tween_points(
+					Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, animation_segment.start_pos ),
+					Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, animation_segment.end_pos ),
+					time_offset_normalized
+				)
+			);
+		} else {
+			return me.pixel_pos;
 		}
 	},
 
+	
+
 /*----------------------- animation — full info -----------------------*/
 	yield_current_animation_type: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number): 'stand'|'walk'|'attack' => {
-		if( Creature_ƒ.yield_animation_segment_for_time_offset( me, offset_in_ms) != undefined ){
+		if( me.current_walk_anim_segment != undefined ){
 			return 'walk';
 		} else if (false){
 			return 'attack';
