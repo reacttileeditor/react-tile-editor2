@@ -203,95 +203,130 @@ export const Creature_Behavior_ƒ = {
 		*/
 		//let current_tile_pos = Creature_ƒ.get_current_tile_pos_from_pixel_pos(me, _TM);
 
+		Creature_Behavior_ƒ.update_pixel_pos(me, _TM, offset_in_ms, change_list);
+
 		if( offset_in_ms >= me.next_behavior_reconsideration_timestamp ) {
-			console.log(me.remaining_move_points, me.is_done_with_turn);
-
-			/*
-				We're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
-
-				First, however, deduct the cost of our current tile from our existing move_points:
-			*/
-			const prior_tile_pos = first(me.path_reachable_this_turn);
-			let current_tile_type = '';
-			if( prior_tile_pos != undefined) {
-				current_tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
-					_TM,
-					prior_tile_pos as Point2D,
-					'terrain',
-				)
-			}
-
-			let prior_tile_cost = 0;
-			if( current_tile_type != undefined) {
-				prior_tile_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(current_tile_type) as number;
-			}
-
-
-			change_list.push({
-				type: 'add',
-				value: -prior_tile_cost,
-				target_variable: 'remaining_move_points',
-				target_obj_uuid: me.unique_id,
-			});
-
-			Creature_ƒ.set_path(
-				me,
-				Pathfinder_ƒ.find_path_between_map_tiles( _TM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
-				_TM
-			);
-
-			let next_tile_pos = me.tile_pos;
-			if( size(me.path_reachable_this_turn_with_directions) > 1){
-				Creature_ƒ.calculate_next_anim_segment(me, _TM, offset_in_ms);
-				next_tile_pos = me.path_reachable_this_turn_with_directions[1].position;
-			} else {
-				me.current_walk_anim_segment = undefined;
-			}
-
-			if(me.remaining_move_points - prior_tile_cost < 0){
-				change_list.push({
-					type: 'set',
-					value: true,
-					target_variable: 'is_done_with_turn',
-					target_obj_uuid: me.unique_id,
-				});
-			}
-
-
-			/*
-				Because we want not *merely* a tile, but also a direction, grab the first element from our new path.  We already know the tile (we had to to calculate the path), but this gives us the direction as well.
-			*/ 
-
-			const new_position = {
-				position: next_tile_pos,
-				direction: ƒ.if(me.current_walk_anim_segment != undefined,
-					me.current_walk_anim_segment?.direction,
-					me.facing_direction
-				),
-			};
-			
-
-			change_list.push({
-				type: 'set',
-				value: offset_in_ms + 300,
-				target_variable: 'next_behavior_reconsideration_timestamp',
-				target_obj_uuid: me.unique_id,
-			});
-
-			change_list.push({
-				type: 'set',
-				value: new_position.position,
-				target_variable: 'tile_pos',
-				target_obj_uuid: me.unique_id,
-			});
-	
-			change_list.push({
-				type: 'set',
-				value: new_position.direction,
-				target_variable: 'facing_direction',
-				target_obj_uuid: me.unique_id,
-			});	
+			Creature_Behavior_ƒ.renegotiate_path(me, _TM, offset_in_ms, change_list);
 		}
+
+	},
+
+	update_pixel_pos: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		offset_in_ms: number,
+		change_list: Array<ChangeInstance>,
+	) => {
+		/*-------- Updating pixel position --------*/
+		let new_pos = Creature_ƒ.yield_walk_anim_position(me, _TM, offset_in_ms);
+
+		change_list.push({
+			type: 'set',
+			value: new_pos,
+			target_variable: 'pixel_pos',
+			target_obj_uuid: me.unique_id,
+		});
+
+	},
+
+	renegotiate_path: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		offset_in_ms: number,
+		change_list: Array<ChangeInstance>,
+	) => {
+		console.log(me.remaining_move_points, me.is_done_with_turn);
+
+		/*
+			We're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
+
+			First, however, deduct the cost of our current tile from our existing move_points:
+		*/
+		const prior_tile_pos = first(me.path_reachable_this_turn);
+		let current_tile_type = '';
+		if( prior_tile_pos != undefined) {
+			current_tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
+				_TM,
+				prior_tile_pos as Point2D,
+				'terrain',
+			)
+		}
+
+		let prior_tile_cost = 0;
+		if( current_tile_type != undefined) {
+			prior_tile_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(current_tile_type) as number;
+		}
+
+
+		change_list.push({
+			type: 'add',
+			value: -prior_tile_cost,
+			target_variable: 'remaining_move_points',
+			target_obj_uuid: me.unique_id,
+		});
+
+		Creature_ƒ.set_path(
+			me,
+			Pathfinder_ƒ.find_path_between_map_tiles( _TM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
+			_TM
+		);
+
+		let next_tile_pos = me.tile_pos;
+		if( size(me.path_reachable_this_turn_with_directions) > 1){
+			Creature_ƒ.calculate_next_anim_segment(me, _TM, offset_in_ms);
+			next_tile_pos = me.path_reachable_this_turn_with_directions[1].position;
+		} else {
+			me.current_walk_anim_segment = undefined;
+		}
+
+		if(me.remaining_move_points - prior_tile_cost < 0){
+			change_list.push({
+				type: 'set',
+				value: true,
+				target_variable: 'is_done_with_turn',
+				target_obj_uuid: me.unique_id,
+			});
+		}
+
+
+		/*
+			Because we want not *merely* a tile, but also a direction, grab the first element from our new path.  We already know the tile (we had to to calculate the path), but this gives us the direction as well.
+		*/ 
+
+		const new_position = {
+			position: next_tile_pos,
+			direction: ƒ.if(me.current_walk_anim_segment != undefined,
+				me.current_walk_anim_segment?.direction,
+				me.facing_direction
+			),
+		};
+		
+
+		change_list.push({
+			type: 'set',
+			value: offset_in_ms + 300,
+			target_variable: 'next_behavior_reconsideration_timestamp',
+			target_obj_uuid: me.unique_id,
+		});
+
+		change_list.push({
+			type: 'set',
+			value: new_position.position,
+			target_variable: 'tile_pos',
+			target_obj_uuid: me.unique_id,
+		});
+
+		change_list.push({
+			type: 'set',
+			value: new_position.direction,
+			target_variable: 'facing_direction',
+			target_obj_uuid: me.unique_id,
+		});	
+	},
+
+	reconsider_behavior: (
+
+	) => {
 
 	},
 	
@@ -406,15 +441,6 @@ export const Creature_Behavior_ƒ = {
 		let change_list: Array<ChangeInstance> = [];
 		const spawnees: Array<Custom_Object_Data> = [];
 
-		/*-------- Updating pixel position --------*/
-		let new_pos = Creature_ƒ.yield_walk_anim_position(me, _TM, offset_in_ms);
-
-		change_list.push({
-			type: 'set',
-			value: new_pos,
-			target_variable: 'pixel_pos',
-			target_obj_uuid: me.unique_id,
-		});
 
 
 
