@@ -164,7 +164,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 	cloneDeep({
 		...me,
 		next_behavior_reconsideration_timestamp: 0,
-		remaining_action_points: 2,
+		remaining_action_points: 1,
 		planned_tile_pos: me.tile_pos,
 		path_this_turn: [],
 		path_this_turn_with_directions: [],

@@ -324,6 +324,26 @@ export const Creature_Behavior_ƒ = {
 		});	
 	},
 
+
+	terminate_movement: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		offset_in_ms: number,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>
+	) => {
+		me.current_walk_anim_segment = undefined;
+	
+
+		change_list.push({
+			type: 'set',
+			value: true,
+			target_variable: 'is_done_with_turn',
+			target_obj_uuid: me.unique_id,
+		});
+	},
+	
+
 	reconsider_behavior: (
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
@@ -369,7 +389,11 @@ export const Creature_Behavior_ƒ = {
 			*/
 
 			//TODO gate on remaining action points
-			Creature_Behavior_ƒ.renegotiate_path(me, _TM, offset_in_ms, change_list);
+			if( (me.remaining_action_points > 0) ){
+				Creature_Behavior_ƒ.renegotiate_path(me, _TM, offset_in_ms, change_list);
+			} else {
+				Creature_Behavior_ƒ.terminate_movement(me, _TM, offset_in_ms, change_list, spawnees);
+			}
 		}
 	},
 
@@ -427,6 +451,15 @@ export const Creature_Behavior_ƒ = {
 			target_variable: 'remaining_action_points',
 			target_obj_uuid: me.unique_id,
 		});
+
+		if(me.remaining_action_points - 1 < 0){
+			change_list.push({
+				type: 'set',
+				value: true,
+				target_variable: 'is_done_with_turn',
+				target_obj_uuid: me.unique_id,
+			});
+		}
 	},
 
 	process_single_frame__damage: (
