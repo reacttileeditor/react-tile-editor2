@@ -206,7 +206,7 @@ export const Creature_Behavior_ƒ = {
 		Creature_Behavior_ƒ.update_pixel_pos(me, _TM, offset_in_ms, change_list);
 
 		if( offset_in_ms >= me.next_behavior_reconsideration_timestamp ) {
-			Creature_Behavior_ƒ.renegotiate_path(me, _TM, offset_in_ms, change_list);
+			Creature_Behavior_ƒ.reconsider_behavior(me, _TM, offset_in_ms, change_list, spawnees);
 		}
 
 	},
@@ -325,11 +325,110 @@ export const Creature_Behavior_ƒ = {
 	},
 
 	reconsider_behavior: (
-
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		offset_in_ms: number,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>
 	) => {
 
-	},
+		/*
+			This is where we decide if it's appropriate to launch an attack.
+			
+			This is a work in progress, and we'll have to expand the criterion as we figure them out.   The first, obvious thing is detecting if there are valid targets.  The second thing we'll do later is figuring out if we've still got enough moves left.
+		*/
+
+		const targets = filter( Game_Manager_ƒ.get_game_state(me.get_GM_instance()).current_frame_state.creature_list, (val) => (
+			val.team !== me.team
+		));
+		
+		let valid_targets: Array<Creature_Data> = []; 
+		if( size(targets) ){
+			valid_targets = filter(targets, (target)=>{
+				const distance = Tilemap_Manager_ƒ.get_tile_coord_distance_between(
+					Creature_ƒ.get_current_tile_pos_from_pixel_pos(me, _TM),
+					Creature_ƒ.get_current_tile_pos_from_pixel_pos(target, _TM)
+				);
 	
+				return (distance <= 1);
+			});
+		}
+
+		if( size(valid_targets) && (me.remaining_action_points > 0) ){
+			/*
+				We have at least one valid target.  I think we'll probably want some priority criterion, but for now, just pick the first one.
+
+				We have to set some kind of mode indicator that we're attacking, right now.
+			*/
+
+			Creature_Behavior_ƒ.perform_attack_instance(me, _TM, offset_in_ms, change_list, spawnees, valid_targets[0]);
+
+		} else {
+			/*
+				We don't have any targets, so we're moving, instead.
+			*/
+
+			//TODO gate on remaining action points
+			Creature_Behavior_ƒ.renegotiate_path(me, _TM, offset_in_ms, change_list);
+		}
+	},
+
+
+	perform_attack_instance: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		offset_in_ms: number,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>,
+		target: Creature_Data,
+	) => {
+		change_list.push({
+			type: 'add',
+			value: -Creature_ƒ.get_delegate(me.type_name).yield_damage(),
+			target_variable: 'current_hitpoints',
+			target_obj_uuid: target.unique_id,
+		});
+
+		change_list.push({
+			type: 'set',
+			value: offset_in_ms,
+			target_variable: 'last_changed_hitpoints',
+			target_obj_uuid: target.unique_id,
+		});
+
+
+		spawnees.push(New_Custom_Object({
+			get_GM_instance: me.get_GM_instance,
+			pixel_pos: target.pixel_pos,
+			type_name: 'shot' as CustomObjectTypeName,
+			creation_timestamp: offset_in_ms,
+			should_remove: false,
+			text: ``,
+			delegate_state: {
+				target_obj: target.unique_id,
+				source_obj: me.unique_id,
+			},
+		}));
+		
+		
+		spawnees.push(New_Custom_Object({
+			get_GM_instance: me.get_GM_instance,
+			pixel_pos: target.pixel_pos,
+			type_name: 'text_label' as CustomObjectTypeName,
+			creation_timestamp: offset_in_ms,
+			should_remove: false,
+			text: `-${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
+			delegate_state: {},
+		}));
+
+		change_list.push({
+			type: 'add',
+			value: -1,
+			target_variable: 'remaining_action_points',
+			target_obj_uuid: me.unique_id,
+		});
+	},
+
 	process_single_frame__damage: (
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
@@ -453,13 +552,13 @@ export const Creature_Behavior_ƒ = {
 			spawnees
 		);
 
-		Creature_ƒ.process_single_frame__damage(
+		/*Creature_ƒ.process_single_frame__damage(
 			me,
 			_TM,
 			offset_in_ms,
 			change_list,
 			spawnees
-		);
+		);*/
 		
 
 
