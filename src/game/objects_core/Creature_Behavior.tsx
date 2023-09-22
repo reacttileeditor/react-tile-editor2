@@ -469,77 +469,6 @@ export const Creature_Behavior_ƒ = {
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>
 	) => {
-		/*
-			DAMAGE:
-		*/
-		const targets = filter( Game_Manager_ƒ.get_game_state(me.get_GM_instance()).current_frame_state.creature_list, (val) => (
-			val.team !== me.team
-		));
-		
-
-		if( size(targets) ){
-			map(targets, (target)=>{
-				const distance = Tilemap_Manager_ƒ.get_tile_coord_distance_between(
-					Creature_ƒ.get_current_tile_pos_from_pixel_pos(me, _TM),
-					Creature_ƒ.get_current_tile_pos_from_pixel_pos(target, _TM)
-				);
-
-				//console.log( `distance between ${me.type_name} and ${target.type_name}: ${distance}`)
-
-
-				if(me.remaining_action_points > 0){
-
-					if(distance <= 1 ){
-						change_list.push({
-							type: 'add',
-							value: -Creature_ƒ.get_delegate(me.type_name).yield_damage(),
-							target_variable: 'current_hitpoints',
-							target_obj_uuid: target.unique_id,
-						});
-
-						change_list.push({
-							type: 'set',
-							value: offset_in_ms,
-							target_variable: 'last_changed_hitpoints',
-							target_obj_uuid: target.unique_id,
-						});
-						
-
-						spawnees.push(New_Custom_Object({
-							get_GM_instance: me.get_GM_instance,
-							pixel_pos: target.pixel_pos,
-							type_name: 'shot' as CustomObjectTypeName,
-							creation_timestamp: offset_in_ms,
-							should_remove: false,
-							text: ``,
-							delegate_state: {
-								target_obj: target.unique_id,
-								source_obj: me.unique_id,
-							},
-						}));
-						
-						
-						spawnees.push(New_Custom_Object({
-							get_GM_instance: me.get_GM_instance,
-							pixel_pos: target.pixel_pos,
-							type_name: 'text_label' as CustomObjectTypeName,
-							creation_timestamp: offset_in_ms,
-							should_remove: false,
-							text: `-${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
-							delegate_state: {},
-						}));
-
-						change_list.push({
-							type: 'add',
-							value: -1,
-							target_variable: 'remaining_action_points',
-							target_obj_uuid: me.unique_id,
-						});
-					}
-				}			
-			})
-		}
-
 		if( me.current_hitpoints <= 0 ) {
 			spawnees.push(New_Custom_Object({
 				get_GM_instance: me.get_GM_instance,
@@ -585,13 +514,13 @@ export const Creature_Behavior_ƒ = {
 			spawnees
 		);
 
-		/*Creature_ƒ.process_single_frame__damage(
+		Creature_ƒ.process_single_frame__damage(
 			me,
 			_TM,
 			offset_in_ms,
 			change_list,
 			spawnees
-		);*/
+		);
 		
 
 
