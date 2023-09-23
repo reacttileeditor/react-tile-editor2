@@ -55,6 +55,9 @@ export const asset_list: StaticValues = {
 		url: "deaths_head.png",
 		name: "deaths_head",
 	},{
+		url: "hit_star.png",
+		name: "hit_star",
+	},{
 		url: "char2-se-walk.png",
 		name: "peasant-se-walk",
 		frames: 8,

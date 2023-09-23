@@ -437,11 +437,21 @@ export const Creature_Behavior_ƒ = {
 		
 		spawnees.push(New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
-			pixel_pos: target.pixel_pos,
+			pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 9},
 			type_name: 'text_label' as CustomObjectTypeName,
 			creation_timestamp: offset_in_ms,
 			should_remove: false,
 			text: `-${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
+			delegate_state: {},
+		}));
+
+		spawnees.push(New_Custom_Object({
+			get_GM_instance: me.get_GM_instance,
+			pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 10},
+			type_name: 'hit_star_bg' as CustomObjectTypeName,
+			creation_timestamp: offset_in_ms,
+			should_remove: false,
+			text: ``,
 			delegate_state: {},
 		}));
 

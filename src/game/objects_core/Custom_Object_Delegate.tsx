@@ -112,7 +112,7 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 
 
 
-		let addend = {x: 0, y: -1};
+		let addend = {x: 0, y: 0};
 
 		return {
 			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
@@ -146,3 +146,29 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
 	yield_image: () => 'deaths_head',
 }
 
+
+
+
+export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
+	...Custom_Object_Delegate_Base_ƒ,
+
+	process_single_frame: (
+		prior_pixel_pos: Point2D, 
+		GM: Game_Manager_Data,
+		prior_delegate_state: Custom_Object_Delegate_States,
+	): {
+		pixel_pos: Point2D,
+		delegate_state: {},
+	} => {
+
+
+
+		let addend = {x: 0, y: 0};
+
+		return {
+			pixel_pos: prior_pixel_pos,
+			delegate_state: prior_delegate_state,
+		}
+	},
+	yield_image: () => 'hit_star',
+}
