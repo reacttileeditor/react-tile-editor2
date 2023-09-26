@@ -33,6 +33,7 @@ export type Custom_Object_Delegate = {
 	},
 
 	yield_image: () => string,
+	yield_zorder: () => number,
 }
 
 const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
@@ -53,7 +54,11 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 
 	yield_image: () => (
 		'red_dot'
-	)
+	),
+
+	yield_zorder: () => (
+		13
+	),
 }
 
 export const CO_Shot_ƒ: Custom_Object_Delegate = {
@@ -120,6 +125,7 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 		}
 	},
 	yield_image: () => 'omit_image',
+	yield_zorder: () => 40,
 }
 
 export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
@@ -171,4 +177,5 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 		}
 	},
 	yield_image: () => 'hit_star',
+	yield_zorder: () => 20,
 }

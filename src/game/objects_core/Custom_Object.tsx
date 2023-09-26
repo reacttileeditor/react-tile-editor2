@@ -107,6 +107,10 @@ export const Custom_Object_ƒ = {
 
 	yield_text: (me: Custom_Object_Data) => (
 		me.text
-	)
+	),
+
+	yield_zorder: (me: Custom_Object_Data) => (
+		Custom_Object_ƒ.get_delegate(me.type_name).yield_zorder()
+	),
 }
 

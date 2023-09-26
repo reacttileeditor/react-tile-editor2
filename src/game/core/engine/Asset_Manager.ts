@@ -565,6 +565,8 @@ export const Asset_Manager_ƒ = {
 		horizontally_flipped: boolean,
 		vertically_flipped: boolean,
 	}) => {
+		console.log(p.zorder);
+
 		Blit_Manager_ƒ.queue_draw_op({
 			_BM:					p._BM,
 			pos:					{ x: p.pos.x, y: p.pos.y },
