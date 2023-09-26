@@ -443,7 +443,16 @@ export const Game_Manager_ƒ = {
 				brightness:					ƒ.if( (Game_Manager_ƒ.get_time_offset(me) - val.last_changed_hitpoints) < 80, 3.0, 1.0),
 				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
 				vertically_flipped:			false,
-			})
+			});
+
+			Asset_Manager_ƒ.draw_hitpoints({
+				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
+				_BM:						me._Blit_Manager,
+				pos:						val.pixel_pos,
+				zorder:						12,
+				current_milliseconds:		0,
+				opacity:					1.0,
+			});
 		})
 
 		map( me.game_state.custom_object_list, (val,idx) => {

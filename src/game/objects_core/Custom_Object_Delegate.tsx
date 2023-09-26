@@ -142,10 +142,10 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
 
 
 
-		let addend = {x: 0, y: 0};
+		let addend = {x: 0, y: -1};
 
 		return {
-			pixel_pos: prior_pixel_pos,
+			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
 			delegate_state: prior_delegate_state,
 		}
 	},
