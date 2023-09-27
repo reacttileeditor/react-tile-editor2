@@ -221,13 +221,7 @@ export const Creature_Behavior_ƒ = {
 		/*-------- Updating pixel position --------*/
 		let new_pos = Creature_ƒ.yield_walk_anim_position(me, _TM, offset_in_ms);
 
-		change_list.push({
-			type: 'set',
-			value: new_pos,
-			target_variable: 'pixel_pos',
-			target_obj_uuid: me.unique_id,
-		});
-
+		Creature_ƒ.set(change_list, me, 'pixel_pos', new_pos);
 	},
 
 	renegotiate_path: (
@@ -258,13 +252,7 @@ export const Creature_Behavior_ƒ = {
 			prior_tile_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(current_tile_type) as number;
 		}
 
-
-		change_list.push({
-			type: 'add',
-			value: -prior_tile_cost,
-			target_variable: 'remaining_move_points',
-			target_obj_uuid: me.unique_id,
-		});
+		Creature_ƒ.add(change_list, me, 'remaining_move_points', -prior_tile_cost);
 
 		Creature_ƒ.set_path(
 			me,
@@ -277,30 +265,15 @@ export const Creature_Behavior_ƒ = {
 			Creature_ƒ.calculate_next_anim_segment(me, _TM, offset_in_ms);
 			next_tile_pos = me.path_reachable_this_turn_with_directions[1].position;
 
-			change_list.push({
-				type: 'set',
-				value: 'walk',
-				target_variable: 'behavior_mode',
-				target_obj_uuid: me.unique_id,
-			});			
+			Creature_ƒ.set(change_list, me, 'behavior_mode', 'walk');
 		} else {
 			me.current_walk_anim_segment = undefined;
 
-			change_list.push({
-				type: 'set',
-				value: 'stand',
-				target_variable: 'behavior_mode',
-				target_obj_uuid: me.unique_id,
-			});			
+			Creature_ƒ.set(change_list, me, 'behavior_mode', 'stand');
 		}
 
 		if(me.remaining_move_points - prior_tile_cost < 0){
-			change_list.push({
-				type: 'set',
-				value: true,
-				target_variable: 'is_done_with_turn',
-				target_obj_uuid: me.unique_id,
-			});
+			Creature_ƒ.set(change_list, me, 'is_done_with_turn', true);
 		}
 
 
@@ -317,26 +290,10 @@ export const Creature_Behavior_ƒ = {
 		};
 		
 
-		change_list.push({
-			type: 'set',
-			value: offset_in_ms + 300,
-			target_variable: 'next_behavior_reconsideration_timestamp',
-			target_obj_uuid: me.unique_id,
-		});
+		Creature_ƒ.set(change_list, me, 'next_behavior_reconsideration_timestamp', offset_in_ms + 300);
 
-		change_list.push({
-			type: 'set',
-			value: new_position.position,
-			target_variable: 'tile_pos',
-			target_obj_uuid: me.unique_id,
-		});
-
-		change_list.push({
-			type: 'set',
-			value: new_position.direction,
-			target_variable: 'facing_direction',
-			target_obj_uuid: me.unique_id,
-		});	
+		Creature_ƒ.set(change_list, me, 'tile_pos', new_position.position);
+		Creature_ƒ.set(change_list, me, 'facing_direction', new_position.direction);
 	},
 
 
@@ -349,13 +306,7 @@ export const Creature_Behavior_ƒ = {
 	) => {
 		me.current_walk_anim_segment = undefined;
 	
-
-		change_list.push({
-			type: 'set',
-			value: true,
-			target_variable: 'is_done_with_turn',
-			target_obj_uuid: me.unique_id,
-		});
+		Creature_ƒ.set(change_list, me, 'is_done_with_turn', true);
 	},
 	
 
@@ -369,26 +320,10 @@ export const Creature_Behavior_ƒ = {
 		spawnees: Array<Custom_Object_Data>,
 		target: Creature_Data,
 	) => {
-		change_list.push({
-			type: 'add',
-			value: -Creature_ƒ.get_delegate(me.type_name).yield_damage(),
-			target_variable: 'current_hitpoints',
-			target_obj_uuid: target.unique_id,
-		});
 
-		change_list.push({
-			type: 'set',
-			value: offset_in_ms,
-			target_variable: 'last_changed_hitpoints',
-			target_obj_uuid: target.unique_id,
-		});
-
-		change_list.push({
-			type: 'set',
-			value: 'attack',
-			target_variable: 'behavior_mode',
-			target_obj_uuid: me.unique_id,
-		});				
+		Creature_ƒ.add(change_list, me, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
+		Creature_ƒ.set(change_list, me, 'last_changed_hitpoints', offset_in_ms);
+		Creature_ƒ.set(change_list, me, 'behavior_mode', 'attack');
 
 		spawnees.push(New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
@@ -423,20 +358,10 @@ export const Creature_Behavior_ƒ = {
 			delegate_state: {},
 		}));
 
-		change_list.push({
-			type: 'add',
-			value: -1,
-			target_variable: 'remaining_action_points',
-			target_obj_uuid: me.unique_id,
-		});
+		Creature_ƒ.add(change_list, me, 'remaining_action_points', -1);
 
 		if(me.remaining_action_points - 1 < 0){
-			change_list.push({
-				type: 'set',
-				value: true,
-				target_variable: 'is_done_with_turn',
-				target_obj_uuid: me.unique_id,
-			});
+			Creature_ƒ.set(change_list, me, 'is_done_with_turn', true);
 		}
 	},
 
@@ -459,13 +384,7 @@ export const Creature_Behavior_ƒ = {
 			}));
 
 
-			change_list.push({
-				type: 'set',
-				value: true,
-				target_variable: 'should_remove',
-				target_obj_uuid: me.unique_id,
-			});
-
+			Creature_ƒ.set(change_list, me, 'should_remove', true);
 		}
 	},
 

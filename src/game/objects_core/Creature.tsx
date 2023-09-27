@@ -367,7 +367,35 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 
 
 
+	add: (
+		change_list: Array<ChangeInstance>,
+		me: Creature_Data,
+		target_variable: keyof Creature_Data,
+		value: ChangeValue,
+	) => {
 
+		change_list.push({
+			type: 'add',
+			value: value,
+			target_variable: target_variable,
+			target_obj_uuid: me.unique_id,
+		});		
+	},
+
+	set: (
+		change_list: Array<ChangeInstance>,
+		me: Creature_Data,
+		target_variable: keyof Creature_Data,
+		value: ChangeValue,
+	) => {
+
+		change_list.push({
+			type: 'set',
+			value: value,
+			target_variable: target_variable,
+			target_obj_uuid: me.unique_id,
+		});		
+	}
 }
 
 
