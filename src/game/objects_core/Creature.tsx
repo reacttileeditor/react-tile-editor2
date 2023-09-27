@@ -25,6 +25,11 @@ export type ChangeType =
 	'set';
 
 
+export type BehaviorMode = 
+	'stand' |
+	'walk' |
+	'attack';
+
 
 export type ChangeInstance = {
 	type: ChangeType,
@@ -58,6 +63,7 @@ export type Creature_Data = {
 	next_behavior_reconsideration_timestamp: number,
 	current_walk_anim_segment?: Anim_Schedule_Element,
 	is_done_with_turn: boolean,
+	behavior_mode: BehaviorMode,
 
 	//intended moves
 	planned_tile_pos: Point2D;
@@ -92,6 +98,7 @@ export const New_Creature = (
 		next_behavior_reconsideration_timestamp?: number,
 		current_walk_anim_segment?: Anim_Schedule_Element,
 		is_done_with_turn: boolean,
+		behavior_mode: BehaviorMode,
 		planned_tile_pos: Point2D,
 		type_name: CreatureTypeName,
 		team: number,
@@ -133,6 +140,7 @@ export const New_Creature = (
 			0,
 		),
 		current_walk_anim_segment: p.current_walk_anim_segment,
+		behavior_mode: p.behavior_mode,
 		is_done_with_turn: p.is_done_with_turn,
 
 
@@ -171,6 +179,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		path_reachable_this_turn: [],
 		path_reachable_this_turn_with_directions: [],
 		animation_this_turn: [],
+		behavior_mode: 'stand',
 		is_done_with_turn: false,
 		remaining_move_points: Creature_ƒ.get_delegate(me.type_name).yield_moves_per_turn()
 	})

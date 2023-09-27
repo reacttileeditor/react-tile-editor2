@@ -11,7 +11,7 @@ import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_
 import { Base_Object_Data, New_Base_Object } from "./Base_Object";
 import { Creature_Delegate, CT_Hermit_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ } from "./Creature_Delegate";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
-import { Anim_Schedule_Element, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection } from "./Creature";
+import { Anim_Schedule_Element, BehaviorMode, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection } from "./Creature";
 import { AI_Core_ƒ } from "./AI_Core";
 
 
@@ -276,8 +276,22 @@ export const Creature_Behavior_ƒ = {
 		if( size(me.path_reachable_this_turn_with_directions) > 1){
 			Creature_ƒ.calculate_next_anim_segment(me, _TM, offset_in_ms);
 			next_tile_pos = me.path_reachable_this_turn_with_directions[1].position;
+
+			change_list.push({
+				type: 'set',
+				value: 'walk',
+				target_variable: 'behavior_mode',
+				target_obj_uuid: me.unique_id,
+			});			
 		} else {
 			me.current_walk_anim_segment = undefined;
+
+			change_list.push({
+				type: 'set',
+				value: 'stand',
+				target_variable: 'behavior_mode',
+				target_obj_uuid: me.unique_id,
+			});			
 		}
 
 		if(me.remaining_move_points - prior_tile_cost < 0){
@@ -369,6 +383,12 @@ export const Creature_Behavior_ƒ = {
 			target_obj_uuid: target.unique_id,
 		});
 
+		change_list.push({
+			type: 'set',
+			value: 'attack',
+			target_variable: 'behavior_mode',
+			target_obj_uuid: me.unique_id,
+		});				
 
 		spawnees.push(New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
@@ -513,15 +533,9 @@ export const Creature_Behavior_ƒ = {
 	
 
 /*----------------------- animation — full info -----------------------*/
-	yield_current_animation_type: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number): 'stand'|'walk'|'attack' => {
-		if( me.current_walk_anim_segment != undefined ){
-			return 'walk';
-		} else if (false){
-			return 'attack';
-		} else {
-			return 'stand';
-		}
-	},
+	yield_current_animation_type: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number): BehaviorMode => (
+		me.behavior_mode
+	),
 
 	yield_animation_asset_for_time: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number):  string => {
 		const anim_type = Creature_ƒ.yield_current_animation_type( me, _TM, offset_in_ms);

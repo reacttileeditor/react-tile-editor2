@@ -114,6 +114,7 @@ export const New_Game_Manager = (p: {
 			team: 1,
 			creation_timestamp: 0,
 			should_remove: false,
+			behavior_mode: 'stand',
 			is_done_with_turn: false,
 		}), New_Creature({
 			get_GM_instance: p.get_GM_instance,
@@ -124,6 +125,7 @@ export const New_Game_Manager = (p: {
 			team: 1,
 			creation_timestamp: 0,
 			should_remove: false,
+			behavior_mode: 'stand',
 			is_done_with_turn: false,
 		}), New_Creature({
 			get_GM_instance: p.get_GM_instance,
@@ -134,6 +136,7 @@ export const New_Game_Manager = (p: {
 			team: 2,
 			creation_timestamp: 0,
 			should_remove: false,
+			behavior_mode: 'stand',
 			is_done_with_turn: false,
 		}), New_Creature({
 			get_GM_instance: p.get_GM_instance,
@@ -144,6 +147,7 @@ export const New_Game_Manager = (p: {
 			team: 2,
 			creation_timestamp: 0,
 			should_remove: false,
+			behavior_mode: 'stand',
 			is_done_with_turn: false,
 		})],
 		custom_object_list: [],
