@@ -23,6 +23,7 @@ export type Creature_Delegate = {
 	yield_moves_per_turn: () => number,
 	yield_damage: () => number,
 	yield_max_hitpoints: () => number,
+	yield_weapon_range: () => number,
 }
 
 
@@ -58,7 +59,7 @@ const Creature_Delegate_Base_ƒ: Creature_Delegate = {
 	yield_moves_per_turn: (): number => ( 1 ),
 	yield_damage: (): number => ( 5 ),
 	yield_max_hitpoints: (): number => ( 100 ),
-
+	yield_weapon_range: () => ( 1 ),
 }
 
 
@@ -69,7 +70,7 @@ export const CT_Hermit_ƒ: Creature_Delegate = {
 	yield_moves_per_turn: () =>  5,
 	yield_creature_image: () => 'hermit',
 	yield_prettyprint_name: () => 'Hermit',
-
+	yield_weapon_range: () => 3,
 }
 
 export const CT_Peasant_ƒ: Creature_Delegate = {

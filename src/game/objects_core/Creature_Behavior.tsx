@@ -321,7 +321,7 @@ export const Creature_Behavior_ƒ = {
 		target: Creature_Data,
 	) => {
 
-		Creature_ƒ.add(change_list, me, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
+		Creature_ƒ.add(change_list, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
 		Creature_ƒ.set(change_list, me, 'last_changed_hitpoints', offset_in_ms);
 		Creature_ƒ.set(change_list, me, 'behavior_mode', 'attack');
 

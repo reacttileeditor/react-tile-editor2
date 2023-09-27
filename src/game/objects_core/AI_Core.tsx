@@ -47,7 +47,7 @@ export const AI_Core_ƒ = {
 					Creature_ƒ.get_current_tile_pos_from_pixel_pos(target, _TM)
 				);
 	
-				return (distance <= 1);
+				return ( distance <= Creature_ƒ.get_delegate(me.type_name).yield_weapon_range() );
 			});
 		}
 
