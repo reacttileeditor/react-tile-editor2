@@ -372,7 +372,7 @@ export const Creature_Behavior_ƒ = {
 
 		spawnees.push(New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
-			pixel_pos: target.pixel_pos,
+			pixel_pos: me.pixel_pos,
 			type_name: 'shot' as CustomObjectTypeName,
 			creation_timestamp: offset_in_ms,
 			should_remove: false,
@@ -382,7 +382,6 @@ export const Creature_Behavior_ƒ = {
 				source_obj: me.unique_id,
 			},
 		}));
-		
 		
 		spawnees.push(New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,

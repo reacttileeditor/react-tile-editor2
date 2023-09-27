@@ -79,7 +79,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 			val.unique_id === _prior_delegate_state.target_obj
 		));
 
-		let addend = {x: 0, y: -1};
+		let addend = {x: 0, y: 0};
 
 
 
@@ -88,11 +88,12 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 			//console.log(target.pixel_pos)
 			const target_pos = target.pixel_pos;
 
-			const angle = Math.atan2(  prior_pixel_pos.y - target_pos.y , prior_pixel_pos.x - target_pos.x )
+			const angle = Math.atan2(  target_pos.y - prior_pixel_pos.y , target_pos.x - prior_pixel_pos.x )
 
 			const magnitude = 0.5;
 
 			addend = { x: magnitude * Math.cos(angle), y: magnitude * Math.sin(angle) }
+
 		}
 
 		return {
