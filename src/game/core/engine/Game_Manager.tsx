@@ -16,6 +16,7 @@ import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, Change
 import { Point2D, Rectangle } from '../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../objects_core/Custom_Object";
 import { TooltipData } from "../gui/Game_View";
+import { zorder } from "../constants/zorder";
 
 interface Game_View_Props {
 	_Asset_Manager: Asset_Manager_Data,
@@ -344,7 +345,7 @@ export const Game_Manager_ƒ = {
 					me.cursor_pos
 				)
 			),
-			zorder:						12,
+			zorder:						zorder.rocks,
 			current_milliseconds:		0,
 			opacity:					1.0,
 			brightness:					1.0,
@@ -441,7 +442,7 @@ export const Game_Manager_ƒ = {
 				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, me._TM, Game_Manager_ƒ.get_time_offset(me)),
 				_BM:						me._Blit_Manager,
 				pos:						val.pixel_pos, 
-				zorder:						12,
+				zorder:						zorder.rocks,
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
 				opacity:					1.0,
 				brightness:					ƒ.if( (Game_Manager_ƒ.get_time_offset(me) - val.last_changed_hitpoints) < 80, 3.0, 1.0),
@@ -453,7 +454,7 @@ export const Game_Manager_ƒ = {
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
 				_BM:						me._Blit_Manager,
 				pos:						val.pixel_pos,
-				zorder:						12,
+				zorder:						zorder.rocks,
 				current_milliseconds:		0,
 				opacity:					1.0,
 			});
@@ -498,7 +499,7 @@ export const Game_Manager_ƒ = {
 				asset_name:					Creature_ƒ.yield_stand_asset_for_direction(val, val.facing_direction),
 				_BM:						me._Blit_Manager,
 				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM, val.tile_pos),
-				zorder:						12,
+				zorder:						zorder.rocks,
 				current_milliseconds:		0,
 				opacity:					1.0,
 				brightness:					1.0,
@@ -510,7 +511,7 @@ export const Game_Manager_ƒ = {
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
 				_BM:						me._Blit_Manager,
 				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM, val.tile_pos),
-				zorder:						12,
+				zorder:						zorder.rocks,
 				current_milliseconds:		0,
 				opacity:					1.0,
 			})			
@@ -521,7 +522,7 @@ export const Game_Manager_ƒ = {
 					asset_name:					'cursor_green',
 					_BM:						me._Blit_Manager,
 					pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM, val.tile_pos),
-					zorder:						10,
+					zorder:						zorder.map_cursor,
 					current_milliseconds:		0,
 					opacity:					1.0,
 					brightness:					1.0,

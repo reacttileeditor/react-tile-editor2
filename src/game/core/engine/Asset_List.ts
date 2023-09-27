@@ -1,3 +1,4 @@
+import { zorder } from "../constants/zorder";
 import { StaticValues } from "./Asset_Manager";
 
 /*
@@ -609,7 +610,7 @@ export const asset_list: StaticValues = {
 			variants: [{
 					graphics: [{
 						id: 'grass1',
-						zorder: 3,
+						zorder: zorder.grass,
 					}],
 				}
 			],
@@ -618,17 +619,17 @@ export const asset_list: StaticValues = {
 			variants: [{
 					graphics: [{
 						id: 'grass-and-scree1',
-						zorder: 3,
+						zorder: zorder.grass,
 					}],
 				},{
 					graphics: [{
 						id: 'grass-and-scree2',
-						zorder: 3,
+						zorder: zorder.grass,
 					}],
 				},{
 					graphics: [{
 						id: 'grass-and-scree3',
-						zorder: 3,
+						zorder: zorder.grass,
 					}],
 				}
 			],
@@ -637,12 +638,12 @@ export const asset_list: StaticValues = {
 			variants: [{
 				graphics: [{
 					id: 'dirt1',
-					zorder: 3,
+					zorder: zorder.grass,
 				}],
 			},{
 				graphics: [{
 					id: 'dirt2',
-					zorder: 3,
+					zorder: zorder.grass,
 				}],
 			}],
 		},{
@@ -650,7 +651,7 @@ export const asset_list: StaticValues = {
 			variants: [{
 				graphics: [{
 					id: 'sandy-dirt1',
-					zorder: 3,
+					zorder: zorder.grass,
 				}],
 			}],
 		},{
@@ -658,12 +659,12 @@ export const asset_list: StaticValues = {
 			variants: [{
 				graphics: [{
 					id: 'scrub-dirt1',
-					zorder: 3,
+					zorder: zorder.grass,
 				}],
 			},{
 				graphics: [{
 					id: 'scrub-dirt2',
-					zorder: 3,
+					zorder: zorder.grass,
 				}],
 			}],
 		},{
@@ -671,12 +672,12 @@ export const asset_list: StaticValues = {
 			variants: [{
 				graphics: [{
 					id: 'scrub-dirt-tall1',
-					zorder: 3,
+					zorder: zorder.grass,
 				}],
 			},{
 				graphics: [{
 					id: 'scrub-dirt-tall2',
-					zorder: 3,
+					zorder: zorder.grass,
 				}],
 			}],
 		},{
@@ -684,17 +685,17 @@ export const asset_list: StaticValues = {
 			variants: [{
 				graphics: [{
 					id: 'sand1',
-					zorder: 3,
+					zorder: zorder.grass,
 				}],
 			},{
 				graphics: [{
 					id: 'sand2',
-					zorder: 3,
+					zorder: zorder.grass,
 				}],
 			},{
 				graphics: [{
 					id: 'sand3',
-					zorder: 3,
+					zorder: zorder.grass,
 				}],
 			}],
 		},{
@@ -702,13 +703,13 @@ export const asset_list: StaticValues = {
 			variants: [{
 				graphics: [{
 					id: 'water-underlay',
-					zorder: -1,
+					zorder: zorder.water_underlay,
 				},{
 					id: 'water-ripples',
-					zorder: 0,
+					zorder: zorder.water_surface,
 				},{
 					id: 'water-edge-nw1',
-					zorder: 1,
+					zorder: zorder.water_edge,
 					restrictions:	[
 										[/.*/, /(dirt|grass|menhir|sand)/],
 											[/.*/, /(water|water-still)/, /.*/],
@@ -716,7 +717,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'water-edge-ne1',
-					zorder: 1,
+					zorder: zorder.water_edge,
 					restrictions:	[
 										[/(dirt|grass|menhir|sand)/, /.*/],
 											[/.*/, /(water|water-still)/, /.*/],
@@ -724,7 +725,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'water-edge-e1',
-					zorder: 1,
+					zorder: zorder.water_edge,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/(dirt|grass|menhir|sand)/, /(water|water-still)/, /.*/],
@@ -732,7 +733,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'water-edge-w1',
-					zorder: 1,
+					zorder: zorder.water_edge,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/.*/, /(water|water-still)/, /(dirt|grass|menhir|sand)/],
@@ -740,7 +741,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'water-edge-sw1',
-					zorder: 1,
+					zorder: zorder.water_edge,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/.*/, /(water|water-still)/, /.*/],
@@ -748,7 +749,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'water-edge-se1',
-					zorder: 1,
+					zorder: zorder.water_edge,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/.*/, /(water|water-still)/, /.*/],
@@ -761,10 +762,10 @@ export const asset_list: StaticValues = {
 			variants: [{
 				graphics: [{
 					id: 'water-underlay-placid',
-					zorder: -1,
+					zorder: zorder.water_underlay,
 				},{
 					id: 'water-edge-nw1',
-					zorder: 1,
+					zorder: zorder.water_edge,
 					restrictions:	[
 										[/.*/, /(dirt|grass|menhir|sand)/],
 											[/.*/, /(water|water-still)/, /.*/],
@@ -772,7 +773,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'water-edge-ne1',
-					zorder: 1,
+					zorder: zorder.water_edge,
 					restrictions:	[
 										[/(dirt|grass|menhir|sand)/, /.*/],
 											[/.*/, /(water|water-still)/, /.*/],
@@ -780,7 +781,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'water-edge-e1',
-					zorder: 1,
+					zorder: zorder.water_edge,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/(dirt|grass|menhir|sand)/, /(water|water-still)/, /.*/],
@@ -788,7 +789,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'water-edge-w1',
-					zorder: 1,
+					zorder: zorder.water_edge,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/.*/, /(water|water-still)/, /(dirt|grass|menhir|sand)/],
@@ -796,7 +797,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'water-edge-sw1',
-					zorder: 1,
+					zorder: zorder.water_edge,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/.*/, /(water|water-still)/, /.*/],
@@ -804,7 +805,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'water-edge-se1',
-					zorder: 1,
+					zorder: zorder.water_edge,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/.*/, /(water|water-still)/, /.*/],
@@ -817,10 +818,10 @@ export const asset_list: StaticValues = {
 			variants: [{
 				graphics: [{
 					id: 'dirt1',
-					zorder: 3,
+					zorder: zorder.grass,
 				},{
 					id: 'menhir2',
-					zorder: 12,
+					zorder: zorder.rocks,
 				}],
 			}],
 		},{
@@ -828,26 +829,26 @@ export const asset_list: StaticValues = {
 			variants: [{
 				graphics: [{
 					id: 'dirt1',
-					zorder: 3,
+					zorder: zorder.grass,
 				},{
 					id: 'menhir1',
-					zorder: 12,
+					zorder: zorder.rocks,
 				}],
 			},{
 				graphics: [{
 					id: 'dirt1',
-					zorder: 3,
+					zorder: zorder.grass,
 				},{
 					id: 'menhir4',
-					zorder: 12,
+					zorder: zorder.rocks,
 				}],
 			},{
 				graphics: [{
 					id: 'dirt1',
-					zorder: 3,
+					zorder: zorder.grass,
 				},{
 					id: 'menhir3',
-					zorder: 12,
+					zorder: zorder.rocks,
 				}],
 			}],
 		},{
@@ -856,7 +857,7 @@ export const asset_list: StaticValues = {
 			variants: [{
 				graphics: [{
 					id: 'red-path-unreachable-dot',
-					zorder: 12,
+					zorder: zorder.rocks,
 				}],
 			}],
 		},
@@ -867,7 +868,7 @@ export const asset_list: StaticValues = {
 			variants: [{
 				graphics: [{
 					id: 'arrowhead-e',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/arrow/, /arrowhead/, /.*/],
@@ -875,7 +876,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrowhead-w',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/.*/, /arrowhead/, /arrow/],
@@ -883,7 +884,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrowhead-sw',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/.*/, /arrow/],
 											[/.*/, /arrowhead/, /.*/],
@@ -891,7 +892,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrowhead-se',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/arrow/, /.*/],
 											[/.*/, /arrowhead/, /.*/],
@@ -899,7 +900,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrowhead-nw',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/.*/, /arrowhead/, /.*/],
@@ -907,7 +908,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrowhead-ne',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/.*/, /arrowhead/, /.*/],
@@ -923,7 +924,7 @@ export const asset_list: StaticValues = {
 			variants: [{
 				graphics: [{
 					id: 'arrow-horizontal-bar',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/arrow/, /arrow/, /arrow/],
@@ -931,7 +932,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrow-se-bar',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/arrow/, /.*/],
 											[/.*/, /arrow/, /.*/],
@@ -939,7 +940,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrow-ne-bar',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/.*/, /arrow/],
 											[/.*/, /arrow/, /.*/],
@@ -947,7 +948,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrow-w-to-se-bar',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/arrow/, /arrow/, /.*/],
@@ -955,7 +956,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrow-nw-to-e-bar',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/arrow/, /.*/],
 											[/.*/, /arrow/, /arrow/],
@@ -963,7 +964,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrow-sw-to-e-bar',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/.*/, /.*/],
 											[/.*/, /arrow/, /arrow/],
@@ -971,7 +972,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrow-w-to-ne-bar',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/.*/, /arrow/],
 											[/arrow/, /arrow/, /.*/],
@@ -979,7 +980,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrow-sw-to-nw-bar',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/arrow/, /.*/],
 											[/.*/, /arrow/, /.*/],
@@ -987,7 +988,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrow-se-to-ne-bar',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/.*/, /arrow/],
 											[/.*/, /arrow/, /.*/],
@@ -995,7 +996,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrow-nw-endcap',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
 											[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
@@ -1003,7 +1004,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrow-ne-endcap',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
 											[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
@@ -1011,7 +1012,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrow-se-endcap',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/arrow/, /^((?!(arrow)).)*$/],
 											[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
@@ -1019,7 +1020,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrow-sw-endcap',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/^((?!(arrow)).)*$/, /arrow/],
 											[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
@@ -1027,7 +1028,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrow-e-endcap',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
 											[/arrow/, /arrow/, /^((?!(arrow)).)*$/],
@@ -1035,7 +1036,7 @@ export const asset_list: StaticValues = {
 									]
 				},{
 					id: 'arrow-w-endcap',
-					zorder: 12,
+					zorder: zorder.rocks,
 					restrictions:	[
 												[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
 											[/^((?!(arrow)).)*$/, /arrow/, /arrow/],
@@ -1050,7 +1051,7 @@ export const asset_list: StaticValues = {
 			variants: [{
 				graphics: [{
 					id: 'animation_test',
-					zorder: 0,
+					zorder: zorder.water_surface,
 				}]
 			}],
 		}*/

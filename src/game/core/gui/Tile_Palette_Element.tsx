@@ -6,6 +6,7 @@ import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, New_Blit_Manager } from "../engine/Blit_Manager";
 import { New_Tilemap_Manager, Tilemap_Manager_Data } from "../engine/Tilemap_Manager";
 import { Point2D, Rectangle } from '../../interfaces';
+import { zorder } from "../constants/zorder";
 
 
 interface Props {
@@ -86,7 +87,7 @@ export class Tile_Palette_Element extends React.Component <Props> {
 					x: Math.floor(this.default_canvas_size.x/2),
 					y: Math.floor(this.default_canvas_size.y)
 				},
-				zorder:						12,
+				zorder:						zorder.rocks,
 				current_milliseconds:		0,
 				opacity:					1.0,
 				brightness:					1.0,

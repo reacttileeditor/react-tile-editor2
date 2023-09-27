@@ -9,6 +9,7 @@ import { Direction } from "../core/engine/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
+import { zorder } from "../core/constants/zorder";
 
 
 export type CustomObjectTypeName = 'shot';
@@ -126,7 +127,7 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 		}
 	},
 	yield_image: () => 'omit_image',
-	yield_zorder: () => 40,
+	yield_zorder: () => zorder.text,
 }
 
 export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
@@ -178,5 +179,5 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 		}
 	},
 	yield_image: () => 'hit_star',
-	yield_zorder: () => 20,
+	yield_zorder: () => zorder.fx,
 }

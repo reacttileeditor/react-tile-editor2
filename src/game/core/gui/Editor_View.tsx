@@ -10,6 +10,7 @@ import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Mana
 
 import "./Primary_View.scss";
 import { Point2D, Rectangle } from '../../interfaces';
+import { zorder } from "../constants/zorder";
 
 
 interface Editor_View_Props {
@@ -54,7 +55,7 @@ export class Editor_View extends React.Component <Editor_View_Props, Editor_View
 			asset_name:					'cursor',
 			_BM:						this.props._Blit_Manager,
 			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( this.props._Tilemap_Manager, this.state.cursor_pos ),
-			zorder:						12,
+			zorder:						zorder.rocks,
 			current_milliseconds:		0,
 			opacity:					1.0,
 			brightness:					1.0,
