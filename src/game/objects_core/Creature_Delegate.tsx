@@ -12,6 +12,7 @@ import { Point2D, Rectangle } from '../interfaces';
 export type Creature_Delegate = {
 	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction:Direction) => string,
 	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction) => string,
+	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction:Direction) => string,
 
 	yield_move_cost_for_tile_type: (tile_type: string) => number|null,
 
@@ -30,6 +31,7 @@ export type Creature_Delegate = {
 const Creature_Delegate_Base_ƒ: Creature_Delegate = {
 	yield_walk_asset_for_direction: (kind: Creature_Delegate,direction:Direction):string => ( kind.yield_creature_image() ),
 	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => ( kind.yield_creature_image() ),
+	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction:Direction) => ( kind.yield_creature_image() ),
 
 	yield_move_cost_for_tile_type: (tile_type: string): number|null => {
 		const speed = {
@@ -135,5 +137,16 @@ export const CT_Skeleton_ƒ: Creature_Delegate = {
 		}[direction]
 	),
 	
+	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
+		{
+			'north_east':	'skeleton-se-attack',
+			'north_west':	'skeleton-se-attack',
+			'east':			'skeleton-se-attack',
+			'south_east':	'skeleton-se-attack',
+			'west':			'skeleton-se-attack',
+			'south_west':	'skeleton-se-attack',	
+		}[direction]
+	),
+
 
 }

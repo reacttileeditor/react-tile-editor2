@@ -230,7 +230,7 @@ export const Creature_Behavior_ƒ = {
 		offset_in_ms: number,
 		change_list: Array<ChangeInstance>,
 	) => {
-		console.log(me.remaining_move_points, me.is_done_with_turn);
+		//console.log(me.remaining_move_points, me.is_done_with_turn);
 
 		/*
 			We're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
@@ -461,7 +461,7 @@ export const Creature_Behavior_ƒ = {
 
 		return {
 			walk: Creature_ƒ.yield_walk_asset_for_direction( me, me.facing_direction ),
-			attack: Creature_ƒ.yield_stand_asset_for_direction( me, me.facing_direction ),
+			attack: Creature_ƒ.yield_attack_asset_for_direction( me, me.facing_direction ),
 			stand: Creature_ƒ.yield_stand_asset_for_direction( me, me.facing_direction ),
 		}[anim_type];
 	},

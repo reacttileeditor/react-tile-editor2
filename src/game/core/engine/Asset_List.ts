@@ -111,6 +111,19 @@ export const asset_list: StaticValues = {
 			h: 120,
 		},
 	},{
+		url: "char3-se-attack.png",
+		name: "skeleton-se-attack",
+		frames: 10,
+		frame_duration: 100,
+		ping_pong: false,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 98,
+			h: 138,
+		},
+	},{
 		url: "hex-tile-experiment-tiles.png",
 		name: "menhir1",
 		bounds: {

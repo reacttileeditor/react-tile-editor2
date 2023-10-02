@@ -232,6 +232,10 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		Creature_ƒ.get_delegate(me.type_name).yield_stand_asset_for_direction(Creature_ƒ.get_delegate(me.type_name), direction)
 	),
 
+	yield_attack_asset_for_direction: (me: Creature_Data, direction: Direction):string => (
+		Creature_ƒ.get_delegate(me.type_name).yield_attack_asset_for_direction(Creature_ƒ.get_delegate(me.type_name), direction)
+	),
+
 
 	yield_creature_image: (me: Creature_Data) => (
 		Creature_ƒ.get_delegate(me.type_name).yield_creature_image()
