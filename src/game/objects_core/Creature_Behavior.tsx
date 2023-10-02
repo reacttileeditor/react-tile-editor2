@@ -325,6 +325,13 @@ export const Creature_Behavior_ƒ = {
 		Creature_ƒ.set(change_list, me, 'last_changed_hitpoints', offset_in_ms);
 		Creature_ƒ.set(change_list, me, 'behavior_mode', 'attack');
 
+
+		const attack_direction = Tilemap_Manager_ƒ.extract_direction_from_map_vector(
+			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, me.tile_pos ),
+			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, target.tile_pos ),
+		)		
+		Creature_ƒ.set(change_list, me, 'facing_direction', attack_direction);
+
 		spawnees.push(New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
 			pixel_pos: me.pixel_pos,
