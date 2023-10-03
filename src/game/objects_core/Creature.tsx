@@ -8,7 +8,7 @@ import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/eng
 import { Point2D, Rectangle } from '../interfaces';
 import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
 import { Base_Object_Data, New_Base_Object } from "./Base_Object";
-import { Creature_Delegate, CT_Hermit_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ } from "./Creature_Delegate";
+import { Creature_Delegate, CT_Hermit_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ, CT_Undead_Javelineer_ƒ } from "./Creature_Delegate";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Creature_Behavior_ƒ } from "./Creature_Behavior";
 
@@ -17,7 +17,7 @@ export type PathNodeWithDirection = {
 	direction: Direction,
 }
 
-export type CreatureTypeName = 'hermit' | 'peasant' | 'skeleton';
+export type CreatureTypeName = 'hermit' | 'peasant' | 'skeleton' | 'undead_javelineer';
 
 
 export type ChangeType = 
@@ -256,6 +256,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 			hermit: CT_Hermit_ƒ,
 			peasant: CT_Peasant_ƒ,
 			skeleton: CT_Skeleton_ƒ,
+			undead_javelineer: CT_Undead_Javelineer_ƒ,
 		}[type_name];
 	},
 

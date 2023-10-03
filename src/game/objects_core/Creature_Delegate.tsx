@@ -150,3 +150,46 @@ export const CT_Skeleton_ƒ: Creature_Delegate = {
 
 
 }
+
+export const CT_Undead_Javelineer_ƒ: Creature_Delegate = {
+	...Creature_Delegate_Base_ƒ,
+
+	yield_moves_per_turn: () => 6,
+	yield_creature_image: () => 'undead-javelineer-se',
+	yield_prettyprint_name: () => 'Hanged Man',
+	yield_damage: (): number => ( 3 ),
+	yield_weapon_range: () => 3,
+
+	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
+		{
+			'north_east':	'undead-javelineer-se',
+			'north_west':	'undead-javelineer-se',
+			'east':			'undead-javelineer-se',
+			'south_east':	'undead-javelineer-se',
+			'west':			'undead-javelineer-se',
+			'south_west':	'undead-javelineer-se',	
+		}[direction]
+	),
+
+	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
+		{
+			'north_east':	'undead-javelineer-se',
+			'north_west':	'undead-javelineer-se',
+			'east':			'undead-javelineer-se',
+			'south_east':	'undead-javelineer-se',
+			'west':			'undead-javelineer-se',
+			'south_west':	'undead-javelineer-se',	
+		}[direction]
+	),
+	
+	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
+		{
+			'north_east':	'undead-javelineer-se',
+			'north_west':	'undead-javelineer-se',
+			'east':			'undead-javelineer-se',
+			'south_east':	'undead-javelineer-se',
+			'west':			'undead-javelineer-se',
+			'south_west':	'undead-javelineer-se',	
+		}[direction]
+	),
+}

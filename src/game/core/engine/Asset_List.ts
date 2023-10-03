@@ -44,6 +44,9 @@ export const asset_list: StaticValues = {
 		url: "char3-ne.png",
 		name: "skeleton-ne",
 	},{
+		url: "characters/undead_javelineer.png",
+		name: "undead-javelineer-se",
+	},{
 		url: "char3.png",
 		name: "skeleton-se",
 	},{

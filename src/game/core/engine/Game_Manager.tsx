@@ -150,6 +150,17 @@ export const New_Game_Manager = (p: {
 			should_remove: false,
 			behavior_mode: 'stand',
 			is_done_with_turn: false,
+		}), New_Creature({
+			get_GM_instance: p.get_GM_instance,
+			tile_pos: {x: 7, y: 8},
+			_TM: p._TM,
+			planned_tile_pos: {x: 7, y: 8},
+			type_name: 'undead_javelineer',
+			team: 2,
+			creation_timestamp: 0,
+			should_remove: false,
+			behavior_mode: 'stand',
+			is_done_with_turn: false,
 		})],
 		custom_object_list: [],
 	};
