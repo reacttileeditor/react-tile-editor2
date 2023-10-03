@@ -214,7 +214,7 @@ export class Canvas_View extends React.Component <Props, State> {
 			
 				onMouseDown={ this.mousedownListener }
 				onMouseMove={ this.mousemoveListener }
-				onContextMenu={ (e) => { e.preventDefault() } }
+				onContextMenu={ (e) => { e.preventDefault(); return false; } }
 			/>
 		</div>;
 	}
