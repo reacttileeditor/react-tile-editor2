@@ -34,6 +34,13 @@ export const Creature_Behavior_ƒ = {
 
 		me.path_reachable_this_turn_with_directions = Creature_ƒ.yield_directional_path_reachable_this_turn(me, _TM, me.path_this_turn_with_directions);
 	},
+
+	clear_path: (me: Creature_Data) => {
+		me.path_this_turn = [];
+		me.path_reachable_this_turn = [];
+		me.path_this_turn_with_directions = [];
+		me.path_reachable_this_turn_with_directions	= [];
+	},
 	
 	yield_path_reachable_this_turn: (me: Creature_Data, _TM: Tilemap_Manager_Data, new_path: Array<Point2D>):Array<Point2D> => {
 		let moves_remaining = cloneDeep(me.remaining_move_points);

@@ -4,7 +4,7 @@ import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumbe
 
 import { ƒ } from "../engine/Utils";
 
-import { Canvas_View } from "./Canvas_View";
+import { Canvas_View, MouseButtonState } from "./Canvas_View";
 import { Asset_Manager_Data } from "../engine/Asset_Manager";
 import { Blit_Manager_Data, ticks_to_ms } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
@@ -281,7 +281,7 @@ export class Game_View extends React.Component <Game_View_Props, {pos: Point2D}>
 			<Canvas_View
 				{...this.props}
 				dimensions={this.props.dimensions}
-				handle_canvas_click={ (mouse_pos: Point2D) => { Game_Manager_ƒ.handle_click(this._Game_Manager_Data, mouse_pos) } }  //TODO  this is broken!
+				handle_canvas_click={ (mouse_pos: Point2D, buttons_pressed: MouseButtonState) => { Game_Manager_ƒ.handle_click(this._Game_Manager_Data, mouse_pos, buttons_pressed) } }  //TODO  this is broken!
 				handle_canvas_keys_down={ ()=>{ /*console.log('game_keydown')*/} }
 				handle_canvas_mouse_move={this.handle_canvas_mouse_move}
 			/>

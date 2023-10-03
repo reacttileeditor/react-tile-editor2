@@ -4,7 +4,7 @@ import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumbe
 
 import { ƒ } from "./Utils";
 
-import { Canvas_View } from "../gui/Canvas_View";
+import { Canvas_View, MouseButtonState } from "../gui/Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager";
 import { Blit_Manager_Data, ticks_to_ms } from "./Blit_Manager";
 import { Tile_Palette_Element } from "../gui/Tile_Palette_Element";
@@ -592,11 +592,11 @@ export const Game_Manager_ƒ = {
 	},
 
 
-	handle_click: (me: Game_Manager_Data, pos: Point2D) => {
+	handle_click: (me: Game_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState) => {
 // 		this.game_state.creature_list = [{
 // 			tile_pos: this._TM.convert_pixel_coords_to_tile_coords( pos )
 // 		}]
-		Game_Manager_ƒ.select_object_based_on_tile_click(me, pos);
+		Game_Manager_ƒ.select_object_based_on_tile_click(me, pos, buttons_pressed);
 	},
 
 	get_selected_creature: (me: Game_Manager_Data):Creature_Data|undefined => {
@@ -623,7 +623,7 @@ export const Game_Manager_ƒ = {
 		return state ? state : Individual_Game_Turn_State_Init;
 	},
 	
-	select_object_based_on_tile_click: (me: Game_Manager_Data, pos: Point2D) => {
+	select_object_based_on_tile_click: (me: Game_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState) => {
 		/*
 			This handles two "modes" simultaneously.  If we click on an object, then we change the current selected object to be the one we clicked on (its position is occupied, and ostensibly can't be moved into - this might need to change with our game rules being what they are, but we'll cross that bridge later).  If we click on the ground, then we're intending to move the current object to that location.
 		*/
@@ -636,16 +636,25 @@ export const Game_Manager_ƒ = {
 		if(newly_selected_creature === -1){
 			//do move command
 			if( me.game_state.selected_object_index != undefined ){
-				const creature = Game_Manager_ƒ.get_current_turn_state(me).creature_list[ me.game_state.selected_object_index ];
-				creature.planned_tile_pos = new_pos;
-				
-				Creature_ƒ.set_path(
-					creature,
-					Pathfinder_ƒ.find_path_between_map_tiles( me._TM, creature.tile_pos, new_pos, creature ).successful_path,
-					me._TM
-				);
-				//Creature_ƒ.calculate_next_anim_segment(creature, me._TM, 0);
 
+				const creature = Game_Manager_ƒ.get_current_turn_state(me).creature_list[ me.game_state.selected_object_index ];
+				/*
+					If it's a regular click, we're setting the path.
+					If it's a right click, we're clearing the path.
+				*/
+
+				if( buttons_pressed.left == true ){
+					creature.planned_tile_pos = new_pos;
+					
+					Creature_ƒ.set_path(
+						creature,
+						Pathfinder_ƒ.find_path_between_map_tiles( me._TM, creature.tile_pos, new_pos, creature ).successful_path,
+						me._TM
+					);
+					//Creature_ƒ.calculate_next_anim_segment(creature, me._TM, 0);
+				} else if ( buttons_pressed.right == true ){
+					Creature_ƒ.clear_path(creature);
+				}
 			}
 		} else if(newly_selected_creature === me.game_state.selected_object_index ) {
 			me.game_state.selected_object_index = undefined;

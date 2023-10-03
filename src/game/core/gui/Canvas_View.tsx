@@ -23,6 +23,14 @@ interface State {
 
 import { Point2D, Rectangle } from '../../interfaces';
 
+export type MouseButtonState = {
+	back: boolean,
+	forward: boolean,
+	left: boolean,
+	middle: boolean,
+	right: boolean,
+}
+
 
 export class Canvas_View extends React.Component <Props, State> {
 	ctx!: CanvasRenderingContext2D;
@@ -92,10 +100,10 @@ export class Canvas_View extends React.Component <Props, State> {
 		return Math.min( Math.max(min_limit, value), max_limit);
 	}
 
-	handle_canvas_click = ( e: React.MouseEvent<HTMLCanvasElement> ) => {
+	handle_canvas_click = ( e: React.MouseEvent<HTMLCanvasElement>, buttons_pressed: MouseButtonState ) => {
 		var mousePos = this.get_mouse_pos_for_action(e, true);
 	
-		this.props.handle_canvas_click( mousePos );
+		this.props.handle_canvas_click( mousePos, buttons_pressed );
 	}
 
 	get_mouse_pos_for_action = ( e: React.MouseEvent<HTMLCanvasElement>, should_constrain: boolean ) => {
@@ -145,12 +153,12 @@ export class Canvas_View extends React.Component <Props, State> {
 
 
 	mousedownListener = (e: React.MouseEvent<HTMLCanvasElement>) => {
-//		console.warn(this.extract_which_mouse_button(e));
-		this.handle_canvas_click(e);
+		let buttons_pressed = this.extract_which_mouse_button(e)
+		this.handle_canvas_click(e, buttons_pressed);
 		this.captureMouseEvents(e);
 	}
 
-	extract_which_mouse_button = (e: React.MouseEvent<HTMLCanvasElement>) => {
+	extract_which_mouse_button = (e: React.MouseEvent<HTMLCanvasElement>): MouseButtonState => {
 		var names = [
 			'left', 'right', 'middle', 'back', 'forward'
 		];
@@ -164,7 +172,7 @@ export class Canvas_View extends React.Component <Props, State> {
 				return {[names[idx]]: Boolean(val === 1) };
 			}),
 			(a,b) => _.merge(a,b)
-		)
+		) as MouseButtonState
 	}
 
 	mousemoveListener = (e: React.MouseEvent<HTMLCanvasElement>) => {
