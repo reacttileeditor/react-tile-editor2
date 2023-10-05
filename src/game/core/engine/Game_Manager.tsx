@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumber, last, map, reduce, size, uniq } from "lodash";
+import { cloneDeep, concat, filter, find, findIndex, includes, isEmpty, isNil, isNumber, last, map, reduce, size, uniq } from "lodash";
 
 import { ƒ } from "./Utils";
 
@@ -609,6 +609,18 @@ export const Game_Manager_ƒ = {
 		)
 		
 		return returnVal;
+	},
+
+	get_creature_by_uuid: (me: Game_Manager_Data, uuid: string): Creature_Data => {
+		let creature = find( Game_Manager_ƒ.get_game_state(me).current_frame_state.creature_list, (val) => (
+			val.unique_id === uuid
+		))
+
+		if( creature == undefined){
+			throw new Error(`An attempt to get_creature_by_uuid(${uuid}) failed, because that uuid isn't in the list.`);
+		} else {
+			return creature;
+		}
 	},
 
 	get_previous_turn_state: (me: Game_Manager_Data) => {

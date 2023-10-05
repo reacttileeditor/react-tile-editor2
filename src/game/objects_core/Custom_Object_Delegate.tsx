@@ -76,9 +76,9 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 		const _prior_delegate_state = prior_delegate_state as CO_Shot_State;
 
 
-		const target = find( Game_Manager_ƒ.get_game_state(GM).current_frame_state.creature_list, (val) => (
-			val.unique_id === _prior_delegate_state.target_obj
-		));
+		const target = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.target_obj );
+		const source = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.source_obj );
+
 
 		let addend = {x: 0, y: 0};
 
@@ -88,12 +88,13 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 		if(target){
 			//console.log(target.pixel_pos)
 			const target_pos = target.pixel_pos;
+			const source_pos = source.pixel_pos;
 
 			const angle = Math.atan2(  target_pos.y - prior_pixel_pos.y , target_pos.x - prior_pixel_pos.x )
 
 			//const magnitude = 0.5;
 
-			const magnitude = Math.hypot( (prior_pixel_pos.x - target_pos.x), (prior_pixel_pos.y - target_pos.y) ) / 30.0;
+			const magnitude = Math.hypot( (source_pos.x - target_pos.x), (source_pos.y - target_pos.y) ) / 30.0;
 
 			addend = { x: magnitude * Math.cos(angle), y: magnitude * Math.sin(angle) }
 
