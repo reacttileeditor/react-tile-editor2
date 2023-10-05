@@ -110,7 +110,7 @@ export const New_Game_Manager = (p: {
 			get_GM_instance: p.get_GM_instance,
 			tile_pos: {x: 1, y: 6},
 			_TM: p._TM,
-			planned_tile_pos: {x: 0, y: 6},
+			planned_tile_pos: {x: 1, y: 6},
 			type_name: 'hermit',
 			team: 1,
 			creation_timestamp: 0,
