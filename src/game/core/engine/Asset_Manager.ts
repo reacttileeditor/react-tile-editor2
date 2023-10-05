@@ -1,4 +1,4 @@
-import _, { isEmpty, map, size } from "lodash";
+import _, { isEmpty, map } from "lodash";
 import Prando from 'prando';
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "./Blit_Manager";
 import * as Utils from "./Utils";
@@ -189,11 +189,7 @@ export const Asset_Manager_ƒ = {
 	},
 
 
-	launch_app: (
-		me: Asset_Manager_Data,
-		do_per_asset_loaded: (current: number, total: number) => void,
-		do_once_app_ready: () => void 
-	) => {
+	launch_app: ( me: Asset_Manager_Data, do_once_app_ready: ()=>void ) => {
 		me.static_vals.image_data_list.map( ( value, index ) => {
 
 			var temp_image = new Image();
@@ -211,20 +207,9 @@ export const Asset_Manager_ƒ = {
 					},
 					bounds: value.bounds,
 				};
-
-				//Asset_Manager_ƒ.record_asset_load_count(me, do_per_asset_loaded);
 				Asset_Manager_ƒ.launch_if_all_assets_are_loaded(me, do_once_app_ready);
 			};
 		});
-	},
-
-	record_asset_load_count: (
-		me: Asset_Manager_Data,
-		do_per_asset_loaded: (current: number, total: number) => void,
-	) => {
-		if( _.size( me.static_vals.image_data_list ) > _.size( me.static_vals.raw_image_list ) ) {
-			do_per_asset_loaded( _.size( me.static_vals.image_data_list) , _.size( me.static_vals.raw_image_list ) );
-		}
 	},
 
 	launch_if_all_assets_are_loaded: ( me: Asset_Manager_Data, do_once_app_ready: ()=>void ) => {
