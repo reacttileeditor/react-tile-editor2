@@ -12,12 +12,15 @@ import { Editor_View } from "./Editor_View";
 import { Point2D, Rectangle } from '../../interfaces';
 
 import "./Primary_View.scss";
+import { Loading_View } from "./Loading_View";
 
 interface Props {
 }
 
 interface State {
 	assets_loaded: boolean,
+	current_assets_loaded_count: number,
+	total_asset_count: number,
 	is_edit_mode: boolean,
 }
 
@@ -35,16 +38,29 @@ export class Primary_View extends React.Component <Props, State> {
 		
 		this.state = {
 			assets_loaded: false,
+			current_assets_loaded_count: 0,
+			total_asset_count: 0, //unknown here, but this value gets filled out once the first asset is loaded.
 			is_edit_mode: true,
 		};
 		
 		this._Asset_Manager = New_Asset_Manager();
+
 		Asset_Manager_ƒ.launch_app(
 			this._Asset_Manager,
-			() => { this.setState({assets_loaded: true}); }
-		);
-		
+			(current: number, total: number) => { this.setState({
+				current_assets_loaded_count: current,
+				total_asset_count: total,
+			}); },
+			() => { this.setState({
+				assets_loaded: true
+			}); }
+		);	
+				
 		this.default_canvas_size = {x: 567, y: 325};
+	}
+
+	componentDidMount(): void {
+	
 	}
 
 	initialize_tilemap_manager = (ctx: CanvasRenderingContext2D) => {
@@ -70,24 +86,35 @@ export class Primary_View extends React.Component <Props, State> {
 				className="master_flex_wrapper"
 			>
 				{
-					this.state.is_edit_mode
+					this.state.assets_loaded
 					?
-					<Editor_View
-						assets_loaded={this.state.assets_loaded}
-						dimensions={this.default_canvas_size}
-						_Asset_Manager={this._Asset_Manager}
-						_Blit_Manager={this._Blit_Manager}
-						_Tilemap_Manager={this._Tilemap_Manager}
-						initialize_tilemap_manager={this.initialize_tilemap_manager}
-					/>
+					<>
+						this.state.is_edit_mode
+						?
+						<Editor_View
+							assets_loaded={this.state.assets_loaded}
+							dimensions={this.default_canvas_size}
+							_Asset_Manager={this._Asset_Manager}
+							_Blit_Manager={this._Blit_Manager}
+							_Tilemap_Manager={this._Tilemap_Manager}
+							initialize_tilemap_manager={this.initialize_tilemap_manager}
+						/>
+						:
+						<Game_View
+							assets_loaded={this.state.assets_loaded}
+							dimensions={this.default_canvas_size}
+							_Asset_Manager={this._Asset_Manager}
+							_Blit_Manager={this._Blit_Manager}
+							_Tilemap_Manager={this._Tilemap_Manager}
+							initialize_tilemap_manager={this.initialize_tilemap_manager}
+						/>
+					</>
 					:
-					<Game_View
+					<Loading_View
 						assets_loaded={this.state.assets_loaded}
+						current_assets_loaded_count={this.state.current_assets_loaded_count}
+						total_asset_count={this.state.total_asset_count}				
 						dimensions={this.default_canvas_size}
-						_Asset_Manager={this._Asset_Manager}
-						_Blit_Manager={this._Blit_Manager}
-						_Tilemap_Manager={this._Tilemap_Manager}
-						initialize_tilemap_manager={this.initialize_tilemap_manager}
 					/>
 				}
 				<div className="instructional_text">
