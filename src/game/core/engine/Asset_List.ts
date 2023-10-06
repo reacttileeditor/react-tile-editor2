@@ -62,6 +62,19 @@ export const asset_list: StaticValues = {
 		url: "hit_star.png",
 		name: "hit_star",
 	},{
+		url: "characters/undead_javelineer_se_stand.png",
+		name: "undead_javelineer_se_stand",
+		frames: 3,
+		frame_duration: 190,
+		ping_pong: true,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 58,
+			h: 158,
+		},
+	},{
 		url: "characters/undead_javelineer_se_attack.png",
 		name: "undead_javelineer_se_attack",
 		frames: 12,

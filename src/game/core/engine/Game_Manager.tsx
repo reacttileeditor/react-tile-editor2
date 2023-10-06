@@ -56,8 +56,9 @@ export const GameStateInit: Game_State = {
 };
 
 interface AnimationState {
-	is_animating_turn_end: boolean,
-	time_turn_end_anim_started__in_ticks: number
+	is_animating_live_game: boolean,
+	time_live_game_anim_started__in_ticks: number,
+	time_paused_game_anim_started__in_ticks: number,
 }
 
 type ObjectiveTypes = 'extermination' | 'decapitation';
@@ -95,8 +96,9 @@ export const New_Game_Manager = (p: {
 		cursor_pos: {x: 0, y: 0},
 
 		animation_state: {
-			is_animating_turn_end: false,
-			time_turn_end_anim_started__in_ticks: 0
+			is_animating_live_game: false,
+			time_live_game_anim_started__in_ticks: 0,
+			time_paused_game_anim_started__in_ticks: 0,
 		},
 
 
@@ -239,8 +241,9 @@ export const Game_Manager_ƒ = {
 		var date = new Date();
 	
 		me.animation_state = {
-			is_animating_turn_end: true,
-			time_turn_end_anim_started__in_ticks: me._Blit_Manager.time_tracker.current_tick,
+			is_animating_live_game: true,
+			time_live_game_anim_started__in_ticks: me._Blit_Manager.time_tracker.current_tick,
+			time_paused_game_anim_started__in_ticks: me.animation_state.time_paused_game_anim_started__in_ticks,
 		};
 	
 		me.game_state.objective_text = Game_Manager_ƒ.write_full_objective_text(me, Game_Manager_ƒ.get_game_state(me).objective_type, Game_Manager_ƒ.get_game_state(me));
@@ -265,7 +268,12 @@ export const Game_Manager_ƒ = {
 
 
 	
-		me.animation_state.is_animating_turn_end = false;
+		me.animation_state = {
+			is_animating_live_game: false,
+			time_live_game_anim_started__in_ticks: me.animation_state.time_live_game_anim_started__in_ticks,
+			time_paused_game_anim_started__in_ticks: me._Blit_Manager.time_tracker.current_tick,
+		};
+
 		me.game_state.objective_text = Game_Manager_ƒ.write_full_objective_text(me, Game_Manager_ƒ.get_game_state(me).objective_type, Game_Manager_ƒ.get_game_state(me));
 
 	
@@ -276,7 +284,11 @@ export const Game_Manager_ƒ = {
 /*----------------------- animation management -----------------------*/
 
 	get_time_offset: (me: Game_Manager_Data) => {
-		return ticks_to_ms(me._Blit_Manager.time_tracker.current_tick - me.animation_state.time_turn_end_anim_started__in_ticks)
+		if(me.animation_state.is_animating_live_game){
+			return ticks_to_ms(me._Blit_Manager.time_tracker.current_tick - me.animation_state.time_live_game_anim_started__in_ticks)
+		} else {
+			return ticks_to_ms(me._Blit_Manager.time_tracker.current_tick - me.animation_state.time_paused_game_anim_started__in_ticks)
+		}
 	},
 	
 	is_turn_finished: (me: Game_Manager_Data):boolean => {
@@ -333,7 +345,7 @@ export const Game_Manager_ƒ = {
 			tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me)}`
 		});
 		
-		if(me.animation_state.is_animating_turn_end){
+		if(me.animation_state.is_animating_live_game){
 			Game_Manager_ƒ.do_live_game_processing(me);
 			Game_Manager_ƒ.do_live_game_rendering(me);
 		} else {
@@ -466,7 +478,7 @@ export const Game_Manager_ƒ = {
 				_BM:						me._Blit_Manager,
 				pos:						val.pixel_pos,
 				zorder:						zorder.rocks,
-				current_milliseconds:		0,
+				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
 				opacity:					1.0,
 			});
 		})
@@ -507,11 +519,11 @@ export const Game_Manager_ƒ = {
 		map( Game_Manager_ƒ.get_current_turn_state(me).creature_list, (val,idx) => {
 			Asset_Manager_ƒ.draw_image_for_asset_name({
 				_AM:						me._Asset_Manager,
-				asset_name:					Creature_ƒ.yield_stand_asset_for_direction(val, val.facing_direction),
+				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, me._TM, Game_Manager_ƒ.get_time_offset(me)),
 				_BM:						me._Blit_Manager,
 				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM, val.tile_pos),
 				zorder:						zorder.rocks,
-				current_milliseconds:		0,
+				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
 				opacity:					1.0,
 				brightness:					1.0,
 				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
@@ -523,7 +535,7 @@ export const Game_Manager_ƒ = {
 				_BM:						me._Blit_Manager,
 				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM, val.tile_pos),
 				zorder:						zorder.rocks,
-				current_milliseconds:		0,
+				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
 				opacity:					1.0,
 			})			
 	
@@ -534,7 +546,7 @@ export const Game_Manager_ƒ = {
 					_BM:						me._Blit_Manager,
 					pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM, val.tile_pos),
 					zorder:						zorder.map_cursor,
-					current_milliseconds:		0,
+					current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
 					opacity:					1.0,
 					brightness:					1.0,
 					horizontally_flipped:		false,
