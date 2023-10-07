@@ -58,6 +58,7 @@ export class Editor_View extends React.Component <Editor_View_Props, Editor_View
 			zorder:						zorder.rocks,
 			current_milliseconds:		0,
 			opacity:					1.0,
+			rotate:						0,
 			brightness:					1.0,
 			horizontally_flipped:		false,
 			vertically_flipped:			false,

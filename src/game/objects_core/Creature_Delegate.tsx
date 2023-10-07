@@ -120,9 +120,9 @@ export const CT_Skeleton_ƒ: Creature_Delegate = {
 			'north_east':	'skeleton-ne',
 			'north_west':	'skeleton-ne',
 			'east':			'skeleton-ne',
-			'south_east':	'skeleton-se',
-			'west':			'skeleton-se',
-			'south_west':	'skeleton-se',	
+			'south_east':	'skeleton_warrior_stand_se',
+			'west':			'skeleton_warrior_stand_se',
+			'south_west':	'skeleton_warrior_stand_se',	
 		}[direction]
 	),
 

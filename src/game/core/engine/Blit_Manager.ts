@@ -15,6 +15,7 @@ interface DrawEntity {
 	z_index: number,
 	opacity: number,
 	brightness: number,
+	rotate: number, // degrees; native canvas is radians, we're using degrees everywhere besides the blitting function.
 	horizontally_flipped: boolean,
 	vertically_flipped: boolean,
 	drawing_data: DrawDataTypes,
@@ -159,6 +160,7 @@ export const Blit_Manager_ƒ = {
 		pos:					Point2D,
 		z_index:				number,
 		opacity:				number,
+		rotate: 				number,
 		brightness: 			number,
 		horizontally_flipped: 	boolean,
 		vertically_flipped: 	boolean,
@@ -168,6 +170,7 @@ export const Blit_Manager_ƒ = {
 			pos:					p.pos,
 			z_index:				p.z_index,
 			opacity:				p.opacity,
+			rotate: 				p.rotate,
 			brightness: 			p.brightness,
 			horizontally_flipped:	p.horizontally_flipped,
 			vertically_flipped:		p.vertically_flipped,
@@ -283,6 +286,8 @@ export const Blit_Manager_ƒ = {
 					me.osb_ctx.filter = `brightness(${ Math.round(value.brightness * 100)}%)`;
 				}
 
+				me.osb_ctx.rotate(value.rotate * Math.PI / 180);
+
 				me.osb_ctx.scale(
 					ƒ.if(value.horizontally_flipped, -1, 1),
 					ƒ.if(value.vertically_flipped, -1, 1),
@@ -313,6 +318,8 @@ export const Blit_Manager_ƒ = {
 					value.pos.y + me.state.actual_viewport_offset.y + value.drawing_data.dest_point.y
 				);
 				me.osb_ctx.globalAlpha = value.opacity;
+
+				me.osb_ctx.rotate(value.rotate * Math.PI / 180);
 
 				me.osb_ctx.scale(
 					ƒ.if(value.horizontally_flipped, -1, 1),

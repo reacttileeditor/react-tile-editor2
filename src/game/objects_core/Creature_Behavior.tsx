@@ -342,6 +342,7 @@ export const Creature_Behavior_ƒ = {
 		spawnees.push(New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
 			pixel_pos: me.pixel_pos,
+			rotate: 0,
 			type_name: 'shot' as CustomObjectTypeName,
 			creation_timestamp: offset_in_ms,
 			should_remove: false,
@@ -355,6 +356,7 @@ export const Creature_Behavior_ƒ = {
 		spawnees.push(New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
 			pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
+			rotate: 0,
 			type_name: 'text_label' as CustomObjectTypeName,
 			creation_timestamp: offset_in_ms,
 			should_remove: false,
@@ -365,6 +367,7 @@ export const Creature_Behavior_ƒ = {
 		spawnees.push(New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
 			pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
+			rotate: 0,
 			type_name: 'hit_star_bg' as CustomObjectTypeName,
 			creation_timestamp: offset_in_ms,
 			should_remove: false,
@@ -390,6 +393,7 @@ export const Creature_Behavior_ƒ = {
 			spawnees.push(New_Custom_Object({
 				get_GM_instance: me.get_GM_instance,
 				pixel_pos: me.pixel_pos,
+				rotate: 0,
 				type_name: 'skull_icon' as CustomObjectTypeName,
 				creation_timestamp: offset_in_ms,
 				should_remove: false,

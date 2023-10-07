@@ -19,6 +19,7 @@ export type Base_Object_Data = {
 
 	//state	
 	pixel_pos: Point2D;
+	rotate: number,
 	should_remove: boolean,
 
 	//accessors
@@ -31,6 +32,7 @@ export const New_Base_Object = (
 		creation_timestamp: number,
 		should_remove: boolean,
 		pixel_pos?: Point2D,
+		rotate?: number,
 		unique_id?: string,
 	}): Base_Object_Data => {
 
@@ -48,6 +50,11 @@ export const New_Base_Object = (
 			p.pixel_pos,
 			{x:0, y: 0}
 		),  //TODO use TM
+		rotate: ƒ.if(p.rotate != undefined,
+			p.rotate,
+			0
+		), 
+
 
 		//accessors
 		get_GM_instance: p.get_GM_instance,

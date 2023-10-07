@@ -25,11 +25,13 @@ export type CO_Shot_State = {
 
 export type Custom_Object_Delegate = {
 	process_single_frame: (
-		prior_pixel_pos: Point2D, 
+		prior_pixel_pos: Point2D,
+		prior_rotation: number,
 		GM: Game_Manager_Data,	
 		prior_delegate_state: Custom_Object_Delegate_States,
 	) => {
 		pixel_pos: Point2D,
+		rotate: number,
 		delegate_state: Custom_Object_Delegate_States,
 	},
 
@@ -40,15 +42,18 @@ export type Custom_Object_Delegate = {
 const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
+		prior_rotation: number,
 		GM: Game_Manager_Data,		
 		prior_delegate_state: Custom_Object_Delegate_States,
 	): {
 		pixel_pos: Point2D,
+		rotate: number,
 		delegate_state: Custom_Object_Delegate_States,
 	} => {
 
 		return {
 			pixel_pos: prior_pixel_pos,
+			rotate: prior_rotation,
 			delegate_state: prior_delegate_state,
 		}
 	},
@@ -67,10 +72,12 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
+		prior_rotation: number,
 		GM: Game_Manager_Data,	
 		prior_delegate_state: Custom_Object_Delegate_States,
 	): {
 		pixel_pos: Point2D,
+		rotate: number,
 		delegate_state: CO_Shot_State,
 	} => {
 		const _prior_delegate_state = prior_delegate_state as CO_Shot_State;
@@ -102,6 +109,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 
 		return {
 			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
+			rotate: prior_rotation,
 			delegate_state: _prior_delegate_state,
 		}
 	},
@@ -113,10 +121,12 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
+		prior_rotation: number,
 		GM: Game_Manager_Data,	
 		prior_delegate_state: Custom_Object_Delegate_States,
 	): {
 		pixel_pos: Point2D,
+		rotate: number,
 		delegate_state: {},
 	} => {
 
@@ -126,6 +136,7 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 
 		return {
 			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
+			rotate: prior_rotation,
 			delegate_state: prior_delegate_state,
 		}
 	},
@@ -138,10 +149,12 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
 
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
+		prior_rotation: number,
 		GM: Game_Manager_Data,
 		prior_delegate_state: Custom_Object_Delegate_States,
 	): {
 		pixel_pos: Point2D,
+		rotate: number,
 		delegate_state: {},
 	} => {
 
@@ -151,6 +164,7 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
 
 		return {
 			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
+			rotate: prior_rotation,
 			delegate_state: prior_delegate_state,
 		}
 	},
@@ -165,10 +179,12 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 
 	process_single_frame: (
 		prior_pixel_pos: Point2D, 
+		prior_rotation: number,
 		GM: Game_Manager_Data,
 		prior_delegate_state: Custom_Object_Delegate_States,
 	): {
 		pixel_pos: Point2D,
+		rotate: number,
 		delegate_state: {},
 	} => {
 
@@ -178,6 +194,7 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 
 		return {
 			pixel_pos: prior_pixel_pos,
+			rotate: prior_rotation,
 			delegate_state: prior_delegate_state,
 		}
 	},

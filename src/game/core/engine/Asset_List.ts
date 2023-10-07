@@ -59,8 +59,24 @@ export const asset_list: StaticValues = {
 		url: "deaths_head.png",
 		name: "deaths_head",
 	},{
+		url: "arrow_placeholder.png",
+		name: "arrow_placeholder",
+	},{
 		url: "hit_star.png",
 		name: "hit_star",
+	},{
+		url: "characters/skeleton_warrior_stand_se.png",
+		name: "skeleton_warrior_stand_se",
+		frames: 3,
+		frame_duration: 170,
+		ping_pong: true,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 58,
+			h: 118,
+		},
 	},{
 		url: "characters/undead_javelineer_se_stand.png",
 		name: "undead_javelineer_se_stand",

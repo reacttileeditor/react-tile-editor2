@@ -28,6 +28,7 @@ export const New_Custom_Object = (
 	p: {
 		get_GM_instance: () => Game_Manager_Data;
 		pixel_pos: Point2D,
+		rotate: number,
 		type_name: CustomObjectTypeName,
 		creation_timestamp: number,
 		should_remove: boolean,
@@ -40,6 +41,7 @@ export const New_Custom_Object = (
 		...New_Base_Object({
 			get_GM_instance: p.get_GM_instance,
 			pixel_pos: cloneDeep(p.pixel_pos),
+			rotate: p.rotate,
 			unique_id: p.unique_id,
 			creation_timestamp: p.creation_timestamp,
 			should_remove: p.should_remove,
@@ -85,6 +87,7 @@ export const Custom_Object_ƒ = {
 
 		const processed_object = Custom_Object_ƒ.get_delegate(me.type_name).process_single_frame(
 			me.pixel_pos,
+			me.rotate,
 			me.get_GM_instance(),
 			me.delegate_state
 		);
@@ -92,6 +95,7 @@ export const Custom_Object_ƒ = {
 		return New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
 			pixel_pos: processed_object.pixel_pos,
+			rotate: processed_object.rotate,
 			type_name: me.type_name,
 			creation_timestamp: me.creation_timestamp,
 			should_remove: ƒ.if( (offset_in_ms - me.creation_timestamp) > 900, true, false ),
