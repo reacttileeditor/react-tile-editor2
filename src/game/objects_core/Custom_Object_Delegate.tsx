@@ -88,7 +88,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 
 
 		let addend = {x: 0, y: 0};
-
+		let rotate = prior_rotation;
 
 
 
@@ -98,22 +98,21 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 			const source_pos = source.pixel_pos;
 
 			const angle = Math.atan2(  target_pos.y - prior_pixel_pos.y , target_pos.x - prior_pixel_pos.x )
-
+			rotate = 90 + angle * 180 / Math.PI ;
 			//const magnitude = 0.5;
 
 			const magnitude = Math.hypot( (source_pos.x - target_pos.x), (source_pos.y - target_pos.y) ) / 30.0;
 
 			addend = { x: magnitude * Math.cos(angle), y: magnitude * Math.sin(angle) }
-
 		}
 
 		return {
 			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
-			rotate: prior_rotation,
+			rotate: rotate,
 			delegate_state: _prior_delegate_state,
 		}
 	},
-	yield_image: () => 'attack_icon',
+	yield_image: () => 'arrow_placeholder',
 }
 
 export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
