@@ -12,9 +12,9 @@ interface Props {
 	_Tilemap_Manager: Tilemap_Manager_Data,
 	dimensions: Point2D,
 	
-	handle_canvas_click: Function,
+	handle_canvas_click: (pos: Point2D, buttons_pressed: MouseButtonState) => void,
 	handle_canvas_keys_down: (keys: Array<string>) => void,
-	handle_canvas_mouse_move: Function,
+	handle_canvas_mouse_move: (pos: Point2D, buttons_pressed: MouseButtonState) => void,
 }
 
 interface State {
@@ -90,10 +90,11 @@ export class Canvas_View extends React.Component <Props, State> {
 		var mousePosUnconstrained = this.get_mouse_pos_for_action(e, false);
 		var mousePos = this.get_mouse_pos_for_action(e, true);
 
+		let buttons_pressed = this.extract_which_mouse_button(e)
 		//this is where we had the giant switch statement of actions to perform.
 		//console.log("MousePos:", mousePos);
 		//this.props._Tilemap_Manager.handle_mouse_move( mousePos.x, mousePos.y );
-		this.props.handle_canvas_mouse_move( mousePos );
+		this.props.handle_canvas_mouse_move( mousePos, buttons_pressed );
 	}
 
 	constrain = ( min_limit: number, value: number, max_limit: number ) => {

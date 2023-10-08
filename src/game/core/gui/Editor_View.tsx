@@ -107,10 +107,14 @@ export class Editor_View extends React.Component <Editor_View_Props, Editor_View
 		);
 	}
 
-	handle_canvas_mouse_move = (mouse_pos: Point2D) => {
+	handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
 		this.set_cursor_pos(
-			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(this.props._Tilemap_Manager, mouse_pos)
+			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(this.props._Tilemap_Manager, pos)
 		);
+
+		if( buttons_pressed.left == true ){
+			this.handle_canvas_click(pos, buttons_pressed);
+		}
 		
 	}
 

@@ -253,8 +253,8 @@ export class Game_View extends React.Component <Game_View_Props, {pos: Point2D}>
 		}
 	}
 
-	handle_canvas_mouse_move = (mouse_pos: Point2D) => {
-		Game_Manager_ƒ.set_cursor_pos(this._Game_Manager_Data, mouse_pos);
+	handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
+		Game_Manager_ƒ.set_cursor_pos(this._Game_Manager_Data, pos);
 	}
 
 	componentDidMount() {
