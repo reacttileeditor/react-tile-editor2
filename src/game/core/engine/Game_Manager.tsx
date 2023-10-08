@@ -236,6 +236,7 @@ export const Game_Manager_ƒ = {
 	advance_turn_start: (me: Game_Manager_Data) => {
 		console.log(`beginning turn #${me.game_state.current_turn}`)
 		me.game_state.current_frame_state = cloneDeep(Game_Manager_ƒ.get_current_turn_state(me))
+		Tilemap_Manager_ƒ.clear_tile_map(me._TM, 'ui');
 
 
 		var date = new Date();
@@ -516,6 +517,40 @@ export const Game_Manager_ƒ = {
 		Game_Manager_ƒ.draw_cursor(me);
 	},
 
+	draw_path_for_unit: (me: Game_Manager_Data, creature: Creature_Data ) => {
+		Asset_Manager_ƒ.draw_image_for_asset_name ({
+			_AM:						me._Asset_Manager,
+			asset_name:					'cursor_green',
+			_BM:						me._Blit_Manager,
+			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM, creature.tile_pos),
+			zorder:						zorder.map_cursor,
+			current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
+			opacity:					1.0,
+			rotate:						0,
+			brightness:					1.0,
+			horizontally_flipped:		false,
+			vertically_flipped:			false,
+		})
+
+		Tilemap_Manager_ƒ.clear_tile_map(me._TM, 'ui');
+
+		map(creature.path_this_turn, (path_val, path_idx) => {
+			Tilemap_Manager_ƒ.modify_tile_status(
+				me._TM,
+				path_val,
+				ƒ.if( includes(creature.path_reachable_this_turn, path_val),
+					ƒ.if(path_val == last(creature.path_reachable_this_turn),
+						'arrowhead-green',
+						'arrow-green',
+					),
+					'red-path-unreachable-dot'
+				),
+				'ui'
+			);
+		});
+	},
+
+
 	do_paused_game_rendering: (me: Game_Manager_Data) => {
 		/*
 			This particularly means "paused at end of turn".
@@ -545,36 +580,7 @@ export const Game_Manager_ƒ = {
 			})			
 	
 			if(me.game_state.selected_object_index == idx){
-				Asset_Manager_ƒ.draw_image_for_asset_name ({
-					_AM:						me._Asset_Manager,
-					asset_name:					'cursor_green',
-					_BM:						me._Blit_Manager,
-					pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM, val.tile_pos),
-					zorder:						zorder.map_cursor,
-					current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
-					opacity:					1.0,
-					rotate:						0,
-					brightness:					1.0,
-					horizontally_flipped:		false,
-					vertically_flipped:			false,
-				})
-
-				Tilemap_Manager_ƒ.clear_tile_map(me._TM, 'ui');
-
-				map(val.path_this_turn, (path_val, path_idx) => {
-					Tilemap_Manager_ƒ.modify_tile_status(
-						me._TM,
-						path_val,
-						ƒ.if( includes(val.path_reachable_this_turn, path_val),
-							ƒ.if(path_val == last(val.path_reachable_this_turn),
-								'arrowhead-green',
-								'arrow-green',
-							),
-							'red-path-unreachable-dot'
-						),
-						'ui'
-					);
-				});
+				Game_Manager_ƒ.draw_path_for_unit(me,val)
 			}
 
 
