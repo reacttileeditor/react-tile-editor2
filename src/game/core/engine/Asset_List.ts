@@ -130,7 +130,7 @@ export const asset_list: StaticValues = {
 			h: 118,
 		},
 	},{
-		url: "char3-ne-walk.png",
+		url: "characters/skeleton_warrior_walk_ne.png",
 		name: "skeleton-ne-walk",
 		frames: 8,
 		frame_duration: 100,
