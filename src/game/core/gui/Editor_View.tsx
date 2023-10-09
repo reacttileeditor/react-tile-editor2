@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
 
@@ -22,39 +22,46 @@ interface Editor_View_Props {
 	dimensions: Point2D,
 }
 
-interface Editor_View_State {
-	selected_tile_type: string,
-}
 
-export class Editor_View extends React.Component <Editor_View_Props, Editor_View_State> {
-	render_loop_interval: number|undefined;
-	state: {
-		selected_tile_type: string,
-		cursor_pos: Point2D,
-	}
 
-	constructor( props: Editor_View_Props ) {
-		super( props );
 
-		this.state = {
-			selected_tile_type: '',
-			cursor_pos: { x: 0, y: 0 },
+
+
+export const Editor_View = (props: Editor_View_Props) => {
+
+	const [render_loop_interval, set_render_loop_interval] = useState<number|null>(null);
+	const [selected_tile_type, set_selected_tile_type] = useState<string>('');
+	const [cursor_pos, set_cursor_pos] = useState<Point2D>({ x: 0, y: 0 });
+
+
+
+	useEffect(() => {
+		if(props.assets_loaded && render_loop_interval == null){
+			console.log('RENDER START')
+			start_render_loop();
+		}
+	}, [props.assets_loaded]);
+
+	useEffect(() => {
+
+		return () => {
+			console.log('RENDER CLEANUP')
+
+			window.clearInterval(render_loop_interval as number);
+			set_render_loop_interval(null);
 		};
-	}
+	}, []);
 
-/*----------------------- cursor stuff -----------------------*/
-	set_cursor_pos = (coords: Point2D) => {
-		this.state.cursor_pos = coords;
-	}
-
-	draw_cursor = () => {
+	/*----------------------- cursor stuff -----------------------*/
+	const draw_cursor = () => {
 		//const pos = this._Tilemap_Manager.convert_tile_coords_to_pixel_coords(0,4); 
+		console.log(cursor_pos);
 
 		Asset_Manager_ƒ.draw_image_for_asset_name({
-			_AM:						this.props._Asset_Manager,
+			_AM:						props._Asset_Manager,
 			asset_name:					'cursor',
-			_BM:						this.props._Blit_Manager,
-			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( this.props._Tilemap_Manager, this.state.cursor_pos ),
+			_BM:						props._Blit_Manager,
+			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( props._Tilemap_Manager, cursor_pos ),
 			zorder:						zorder.rocks,
 			current_milliseconds:		0,
 			opacity:					1.0,
@@ -66,59 +73,41 @@ export class Editor_View extends React.Component <Editor_View_Props, Editor_View
 	}
 
 
-/*----------------------- core drawing routines -----------------------*/
-	start_render_loop = () => {
-		if( !this.render_loop_interval ){
-			this.render_loop_interval = window.setInterval( this.render_canvas, 16.666 );
+	/*----------------------- core drawing routines -----------------------*/
+	const start_render_loop = () => {
+		if( !render_loop_interval ){
+			set_render_loop_interval( window.setInterval( render_canvas, 16.666 ) );
 		}
 	}
 
-	render_canvas = () => {
-		Tilemap_Manager_ƒ.do_one_frame_of_rendering( this.props._Tilemap_Manager );
-		this.draw_cursor();
+	const render_canvas = () => {
+		Tilemap_Manager_ƒ.do_one_frame_of_rendering( props._Tilemap_Manager );
+		draw_cursor();
 	}
 
-
-
-	componentDidMount() {
-		if(this.props.assets_loaded){
-			this.start_render_loop();
-		}
-	}
-
-	componentDidUpdate() {
-		if(this.props.assets_loaded){
-			this.start_render_loop();
-		}
-	}
 	
-	componentWillUnmount(){
-		window.clearInterval(this.render_loop_interval);
-		this.render_loop_interval = undefined;
-	}
-
-/*----------------------- I/O routines -----------------------*/
-	handle_canvas_click = (pos: Point2D, buttons_pressed: MouseButtonState) => {
+	/*----------------------- I/O routines -----------------------*/
+	const handle_canvas_click = (pos: Point2D, buttons_pressed: MouseButtonState) => {
 		Tilemap_Manager_ƒ.modify_tile_status(
-			this.props._Tilemap_Manager,
-			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(this.props._Tilemap_Manager, pos),
-			this.state.selected_tile_type,
+			props._Tilemap_Manager,
+			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager, pos),
+			selected_tile_type,
 			'terrain'
 		);
 	}
 
-	handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
-		this.set_cursor_pos(
-			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(this.props._Tilemap_Manager, pos)
+	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
+		set_cursor_pos(
+			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager, pos)
 		);
 
 		if( buttons_pressed.left == true ){
-			this.handle_canvas_click(pos, buttons_pressed);
+			handle_canvas_click(pos, buttons_pressed);
 		}
 		
 	}
 
-	handle_canvas_keys_down = (keys: Array<string>) => {
+	const handle_canvas_keys_down = (keys: Array<string>) => {
 		let move = { x: 0, y: 0};
 
 		if( _.includes(keys, 'ArrowDown') ){
@@ -137,40 +126,35 @@ export class Editor_View extends React.Component <Editor_View_Props, Editor_View
 			move.x += 40;
 		}
 
-		Blit_Manager_ƒ.adjust_viewport_pos(this.props._Blit_Manager, move.x, move.y);
-
+		Blit_Manager_ƒ.adjust_viewport_pos(props._Blit_Manager, move.x, move.y);
 	}
 
 
 
-
-	render() {
-		return <div className="editor_node">
-			
-			<Canvas_View
-				{...this.props}
-				dimensions={this.props.dimensions}
-				handle_canvas_click={this.handle_canvas_click}
-				handle_canvas_keys_down={this.handle_canvas_keys_down}
-				handle_canvas_mouse_move={this.handle_canvas_mouse_move}
-			/>
-			<div className="tile_palette">
-			{
-				this.props.assets_loaded
-				&&
-				Asset_Manager_ƒ.yield_tile_name_list(this.props._Asset_Manager).map( (value, index) => {
-					return	<Tile_Palette_Element
-								asset_manager={this.props._Asset_Manager}
-								tile_name={value}
-								asset_name={''}
-								key={value}
-								highlight={this.state.selected_tile_type == value}
-								handle_click={ () => this.setState({selected_tile_type: value}) }
-							/>
-				})
-			}
-			</div>
-		</div>;
-	}
-
+	return <div className="editor_node">
+		
+		<Canvas_View
+			{...props}
+			dimensions={props.dimensions}
+			handle_canvas_click={handle_canvas_click}
+			handle_canvas_keys_down={handle_canvas_keys_down}
+			handle_canvas_mouse_move={handle_canvas_mouse_move}
+		/>
+		<div className="tile_palette">
+		{
+			props.assets_loaded
+			&&
+			Asset_Manager_ƒ.yield_tile_name_list(props._Asset_Manager).map( (value, index) => {
+				return	<Tile_Palette_Element
+							asset_manager={props._Asset_Manager}
+							tile_name={value}
+							asset_name={''}
+							key={value}
+							highlight={ selected_tile_type == value }
+							handle_click={ () => set_selected_tile_type( value ) }
+						/>
+			})
+		}
+		</div>
+	</div>;
 }
