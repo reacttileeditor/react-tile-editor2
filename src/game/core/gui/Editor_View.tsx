@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
 
@@ -24,7 +24,26 @@ interface Editor_View_Props {
 
 
 
-
+function useInterval(callback: Function, delay: number) {
+	//https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+	const savedCallback = useRef<Function>( ()=>{} );
+  
+	// Remember the latest callback.
+	useEffect(() => {
+	  savedCallback.current = callback;
+	}, [callback]);
+  
+	// Set up the interval.
+	useEffect(() => {
+	  function tick() {
+		savedCallback.current();
+	  }
+	  if (delay !== null) {
+		let id = setInterval(tick, delay);
+		return () => clearInterval(id);
+	  }
+	}, [delay]);
+  }
 
 
 export const Editor_View = (props: Editor_View_Props) => {
@@ -32,9 +51,20 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [render_loop_interval, set_render_loop_interval] = useState<number|null>(null);
 	const [selected_tile_type, set_selected_tile_type] = useState<string>('');
 	const [cursor_pos, set_cursor_pos] = useState<Point2D>({ x: 0, y: 0 });
+	const [render_tick, set_render_tick] = useState<number>(0);
 
 
+	useEffect(() => {
+		if(render_tick > 0){
+		render_canvas();
+		}
+	}, [render_tick]);
 
+	useInterval(() => {
+		// Your custom logic here
+		set_render_tick(render_tick + 1);
+	}, 16.666 );	
+		
 	useEffect(() => {
 		if(
 			props.assets_loaded
@@ -84,14 +114,25 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 	/*----------------------- core drawing routines -----------------------*/
 	const start_render_loop = () => {
-		if( !render_loop_interval ){
-			set_render_loop_interval( window.setInterval( render_canvas, 16.666 ) );
-		}
+		// if( !render_loop_interval ){
+		// 	set_render_loop_interval( window.setInterval( () => {set_render_tick(render_tick + 1), console.log(render_tick)}, 16.666 ) );
+		// }
+
+	
 	}
 
 	const render_canvas = () => {
+		if(
+			props.assets_loaded
+			&&
+			render_loop_interval == null
+			&&
+			props._Tilemap_Manager != null
+			
+		){
 		Tilemap_Manager_ƒ.do_one_frame_of_rendering( props._Tilemap_Manager );
 		draw_cursor();
+		}
 	}
 
 	
@@ -106,8 +147,12 @@ export const Editor_View = (props: Editor_View_Props) => {
 	}
 
 	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
+		const new_tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager, pos)
+	
+		//console.log(`pos ${pos.x},${pos.y} | ${new_tile_pos.x},${new_tile_pos.y}`)
+
 		set_cursor_pos(
-			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager, pos)
+			new_tile_pos
 		);
 
 		if( buttons_pressed.left == true ){
