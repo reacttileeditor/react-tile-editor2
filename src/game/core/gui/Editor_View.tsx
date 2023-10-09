@@ -36,11 +36,18 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 
 	useEffect(() => {
-		if(props.assets_loaded && render_loop_interval == null){
+		if(
+			props.assets_loaded
+			&&
+			render_loop_interval == null
+			&&
+			props._Tilemap_Manager != null
+			
+		){
 			console.log('EDITOR START')
 			start_render_loop();
 		}
-	}, [props.assets_loaded]);
+	}, [props.assets_loaded, props._Tilemap_Manager]);
 
 	useEffect(() => {
 

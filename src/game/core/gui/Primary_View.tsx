@@ -26,13 +26,12 @@ interface State {
 
 export const Primary_View = () => {
 	const _Asset_Manager: Asset_Manager_Data = New_Asset_Manager();
-	let _Blit_Manager!: Blit_Manager_Data;
-	let _Tilemap_Manager!: Tilemap_Manager_Data;
 	const default_canvas_size: Point2D = {x: 567, y: 325};
 
+	const [_Blit_Manager, set_Blit_Manager] = useState<Blit_Manager_Data|null>(null);
+	const [_Tilemap_Manager, set_Tilemap_Manager] = useState<Tilemap_Manager_Data|null>(null);
 	const [is_edit_mode, set_is_edit_mode] = useState<boolean>(true);
 	const [assets_loaded, set_assets_loaded] = useState<boolean>(false);
-
 
 
 
@@ -54,13 +53,29 @@ export const Primary_View = () => {
 	}, []);
 
 
+	useEffect(() => {
+		if(_Blit_Manager){
+			set_Tilemap_Manager(New_Tilemap_Manager({_AM: _Asset_Manager, _BM: _Blit_Manager}));
+		}
+	}, [_Blit_Manager]);
+
 	const initialize_tilemap_manager = (ctx: CanvasRenderingContext2D) => {
 		if( !_Tilemap_Manager ){
-			_Blit_Manager = New_Blit_Manager(ctx, default_canvas_size, true);
-			_Tilemap_Manager = New_Tilemap_Manager({_AM: _Asset_Manager, _BM: _Blit_Manager});
+			set_Blit_Manager(New_Blit_Manager(ctx, default_canvas_size, true));
 		} else {
-			Blit_Manager_ƒ.reset_context(_Blit_Manager, ctx);
+			if(_Blit_Manager){
+				Blit_Manager_ƒ.reset_context(_Blit_Manager, ctx);
+			}
 		}
+
+		/*if( !_Tilemap_Manager ){
+			set_Blit_Manager(New_Blit_Manager(ctx, default_canvas_size, true));
+			set_Tilemap_Manager(New_Tilemap_Manager({_AM: _Asset_Manager, _BM: _Blit_Manager}));
+		} else {
+			if(_Blit_Manager){
+				Blit_Manager_ƒ.reset_context(_Blit_Manager, ctx);
+			}
+		}*/
 	}
 
 
@@ -96,8 +111,8 @@ export const Primary_View = () => {
 								assets_loaded={assets_loaded}
 								dimensions={default_canvas_size}
 								_Asset_Manager={_Asset_Manager}
-								_Blit_Manager={_Blit_Manager}
-								_Tilemap_Manager={_Tilemap_Manager}
+								_Blit_Manager={_Blit_Manager as Blit_Manager_Data}
+								_Tilemap_Manager={_Tilemap_Manager as Tilemap_Manager_Data}
 								initialize_tilemap_manager={initialize_tilemap_manager}
 							/>
 							:
@@ -105,8 +120,8 @@ export const Primary_View = () => {
 								assets_loaded={assets_loaded}
 								dimensions={default_canvas_size}
 								_Asset_Manager={_Asset_Manager}
-								_Blit_Manager={_Blit_Manager}
-								_Tilemap_Manager={_Tilemap_Manager}
+								_Blit_Manager={_Blit_Manager as Blit_Manager_Data}
+								_Tilemap_Manager={_Tilemap_Manager as Tilemap_Manager_Data}
 								initialize_tilemap_manager={initialize_tilemap_manager}
 							/>
 						}
