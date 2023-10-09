@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
 
@@ -32,37 +32,52 @@ export type MouseButtonState = {
 }
 
 
-export class Canvas_View extends React.Component <Props, State> {
-	ctx!: CanvasRenderingContext2D;
-	render_loop_interval: number|undefined;
-	canvas!: HTMLCanvasElement;
-	keys_currently_pressed: Array<string>;
+export const Canvas_View = (props: Props) => {
+
+	const canvasRef = React.useRef<HTMLCanvasElement>(null);
+
+	const [keys_currently_pressed, set_keys_currently_pressed] = useState<Array<string>>([]);
+	const [mousedown_pos, set_mousedown_pos] = useState<Point2D|null>(null);
+
 
 /*----------------------- initialization and asset loading -----------------------*/
-	constructor( props: Props ) {
-		super( props );
-		
-		this.keys_currently_pressed = [];
-		this.state = {
-			mousedown_pos: undefined,
+	useEffect(() => {
+		console.log('CANVAS TILEMANAGER INIT')
+
+		const ctx = getContext();
+		console.log(ctx);
+		props.initialize_tilemap_manager(ctx);
+	}, []);
+
+
+	useEffect(() => {
+		console.log('CANVAS EVENT INIT')
+
+		document.addEventListener('keydown', handle_canvas_keydown as unknown as EventListener );
+		document.addEventListener('keyup', handle_canvas_keyup as unknown as EventListener );
+
+		return () => {
+			console.log('CANVAS EVENT CLEANUP')
+
+			document.removeEventListener ('mouseup',   mouseupListener as unknown as EventListener,   {capture: true});
+			document.removeEventListener ('mousemove', mousemoveListener as unknown as EventListener, {capture: true});
+			document.removeEventListener ('keydown', handle_canvas_keydown as unknown as EventListener);
+			document.removeEventListener ('keyup', handle_canvas_keyup as unknown as EventListener);
+		};
+	}, []);
+
+	const getCanvas =  (): HTMLCanvasElement | null => (canvasRef.current);
+	const getContext = (): CanvasRenderingContext2D | null => {
+		const canvas = getCanvas()
+		if(canvas != null){
+			return canvas.getContext('2d');
+		} else {
+			return null;
 		}
-	}
+	};
 
 
-	componentDidMount() {
-		this.ctx = this.canvas!.getContext("2d")!;
-		this.props.initialize_tilemap_manager(this.ctx);
-		document.addEventListener('keydown', this.handle_canvas_keydown as unknown as EventListener );
-		document.addEventListener('keyup', this.handle_canvas_keyup as unknown as EventListener );
-	}
 
-	componentWillUnmount() {
-		document.removeEventListener ('mouseup',   this.mouseupListener as unknown as EventListener,   {capture: true});
-		document.removeEventListener ('mousemove', this.mousemoveListener as unknown as EventListener, {capture: true});
-		document.removeEventListener ('keydown', this.handle_canvas_keydown as unknown as EventListener);
-		document.removeEventListener ('keyup', this.handle_canvas_keyup as unknown as EventListener);
-
-	}	
 
 /*----------------------- event handling -----------------------*/
 	/*
@@ -70,96 +85,102 @@ export class Canvas_View extends React.Component <Props, State> {
 
 		Events, like in photoshop, are modal; once you start rotating an image, the program is essentially 'locked' into a rotation mode until you let go of the mouse.  Because of this, we handle everything basically as a central 'switchboard', right here.
 	*/
-	handle_canvas_keydown = (evt: React.KeyboardEvent<HTMLCanvasElement>)=>{
-		this.keys_currently_pressed = _.uniq( _.concat(this.keys_currently_pressed, evt.key) )
+	const handle_canvas_keydown = (evt: React.KeyboardEvent<HTMLCanvasElement>)=>{
+		set_keys_currently_pressed(_.uniq( _.concat(keys_currently_pressed, evt.key) ));
 
 
-		this.props.handle_canvas_keys_down( this.keys_currently_pressed );
+		props.handle_canvas_keys_down( keys_currently_pressed );
 	}
 
-	handle_canvas_keyup = (evt: React.KeyboardEvent<HTMLCanvasElement>)=>{
-		this.keys_currently_pressed = _.uniq( _.filter(this.keys_currently_pressed, (val)=>(val != evt.key)) )
+	const handle_canvas_keyup = (evt: React.KeyboardEvent<HTMLCanvasElement>)=>{
+		set_keys_currently_pressed( _.uniq( _.filter(keys_currently_pressed, (val)=>(val != evt.key)) ) );
 
 
-		this.props.handle_canvas_keys_down( this.keys_currently_pressed );
+		props.handle_canvas_keys_down( keys_currently_pressed );
 	}
 
 
 
-	track_canvas_move = ( e: React.MouseEvent<HTMLCanvasElement> ) => {
-		var mousePosUnconstrained = this.get_mouse_pos_for_action(e, false);
-		var mousePos = this.get_mouse_pos_for_action(e, true);
+	const track_canvas_move = ( e: React.MouseEvent<HTMLCanvasElement> ) => {
+		var mousePosUnconstrained = get_mouse_pos_for_action(e, false);
+		var mousePos = get_mouse_pos_for_action(e, true);
 
-		let buttons_pressed = this.extract_which_mouse_button(e)
+		let buttons_pressed = extract_which_mouse_button(e)
 		//this is where we had the giant switch statement of actions to perform.
 		//console.log("MousePos:", mousePos);
 		//this.props._Tilemap_Manager.handle_mouse_move( mousePos.x, mousePos.y );
-		this.props.handle_canvas_mouse_move( mousePos, buttons_pressed );
+		props.handle_canvas_mouse_move( mousePos, buttons_pressed );
 	}
 
-	constrain = ( min_limit: number, value: number, max_limit: number ) => {
+	const constrain = ( min_limit: number, value: number, max_limit: number ) => {
 		return Math.min( Math.max(min_limit, value), max_limit);
 	}
 
-	handle_canvas_click = ( e: React.MouseEvent<HTMLCanvasElement>, buttons_pressed: MouseButtonState ) => {
-		var mousePos = this.get_mouse_pos_for_action(e, true);
+	const handle_canvas_click = ( e: React.MouseEvent<HTMLCanvasElement>, buttons_pressed: MouseButtonState ) => {
+		var mousePos = get_mouse_pos_for_action(e, true);
 	
-		this.props.handle_canvas_click( mousePos, buttons_pressed );
+		props.handle_canvas_click( mousePos, buttons_pressed );
 	}
 
-	get_mouse_pos_for_action = ( e: React.MouseEvent<HTMLCanvasElement>, should_constrain: boolean ) => {
-		const bgRectSrc = this.canvas.getBoundingClientRect();
-		const bgRect = { x: bgRectSrc.left, y: bgRectSrc.top, w: bgRectSrc.right - bgRectSrc.left, h: bgRectSrc.bottom - bgRectSrc.top };
+	const get_mouse_pos_for_action = ( e: React.MouseEvent<HTMLCanvasElement>, should_constrain: boolean ) => {
+		const canvas = getCanvas();
+
+		if( canvas ){
+			const bgRectSrc = (canvas as HTMLCanvasElement).getBoundingClientRect();
+			const bgRect = { x: bgRectSrc.left, y: bgRectSrc.top, w: bgRectSrc.right - bgRectSrc.left, h: bgRectSrc.bottom - bgRectSrc.top };
 
 
-			/*
-				This exists to enable having a canvas that's got different bounds than its native pixel size (generally something like 2x, but this should be general enough to handle wacky alternatives, including situations where it's being vertically stretched or w/e.
-			*/
-		const scaleCoeff = {
-			x: bgRect.w / this.props.dimensions.x,
-			y: bgRect.h / this.props.dimensions.y
-		}
+				/*
+					This exists to enable having a canvas that's got different bounds than its native pixel size (generally something like 2x, but this should be general enough to handle wacky alternatives, including situations where it's being vertically stretched or w/e.
+				*/
+			const scaleCoeff = {
+				x: bgRect.w / props.dimensions.x,
+				y: bgRect.h / props.dimensions.y
+			}
 
-		const mousePosRaw = (() => { if(e.nativeEvent !== undefined) {
-			return	{
-						x: e.nativeEvent.clientX - bgRect.x,
-						y: e.nativeEvent.clientY - bgRect.y
-					};
+			const mousePosRaw = (() => { if(e.nativeEvent !== undefined) {
+				return	{
+							x: e.nativeEvent.clientX - bgRect.x,
+							y: e.nativeEvent.clientY - bgRect.y
+						};
+			} else {
+				return	{
+							x: e.clientX - bgRect.x,
+							y: e.clientY - bgRect.y
+						};
+			}})();
+
+			const mousePos =	{
+									x: Math.round(mousePosRaw.x / scaleCoeff.x),
+									y: Math.round(mousePosRaw.y / scaleCoeff.y)
+								};
+
+
+			if( should_constrain ){
+				return {
+					x: constrain(0, mousePos.x, bgRect.w),
+					y: constrain(0, mousePos.y, bgRect.h)
+				};
+			} else {
+				return {
+					x: mousePos.x,
+					y: mousePos.y,
+				};
+			}
 		} else {
-			return	{
-						x: e.clientX - bgRect.x,
-						y: e.clientY - bgRect.y
-					};
-		}})();
-
-		const mousePos =	{
-								x: Math.round(mousePosRaw.x / scaleCoeff.x),
-								y: Math.round(mousePosRaw.y / scaleCoeff.y)
-							};
-
-
-		if( should_constrain ){
-			return {
-				x: this.constrain(0, mousePos.x, bgRect.w),
-				y: this.constrain(0, mousePos.y, bgRect.h)
-			};
-		} else {
-			return {
-				x: mousePos.x,
-				y: mousePos.y,
-			};
+			return {x: 0, y: 0};
 		}
 	}
 
 
 
-	mousedownListener = (e: React.MouseEvent<HTMLCanvasElement>) => {
-		let buttons_pressed = this.extract_which_mouse_button(e)
-		this.handle_canvas_click(e, buttons_pressed);
-		this.captureMouseEvents(e);
+	const mousedownListener = (e: React.MouseEvent<HTMLCanvasElement>) => {
+		let buttons_pressed = extract_which_mouse_button(e)
+		handle_canvas_click(e, buttons_pressed);
+		captureMouseEvents(e);
 	}
 
-	extract_which_mouse_button = (e: React.MouseEvent<HTMLCanvasElement>): MouseButtonState => {
+	const extract_which_mouse_button = (e: React.MouseEvent<HTMLCanvasElement>): MouseButtonState => {
 		var names = [
 			'left', 'right', 'middle', 'back', 'forward'
 		];
@@ -176,35 +197,35 @@ export class Canvas_View extends React.Component <Props, State> {
 		) as MouseButtonState
 	}
 
-	mousemoveListener = (e: React.MouseEvent<HTMLCanvasElement>) => {
-		this.track_canvas_move(e);
+	const mousemoveListener = (e: React.MouseEvent<HTMLCanvasElement>) => {
+		track_canvas_move(e);
 		e.stopPropagation();
 	}
 
-	mouseupListener = (e: React.MouseEvent<HTMLCanvasElement>) => {
+	const mouseupListener = (e: React.MouseEvent<HTMLCanvasElement>) => {
 		var restoreGlobalMouseEvents = () => {
 			document.body.setAttribute('style', 'pointer-events: auto;');
 		}
 
 		restoreGlobalMouseEvents ();
-		document.removeEventListener ('mouseup',   this.mouseupListener as unknown as EventListener,   {capture: true});
-		document.removeEventListener ('mousemove', this.mousemoveListener as unknown as EventListener, {capture: true});
+		document.removeEventListener ('mouseup',   mouseupListener as unknown as EventListener,   {capture: true});
+		document.removeEventListener ('mousemove', mousemoveListener as unknown as EventListener, {capture: true});
 		e.stopPropagation ();
 
 		//annul any in-progress operations here
 		//this.props._Tilemap_Manager.annul_current_drag_operation();
 
-		this.setState({mousedown_pos: undefined});
+		set_mousedown_pos(null);
 	}
 
-	captureMouseEvents = (e: React.MouseEvent<HTMLCanvasElement>) => {
+	const captureMouseEvents = (e: React.MouseEvent<HTMLCanvasElement>) => {
 		var preventGlobalMouseEvents = () => {
 			document.body.setAttribute('style', 'pointer-events: none;');
 		};
 
 		preventGlobalMouseEvents ();
-		document.addEventListener ('mouseup',   this.mouseupListener as unknown as EventListener,   {capture: true});
-		document.addEventListener ('mousemove', this.mousemoveListener as unknown as EventListener, {capture: true});
+		document.addEventListener ('mouseup',   mouseupListener as unknown as EventListener,   {capture: true});
+		document.addEventListener ('mousemove', mousemoveListener as unknown as EventListener, {capture: true});
 		e.preventDefault ();
 		e.stopPropagation ();
 	}
@@ -214,17 +235,15 @@ export class Canvas_View extends React.Component <Props, State> {
 
 /*----------------------- react render -----------------------*/
 
-	render() {
-		return <div className="canvas_holder">
-			<canvas
-				ref={(node) => {this.canvas = node!;}}
-				width={this.props.dimensions.x}
-				height={this.props.dimensions.y}
-			
-				onMouseDown={ this.mousedownListener }
-				onMouseMove={ this.mousemoveListener }
-				onContextMenu={ (e) => { e.preventDefault(); return false; } }
-			/>
-		</div>;
-	}
+	return <div className="canvas_holder">
+		<canvas
+			ref={canvasRef}
+			width={props.dimensions.x}
+			height={props.dimensions.y}
+		
+			onMouseDown={ mousedownListener }
+			onMouseMove={ mousemoveListener }
+			onContextMenu={ (e) => { e.preventDefault(); return false; } }
+		/>
+	</div>;
 }

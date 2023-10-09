@@ -37,7 +37,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 	useEffect(() => {
 		if(props.assets_loaded && render_loop_interval == null){
-			console.log('RENDER START')
+			console.log('EDITOR START')
 			start_render_loop();
 		}
 	}, [props.assets_loaded]);
@@ -45,12 +45,14 @@ export const Editor_View = (props: Editor_View_Props) => {
 	useEffect(() => {
 
 		return () => {
-			console.log('RENDER CLEANUP')
+			if( render_loop_interval ){
+				console.log('EDITOR CLEANUP')
 
-			window.clearInterval(render_loop_interval as number);
-			set_render_loop_interval(null);
+				window.clearInterval(render_loop_interval as number);
+				set_render_loop_interval(null);
+			}
 		};
-	}, []);
+	}, [render_loop_interval]);
 
 	/*----------------------- cursor stuff -----------------------*/
 	const draw_cursor = () => {
@@ -132,7 +134,6 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 
 	return <div className="editor_node">
-		
 		<Canvas_View
 			{...props}
 			dimensions={props.dimensions}
