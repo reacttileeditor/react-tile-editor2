@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
 
@@ -18,107 +18,121 @@ interface Props {
 }
 
 
-export class Tile_Palette_Element extends React.Component <Props> {
-	ctx!: CanvasRenderingContext2D;
-	canvas!: HTMLCanvasElement;
-	_Blit_Manager!: Blit_Manager_Data;
-	_Tilemap_Manager!: Tilemap_Manager_Data;
-	default_canvas_size: Point2D;
+export const Tile_Palette_Element = (props: Props) => {
+	const default_canvas_size: Point2D = {x: 50, y: 50};
+	const [_Blit_Manager, set_Blit_Manager] = useState<Blit_Manager_Data|null>(null);
+	const [_Tilemap_Manager, set_Tilemap_Manager] = useState<Tilemap_Manager_Data|null>(null);
+
+
+/*----------------------- canvas element access -----------------------*/
+	const canvasRef = React.useRef<HTMLCanvasElement>(null);
+
+
+	const getCanvas =  (): HTMLCanvasElement | null => (canvasRef.current);
+	const getContext = (): CanvasRenderingContext2D | null => {
+		const canvas = getCanvas()
+		if(canvas != null){
+			return canvas.getContext('2d');
+		} else {
+			return null;
+		}
+	};
 
 /*----------------------- initialization and asset loading -----------------------*/
-	constructor( props: Props ) {
-		super( props );
-		
-		this.state = {
-		};
-		
-		this.default_canvas_size = {x: 50, y: 50};
-	}
+	useEffect(() => {
+		console.log('CANVAS TILEMANAGER INIT')
 
-	componentDidMount() {
-		this.ctx = this.canvas!.getContext("2d")!;
-		this.initialize_tilemap_manager(this.ctx);
-		
-		this.draw_canvas();
-	}
+		const ctx = getContext();
+		if(ctx != null){
+			initialize_tilemap_manager(ctx);
 
-	componentDidUpdate() {
-		this.ctx = this.canvas!.getContext("2d")!;
-		this.initialize_tilemap_manager(this.ctx);
-		this.draw_canvas();
-	}
-
-	initialize_tilemap_manager = (ctx: CanvasRenderingContext2D) => {
-		if( !this._Tilemap_Manager ){
-			this._Blit_Manager = New_Blit_Manager(ctx, this.default_canvas_size, false);
-			this._Tilemap_Manager = New_Tilemap_Manager({_AM: this.props.asset_manager, _BM: this._Blit_Manager});
-		} else {
-			Blit_Manager_ƒ.reset_context(this._Blit_Manager, ctx);
+			draw_canvas();
 		}
+	}, [_Blit_Manager]);
+
+
+
+
+	useEffect(() => {
+		if(_Blit_Manager){
+			set_Tilemap_Manager(New_Tilemap_Manager({_AM: props.asset_manager, _BM: _Blit_Manager}));
+		}
+	}, [_Blit_Manager]);
+
+	const initialize_tilemap_manager = (ctx: CanvasRenderingContext2D) => {
+		if( !_Tilemap_Manager ){
+			set_Blit_Manager(New_Blit_Manager(ctx, default_canvas_size, false));
+		} else {
+			if(_Blit_Manager){
+				Blit_Manager_ƒ.reset_context(_Blit_Manager, ctx);
+			}
+		}
+
 	}
+
 
 
 /*----------------------- draw ops -----------------------*/
 
 	
-	draw_canvas = () => {
-		let { consts } = this.props.asset_manager;
+	const draw_canvas = () => {
+		if(_Blit_Manager != null){
+			let { consts } = props.asset_manager;
 
-		Blit_Manager_ƒ.fill_canvas_with_solid_color(this._Blit_Manager);
+			Blit_Manager_ƒ.fill_canvas_with_solid_color(_Blit_Manager);
 
-		if(  _.size(this.props.tile_name) > 0 ){
-			Asset_Manager_ƒ.draw_all_assets_for_tile_type(
-				this.props.asset_manager,
-				this.props.tile_name,
-				this._Blit_Manager,
-				{
-					x: Math.floor(this.default_canvas_size.x/2),
-					y: Math.floor(this.default_canvas_size.y/2)
-				},
-			);
+			if(  _.size(props.tile_name) > 0 ){
+				Asset_Manager_ƒ.draw_all_assets_for_tile_type(
+					props.asset_manager,
+					props.tile_name,
+					_Blit_Manager,
+					{
+						x: Math.floor(default_canvas_size.x/2),
+						y: Math.floor(default_canvas_size.y/2)
+					},
+				);
+			}
+
+			if( _.size(props.asset_name) > 0 ){
+				Asset_Manager_ƒ.draw_image_for_asset_name({
+					_AM:						props.asset_manager,
+					asset_name:					props.asset_name,
+					_BM:						_Blit_Manager,
+					pos:						{
+						x: Math.floor(default_canvas_size.x/2),
+						y: Math.floor(default_canvas_size.y)
+					},
+					zorder:						zorder.rocks,
+					current_milliseconds:		0,
+					opacity:					1.0,
+					rotate:						0,
+					brightness:					1.0,
+					horizontally_flipped:		false,
+					vertically_flipped:			false,
+				})
+			}
+
+			Blit_Manager_ƒ.draw_entire_frame(_Blit_Manager);
 		}
-
-		if( _.size(this.props.asset_name) > 0 ){
-			Asset_Manager_ƒ.draw_image_for_asset_name({
-				_AM:						this.props.asset_manager,
-				asset_name:					this.props.asset_name,
-				_BM:						this._Blit_Manager,
-				pos:						{
-					x: Math.floor(this.default_canvas_size.x/2),
-					y: Math.floor(this.default_canvas_size.y)
-				},
-				zorder:						zorder.rocks,
-				current_milliseconds:		0,
-				opacity:					1.0,
-				rotate:						0,
-				brightness:					1.0,
-				horizontally_flipped:		false,
-				vertically_flipped:			false,
-			})
-		}
-
-		Blit_Manager_ƒ.draw_entire_frame(this._Blit_Manager);
 	}
 	
-	handle_mouse_click = (e: React.MouseEvent<HTMLCanvasElement>) => {
-		this.props.handle_click();
+	const handle_mouse_click = (e: React.MouseEvent<HTMLCanvasElement>) => {
+		props.handle_click();
 	}
 	
 
-	render() {
-		return <div className={`tile_cell${ this.props.highlight ? ' active' : ''}`}>
-			<canvas
-				ref={(node) => {this.canvas = node!;}}
-				width={this.default_canvas_size.x}
-				height={this.default_canvas_size.y}
-				style={ {
-					width: this.default_canvas_size.x * 2,
-					height: this.default_canvas_size.y * 2,
-					imageRendering: 'pixelated',
-				} }
-			
-				onClick={ this.handle_mouse_click }
-			/>
-		</div>;
-	}
+	return <div className={`tile_cell${ props.highlight ? ' active' : ''}`}>
+		<canvas
+			ref={canvasRef}
+			width={default_canvas_size.x}
+			height={default_canvas_size.y}
+			style={ {
+				width: default_canvas_size.x * 2,
+				height: default_canvas_size.y * 2,
+				imageRendering: 'pixelated',
+			} }
+		
+			onClick={ handle_mouse_click }
+		/>
+	</div>;
 }
