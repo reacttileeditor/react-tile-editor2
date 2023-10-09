@@ -37,128 +37,6 @@ export type TooltipData = {
 
 
 
-
-interface Game_Status_Display_Props {
-	_Game_Manager_Data: Game_Manager_Data,
-	_Asset_Manager: Asset_Manager_Data;
-}
-
-
-class Game_Status_Display extends React.Component <Game_Status_Display_Props, {
-	game_state: Game_State,
-}> {
-	constructor( props: Game_Status_Display_Props ) {
-		super( props );
-
-		this.state = {
-			game_state: cloneDeep(GameStateInit)
-		};
-	}
-
-
-	update_game_state_for_ui = (game_state: Game_State) => {
-		this.setState({game_state: cloneDeep(game_state)});
-	}
-
-	get_selected_creature = (): Creature_Data|undefined => {
-		const _gs = this.state.game_state;
-
-		if( _gs.selected_object_index != undefined ){
-			return _gs.turn_list[_gs.current_turn].creature_list[_gs.selected_object_index]
-		} else {
-			return undefined;
-		}
-	}
-
-	render = () => {
-		const _GS = this.state.game_state;
-		const selected_creature = this.get_selected_creature();
-	
-		return (
-			<div
-				className="game_status_display"
-			>
-				<button
-					onClick={(evt)=>{Game_Manager_ƒ.advance_turn_start(this.props._Game_Manager_Data)}}
-				>
-					Next Turn
-				</button>
-				<Label_and_Data_Pair
-					label={'Turn #:'}
-					data={`${_GS.current_turn}`}
-				/>
-				<Label_and_Data_Pair
-					label={'Objectives:'}
-					data={``}
-				/>
-				<Label_and_Data_Pair
-					label={''}
-					data={`${_GS.objective_text}`}
-				/>
-				<br />
-				<hr />
-				<br />
-				<>
-				{
-					(selected_creature !== undefined ?
-						<Label_and_Data_Pair
-							label={'Selected Unit:'}
-							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_prettyprint_name()}`}
-						/> :
-						<Label_and_Data_Pair
-							label={''}
-							data={`No Unit Selected.`}
-						/>
-					)
-				}
-				</>
-				<>
-				{
-					(selected_creature !== undefined)
-					&&
-					<>
-						<Label_and_Data_Pair
-							label={'Team:'}
-							data={`${selected_creature.team}`}
-						/>
-
-						<Tile_Palette_Element
-							asset_manager={this.props._Asset_Manager}
-							tile_name={''}
-							asset_name={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_creature_image()}`}
-							highlight={false}
-							handle_click={ ()=>{} }
-						/>
-						<Label_and_Data_Pair
-							label={'Hitpoints:'}
-							data={`${selected_creature.current_hitpoints} / ${Creature_ƒ.get_delegate(selected_creature.type_name).yield_max_hitpoints()}`}
-						/>
-						<Label_and_Data_Pair
-							label={'Moves:'}
-							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_moves_per_turn()}`}
-						/>
-						<Label_and_Data_Pair
-							label={'Damage:'}
-							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_damage()}`}
-						/>
-					</>
-				}
-				</>
-
-			</div>
-		)
-	}
-}
-
-class Label_and_Data_Pair extends React.Component <{label: string, data: string}> {
-	render = () => (
-		<div className="label_and_data_pair">
-			<div className="label">{this.props.label}</div>
-			<div className="data">{this.props.data}</div>
-		</div>
-	)
-}
-
 const Map_Tooltip = (props: TooltipData) => {
 	return <div
 		className="map-tooltip"
@@ -178,6 +56,7 @@ const Map_Tooltip = (props: TooltipData) => {
 
 import Foot_Icon from '../../../assets/feet-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game_Manager } from "../engine/Game_Manager";
+import { Game_Status_Display } from "./Game_Status_Display";
 
 
 class Tooltip_Manager extends React.Component<{},TooltipData> {
@@ -207,7 +86,6 @@ export class Game_View extends React.Component <Game_View_Props, {pos: Point2D}>
 	render_loop_interval: number|undefined;
 	_Game_Manager_Data: Game_Manager_Data;
 	awaiting_render: boolean;
-	gsd!: Game_Status_Display;
 	tooltip_manager!: Tooltip_Manager;
 	
 
@@ -258,7 +136,7 @@ export class Game_View extends React.Component <Game_View_Props, {pos: Point2D}>
 	}
 
 	componentDidMount() {
-		Game_Manager_ƒ.set_update_function(this._Game_Manager_Data, this.gsd.update_game_state_for_ui );
+		//Game_Manager_ƒ.set_update_function(this._Game_Manager_Data, this.gsd.update_game_state_for_ui );
 		Game_Manager_ƒ.set_tooltip_update_function(this._Game_Manager_Data, this.tooltip_manager.update_tooltip_data );
 		if(this.props.assets_loaded){
 			this.iterate_render_loop();
@@ -289,7 +167,6 @@ export class Game_View extends React.Component <Game_View_Props, {pos: Point2D}>
 				ref={(node) => {this.tooltip_manager = node!;}}
 			/>
 			<Game_Status_Display
-				ref={(node) => {this.gsd = node!;}}
 				_Game_Manager_Data={this._Game_Manager_Data}
 				_Asset_Manager={this.props._Asset_Manager}
 			/>
