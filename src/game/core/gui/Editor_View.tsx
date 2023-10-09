@@ -11,6 +11,7 @@ import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Mana
 import "./Primary_View.scss";
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
+import { useInterval } from "../engine/Utils";
 
 
 interface Editor_View_Props {
@@ -24,26 +25,6 @@ interface Editor_View_Props {
 
 
 
-function useInterval(callback: Function, delay: number) {
-	//https://overreacted.io/making-setinterval-declarative-with-react-hooks/
-	const savedCallback = useRef<Function>( ()=>{} );
-  
-	// Remember the latest callback.
-	useEffect(() => {
-	  savedCallback.current = callback;
-	}, [callback]);
-  
-	// Set up the interval.
-	useEffect(() => {
-	  function tick() {
-		savedCallback.current();
-	  }
-	  if (delay !== null) {
-		let id = setInterval(tick, delay);
-		return () => clearInterval(id);
-	  }
-	}, [delay]);
-  }
 
 
 export const Editor_View = (props: Editor_View_Props) => {
@@ -94,7 +75,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 	/*----------------------- cursor stuff -----------------------*/
 	const draw_cursor = () => {
 		//const pos = this._Tilemap_Manager.convert_tile_coords_to_pixel_coords(0,4); 
-		console.log(cursor_pos);
+		//console.log(cursor_pos);
 
 		Asset_Manager_ƒ.draw_image_for_asset_name({
 			_AM:						props._Asset_Manager,

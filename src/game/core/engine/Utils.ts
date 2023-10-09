@@ -1,6 +1,7 @@
 import _ from "lodash";
 import Prando from 'prando';
 import { Point2D, Rectangle } from '../../interfaces';
+import { useEffect, useRef } from "react";
 
 
 /*----------------------- utility functions -----------------------*/
@@ -76,3 +77,24 @@ export const convert_bitmask_to_array_of_individual_bit_values = (byteVal: any) 
 
 	return res;
 }
+
+export const useInterval = (callback: Function, delay: number) => {
+	//https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+	const savedCallback = useRef<Function>( ()=>{} );
+  
+	// Remember the latest callback.
+	useEffect(() => {
+	  savedCallback.current = callback;
+	}, [callback]);
+  
+	// Set up the interval.
+	useEffect(() => {
+	  function tick() {
+		savedCallback.current();
+	  }
+	  if (delay !== null) {
+		let id = setInterval(tick, delay);
+		return () => clearInterval(id);
+	  }
+	}, [delay]);
+  }

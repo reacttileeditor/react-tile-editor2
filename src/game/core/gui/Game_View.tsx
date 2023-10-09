@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumber, last, map, reduce, size, uniq } from "lodash";
 
@@ -59,7 +59,7 @@ import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game
 import { Game_Status_Display } from "./Game_Status_Display";
 
 
-class Tooltip_Manager extends React.Component<{},TooltipData> {
+/*class Tooltip_Manager extends React.Component<{},TooltipData> {
 	
 	constructor (props: {}) {
 		super( props );
@@ -78,36 +78,53 @@ class Tooltip_Manager extends React.Component<{},TooltipData> {
 			/>
 		</div>
 	)
-}
+}*/
+
+export const Tooltip_Manager = (props: TooltipData) => (
+	<div className="map-tooltip-anchor">
+		<Map_Tooltip
+			{...props}
+		/>
+	</div>
+)
 
 
-
-export class Game_View extends React.Component <Game_View_Props, {pos: Point2D}> {
-	render_loop_interval: number|undefined;
-	_Game_Manager_Data: Game_Manager_Data;
-	awaiting_render: boolean;
-	tooltip_manager!: Tooltip_Manager;
+export const Game_View = (props: Game_View_Props) => {
+	//tooltip_manager!: Tooltip_Manager;
 	
+	const [tooltip_pos, set_tooltip_pos] = useState<Point2D>({x:0,y:0});
+	const [awaiting_render, set_awaiting_render] = useState<boolean>(false);
 
-	constructor( props: Game_View_Props ) {
-		super( props );
+	const [tooltip_data, set_tooltip_data] = useState<TooltipData>({
+		pos: {x:0,y:0},
+		tile_name: '',
+		tile_cost: '',
+	})
 
-		this._Game_Manager_Data = New_Game_Manager({
-			_Blit_Manager: this.props._Blit_Manager,
-			_Asset_Manager: this.props._Asset_Manager,
-			_TM: this.props._Tilemap_Manager,
-			get_GM_instance: ()=>( this._Game_Manager_Data ),
-		});
-		this.awaiting_render = false;
-		this.state = { pos: {x:0,y:0}};
-	}
+	const _Game_Manager_Data = New_Game_Manager({
+		_Blit_Manager: props._Blit_Manager,
+		_Asset_Manager: props._Asset_Manager,
+		_TM: props._Tilemap_Manager,
+		get_GM_instance: ()=>( _Game_Manager_Data ),
+	});
 
+	let render_loop_timeout = 0;
+
+	useEffect(() => {
+		console.log('initialize game view')
+		//Game_Manager_ƒ.set_tooltip_update_function(_Game_Manager_Data, set_tooltip_data );
+		render_canvas();
+	});
+
+	useEffect(() => {
+		return () => { window.clearInterval(render_loop_timeout) };
+	});
 
 
 /*----------------------- core drawing routines -----------------------*/
-	iterate_render_loop = () => {
-		this.awaiting_render = true;
-		this.render_loop_interval = window.setTimeout( this.render_canvas, 16.666 );
+	const iterate_render_loop = () => {
+		set_awaiting_render(true);
+		render_loop_timeout = window.setTimeout( render_canvas, 16.666 );
 
 		/*
 			Whether this is an appropriate solution gets into some deep and hard questions about React that I'm not prepared to answer; in a lot of other paradigms, we'd seize full control over the event loop.  Here, we are, instead, opting to "sleep" until our setTimeout fires.
@@ -116,61 +133,57 @@ export class Game_View extends React.Component <Game_View_Props, {pos: Point2D}>
 		*/
 	}
 
-	set_tooltip_data = (pos: Point2D) => {
-		this.setState({ pos: pos});
-	}
 
-	render_canvas = () => {
-		if(this.awaiting_render){
-			Tilemap_Manager_ƒ.do_one_frame_of_rendering(this.props._Tilemap_Manager);
-			Game_Manager_ƒ.do_one_frame_of_rendering_and_processing(this._Game_Manager_Data);
-			this.awaiting_render = false;
-			this.iterate_render_loop();
+	const render_canvas = () => {
+		console.log('render game')
+		if(awaiting_render){
+			Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager);
+			Game_Manager_ƒ.do_one_frame_of_rendering_and_processing(_Game_Manager_Data);
+			set_awaiting_render(false);
+			iterate_render_loop();
 		} else {
-			this.iterate_render_loop();
+			iterate_render_loop();
 		}
 	}
 
-	handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
-		Game_Manager_ƒ.set_cursor_pos(this._Game_Manager_Data, pos);
+	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
+		Game_Manager_ƒ.set_cursor_pos(_Game_Manager_Data, pos);
 	}
 
-	componentDidMount() {
-		//Game_Manager_ƒ.set_update_function(this._Game_Manager_Data, this.gsd.update_game_state_for_ui );
-		Game_Manager_ƒ.set_tooltip_update_function(this._Game_Manager_Data, this.tooltip_manager.update_tooltip_data );
-		if(this.props.assets_loaded){
-			this.iterate_render_loop();
-		}
-	}
+	// componentDidMount() {
+	// 	//Game_Manager_ƒ.set_update_function(this._Game_Manager_Data, this.gsd.update_game_state_for_ui );
+	// 	Game_Manager_ƒ.set_tooltip_update_function(this._Game_Manager_Data, this.tooltip_manager.update_tooltip_data );
+	// 	if(this.props.assets_loaded){
+	// 		this.iterate_render_loop();
+	// 	}
+	// }
 
-	componentDidUpdate() {
-		if(this.props.assets_loaded){
-			this.iterate_render_loop();
-		}
-	}
+	// componentDidUpdate() {
+	// 	if(this.props.assets_loaded){
+	// 		this.iterate_render_loop();
+	// 	}
+	// }
 	
-	componentWillUnmount(){
-		window.clearInterval(this.render_loop_interval);
-		this.render_loop_interval = undefined;
-	}
+	// componentWillUnmount(){
+	// 	window.clearInterval(this.render_loop_interval);
+	// 	this.render_loop_interval = undefined;
+	// }
 
-	render() {
-		return <div className="game_node">
-			<Canvas_View
-				{...this.props}
-				dimensions={this.props.dimensions}
-				handle_canvas_click={ (mouse_pos: Point2D, buttons_pressed: MouseButtonState) => { Game_Manager_ƒ.handle_click(this._Game_Manager_Data, mouse_pos, buttons_pressed) } }  //TODO  this is broken!
-				handle_canvas_keys_down={ ()=>{ /*console.log('game_keydown')*/} }
-				handle_canvas_mouse_move={this.handle_canvas_mouse_move}
-			/>
-			<Tooltip_Manager
-				ref={(node) => {this.tooltip_manager = node!;}}
-			/>
-			<Game_Status_Display
-				_Game_Manager_Data={this._Game_Manager_Data}
-				_Asset_Manager={this.props._Asset_Manager}
-			/>
-		</div>;
-	}
+	return <div className="game_node">
+		<Canvas_View
+			{...props}
+			dimensions={props.dimensions}
+			handle_canvas_click={ (mouse_pos: Point2D, buttons_pressed: MouseButtonState) => { Game_Manager_ƒ.handle_click(_Game_Manager_Data, mouse_pos, buttons_pressed) } }  //TODO  this is broken!
+			handle_canvas_keys_down={ ()=>{ /*console.log('game_keydown')*/} }
+			handle_canvas_mouse_move={handle_canvas_mouse_move}
+		/>
+		<Tooltip_Manager
+			{...tooltip_data} //ref={(node) => {this.tooltip_manager = node!;}}
+		/>
+		<Game_Status_Display
+			_Game_Manager_Data={_Game_Manager_Data}
+			_Asset_Manager={props._Asset_Manager}
+		/>
+	</div>;
 
 }
