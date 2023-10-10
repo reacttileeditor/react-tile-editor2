@@ -334,17 +334,19 @@ export const Game_Manager_ƒ = {
 		}
 	},
 
+	get_tooltip_data: (me: Game_Manager_Data): TooltipData => ({
+		pos: me.cursor_pos,
+		tile_name: Tilemap_Manager_ƒ.get_tile_name_for_pos(
+			me._TM,
+			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( me._TM, me.cursor_pos ),
+			'terrain',
+		),
+		tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me)}`
+	}),
+
 	do_one_frame_of_rendering_and_processing: (me: Game_Manager_Data) => {
 		me.update_game_state_for_ui(me.game_state);
-		me.update_tooltip_state( {
-			pos: me.cursor_pos,
-			tile_name: Tilemap_Manager_ƒ.get_tile_name_for_pos(
-				me._TM,
-				Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( me._TM, me.cursor_pos ),
-				'terrain',
-			),
-			tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me)}`
-		});
+		me.update_tooltip_state( Game_Manager_ƒ.get_tooltip_data(me));
 		
 		if(me.animation_state.is_animating_live_game){
 			Game_Manager_ƒ.do_live_game_processing(me);

@@ -59,47 +59,28 @@ import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game
 import { Game_Status_Display } from "./Game_Status_Display";
 
 
-/*class Tooltip_Manager extends React.Component<{},TooltipData> {
-	
-	constructor (props: {}) {
-		super( props );
+export const Tooltip_Manager = (props: {_Game_Manager_Data: Game_Manager_Data, render_ticktock: boolean}) => {
 
-		this.state = { pos: {x:0,y:0}, tile_name: '', tile_cost: '' };
-	}
 
-	update_tooltip_data = (p: TooltipData) => {
-		this.setState(p);
-	}
+	useEffect(() => {
+		console.log('tooltip');
+		//Game_Manager_ƒ.set_tooltip_update_function(_Game_Manager_Data, set_tooltip_data );
+	}, [props.render_ticktock]);
 
-	render = () => (
-		<div className="map-tooltip-anchor">
-			<Map_Tooltip
-				{...this.state}
-			/>
-		</div>
-	)
-}*/
 
-export const Tooltip_Manager = (props: TooltipData) => (
-	<div className="map-tooltip-anchor">
+	return <div className={`map-tooltip-anchor ${props.render_ticktock}`}>
 		<Map_Tooltip
-			{...props}
+			{...Game_Manager_ƒ.get_tooltip_data(props._Game_Manager_Data)}
 		/>
 	</div>
-)
+}
 
 
 export const Game_View = (props: Game_View_Props) => {
 	//tooltip_manager!: Tooltip_Manager;
 	
-	const [tooltip_pos, set_tooltip_pos] = useState<Point2D>({x:0,y:0});
-	const [awaiting_render, set_awaiting_render] = useState<boolean>(false);
+	const [render_ticktock, set_render_ticktock] = useState<boolean>(false);
 
-	const [tooltip_data, set_tooltip_data] = useState<TooltipData>({
-		pos: {x:0,y:0},
-		tile_name: '',
-		tile_cost: '',
-	})
 
 	const _Game_Manager_Data = New_Game_Manager({
 		_Blit_Manager: props._Blit_Manager,
@@ -110,21 +91,22 @@ export const Game_View = (props: Game_View_Props) => {
 
 	let render_loop_timeout = 0;
 
-	useEffect(() => {
-		console.log('initialize game view')
-		//Game_Manager_ƒ.set_tooltip_update_function(_Game_Manager_Data, set_tooltip_data );
-		render_canvas();
-	});
 
 	useEffect(() => {
-		return () => { window.clearInterval(render_loop_timeout) };
-	});
+		console.log('game view render')
+		//Game_Manager_ƒ.set_tooltip_update_function(_Game_Manager_Data, set_tooltip_data );
+		render_canvas();
+	}, [render_ticktock]);
+
+	useEffect(() => {
+		return () => { console.log('cleanup'); window.clearInterval(render_loop_timeout) };
+	}, []);
 
 
 /*----------------------- core drawing routines -----------------------*/
 	const iterate_render_loop = () => {
-		set_awaiting_render(true);
-		render_loop_timeout = window.setTimeout( render_canvas, 16.666 );
+		render_loop_timeout = window.setTimeout( () => {set_render_ticktock( !render_ticktock )}, 16.666 );
+		
 
 		/*
 			Whether this is an appropriate solution gets into some deep and hard questions about React that I'm not prepared to answer; in a lot of other paradigms, we'd seize full control over the event loop.  Here, we are, instead, opting to "sleep" until our setTimeout fires.
@@ -135,39 +117,16 @@ export const Game_View = (props: Game_View_Props) => {
 
 
 	const render_canvas = () => {
-		console.log('render game')
-		if(awaiting_render){
-			Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager);
-			Game_Manager_ƒ.do_one_frame_of_rendering_and_processing(_Game_Manager_Data);
-			set_awaiting_render(false);
-			iterate_render_loop();
-		} else {
-			iterate_render_loop();
-		}
+		Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager);
+		Game_Manager_ƒ.do_one_frame_of_rendering_and_processing(_Game_Manager_Data);
+		
+		iterate_render_loop();
 	}
 
 	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
 		Game_Manager_ƒ.set_cursor_pos(_Game_Manager_Data, pos);
 	}
 
-	// componentDidMount() {
-	// 	//Game_Manager_ƒ.set_update_function(this._Game_Manager_Data, this.gsd.update_game_state_for_ui );
-	// 	Game_Manager_ƒ.set_tooltip_update_function(this._Game_Manager_Data, this.tooltip_manager.update_tooltip_data );
-	// 	if(this.props.assets_loaded){
-	// 		this.iterate_render_loop();
-	// 	}
-	// }
-
-	// componentDidUpdate() {
-	// 	if(this.props.assets_loaded){
-	// 		this.iterate_render_loop();
-	// 	}
-	// }
-	
-	// componentWillUnmount(){
-	// 	window.clearInterval(this.render_loop_interval);
-	// 	this.render_loop_interval = undefined;
-	// }
 
 	return <div className="game_node">
 		<Canvas_View
@@ -178,7 +137,8 @@ export const Game_View = (props: Game_View_Props) => {
 			handle_canvas_mouse_move={handle_canvas_mouse_move}
 		/>
 		<Tooltip_Manager
-			{...tooltip_data} //ref={(node) => {this.tooltip_manager = node!;}}
+			_Game_Manager_Data={_Game_Manager_Data}
+			render_ticktock={render_ticktock}
 		/>
 		<Game_Status_Display
 			_Game_Manager_Data={_Game_Manager_Data}
