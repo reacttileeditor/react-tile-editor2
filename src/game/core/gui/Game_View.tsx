@@ -90,8 +90,6 @@ export const Game_View = (props: Game_View_Props) => {
 
 	const init_Game_Manager_Data = 
 		New_Game_Manager({
-			_Blit_Manager: props._Blit_Manager,
-			_Asset_Manager: props._Asset_Manager,
 			_TM: props._Tilemap_Manager,
 			get_GM_instance: ()=>( _Game_Manager_Data ),
 		});
@@ -109,7 +107,7 @@ export const Game_View = (props: Game_View_Props) => {
 
 	useEffect(() => {
 		console.log('game view render', _Game_Manager_Data)
-		Game_Manager_ƒ.do_one_frame_of_rendering(_Game_Manager_Data);
+		Game_Manager_ƒ.do_one_frame_of_rendering(_Game_Manager_Data, props._Asset_Manager(), props._Blit_Manager());
 	}, [_Game_Manager_Data]);
 
 	useEffect(() => {
@@ -132,7 +130,7 @@ export const Game_View = (props: Game_View_Props) => {
 
 	const render_canvas = () => {
 		Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager());
-		set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(_Game_Manager_Data) );
+		set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(_Game_Manager_Data, props._Blit_Manager()) );
 		
 		iterate_render_loop();
 	}
@@ -158,7 +156,8 @@ export const Game_View = (props: Game_View_Props) => {
 		/>
 		<Game_Status_Display
 			_Game_Manager_Data={_Game_Manager_Data}
-			_Asset_Manager={props._Asset_Manager()}
+			_Asset_Manager={props._Asset_Manager}
+			_Blit_Manager={props._Blit_Manager}
 		/>
 	</div>;
 

@@ -68,8 +68,8 @@ type ObjectiveTypes = 'extermination' | 'decapitation';
 
 
 export type Game_Manager_Data = {
-	_Asset_Manager: () => Asset_Manager_Data,
-	_Blit_Manager: () => Blit_Manager_Data,
+//	_Asset_Manager: () => Asset_Manager_Data,
+//	_Blit_Manager: () => Blit_Manager_Data,
 	_TM: () => Tilemap_Manager_Data,
 	animation_state: AnimationState;
 	game_state: Game_State;
@@ -80,16 +80,16 @@ export type Game_Manager_Data = {
 
 
 export const New_Game_Manager = (p: {
-	_Asset_Manager: () => Asset_Manager_Data,
-	_Blit_Manager: () => Blit_Manager_Data,
+	// _Asset_Manager: () => Asset_Manager_Data,
+	// _Blit_Manager: () => Blit_Manager_Data,
 	_TM: () => Tilemap_Manager_Data,
 	get_GM_instance: ()=> Game_Manager_Data,
 }): Game_Manager_Data => {
 
 
 	const game_manager: Game_Manager_Data = {
-		_Asset_Manager: p._Asset_Manager,
-		_Blit_Manager: p._Blit_Manager,
+		// _Asset_Manager: p._Asset_Manager,
+		// _Blit_Manager: p._Blit_Manager,
 		_TM: p._TM,
 		update_game_state_for_ui: ()=>{},
 		update_tooltip_state: ()=>{},
@@ -233,7 +233,7 @@ export const Game_Manager_ƒ = {
 
 /*----------------------- turn management -----------------------*/
 
-	advance_turn_start: (me: Game_Manager_Data) => {
+	advance_turn_start: (me: Game_Manager_Data, _BM: Blit_Manager_Data) => {
 		console.log(`beginning turn #${me.game_state.current_turn}`)
 		me.game_state.current_frame_state = cloneDeep(Game_Manager_ƒ.get_current_turn_state(me))
 		Tilemap_Manager_ƒ.clear_tile_map(me._TM(), 'ui');
@@ -243,14 +243,14 @@ export const Game_Manager_ƒ = {
 	
 		me.animation_state = {
 			is_animating_live_game: true,
-			time_live_game_anim_started__in_ticks: me._Blit_Manager().time_tracker.current_tick,
+			time_live_game_anim_started__in_ticks: _BM.time_tracker.current_tick,
 			time_paused_game_anim_started__in_ticks: me.animation_state.time_paused_game_anim_started__in_ticks,
 		};
 	
 		me.game_state.objective_text = Game_Manager_ƒ.write_full_objective_text(me, Game_Manager_ƒ.get_game_state(me).objective_type, Game_Manager_ƒ.get_game_state(me));
 	},
 
-	advance_turn_finish: (me: Game_Manager_Data) => {
+	advance_turn_finish: (me: Game_Manager_Data, _BM: Blit_Manager_Data) => {
 		/*
 			All behavior is handled inside creature and custom object processing.  Impressing the current state of this into the array of turns is mostly being done as a snapshot.
 		*/
@@ -272,7 +272,7 @@ export const Game_Manager_ƒ = {
 		me.animation_state = {
 			is_animating_live_game: false,
 			time_live_game_anim_started__in_ticks: me.animation_state.time_live_game_anim_started__in_ticks,
-			time_paused_game_anim_started__in_ticks: me._Blit_Manager().time_tracker.current_tick,
+			time_paused_game_anim_started__in_ticks: _BM.time_tracker.current_tick,
 		};
 
 		me.game_state.objective_text = Game_Manager_ƒ.write_full_objective_text(me, Game_Manager_ƒ.get_game_state(me).objective_type, Game_Manager_ƒ.get_game_state(me));
@@ -284,11 +284,11 @@ export const Game_Manager_ƒ = {
 
 /*----------------------- animation management -----------------------*/
 
-	get_time_offset: (me: Game_Manager_Data) => {
+	get_time_offset: (me: Game_Manager_Data, _BM: Blit_Manager_Data) => {
 		if(me.animation_state.is_animating_live_game){
-			return ticks_to_ms(me._Blit_Manager().time_tracker.current_tick - me.animation_state.time_live_game_anim_started__in_ticks)
+			return ticks_to_ms(_BM.time_tracker.current_tick - me.animation_state.time_live_game_anim_started__in_ticks)
 		} else {
-			return ticks_to_ms(me._Blit_Manager().time_tracker.current_tick - me.animation_state.time_paused_game_anim_started__in_ticks)
+			return ticks_to_ms(_BM.time_tracker.current_tick - me.animation_state.time_paused_game_anim_started__in_ticks)
 		}
 	},
 	
@@ -344,33 +344,33 @@ export const Game_Manager_ƒ = {
 		tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me)}`
 	}),
 
-	do_one_frame_of_processing: (me: Game_Manager_Data): Game_Manager_Data => {
+	do_one_frame_of_processing: (me: Game_Manager_Data, _BM: Blit_Manager_Data): Game_Manager_Data => {
 		//me.update_game_state_for_ui(me.game_state);
 		//me.update_tooltip_state( Game_Manager_ƒ.get_tooltip_data(me));
 		
 
 		return ƒ.if(me.animation_state.is_animating_live_game,
-			Game_Manager_ƒ.do_live_game_processing(me),
-			Game_Manager_ƒ.do_paused_game_processing(me)
+			Game_Manager_ƒ.do_live_game_processing(me, _BM),
+			Game_Manager_ƒ.do_paused_game_processing(me, _BM)
 		);
 	},
 
-	do_one_frame_of_rendering: (me: Game_Manager_Data): void => {
+	do_one_frame_of_rendering: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): void => {
 		console.log('erendr')
 		if(me.animation_state.is_animating_live_game){
-			Game_Manager_ƒ.do_live_game_rendering(me);
+			Game_Manager_ƒ.do_live_game_rendering(me, _BM, _AM);
 		} else {
-			Game_Manager_ƒ.do_paused_game_rendering(me);
+			Game_Manager_ƒ.do_paused_game_rendering(me, _AM, _BM);
 		}
 	},
 
-	draw_cursor: (me: Game_Manager_Data) => {
+	draw_cursor: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
 		//const pos = this._TM.convert_tile_coords_to_pixel_coords(0,4); 
 
 		Asset_Manager_ƒ.draw_image_for_asset_name({
-			_AM:						me._Asset_Manager(),
+			_AM:						_AM,
 			asset_name:					'cursor',
-			_BM:						me._Blit_Manager(),
+			_BM:						_BM,
 			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
 				me._TM(),
 				Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(
@@ -388,7 +388,7 @@ export const Game_Manager_ƒ = {
 		})
 	},
 
-	do_live_game_processing: (me: Game_Manager_Data): Game_Manager_Data => {
+	do_live_game_processing: (me: Game_Manager_Data, _BM: Blit_Manager_Data): Game_Manager_Data => {
 		/*
 			Process all of the existing creatures.
 			
@@ -396,7 +396,7 @@ export const Game_Manager_ƒ = {
 		*/
 
 		if( Game_Manager_ƒ.is_turn_finished(me) ){
-			Game_Manager_ƒ.advance_turn_finish(me);
+			Game_Manager_ƒ.advance_turn_finish(me, _BM);
 
 			return me;
 		} else {		
@@ -404,7 +404,7 @@ export const Game_Manager_ƒ = {
 			let master_change_list: Array<ChangeInstance> = [];
 
 			map( me.game_state.current_frame_state.creature_list, (val,idx) => {
-				const processed_results = Creature_ƒ.process_single_frame(val, me._TM(), Game_Manager_ƒ.get_time_offset(me));
+				const processed_results = Creature_ƒ.process_single_frame(val, me._TM(), Game_Manager_ƒ.get_time_offset(me, _BM));
 
 				map(processed_results.spawnees, (val)=>{ spawnees.push(val) });
 				map(processed_results.change_list, (val)=>{ master_change_list.push(val) });
@@ -417,7 +417,7 @@ export const Game_Manager_ƒ = {
 			*/
 			let all_objects = concat( cloneDeep(me.game_state.custom_object_list), cloneDeep(spawnees));
 			let all_objects_processed = map( all_objects, (val,idx) => {
-				return (Custom_Object_ƒ.process_single_frame(val, me._TM(), Game_Manager_ƒ.get_time_offset(me)))
+				return (Custom_Object_ƒ.process_single_frame(val, me._TM(), Game_Manager_ƒ.get_time_offset(me, _BM)))
 			});
 
 			let all_objects_processed_and_culled = filter( all_objects_processed, (val)=>(
@@ -457,14 +457,14 @@ export const Game_Manager_ƒ = {
 		}
 	},
 
-	do_paused_game_processing: (me: Game_Manager_Data): Game_Manager_Data => {
+	do_paused_game_processing: (me: Game_Manager_Data, _BM: Blit_Manager_Data): Game_Manager_Data => {
 		/*
 			This is considerably simpler; we just run existing custom objects through their processing.
 		*/
 
 		let all_objects = cloneDeep(me.game_state.custom_object_list);
 		let all_objects_processed = map( all_objects, (val,idx) => {
-			return (Custom_Object_ƒ.process_single_frame(val, me._TM(), Game_Manager_ƒ.get_time_offset(me)))
+			return (Custom_Object_ƒ.process_single_frame(val, me._TM(), Game_Manager_ƒ.get_time_offset(me, _BM)))
 		});
 
 		let all_objects_processed_and_culled = filter( all_objects_processed, (val)=>(
@@ -482,44 +482,44 @@ export const Game_Manager_ƒ = {
 	},
 
 
-	do_live_game_rendering: (me: Game_Manager_Data) => {
+	do_live_game_rendering: (me: Game_Manager_Data, _BM: Blit_Manager_Data, _AM: Asset_Manager_Data) => {
 		/*
 			This is for when the game is "live" and actually progressing through time.  The player's set up their moves, and hit "go".
 		*/
 
 		map( me.game_state.current_frame_state.creature_list, (val,idx) => {
 			Asset_Manager_ƒ.draw_image_for_asset_name({
-				_AM:						me._Asset_Manager(),
-				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, me._TM(), Game_Manager_ƒ.get_time_offset(me)),
-				_BM:						me._Blit_Manager(),
+				_AM:						_AM,
+				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, me._TM(), Game_Manager_ƒ.get_time_offset(me, _BM)),
+				_BM:						_BM,
 				pos:						val.pixel_pos, 
 				zorder:						zorder.rocks,
-				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
+				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
 				rotate:						val.rotate,
-				brightness:					ƒ.if( (Game_Manager_ƒ.get_time_offset(me) - val.last_changed_hitpoints) < 80, 3.0, 1.0),
+				brightness:					ƒ.if( (Game_Manager_ƒ.get_time_offset(me, _BM) - val.last_changed_hitpoints) < 80, 3.0, 1.0),
 				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
 				vertically_flipped:			false,
 			});
 
 			Asset_Manager_ƒ.draw_hitpoints({
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
-				_BM:						me._Blit_Manager(),
+				_BM:						_BM,
 				pos:						val.pixel_pos,
 				zorder:						zorder.rocks,
-				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
+				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
 			});
 		})
 
 		map( me.game_state.custom_object_list, (val,idx) => {
 			Asset_Manager_ƒ.draw_image_for_asset_name({
-				_AM:						me._Asset_Manager(),
+				_AM:						_AM,
 				asset_name:					Custom_Object_ƒ.yield_image(val),
-				_BM:						me._Blit_Manager(),
+				_BM:						_BM,
 				pos:						val.pixel_pos,
 				zorder:						Custom_Object_ƒ.yield_zorder(val),
-				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
+				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
 				rotate:						val.rotate,
 				brightness:					1.0,
@@ -529,10 +529,10 @@ export const Game_Manager_ƒ = {
 
 			Asset_Manager_ƒ.draw_text({
 				text:						Custom_Object_ƒ.yield_text(val),
-				_BM:						me._Blit_Manager(),
+				_BM:						_BM,
 				pos:						val.pixel_pos,
 				zorder:						Custom_Object_ƒ.yield_zorder(val),
-				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
+				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
 				rotate:						0,
 				brightness:					1.0,
@@ -540,17 +540,17 @@ export const Game_Manager_ƒ = {
 				vertically_flipped:			false,
 			})
 		})			
-		Game_Manager_ƒ.draw_cursor(me);
+		Game_Manager_ƒ.draw_cursor(me, _AM, _BM);
 	},
 
-	draw_path_for_unit: (me: Game_Manager_Data, creature: Creature_Data ) => {
+	draw_path_for_unit: (me: Game_Manager_Data, creature: Creature_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data ) => {
 		Asset_Manager_ƒ.draw_image_for_asset_name ({
-			_AM:						me._Asset_Manager(),
+			_AM:						_AM,
 			asset_name:					'cursor_green',
-			_BM:						me._Blit_Manager(),
+			_BM:						_BM,
 			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM(), creature.tile_pos),
 			zorder:						zorder.map_cursor,
-			current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
+			current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 			opacity:					1.0,
 			rotate:						0,
 			brightness:					1.0,
@@ -577,18 +577,18 @@ export const Game_Manager_ƒ = {
 	},
 
 
-	do_paused_game_rendering: (me: Game_Manager_Data) => {
+	do_paused_game_rendering: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
 		/*
 			This particularly means "paused at end of turn".
 		*/
 		map( Game_Manager_ƒ.get_current_turn_state(me).creature_list, (val,idx) => {
 			Asset_Manager_ƒ.draw_image_for_asset_name({
-				_AM:						me._Asset_Manager(),
-				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, me._TM(), Game_Manager_ƒ.get_time_offset(me)),
-				_BM:						me._Blit_Manager(),
+				_AM:						_AM,
+				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, me._TM(), Game_Manager_ƒ.get_time_offset(me, _BM)),
+				_BM:						_BM,
 				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM(), val.tile_pos),
 				zorder:						zorder.rocks,
-				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
+				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
 				rotate:						val.rotate,
 				brightness:					1.0,
@@ -598,26 +598,26 @@ export const Game_Manager_ƒ = {
 
 			Asset_Manager_ƒ.draw_hitpoints({
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
-				_BM:						me._Blit_Manager(),
+				_BM:						_BM,
 				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM(), val.tile_pos),
 				zorder:						zorder.rocks,
-				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
+				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
 			})			
 	
 			if(me.game_state.selected_object_index == idx){
-				Game_Manager_ƒ.draw_path_for_unit(me,val)
+				Game_Manager_ƒ.draw_path_for_unit(me,val, _AM, _BM)
 			}
 
 
 			map( me.game_state.custom_object_list, (val,idx) => {
 				Asset_Manager_ƒ.draw_image_for_asset_name({
-					_AM:						me._Asset_Manager(),
+					_AM:						_AM,
 					asset_name:					Custom_Object_ƒ.yield_image(val),
-					_BM:						me._Blit_Manager(),
+					_BM:						_BM,
 					pos:						val.pixel_pos,
 					zorder:						Custom_Object_ƒ.yield_zorder(val),
-					current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
+					current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 					opacity:					1.0,
 					rotate:						val.rotate,
 					brightness:					1.0,
@@ -627,10 +627,10 @@ export const Game_Manager_ƒ = {
 	
 				Asset_Manager_ƒ.draw_text({
 					text:						Custom_Object_ƒ.yield_text(val),
-					_BM:						me._Blit_Manager(),
+					_BM:						_BM,
 					pos:						val.pixel_pos,
 					zorder:						Custom_Object_ƒ.yield_zorder(val),
-					current_milliseconds:		Game_Manager_ƒ.get_time_offset(me),
+					current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 					opacity:					1.0,
 					rotate:						val.rotate,
 					brightness:					1.0,
@@ -639,7 +639,7 @@ export const Game_Manager_ƒ = {
 				})
 			})	
 		})
-		Game_Manager_ƒ.draw_cursor(me);
+		Game_Manager_ƒ.draw_cursor(me, _AM, _BM);
 
 	},
 

@@ -36,7 +36,8 @@ export type TooltipData = {
 
 interface Game_Status_Display_Props {
 	_Game_Manager_Data: Game_Manager_Data,
-	_Asset_Manager: Asset_Manager_Data;
+	_Asset_Manager: () => Asset_Manager_Data,
+	_Blit_Manager: () => Blit_Manager_Data,
 }
 
 
@@ -65,7 +66,7 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 			className="game_status_display"
 		>
 			<button
-				onClick={(evt)=>{Game_Manager_ƒ.advance_turn_start(props._Game_Manager_Data)}}
+				onClick={(evt)=>{Game_Manager_ƒ.advance_turn_start(props._Game_Manager_Data, props._Blit_Manager())}}
 			>
 				Next Turn
 			</button>
@@ -109,7 +110,7 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 					/>
 
 					<Tile_Palette_Element
-						asset_manager={props._Asset_Manager}
+						asset_manager={props._Asset_Manager()}
 						tile_name={''}
 						asset_name={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_creature_image()}`}
 						highlight={false}
