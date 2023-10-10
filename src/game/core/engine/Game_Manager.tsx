@@ -344,15 +344,22 @@ export const Game_Manager_ƒ = {
 		tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me)}`
 	}),
 
-	do_one_frame_of_rendering_and_processing: (me: Game_Manager_Data) => {
-		me.update_game_state_for_ui(me.game_state);
-		me.update_tooltip_state( Game_Manager_ƒ.get_tooltip_data(me));
+	do_one_frame_of_processing: (me: Game_Manager_Data): Game_Manager_Data => {
+		//me.update_game_state_for_ui(me.game_state);
+		//me.update_tooltip_state( Game_Manager_ƒ.get_tooltip_data(me));
 		
+
+		return ƒ.if(me.animation_state.is_animating_live_game,
+			Game_Manager_ƒ.do_live_game_processing(me),
+			Game_Manager_ƒ.do_paused_game_processing(me)
+		);
+	},
+
+	do_one_frame_of_rendering: (me: Game_Manager_Data): void => {
+		console.log('erendr')
 		if(me.animation_state.is_animating_live_game){
-			Game_Manager_ƒ.do_live_game_processing(me);
 			Game_Manager_ƒ.do_live_game_rendering(me);
 		} else {
-			Game_Manager_ƒ.do_paused_game_processing(me);
 			Game_Manager_ƒ.do_paused_game_rendering(me);
 		}
 	},
@@ -381,7 +388,7 @@ export const Game_Manager_ƒ = {
 		})
 	},
 
-	do_live_game_processing: (me: Game_Manager_Data) => {
+	do_live_game_processing: (me: Game_Manager_Data): Game_Manager_Data => {
 		/*
 			Process all of the existing creatures.
 			
@@ -390,6 +397,8 @@ export const Game_Manager_ƒ = {
 
 		if( Game_Manager_ƒ.is_turn_finished(me) ){
 			Game_Manager_ƒ.advance_turn_finish(me);
+
+			return me;
 		} else {		
 			let spawnees: Array<Custom_Object_Data> = [];
 			let master_change_list: Array<ChangeInstance> = [];
@@ -429,17 +438,26 @@ export const Game_Manager_ƒ = {
 			) );
 			
 			
-
-
-			me.game_state.current_frame_state = {
-				creature_list: all_creatures_processed_and_culled,
+			return {
+				...cloneDeep(me),
+				game_state: {
+					...cloneDeep(me.game_state),
+					current_frame_state: {
+						creature_list: all_creatures_processed_and_culled,
+					},
+					custom_object_list: all_objects_processed_and_culled,
+				}
 			}
+			
+			// me.game_state.current_frame_state = {
+			// 	creature_list: all_creatures_processed_and_culled,
+			// }
 
-			me.game_state.custom_object_list = all_objects_processed_and_culled
+			// me.game_state.custom_object_list = all_objects_processed_and_culled
 		}
 	},
 
-	do_paused_game_processing: (me: Game_Manager_Data) => {
+	do_paused_game_processing: (me: Game_Manager_Data): Game_Manager_Data => {
 		/*
 			This is considerably simpler; we just run existing custom objects through their processing.
 		*/
@@ -454,7 +472,13 @@ export const Game_Manager_ƒ = {
 		) );
 
 
-		me.game_state.custom_object_list = all_objects_processed_and_culled
+		return {
+			...cloneDeep(me),
+			game_state: {
+				...cloneDeep(me.game_state),
+				custom_object_list: all_objects_processed_and_culled,
+			}
+		}
 	},
 
 

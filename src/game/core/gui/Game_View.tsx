@@ -61,9 +61,17 @@ import { Game_Status_Display } from "./Game_Status_Display";
 
 export const Tooltip_Manager = (props: {_Game_Manager_Data: Game_Manager_Data, render_ticktock: boolean}) => {
 
+	const [tooltip_data, set_tooltip_data] = useState<TooltipData>({
+		pos: {x:0,y:0},
+		tile_name: '',
+		tile_cost: '',
+	});
 
 	useEffect(() => {
-		console.log('tooltip');
+		console.log('tooltip', Game_Manager_ƒ.get_tooltip_data(props._Game_Manager_Data));
+
+		//props._Game_Manager_Data.get_GM_instance()
+
 		//Game_Manager_ƒ.set_tooltip_update_function(_Game_Manager_Data, set_tooltip_data );
 	}, [props.render_ticktock]);
 
@@ -77,26 +85,32 @@ export const Tooltip_Manager = (props: {_Game_Manager_Data: Game_Manager_Data, r
 
 
 export const Game_View = (props: Game_View_Props) => {
-	//tooltip_manager!: Tooltip_Manager;
-	
 	const [render_ticktock, set_render_ticktock] = useState<boolean>(false);
 
 
-	const _Game_Manager_Data = New_Game_Manager({
-		_Blit_Manager: props._Blit_Manager,
-		_Asset_Manager: props._Asset_Manager,
-		_TM: props._Tilemap_Manager,
-		get_GM_instance: ()=>( _Game_Manager_Data ),
-	});
+	const init_Game_Manager_Data = 
+		New_Game_Manager({
+			_Blit_Manager: props._Blit_Manager,
+			_Asset_Manager: props._Asset_Manager,
+			_TM: props._Tilemap_Manager,
+			get_GM_instance: ()=>( _Game_Manager_Data ),
+		});
+
+	const [_Game_Manager_Data, set_Game_Manager_Data] = useState<Game_Manager_Data>(init_Game_Manager_Data);
+
 
 	let render_loop_timeout = 0;
 
 
 	useEffect(() => {
-		console.log('game view render')
-		//Game_Manager_ƒ.set_tooltip_update_function(_Game_Manager_Data, set_tooltip_data );
+		console.log('game view process')
 		render_canvas();
 	}, [render_ticktock]);
+
+	useEffect(() => {
+		console.log('game view render', _Game_Manager_Data)
+		Game_Manager_ƒ.do_one_frame_of_rendering(_Game_Manager_Data);
+	}, [_Game_Manager_Data]);
 
 	useEffect(() => {
 		return () => { console.log('cleanup'); window.clearInterval(render_loop_timeout) };
@@ -117,14 +131,14 @@ export const Game_View = (props: Game_View_Props) => {
 
 
 	const render_canvas = () => {
-		Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager);
-		Game_Manager_ƒ.do_one_frame_of_rendering_and_processing(_Game_Manager_Data);
+		//Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager);
+		set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(_Game_Manager_Data) );
 		
 		iterate_render_loop();
 	}
 
 	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
-		Game_Manager_ƒ.set_cursor_pos(_Game_Manager_Data, pos);
+		//Game_Manager_ƒ.set_cursor_pos(_Game_Manager_Data, pos);
 	}
 
 
