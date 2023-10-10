@@ -79,7 +79,7 @@ export const Primary_View = () => {
 	}
 
 
-
+	const get_Blit_Manager = () => ( _Blit_Manager );
 
 
 	return (
@@ -110,18 +110,18 @@ export const Primary_View = () => {
 							<Editor_View
 								assets_loaded={assets_loaded}
 								dimensions={default_canvas_size}
-								_Asset_Manager={_Asset_Manager}
-								_Blit_Manager={_Blit_Manager as Blit_Manager_Data}
-								_Tilemap_Manager={_Tilemap_Manager as Tilemap_Manager_Data}
+								_Asset_Manager={() => (_Asset_Manager)}
+								_Blit_Manager={() => (_Blit_Manager as Blit_Manager_Data)}
+								_Tilemap_Manager={() => (_Tilemap_Manager as Tilemap_Manager_Data)}
 								initialize_tilemap_manager={initialize_tilemap_manager}
 							/>
 							:
 							<Game_View
 								assets_loaded={assets_loaded}
 								dimensions={default_canvas_size}
-								_Asset_Manager={_Asset_Manager}
-								_Blit_Manager={_Blit_Manager as Blit_Manager_Data}
-								_Tilemap_Manager={_Tilemap_Manager as Tilemap_Manager_Data}
+								_Asset_Manager={() => (_Asset_Manager)}
+								_Blit_Manager={() => (_Blit_Manager as Blit_Manager_Data)}
+								_Tilemap_Manager={() => (_Tilemap_Manager as Tilemap_Manager_Data)}
 								initialize_tilemap_manager={initialize_tilemap_manager}
 							/>
 						}

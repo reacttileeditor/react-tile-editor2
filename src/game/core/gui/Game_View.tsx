@@ -19,11 +19,11 @@ import { Point2D, Rectangle } from '../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../objects_core/Custom_Object";
 
 interface Game_View_Props {
-	_Asset_Manager: Asset_Manager_Data,
-	_Blit_Manager: Blit_Manager_Data,
+	_Asset_Manager: () => Asset_Manager_Data,
+	_Blit_Manager: () => Blit_Manager_Data,
+	_Tilemap_Manager: () => Tilemap_Manager_Data,
 	assets_loaded: boolean,
 	initialize_tilemap_manager: Function,
-	_Tilemap_Manager: Tilemap_Manager_Data,
 	dimensions: Point2D,
 }
 
@@ -131,7 +131,7 @@ export const Game_View = (props: Game_View_Props) => {
 
 
 	const render_canvas = () => {
-		//Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager);
+		Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager());
 		set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(_Game_Manager_Data) );
 		
 		iterate_render_loop();
@@ -144,7 +144,9 @@ export const Game_View = (props: Game_View_Props) => {
 
 	return <div className="game_node">
 		<Canvas_View
-			{...props}
+			assets_loaded={props.assets_loaded}
+			initialize_tilemap_manager={props.initialize_tilemap_manager}
+			_Tilemap_Manager={props._Tilemap_Manager()}
 			dimensions={props.dimensions}
 			handle_canvas_click={ (mouse_pos: Point2D, buttons_pressed: MouseButtonState) => { Game_Manager_ƒ.handle_click(_Game_Manager_Data, mouse_pos, buttons_pressed) } }  //TODO  this is broken!
 			handle_canvas_keys_down={ ()=>{ /*console.log('game_keydown')*/} }
@@ -156,7 +158,7 @@ export const Game_View = (props: Game_View_Props) => {
 		/>
 		<Game_Status_Display
 			_Game_Manager_Data={_Game_Manager_Data}
-			_Asset_Manager={props._Asset_Manager}
+			_Asset_Manager={props._Asset_Manager()}
 		/>
 	</div>;
 

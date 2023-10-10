@@ -15,11 +15,11 @@ import { useInterval } from "../engine/Utils";
 
 
 interface Editor_View_Props {
-	_Asset_Manager: Asset_Manager_Data,
-	_Blit_Manager: Blit_Manager_Data,
+	_Asset_Manager: () => Asset_Manager_Data,
+	_Blit_Manager: () => Blit_Manager_Data,
+	_Tilemap_Manager: () => Tilemap_Manager_Data,
 	assets_loaded: boolean,
 	initialize_tilemap_manager: Function,
-	_Tilemap_Manager: Tilemap_Manager_Data,
 	dimensions: Point2D,
 }
 
@@ -78,10 +78,10 @@ export const Editor_View = (props: Editor_View_Props) => {
 		//console.log(cursor_pos);
 
 		Asset_Manager_ƒ.draw_image_for_asset_name({
-			_AM:						props._Asset_Manager,
+			_AM:						props._Asset_Manager(),
 			asset_name:					'cursor',
-			_BM:						props._Blit_Manager,
-			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( props._Tilemap_Manager, cursor_pos ),
+			_BM:						props._Blit_Manager(),
+			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( props._Tilemap_Manager(), cursor_pos ),
 			zorder:						zorder.rocks,
 			current_milliseconds:		0,
 			opacity:					1.0,
@@ -111,7 +111,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			props._Tilemap_Manager != null
 			
 		){
-		Tilemap_Manager_ƒ.do_one_frame_of_rendering( props._Tilemap_Manager );
+		Tilemap_Manager_ƒ.do_one_frame_of_rendering( props._Tilemap_Manager() );
 		draw_cursor();
 		}
 	}
@@ -120,15 +120,15 @@ export const Editor_View = (props: Editor_View_Props) => {
 	/*----------------------- I/O routines -----------------------*/
 	const handle_canvas_click = (pos: Point2D, buttons_pressed: MouseButtonState) => {
 		Tilemap_Manager_ƒ.modify_tile_status(
-			props._Tilemap_Manager,
-			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager, pos),
+			props._Tilemap_Manager(),
+			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), pos),
 			selected_tile_type,
 			'terrain'
 		);
 	}
 
 	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
-		const new_tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager, pos)
+		const new_tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), pos)
 	
 		//console.log(`pos ${pos.x},${pos.y} | ${new_tile_pos.x},${new_tile_pos.y}`)
 
@@ -161,14 +161,16 @@ export const Editor_View = (props: Editor_View_Props) => {
 			move.x += 40;
 		}
 
-		Blit_Manager_ƒ.adjust_viewport_pos(props._Blit_Manager, move.x, move.y);
+		Blit_Manager_ƒ.adjust_viewport_pos(props._Blit_Manager(), move.x, move.y);
 	}
 
 
 
 	return <div className="editor_node">
 		<Canvas_View
-			{...props}
+			assets_loaded={props.assets_loaded}
+			initialize_tilemap_manager={props.initialize_tilemap_manager}
+			_Tilemap_Manager={props._Tilemap_Manager()}
 			dimensions={props.dimensions}
 			handle_canvas_click={handle_canvas_click}
 			handle_canvas_keys_down={handle_canvas_keys_down}
@@ -178,9 +180,9 @@ export const Editor_View = (props: Editor_View_Props) => {
 		{
 			props.assets_loaded
 			&&
-			Asset_Manager_ƒ.yield_tile_name_list(props._Asset_Manager).map( (value, index) => {
+			Asset_Manager_ƒ.yield_tile_name_list(props._Asset_Manager()).map( (value, index) => {
 				return	<Tile_Palette_Element
-							asset_manager={props._Asset_Manager}
+							asset_manager={props._Asset_Manager()}
 							tile_name={value}
 							asset_name={''}
 							key={value}
