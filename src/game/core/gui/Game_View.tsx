@@ -61,7 +61,7 @@ import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game
 import { Game_Status_Display } from "./Game_Status_Display";
 
 
-export const Tooltip_Manager = (props: {_Game_Manager_Data: Game_Manager_Data, render_ticktock: boolean}) => {
+export const Tooltip_Manager = (props: {get_Game_Manager_Data: () => Game_Manager_Data, render_ticktock: boolean}) => {
 
 	const [tooltip_data, set_tooltip_data] = useState<TooltipData>({
 		pos: {x:0,y:0},
@@ -70,18 +70,23 @@ export const Tooltip_Manager = (props: {_Game_Manager_Data: Game_Manager_Data, r
 	});
 
 	useEffect(() => {
-		console.log('tooltip', Game_Manager_ƒ.get_tooltip_data(props._Game_Manager_Data));
+		console.log('tooltip', Game_Manager_ƒ.get_tooltip_data(props.get_Game_Manager_Data()));
 
 		//props._Game_Manager_Data.get_GM_instance()
 
 		//Game_Manager_ƒ.set_tooltip_update_function(_Game_Manager_Data, set_tooltip_data );
 	}, [props.render_ticktock]);
 
+	const _Game_Manager_Data = props.get_Game_Manager_Data();
 
 	return <div className={`map-tooltip-anchor ${props.render_ticktock}`}>
-		<Map_Tooltip
-			{...Game_Manager_ƒ.get_tooltip_data(props._Game_Manager_Data)}
-		/>
+		{
+			_Game_Manager_Data != undefined
+			&&
+			<Map_Tooltip
+				{...Game_Manager_ƒ.get_tooltip_data(_Game_Manager_Data)}
+			/>
+		}
 	</div>
 }
 
@@ -154,11 +159,11 @@ export const Game_View = (props: Game_View_Props) => {
 			handle_canvas_keys_down={ ()=>{ /*console.log('game_keydown')*/} }
 			handle_canvas_mouse_move={handle_canvas_mouse_move}
 		/>
-		{/* <Tooltip_Manager
-			_Game_Manager_Data={_Game_Manager_Data}
+		 <Tooltip_Manager
+			get_Game_Manager_Data={props.get_Game_Manager_Data}
 			render_ticktock={render_ticktock}
 		/>
-		<Game_Status_Display
+		{/*<Game_Status_Display
 			_Game_Manager_Data={_Game_Manager_Data}
 			_Asset_Manager={props._Asset_Manager}
 			_Blit_Manager={props._Blit_Manager}
