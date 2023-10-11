@@ -373,7 +373,6 @@ export const Game_Manager_ƒ = {
 	},
 
 	do_one_frame_of_rendering: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): void => {
-		console.log('game manager render')
 		if(me.animation_state.is_animating_live_game){
 			Game_Manager_ƒ.do_live_game_rendering(me, _BM, _AM);
 		} else {

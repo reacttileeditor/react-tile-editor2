@@ -62,20 +62,9 @@ import { Game_Status_Display } from "./Game_Status_Display";
 
 
 export const Tooltip_Manager = (props: {get_Game_Manager_Data: () => Game_Manager_Data, render_ticktock: boolean}) => {
-
-	const [tooltip_data, set_tooltip_data] = useState<TooltipData>({
-		pos: {x:0,y:0},
-		tile_name: '',
-		tile_cost: '',
-	});
-
-	useEffect(() => {
-		console.log('tooltip', Game_Manager_ƒ.get_tooltip_data(props.get_Game_Manager_Data()));
-	}, [props.render_ticktock]);
-
 	const _Game_Manager_Data = props.get_Game_Manager_Data();
 
-	return <div className={`map-tooltip-anchor ${props.render_ticktock}`}>
+	return <div className={`map-tooltip-anchor`}>
 		{
 			_Game_Manager_Data != undefined
 			&&
