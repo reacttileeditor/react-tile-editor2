@@ -12,6 +12,7 @@ import { Editor_View } from "./Editor_View";
 import { Point2D, Rectangle } from '../../interfaces';
 
 import "./Primary_View.scss";
+import { Game_Manager_Data, New_Game_Manager } from "../engine/Game_Manager";
 
 interface Props {
 }
@@ -34,6 +35,10 @@ export const Primary_View = () => {
 	const [assets_loaded, set_assets_loaded] = useState<boolean>(false);
 
 
+	let _Game_Manager_Data: Game_Manager_Data | undefined = undefined;
+	const get_Game_Manager_Data = () => (_Game_Manager_Data as Game_Manager_Data);
+	const set_Game_Manager_Data = (newVal: Game_Manager_Data) => { _Game_Manager_Data = newVal;}
+
 
 	useEffect(() => {
 		console.log('PRIMARY LAUNCH')
@@ -55,6 +60,7 @@ export const Primary_View = () => {
 
 	useEffect(() => {
 		if(_Blit_Manager){
+			console.log('PRIMARY BLIT MANAGER LOADED')
 			set_Tilemap_Manager(New_Tilemap_Manager({_AM: _Asset_Manager, _BM: _Blit_Manager}));
 		}
 	}, [_Blit_Manager]);
@@ -66,7 +72,14 @@ export const Primary_View = () => {
 			if(_Blit_Manager){
 				Blit_Manager_ƒ.reset_context(_Blit_Manager, ctx);
 			}
+
+			set_Game_Manager_Data(New_Game_Manager({
+				_TM: () => _Tilemap_Manager,
+				get_GM_instance: get_Game_Manager_Data,
+			}));				
 		}
+
+	
 
 		/*if( !_Tilemap_Manager ){
 			set_Blit_Manager(New_Blit_Manager(ctx, default_canvas_size, true));
@@ -122,6 +135,9 @@ export const Primary_View = () => {
 								_Asset_Manager={() => (_Asset_Manager)}
 								_Blit_Manager={() => (_Blit_Manager as Blit_Manager_Data)}
 								_Tilemap_Manager={() => (_Tilemap_Manager as Tilemap_Manager_Data)}
+								get_Game_Manager_Data={get_Game_Manager_Data}
+								set_Game_Manager_Data={set_Game_Manager_Data}
+							
 								initialize_tilemap_manager={initialize_tilemap_manager}
 							/>
 						}

@@ -22,6 +22,8 @@ interface Game_View_Props {
 	_Asset_Manager: () => Asset_Manager_Data,
 	_Blit_Manager: () => Blit_Manager_Data,
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
+	get_Game_Manager_Data: () => Game_Manager_Data,
+	set_Game_Manager_Data: (newVal: Game_Manager_Data) => void;
 	assets_loaded: boolean,
 	initialize_tilemap_manager: Function,
 	dimensions: Point2D,
@@ -88,13 +90,6 @@ export const Game_View = (props: Game_View_Props) => {
 	const [render_ticktock, set_render_ticktock] = useState<boolean>(false);
 
 
-	const init_Game_Manager_Data = 
-		New_Game_Manager({
-			_TM: props._Tilemap_Manager,
-			get_GM_instance: ()=>( _Game_Manager_Data ),
-		});
-
-	const [_Game_Manager_Data, set_Game_Manager_Data] = useState<Game_Manager_Data>(init_Game_Manager_Data);
 
 
 	let render_loop_timeout = 0;
@@ -102,13 +97,17 @@ export const Game_View = (props: Game_View_Props) => {
 
 	useEffect(() => {
 		console.log('game view process')
-		render_canvas();
-	}, [render_ticktock]);
 
-	useEffect(() => {
-		console.log('game view render', _Game_Manager_Data)
-		Game_Manager_ƒ.do_one_frame_of_rendering(_Game_Manager_Data, props._Asset_Manager(), props._Blit_Manager());
-	}, [_Game_Manager_Data]);
+		Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager());
+		props.set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Blit_Manager()) );
+		Game_Manager_ƒ.do_one_frame_of_rendering(props.get_Game_Manager_Data(), props._Asset_Manager(), props._Blit_Manager());
+		render_loop_timeout = window.setTimeout( () => {set_render_ticktock( !render_ticktock )}, 16.666 );
+}, [render_ticktock]);
+
+	// useEffect(() => {
+	// 	console.log('game view render', _Game_Manager_Data)
+	// 	Game_Manager_ƒ.do_one_frame_of_rendering(_Game_Manager_Data, props._Asset_Manager(), props._Blit_Manager());
+	// }, [_Game_Manager_Data]);
 
 	useEffect(() => {
 		return () => { console.log('cleanup'); window.clearInterval(render_loop_timeout) };
@@ -116,27 +115,32 @@ export const Game_View = (props: Game_View_Props) => {
 
 
 /*----------------------- core drawing routines -----------------------*/
-	const iterate_render_loop = () => {
-		render_loop_timeout = window.setTimeout( () => {set_render_ticktock( !render_ticktock )}, 16.666 );
+	// const iterate_render_loop = () => {
+	// 	render_loop_timeout = window.setTimeout( () => {set_render_ticktock( !render_ticktock )}, 16.666 );
 		
 
-		/*
-			Whether this is an appropriate solution gets into some deep and hard questions about React that I'm not prepared to answer; in a lot of other paradigms, we'd seize full control over the event loop.  Here, we are, instead, opting to "sleep" until our setTimeout fires.
+	// 	/*
+	// 		Whether this is an appropriate solution gets into some deep and hard questions about React that I'm not prepared to answer; in a lot of other paradigms, we'd seize full control over the event loop.  Here, we are, instead, opting to "sleep" until our setTimeout fires.
 
-			I suspect that because this setTimeout is initiated AFTER all of our rendering code finishes executing, that this solution will not cause the main failure state we're concerned about, which is a 'pileup'; a 'sorceror's apprentice' failure where callbacks are queued up faster than we can process them..
-		*/
-	}
+	// 		I suspect that because this setTimeout is initiated AFTER all of our rendering code finishes executing, that this solution will not cause the main failure state we're concerned about, which is a 'pileup'; a 'sorceror's apprentice' failure where callbacks are queued up faster than we can process them..
+	// 	*/
+	// }
 
 
 	const render_canvas = () => {
 		Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager());
-		set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(_Game_Manager_Data, props._Blit_Manager()) );
-		
-		iterate_render_loop();
+		//set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(_Game_Manager_Data, props._Blit_Manager()) );
+		props.set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Blit_Manager()))
+
+		//iterate_render_loop();
 	}
 
 	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
-		//Game_Manager_ƒ.set_cursor_pos(_Game_Manager_Data, pos);
+		props.set_Game_Manager_Data( Game_Manager_ƒ.set_cursor_pos(props.get_Game_Manager_Data(), pos, buttons_pressed));
+	}
+
+	const handle_canvas_mouse_click = (pos: Point2D, buttons_pressed: MouseButtonState) => {
+		props.set_Game_Manager_Data( Game_Manager_ƒ.handle_click(props.get_Game_Manager_Data(), pos, buttons_pressed));
 	}
 
 
@@ -146,11 +150,11 @@ export const Game_View = (props: Game_View_Props) => {
 			initialize_tilemap_manager={props.initialize_tilemap_manager}
 			_Tilemap_Manager={props._Tilemap_Manager()}
 			dimensions={props.dimensions}
-			handle_canvas_click={ (mouse_pos: Point2D, buttons_pressed: MouseButtonState) => { Game_Manager_ƒ.handle_click(_Game_Manager_Data, mouse_pos, buttons_pressed) } }  //TODO  this is broken!
+			handle_canvas_click={handle_canvas_mouse_click}
 			handle_canvas_keys_down={ ()=>{ /*console.log('game_keydown')*/} }
 			handle_canvas_mouse_move={handle_canvas_mouse_move}
 		/>
-		<Tooltip_Manager
+		{/* <Tooltip_Manager
 			_Game_Manager_Data={_Game_Manager_Data}
 			render_ticktock={render_ticktock}
 		/>
@@ -158,7 +162,7 @@ export const Game_View = (props: Game_View_Props) => {
 			_Game_Manager_Data={_Game_Manager_Data}
 			_Asset_Manager={props._Asset_Manager}
 			_Blit_Manager={props._Blit_Manager}
-		/>
+		/> */}
 	</div>;
 
 }
