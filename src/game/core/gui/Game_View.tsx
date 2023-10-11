@@ -71,10 +71,6 @@ export const Tooltip_Manager = (props: {get_Game_Manager_Data: () => Game_Manage
 
 	useEffect(() => {
 		console.log('tooltip', Game_Manager_ƒ.get_tooltip_data(props.get_Game_Manager_Data()));
-
-		//props._Game_Manager_Data.get_GM_instance()
-
-		//Game_Manager_ƒ.set_tooltip_update_function(_Game_Manager_Data, set_tooltip_data );
 	}, [props.render_ticktock]);
 
 	const _Game_Manager_Data = props.get_Game_Manager_Data();
@@ -92,11 +88,8 @@ export const Tooltip_Manager = (props: {get_Game_Manager_Data: () => Game_Manage
 
 
 export const Game_View = (props: Game_View_Props) => {
+
 	const [render_ticktock, set_render_ticktock] = useState<boolean>(false);
-
-
-
-
 	let render_loop_timeout = 0;
 
 
@@ -106,40 +99,26 @@ export const Game_View = (props: Game_View_Props) => {
 		Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager());
 		props.set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Blit_Manager()) );
 		Game_Manager_ƒ.do_one_frame_of_rendering(props.get_Game_Manager_Data(), props._Asset_Manager(), props._Blit_Manager());
-		render_loop_timeout = window.setTimeout( () => {set_render_ticktock( !render_ticktock )}, 16.666 );
-}, [render_ticktock]);
 
-	// useEffect(() => {
-	// 	console.log('game view render', _Game_Manager_Data)
-	// 	Game_Manager_ƒ.do_one_frame_of_rendering(_Game_Manager_Data, props._Asset_Manager(), props._Blit_Manager());
-	// }, [_Game_Manager_Data]);
+
+		/*
+			Whether this is an appropriate solution gets into some deep and hard questions about React that I'm not prepared to answer; in a lot of other paradigms, we'd seize full control over the event loop.  Here, we are, instead, opting to "sleep" until our setTimeout fires.
+
+			I suspect that because this setTimeout is initiated AFTER all of our rendering code finishes executing, that this solution will not cause the main failure state we're concerned about, which is a 'pileup'; a 'sorceror's apprentice' failure where callbacks are queued up faster than we can process them..
+		*/
+		render_loop_timeout = window.setTimeout( () => {set_render_ticktock( !render_ticktock )}, 16.666 );
+	}, [render_ticktock]);
+
 
 	useEffect(() => {
-		return () => { console.log('cleanup'); window.clearInterval(render_loop_timeout) };
+		return () => {
+			console.log('game view cleanup');
+			window.clearInterval(render_loop_timeout)
+		};
 	}, []);
 
 
-/*----------------------- core drawing routines -----------------------*/
-	// const iterate_render_loop = () => {
-	// 	render_loop_timeout = window.setTimeout( () => {set_render_ticktock( !render_ticktock )}, 16.666 );
-		
-
-	// 	/*
-	// 		Whether this is an appropriate solution gets into some deep and hard questions about React that I'm not prepared to answer; in a lot of other paradigms, we'd seize full control over the event loop.  Here, we are, instead, opting to "sleep" until our setTimeout fires.
-
-	// 		I suspect that because this setTimeout is initiated AFTER all of our rendering code finishes executing, that this solution will not cause the main failure state we're concerned about, which is a 'pileup'; a 'sorceror's apprentice' failure where callbacks are queued up faster than we can process them..
-	// 	*/
-	// }
-
-
-	const render_canvas = () => {
-		Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager());
-		//set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(_Game_Manager_Data, props._Blit_Manager()) );
-		props.set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Blit_Manager()))
-
-		//iterate_render_loop();
-	}
-
+	/*----------------------- IO routines -----------------------*/
 	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
 		props.set_Game_Manager_Data( Game_Manager_ƒ.set_cursor_pos(props.get_Game_Manager_Data(), pos, buttons_pressed));
 	}
