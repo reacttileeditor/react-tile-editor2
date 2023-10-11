@@ -35,7 +35,8 @@ export type TooltipData = {
 
 
 interface Game_Status_Display_Props {
-	_Game_Manager_Data: Game_Manager_Data,
+	get_Game_Manager_Data: () => Game_Manager_Data,
+	set_Game_Manager_Data: (newVal: Game_Manager_Data) => void;
 	_Asset_Manager: () => Asset_Manager_Data,
 	_Blit_Manager: () => Blit_Manager_Data,
 }
@@ -43,16 +44,14 @@ interface Game_Status_Display_Props {
 
 export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 
-	const _GS = props._Game_Manager_Data.game_state;
+	const _GS = props.get_Game_Manager_Data()?.game_state;
 
 
-	// update_game_state_for_ui = (game_state: Game_State) => {
-	// 	this.setState({game_state: cloneDeep(game_state)});
-	// }
+
 
 	const get_selected_creature = (_GS: Game_State): Creature_Data|undefined => {
 
-		if( _GS.selected_object_index != undefined ){
+		if( _GS?.selected_object_index != undefined ){
 			return _GS.turn_list[_GS.current_turn].creature_list[_GS.selected_object_index]
 		} else {
 			return undefined;
@@ -62,77 +61,85 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 	const selected_creature = get_selected_creature(_GS);
 
 	return (
-		<div
-			className="game_status_display"
-		>
-			<button
-				onClick={(evt)=>{Game_Manager_ƒ.advance_turn_start(props._Game_Manager_Data, props._Blit_Manager())}}
+		<>{
+			_GS
+			&&
+			<div
+				className="game_status_display"
 			>
-				Next Turn
-			</button>
-			<Label_and_Data_Pair
-				label={'Turn #:'}
-				data={`${_GS.current_turn}`}
-			/>
-			<Label_and_Data_Pair
-				label={'Objectives:'}
-				data={``}
-			/>
-			<Label_and_Data_Pair
-				label={''}
-				data={`${_GS.objective_text}`}
-			/>
-			<br />
-			<hr />
-			<br />
-			<>
-			{
-				(selected_creature !== undefined ?
-					<Label_and_Data_Pair
-						label={'Selected Unit:'}
-						data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_prettyprint_name()}`}
-					/> :
-					<Label_and_Data_Pair
-						label={''}
-						data={`No Unit Selected.`}
-					/>
-				)
-			}
-			</>
-			<>
-			{
-				(selected_creature !== undefined)
-				&&
+				<button
+					onClick={(evt)=>{
+						props.set_Game_Manager_Data(
+							Game_Manager_ƒ.advance_turn_start(props.get_Game_Manager_Data(), props._Blit_Manager())
+						)
+					}}
+				>
+					Next Turn
+				</button>
+				<Label_and_Data_Pair
+					label={'Turn #:'}
+					data={`${_GS.current_turn}`}
+				/>
+				<Label_and_Data_Pair
+					label={'Objectives:'}
+					data={``}
+				/>
+				<Label_and_Data_Pair
+					label={''}
+					data={`${_GS.objective_text}`}
+				/>
+				<br />
+				<hr />
+				<br />
 				<>
-					<Label_and_Data_Pair
-						label={'Team:'}
-						data={`${selected_creature.team}`}
-					/>
-
-					<Tile_Palette_Element
-						asset_manager={props._Asset_Manager()}
-						tile_name={''}
-						asset_name={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_creature_image()}`}
-						highlight={false}
-						handle_click={ ()=>{} }
-					/>
-					<Label_and_Data_Pair
-						label={'Hitpoints:'}
-						data={`${selected_creature.current_hitpoints} / ${Creature_ƒ.get_delegate(selected_creature.type_name).yield_max_hitpoints()}`}
-					/>
-					<Label_and_Data_Pair
-						label={'Moves:'}
-						data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_moves_per_turn()}`}
-					/>
-					<Label_and_Data_Pair
-						label={'Damage:'}
-						data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_damage()}`}
-					/>
+				{
+					(selected_creature !== undefined ?
+						<Label_and_Data_Pair
+							label={'Selected Unit:'}
+							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_prettyprint_name()}`}
+						/> :
+						<Label_and_Data_Pair
+							label={''}
+							data={`No Unit Selected.`}
+						/>
+					)
+				}
 				</>
-			}
-			</>
+				<>
+				{
+					(selected_creature !== undefined)
+					&&
+					<>
+						<Label_and_Data_Pair
+							label={'Team:'}
+							data={`${selected_creature.team}`}
+						/>
 
-		</div>
+						<Tile_Palette_Element
+							asset_manager={props._Asset_Manager()}
+							tile_name={''}
+							asset_name={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_creature_image()}`}
+							highlight={false}
+							handle_click={ ()=>{} }
+						/>
+						<Label_and_Data_Pair
+							label={'Hitpoints:'}
+							data={`${selected_creature.current_hitpoints} / ${Creature_ƒ.get_delegate(selected_creature.type_name).yield_max_hitpoints()}`}
+						/>
+						<Label_and_Data_Pair
+							label={'Moves:'}
+							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_moves_per_turn()}`}
+						/>
+						<Label_and_Data_Pair
+							label={'Damage:'}
+							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_damage()}`}
+						/>
+					</>
+				}
+				</>
+
+			</div>
+		}</>
 	)
 }
 

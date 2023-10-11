@@ -243,7 +243,7 @@ export const Game_Manager_ƒ = {
 
 /*----------------------- turn management -----------------------*/
 
-	advance_turn_start: (me: Game_Manager_Data, _BM: Blit_Manager_Data) => {
+	advance_turn_start: (me: Game_Manager_Data, _BM: Blit_Manager_Data):Game_Manager_Data => {
 		console.log(`beginning turn #${me.game_state.current_turn}`)
 		me.game_state.current_frame_state = cloneDeep(Game_Manager_ƒ.get_current_turn_state(me))
 		Tilemap_Manager_ƒ.clear_tile_map(me._TM(), 'ui');
@@ -251,16 +251,21 @@ export const Game_Manager_ƒ = {
 
 		var date = new Date();
 	
-		me.animation_state = {
-			is_animating_live_game: true,
-			time_live_game_anim_started__in_ticks: _BM.time_tracker.current_tick,
-			time_paused_game_anim_started__in_ticks: me.animation_state.time_paused_game_anim_started__in_ticks,
-		};
-	
-		me.game_state.objective_text = Game_Manager_ƒ.write_full_objective_text(me, Game_Manager_ƒ.get_game_state(me).objective_type, Game_Manager_ƒ.get_game_state(me));
+		return {
+			...cloneDeep(me),
+			animation_state: {
+				is_animating_live_game: true,
+				time_live_game_anim_started__in_ticks: _BM.time_tracker.current_tick,
+				time_paused_game_anim_started__in_ticks: me.animation_state.time_paused_game_anim_started__in_ticks,
+			},
+			game_state: {
+				...cloneDeep(me.game_state),
+				objective_text: Game_Manager_ƒ.write_full_objective_text(me, Game_Manager_ƒ.get_game_state(me).objective_type, Game_Manager_ƒ.get_game_state(me)),
+			}
+		}
 	},
 
-	advance_turn_finish: (me: Game_Manager_Data, _BM: Blit_Manager_Data) => {
+	advance_turn_finish: (me: Game_Manager_Data, _BM: Blit_Manager_Data):Game_Manager_Data => {
 		/*
 			All behavior is handled inside creature and custom object processing.  Impressing the current state of this into the array of turns is mostly being done as a snapshot.
 		*/
@@ -278,17 +283,19 @@ export const Game_Manager_ƒ = {
 		console.log(`finishing turn #${me.game_state.current_turn}`)
 
 
-	
-		me.animation_state = {
-			is_animating_live_game: false,
-			time_live_game_anim_started__in_ticks: me.animation_state.time_live_game_anim_started__in_ticks,
-			time_paused_game_anim_started__in_ticks: _BM.time_tracker.current_tick,
-		};
-
-		me.game_state.objective_text = Game_Manager_ƒ.write_full_objective_text(me, Game_Manager_ƒ.get_game_state(me).objective_type, Game_Manager_ƒ.get_game_state(me));
-
-	
-		me.game_state.current_turn += 1;
+		return {
+			...cloneDeep(me),
+			animation_state: {
+				is_animating_live_game: false,
+				time_live_game_anim_started__in_ticks: me.animation_state.time_live_game_anim_started__in_ticks,
+				time_paused_game_anim_started__in_ticks: _BM.time_tracker.current_tick,
+			},
+			game_state: {
+				...cloneDeep(me.game_state),
+				objective_text: Game_Manager_ƒ.write_full_objective_text(me, Game_Manager_ƒ.get_game_state(me).objective_type, Game_Manager_ƒ.get_game_state(me)),
+				current_turn: me.game_state.current_turn + 1,
+			},
+		}
 	},
 
 
@@ -406,9 +413,9 @@ export const Game_Manager_ƒ = {
 		*/
 
 		if( Game_Manager_ƒ.is_turn_finished(me) ){
-			Game_Manager_ƒ.advance_turn_finish(me, _BM);
 
-			return me;
+			return Game_Manager_ƒ.advance_turn_finish(me, _BM);
+
 		} else {		
 			let spawnees: Array<Custom_Object_Data> = [];
 			let master_change_list: Array<ChangeInstance> = [];
@@ -678,13 +685,13 @@ export const Game_Manager_ƒ = {
 		}
 	},
 
-	get_previous_turn_state: (me: Game_Manager_Data) => {
+	get_previous_turn_state: (me: Game_Manager_Data): Individual_Game_Turn_State => {
 		const state = me.game_state.turn_list[ size(me.game_state.turn_list) -2 ];
 	
 		return state ? state : Individual_Game_Turn_State_Init;
 	},
 	
-	get_current_turn_state: (me: Game_Manager_Data) => {
+	get_current_turn_state: (me: Game_Manager_Data): Individual_Game_Turn_State => {
 		const state = last(me.game_state.turn_list);
 	
 		return state ? state : Individual_Game_Turn_State_Init;

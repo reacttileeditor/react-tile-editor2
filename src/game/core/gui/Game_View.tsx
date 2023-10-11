@@ -163,11 +163,12 @@ export const Game_View = (props: Game_View_Props) => {
 			get_Game_Manager_Data={props.get_Game_Manager_Data}
 			render_ticktock={render_ticktock}
 		/>
-		{/*<Game_Status_Display
-			_Game_Manager_Data={_Game_Manager_Data}
+		<Game_Status_Display
+			get_Game_Manager_Data={props.get_Game_Manager_Data}
+			set_Game_Manager_Data={props.set_Game_Manager_Data}
 			_Asset_Manager={props._Asset_Manager}
 			_Blit_Manager={props._Blit_Manager}
-		/> */}
+		/>
 	</div>;
 
 }
