@@ -46,42 +46,47 @@ export const Primary_View = () => {
 			_Asset_Manager,
 			() => { set_assets_loaded(true); }
 		);
-		
+		set_Tilemap_Manager(New_Tilemap_Manager());		
+		set_Game_Manager_Data(New_Game_Manager({
+			_Blit_Manager: () => _Blit_Manager as Blit_Manager_Data,
+			_Asset_Manager: () => _Asset_Manager,
+			_Tilemap_Manager: () => _Tilemap_Manager as Tilemap_Manager_Data,
+			get_GM_instance: get_Game_Manager_Data,
+		}));
+
+
+		return () => {
+			console.log('PRIMARY CLEANUP')
+		};		
 	}, []);
 
 	useEffect(() => {
 
-		return () => {
-			console.log('PRIMARY CLEANUP')
 
-		};
-	}, []);
+	}, [_Tilemap_Manager]);
 
 
 	useEffect(() => {
 		if(_Blit_Manager){
 			console.log('PRIMARY BLIT MANAGER LOADED')
-			set_Tilemap_Manager(New_Tilemap_Manager({_AM: _Asset_Manager, _BM: _Blit_Manager}));
 		}
 	}, [_Blit_Manager]);
 
-	const initialize_tilemap_manager = (ctx: CanvasRenderingContext2D) => {
-		console.log('initialize_tilemap_manager', _Tilemap_Manager)
-		if( !_Tilemap_Manager ){
-			set_Blit_Manager(New_Blit_Manager(ctx, default_canvas_size, true));
-		} else {
-			console.log('blit manager context reset', _Tilemap_Manager, _Blit_Manager)
-			if(_Blit_Manager){
-				Blit_Manager_ƒ.reset_context(_Blit_Manager, ctx);
-			}
+	const connect_context_to_blit_manager = (ctx: CanvasRenderingContext2D) => {
+		console.log('connect_context_to_blit_manager')
+		set_Blit_Manager(New_Blit_Manager(ctx, default_canvas_size, true));
+	}
+		
+		// if( !_Tilemap_Manager ){
+		// 	set_Blit_Manager(New_Blit_Manager(ctx, default_canvas_size, true));
+		// } else {
+		// 	console.log('blit manager context reset', _Tilemap_Manager, _Blit_Manager)
+		// 	if(_Blit_Manager){
+		// 		Blit_Manager_ƒ.reset_context(_Blit_Manager, ctx);
+		// 	}
 
-			set_Game_Manager_Data(New_Game_Manager({
-				_Blit_Manager: () => _Blit_Manager as Blit_Manager_Data,
-				_Asset_Manager: () => _Asset_Manager,
-				_Tilemap_Manager: () => _Tilemap_Manager,
-				get_GM_instance: get_Game_Manager_Data,
-			}));				
-		}
+							
+		// }
 
 	
 
@@ -93,10 +98,9 @@ export const Primary_View = () => {
 				Blit_Manager_ƒ.reset_context(_Blit_Manager, ctx);
 			}
 		}*/
-	}
+	
 
 
-	const get_Blit_Manager = () => ( _Blit_Manager );
 
 
 	return (
@@ -130,7 +134,7 @@ export const Primary_View = () => {
 								_Asset_Manager={() => (_Asset_Manager)}
 								_Blit_Manager={() => (_Blit_Manager as Blit_Manager_Data)}
 								_Tilemap_Manager={() => (_Tilemap_Manager as Tilemap_Manager_Data)}
-								initialize_tilemap_manager={initialize_tilemap_manager}
+								connect_context_to_blit_manager={connect_context_to_blit_manager}
 							/>
 							:
 							<Game_View
@@ -142,7 +146,7 @@ export const Primary_View = () => {
 								get_Game_Manager_Data={get_Game_Manager_Data}
 								set_Game_Manager_Data={set_Game_Manager_Data}
 							
-								initialize_tilemap_manager={initialize_tilemap_manager}
+								connect_context_to_blit_manager={connect_context_to_blit_manager}
 							/>
 						}
 						<div className="instructional_text">

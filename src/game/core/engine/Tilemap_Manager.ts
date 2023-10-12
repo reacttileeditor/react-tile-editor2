@@ -58,10 +58,7 @@ export type Tilemap_Manager_Data = {
 	// _BM: Blit_Manager_Data;
 }
 
-export const New_Tilemap_Manager = (p: {
-	// _AM: Asset_Manager_Data,
-	// _BM: Blit_Manager_Data,
-}): Tilemap_Manager_Data => {
+export const New_Tilemap_Manager = (): Tilemap_Manager_Data => {
 	
 	return {
 		state: {
@@ -73,8 +70,6 @@ export const New_Tilemap_Manager = (p: {
 			cache_of_image_lists: _.cloneDeep({}),
 			initialized: false,
 		},
-		// _AM: p._AM,
-		// _BM: p._BM,
 	}
 }
 

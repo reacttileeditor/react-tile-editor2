@@ -25,7 +25,7 @@ interface Game_View_Props {
 	get_Game_Manager_Data: () => Game_Manager_Data,
 	set_Game_Manager_Data: (newVal: Game_Manager_Data) => void;
 	assets_loaded: boolean,
-	initialize_tilemap_manager: Function,
+	connect_context_to_blit_manager: (ctx: CanvasRenderingContext2D) => void,
 	dimensions: Point2D,
 }
 
@@ -125,7 +125,7 @@ export const Game_View = (props: Game_View_Props) => {
 	return <div className="game_node">
 		<Canvas_View
 			assets_loaded={props.assets_loaded}
-			initialize_tilemap_manager={props.initialize_tilemap_manager}
+			connect_context_to_blit_manager={props.connect_context_to_blit_manager}
 			_Tilemap_Manager={props._Tilemap_Manager()}
 			dimensions={props.dimensions}
 			handle_canvas_click={handle_canvas_mouse_click}

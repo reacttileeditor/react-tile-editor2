@@ -53,7 +53,7 @@ export const Tile_Palette_Element = (props: Props) => {
 
 	useEffect(() => {
 		if(_Blit_Manager){
-			set_Tilemap_Manager(New_Tilemap_Manager({_AM: props.asset_manager, _BM: _Blit_Manager}));
+			set_Tilemap_Manager(New_Tilemap_Manager());
 		}
 	}, [_Blit_Manager]);
 

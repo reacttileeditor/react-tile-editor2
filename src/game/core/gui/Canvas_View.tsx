@@ -8,7 +8,7 @@ import * as Utils from "../engine/Utils";
 
 interface Props {
 	assets_loaded: boolean,
-	initialize_tilemap_manager: Function,
+	connect_context_to_blit_manager: (ctx: CanvasRenderingContext2D) => void,
 	_Tilemap_Manager: Tilemap_Manager_Data,
 	dimensions: Point2D,
 	
@@ -42,11 +42,16 @@ export const Canvas_View = (props: Props) => {
 
 /*----------------------- initialization and asset loading -----------------------*/
 	useEffect(() => {
-		console.log('CANVAS TILEMANAGER INIT')
 
 		const ctx = getContext();
 		console.log(ctx);
-		props.initialize_tilemap_manager(ctx);
+		if(ctx){
+			console.log('CANVAS TILEMANAGER INIT SUCCESS')
+			props.connect_context_to_blit_manager(ctx);
+		} else {
+			console.log('CANVAS TILEMANAGER INIT FAIL')
+
+		}
 	}, []);
 
 
