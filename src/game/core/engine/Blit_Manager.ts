@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _, { reduce, zip, zipWith } from "lodash";
+import _, { cloneDeep, reduce, zip, zipWith } from "lodash";
 
 import { ƒ } from "./Utils";
 import { Asset_Manager_Data } from "./Asset_Manager";
@@ -136,15 +136,21 @@ export const Blit_Manager_ƒ = {
 	},
 
 /*----------------------- state manipulation -----------------------*/
-	adjust_viewport_pos: ( me: Blit_Manager_Data, x: number, y: number) => {
-		me.state.viewport_tween_progress = ƒ.if(me.state.viewport_tween_progress == 1.0,
-			0.0,
-			me.state.viewport_tween_progress * 0.3
-		);
-		me.state.intended_viewport_offset = {
-			x: me.state.intended_viewport_offset.x + x,
-			y: me.state.intended_viewport_offset.y + y
-		};
+	adjust_viewport_pos: ( me: Blit_Manager_Data, x: number, y: number): Blit_Manager_Data => {
+		return {
+			...cloneDeep(me),
+			state: {
+				viewport_tween_progress: ƒ.if(me.state.viewport_tween_progress == 1.0,
+					0.0,
+					me.state.viewport_tween_progress * 0.3
+				),
+				intended_viewport_offset: {
+					x: me.state.intended_viewport_offset.x + x,
+					y: me.state.intended_viewport_offset.y + y
+				},
+				actual_viewport_offset: me.state.actual_viewport_offset,
+			}
+		}
 	},
 
 	yield_world_coords_for_absolute_coords: ( me: Blit_Manager_Data, pos: Point2D) => {
@@ -179,7 +185,7 @@ export const Blit_Manager_ƒ = {
 	},
 	
 	
-	draw_entire_frame: ( me: Blit_Manager_Data ) => {
+	draw_entire_frame: ( me: Blit_Manager_Data ): Blit_Manager_Data => {
 		Blit_Manager_ƒ.iterate_viewport_tween(me);
 // 		console.log(me.state.actual_viewport_offset);
 	
@@ -355,15 +361,21 @@ export const Blit_Manager_ƒ = {
 		//var bitmap = me._OffScreenBuffer.transferToImageBitmap();
 		me.ctx.drawImage(me._OffScreenBuffer, 0, 0);
 
-		/*
-			Manage time tracking.  No matter how long it took, each frame is only considered "1 tick" long, and all animations are based on that metric, alone.
-		*/
-		me.time_tracker.current_tick += 1;
 		
+		
+		return {
+			...cloneDeep(me),
 
-		//then clear it, because the next frame needs to start from scratch
-		me._Draw_List = [];
-		
+			state: Blit_Manager_ƒ.iterate_viewport_tween(me),
+			/*
+				Manage time tracking.  No matter how long it took, each frame is only considered "1 tick" long, and all animations are based on that metric, alone.
+			*/
+			time_tracker: {
+				...cloneDeep(me.time_tracker),
+				current_tick: me.time_tracker.current_tick + 1,
+			},
+			_Draw_List: [],  //then clear it, because the next frame needs to start from scratch
+		}
 	},
 
 	isDrawDataWithBounds( data: DrawDataTypes ): data is DrawData {
@@ -380,20 +392,23 @@ export const Blit_Manager_ƒ = {
 
 
 /*----------------------- tweening -----------------------*/
-	iterate_viewport_tween: ( me: Blit_Manager_Data ) => {
+	iterate_viewport_tween: ( me: Blit_Manager_Data ): BlitManagerState => {
 		const { viewport_tween_progress, intended_viewport_offset, actual_viewport_offset } = me.state;
 	
 		if( viewport_tween_progress < 1.0 ){
-			me.state.viewport_tween_progress += 0.02;
-			me.state.actual_viewport_offset = {
-				x: Math.floor(actual_viewport_offset.x + viewport_tween_progress * ( intended_viewport_offset.x - actual_viewport_offset.x )),
-				y: Math.floor(actual_viewport_offset.y + viewport_tween_progress * ( intended_viewport_offset.y - actual_viewport_offset.y )),
-			};
+			return {
+				intended_viewport_offset: cloneDeep(intended_viewport_offset),
+				viewport_tween_progress: viewport_tween_progress + 0.02,
+				actual_viewport_offset: {
+					x: Math.floor(actual_viewport_offset.x + viewport_tween_progress * ( intended_viewport_offset.x - actual_viewport_offset.x )),
+					y: Math.floor(actual_viewport_offset.y + viewport_tween_progress * ( intended_viewport_offset.y - actual_viewport_offset.y )),
+				},
+			}
 		} else {
-			me.state.viewport_tween_progress = 1.0;
-			me.state.actual_viewport_offset = {
-				x: intended_viewport_offset.x,
-				y: intended_viewport_offset.y,
+			return {
+				viewport_tween_progress: 1.0,
+				intended_viewport_offset: cloneDeep(intended_viewport_offset),
+				actual_viewport_offset: cloneDeep(intended_viewport_offset),
 			};
 		}
 	},

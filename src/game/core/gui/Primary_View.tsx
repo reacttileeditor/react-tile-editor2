@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import _, { isEmpty } from "lodash";
 
@@ -29,7 +29,12 @@ export const Primary_View = () => {
 	const _Asset_Manager: Asset_Manager_Data = New_Asset_Manager();
 	const default_canvas_size: Point2D = {x: 567, y: 325};
 
-	const [_Blit_Manager, set_Blit_Manager] = useState<Blit_Manager_Data|null>(null);
+	//const [_Blit_Manager, set_Blit_Manager] = useState<Blit_Manager_Data|null>(null);
+
+	const _Blit_Manager = useRef<Blit_Manager_Data|null>( null );
+	const set_Blit_Manager = (newVal: Blit_Manager_Data) => { _Blit_Manager.current = newVal;  console.log('set blit manager') }
+	const get_Blit_Manager = () => (_Blit_Manager.current as Blit_Manager_Data);
+
 	const [_Tilemap_Manager, set_Tilemap_Manager] = useState<Tilemap_Manager_Data|null>(null);
 	const [is_edit_mode, set_is_edit_mode] = useState<boolean>(true);
 	const [assets_loaded, set_assets_loaded] = useState<boolean>(false);
@@ -53,7 +58,7 @@ export const Primary_View = () => {
 			Tilemap_Manager_ƒ.initialize_tiles(New_Tilemap_Manager(), _Asset_Manager)
 		);		
 		set_Game_Manager_Data(New_Game_Manager({
-			_Blit_Manager: () => _Blit_Manager as Blit_Manager_Data,
+			_Blit_Manager: () => _Blit_Manager.current as Blit_Manager_Data,
 			_Asset_Manager: () => _Asset_Manager,
 			_Tilemap_Manager: () => _Tilemap_Manager as Tilemap_Manager_Data,
 			get_GM_instance: get_Game_Manager_Data,
@@ -97,7 +102,8 @@ export const Primary_View = () => {
 								context_connected={context_connected}
 								dimensions={default_canvas_size}
 								_Asset_Manager={() => (_Asset_Manager)}
-								_Blit_Manager={() => (_Blit_Manager as Blit_Manager_Data)}
+								_Blit_Manager={get_Blit_Manager}
+								set_Blit_Manager={set_Blit_Manager}
 								_Tilemap_Manager={() => (_Tilemap_Manager as Tilemap_Manager_Data)}
 								connect_context_to_blit_manager={connect_context_to_blit_manager}
 							/>
@@ -106,7 +112,7 @@ export const Primary_View = () => {
 								assets_loaded={assets_loaded}
 								dimensions={default_canvas_size}
 								_Asset_Manager={() => (_Asset_Manager)}
-								_Blit_Manager={() => (_Blit_Manager as Blit_Manager_Data)}
+								_Blit_Manager={get_Blit_Manager}
 								_Tilemap_Manager={() => (_Tilemap_Manager as Tilemap_Manager_Data)}
 								get_Game_Manager_Data={get_Game_Manager_Data}
 								set_Game_Manager_Data={set_Game_Manager_Data}

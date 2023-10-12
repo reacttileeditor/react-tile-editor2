@@ -17,6 +17,7 @@ import { useInterval } from "../engine/Utils";
 interface Editor_View_Props {
 	_Asset_Manager: () => Asset_Manager_Data,
 	_Blit_Manager: () => Blit_Manager_Data,
+	set_Blit_Manager: (newVal: Blit_Manager_Data) => void,
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
 	assets_loaded: boolean,
 	context_connected:  boolean,
@@ -114,7 +115,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			props._Tilemap_Manager != null
 			
 		){
-		Tilemap_Manager_ƒ.do_one_frame_of_rendering( props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager() );
+		Tilemap_Manager_ƒ.do_one_frame_of_rendering( props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), props.set_Blit_Manager );
 		draw_cursor();
 		}
 	}
@@ -165,7 +166,9 @@ export const Editor_View = (props: Editor_View_Props) => {
 			move.x += 40;
 		}
 
-		Blit_Manager_ƒ.adjust_viewport_pos(props._Blit_Manager(), move.x, move.y);
+		props.set_Blit_Manager(
+			Blit_Manager_ƒ.adjust_viewport_pos(props._Blit_Manager(), move.x, move.y)
+		)
 	}
 
 

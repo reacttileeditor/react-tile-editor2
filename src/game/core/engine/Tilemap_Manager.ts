@@ -244,11 +244,14 @@ export const Tilemap_Manager_ƒ = {
 	},
 
 	
-	do_one_frame_of_rendering: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
+	do_one_frame_of_rendering: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, set_Blit_Manager: (newVal: Blit_Manager_Data) => void) => {
 		if(me.state.initialized){
 			Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM);
 			Tilemap_Manager_ƒ.draw_tiles(me, _AM, _BM);
-			Blit_Manager_ƒ.draw_entire_frame(_BM);
+
+			set_Blit_Manager(
+				Blit_Manager_ƒ.draw_entire_frame(_BM)
+			)
 		} else {
 			Tilemap_Manager_ƒ.initialize_tiles(me, _AM);
 		}
