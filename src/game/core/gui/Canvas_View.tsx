@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
 
@@ -36,9 +36,11 @@ export const Canvas_View = (props: Props) => {
 
 	const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
-	const [keys_currently_pressed, set_keys_currently_pressed] = useState<Array<string>>([]);
+	//const [keys_currently_pressed, set_keys_currently_pressed] = useState<Array<string>>([]);
 	const [mousedown_pos, set_mousedown_pos] = useState<Point2D|null>(null);
 
+	const keys_currently_pressed = useRef<Array<string>>([]);
+	const set_keys_currently_pressed = (newKeys: Array<string>) => (keys_currently_pressed.current = newKeys);
 
 /*----------------------- initialization and asset loading -----------------------*/
 	useEffect(() => {
@@ -91,17 +93,17 @@ export const Canvas_View = (props: Props) => {
 		Events, like in photoshop, are modal; once you start rotating an image, the program is essentially 'locked' into a rotation mode until you let go of the mouse.  Because of this, we handle everything basically as a central 'switchboard', right here.
 	*/
 	const handle_canvas_keydown = (evt: React.KeyboardEvent<HTMLCanvasElement>)=>{
-		set_keys_currently_pressed(_.uniq( _.concat(keys_currently_pressed, evt.key) ));
+		set_keys_currently_pressed(_.uniq( _.concat(keys_currently_pressed.current, evt.key) ));
 
 
-		props.handle_canvas_keys_down( keys_currently_pressed );
+		props.handle_canvas_keys_down( keys_currently_pressed.current );
 	}
 
 	const handle_canvas_keyup = (evt: React.KeyboardEvent<HTMLCanvasElement>)=>{
-		set_keys_currently_pressed( _.uniq( _.filter(keys_currently_pressed, (val)=>(val != evt.key)) ) );
+		set_keys_currently_pressed( _.uniq( _.filter(keys_currently_pressed.current, (val)=>(val != evt.key)) ) );
 
 
-		props.handle_canvas_keys_down( keys_currently_pressed );
+		props.handle_canvas_keys_down( keys_currently_pressed.current );
 	}
 
 
