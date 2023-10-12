@@ -35,7 +35,11 @@ export const Primary_View = () => {
 	const set_Blit_Manager = (newVal: Blit_Manager_Data) => { _Blit_Manager.current = newVal;  console.log('set blit manager') }
 	const get_Blit_Manager = () => (_Blit_Manager.current as Blit_Manager_Data);
 
-	const [_Tilemap_Manager, set_Tilemap_Manager] = useState<Tilemap_Manager_Data|null>(null);
+	const _Tilemap_Manager = useRef<Tilemap_Manager_Data|null>( null );
+	const set_Tilemap_Manager = (newVal: Tilemap_Manager_Data) => { _Tilemap_Manager.current = newVal;  console.log('set tile manager') }
+	const get_Tilemap_Manager = () => (_Tilemap_Manager.current as Tilemap_Manager_Data);
+
+	//const [_Tilemap_Manager, set_Tilemap_Manager] = useState<Tilemap_Manager_Data|null>(null);
 	const [is_edit_mode, set_is_edit_mode] = useState<boolean>(true);
 	const [assets_loaded, set_assets_loaded] = useState<boolean>(false);
 	const [context_connected, set_context_connected] = useState<boolean>(false);
@@ -60,7 +64,7 @@ export const Primary_View = () => {
 		set_Game_Manager_Data(New_Game_Manager({
 			_Blit_Manager: () => _Blit_Manager.current as Blit_Manager_Data,
 			_Asset_Manager: () => _Asset_Manager,
-			_Tilemap_Manager: () => _Tilemap_Manager as Tilemap_Manager_Data,
+			_Tilemap_Manager: () => _Tilemap_Manager.current as Tilemap_Manager_Data,
 			get_GM_instance: get_Game_Manager_Data,
 		}));
 
@@ -104,7 +108,8 @@ export const Primary_View = () => {
 								_Asset_Manager={() => (_Asset_Manager)}
 								_Blit_Manager={get_Blit_Manager}
 								set_Blit_Manager={set_Blit_Manager}
-								_Tilemap_Manager={() => (_Tilemap_Manager as Tilemap_Manager_Data)}
+								_Tilemap_Manager={get_Tilemap_Manager}
+								set_Tilemap_Manager={set_Tilemap_Manager}
 								connect_context_to_blit_manager={connect_context_to_blit_manager}
 							/>
 							:
@@ -113,7 +118,7 @@ export const Primary_View = () => {
 								dimensions={default_canvas_size}
 								_Asset_Manager={() => (_Asset_Manager)}
 								_Blit_Manager={get_Blit_Manager}
-								_Tilemap_Manager={() => (_Tilemap_Manager as Tilemap_Manager_Data)}
+								_Tilemap_Manager={get_Tilemap_Manager}
 								get_Game_Manager_Data={get_Game_Manager_Data}
 								set_Game_Manager_Data={set_Game_Manager_Data}
 							
