@@ -64,13 +64,13 @@ interface AnimationState {
 type ObjectiveTypes = 'extermination' | 'decapitation';
 
 
-
+type Game_and_Tilemap_Manager_Data = {
+	gm: Game_Manager_Data,
+	tm: Tilemap_Manager_Data,
+}
 
 
 export type Game_Manager_Data = {
-//	_Asset_Manager: () => Asset_Manager_Data,
-//	_Blit_Manager: () => Blit_Manager_Data,
-	_TM: () => Tilemap_Manager_Data,
 	animation_state: AnimationState;
 	game_state: Game_State;
 	update_game_state_for_ui: Function;
@@ -88,9 +88,6 @@ export const New_Game_Manager = (p: {
 
 
 	const game_manager: Game_Manager_Data = {
-		// _Asset_Manager: p._Asset_Manager,
-		// _Blit_Manager: p._Blit_Manager,
-		_TM: p._TM,
 		update_game_state_for_ui: ()=>{},
 		update_tooltip_state: ()=>{},
 		cursor_pos: {x: 0, y: 0},
@@ -202,8 +199,8 @@ export const Game_Manager_ƒ = {
 	},
 
 
-	handle_click: (me: Game_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState): Game_Manager_Data => (
-		Game_Manager_ƒ.select_object_based_on_tile_click(me, pos, buttons_pressed)
+	handle_click: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState): Game_Manager_Data => (
+		Game_Manager_ƒ.select_object_based_on_tile_click(me, _TM, pos, buttons_pressed)
 	),
 		
 	
@@ -243,24 +240,23 @@ export const Game_Manager_ƒ = {
 
 /*----------------------- turn management -----------------------*/
 
-	advance_turn_start: (me: Game_Manager_Data, _BM: Blit_Manager_Data):Game_Manager_Data => {
+	advance_turn_start: (me: Game_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data): Game_and_Tilemap_Manager_Data => {
 		console.log(`beginning turn #${me.game_state.current_turn}`)
-		me.game_state.current_frame_state = cloneDeep(Game_Manager_ƒ.get_current_turn_state(me))
-		Tilemap_Manager_ƒ.clear_tile_map(me._TM(), 'ui');
 
-
-		var date = new Date();
-	
 		return {
-			...cloneDeep(me),
-			animation_state: {
-				is_animating_live_game: true,
-				time_live_game_anim_started__in_ticks: _BM.time_tracker.current_tick,
-				time_paused_game_anim_started__in_ticks: me.animation_state.time_paused_game_anim_started__in_ticks,
-			},
-			game_state: {
-				...cloneDeep(me.game_state),
-				objective_text: Game_Manager_ƒ.write_full_objective_text(me, Game_Manager_ƒ.get_game_state(me).objective_type, Game_Manager_ƒ.get_game_state(me)),
+			tm: Tilemap_Manager_ƒ.clear_tile_map(_TM, 'ui'),
+			gm: {
+				...cloneDeep(me),
+				animation_state: {
+					is_animating_live_game: true,
+					time_live_game_anim_started__in_ticks: _BM.time_tracker.current_tick,
+					time_paused_game_anim_started__in_ticks: me.animation_state.time_paused_game_anim_started__in_ticks,
+				},
+				game_state: {
+					...cloneDeep(me.game_state),
+					current_frame_state: cloneDeep(Game_Manager_ƒ.get_current_turn_state(me)),
+					objective_text: Game_Manager_ƒ.write_full_objective_text(me, Game_Manager_ƒ.get_game_state(me).objective_type, Game_Manager_ƒ.get_game_state(me)),
+				}
 			}
 		}
 	},
@@ -334,13 +330,13 @@ export const Game_Manager_ƒ = {
 		)
 	),
 
-	get_current_creatures_move_cost: (me: Game_Manager_Data): string => {
+	get_current_creatures_move_cost: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data): string => {
 		const selected_creature = Game_Manager_ƒ.get_selected_creature(me);
 
 		if(selected_creature){
 			const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
-				me._TM(),
-				Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( me._TM(), me.cursor_pos ), //selected_creature.tile_pos,
+				_TM,
+				Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, me.cursor_pos ), //selected_creature.tile_pos,
 				'terrain',
 			);
 
@@ -351,36 +347,36 @@ export const Game_Manager_ƒ = {
 		}
 	},
 
-	get_tooltip_data: (me: Game_Manager_Data): TooltipData => ({
+	get_tooltip_data: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data): TooltipData => ({
 		pos: me.cursor_pos,
 		tile_name: Tilemap_Manager_ƒ.get_tile_name_for_pos(
-			me._TM(),
-			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( me._TM(), me.cursor_pos ),
+			_TM,
+			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, me.cursor_pos ),
 			'terrain',
 		),
-		tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me)}`
+		tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me, _TM)}`
 	}),
 
-	do_one_frame_of_processing: (me: Game_Manager_Data, _BM: Blit_Manager_Data): Game_Manager_Data => {
+	do_one_frame_of_processing: (me: Game_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data): Game_Manager_Data => {
 		//me.update_game_state_for_ui(me.game_state);
 		//me.update_tooltip_state( Game_Manager_ƒ.get_tooltip_data(me));
 		
 
 		return ƒ.if(me.animation_state.is_animating_live_game,
-			Game_Manager_ƒ.do_live_game_processing(me, _BM),
-			Game_Manager_ƒ.do_paused_game_processing(me, _BM)
+			Game_Manager_ƒ.do_live_game_processing(me, _BM, _TM),
+			Game_Manager_ƒ.do_paused_game_processing(me, _BM, _TM)
 		);
 	},
 
-	do_one_frame_of_rendering: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): void => {
+	do_one_frame_of_rendering: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data): void => {
 		if(me.animation_state.is_animating_live_game){
-			Game_Manager_ƒ.do_live_game_rendering(me, _BM, _AM);
+			Game_Manager_ƒ.do_live_game_rendering(me, _BM, _AM, _TM);
 		} else {
-			Game_Manager_ƒ.do_paused_game_rendering(me, _AM, _BM);
+			Game_Manager_ƒ.do_paused_game_rendering(me, _AM, _BM, _TM);
 		}
 	},
 
-	draw_cursor: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
+	draw_cursor: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data) => {
 		//const pos = this._TM.convert_tile_coords_to_pixel_coords(0,4); 
 
 		Asset_Manager_ƒ.draw_image_for_asset_name({
@@ -388,9 +384,9 @@ export const Game_Manager_ƒ = {
 			asset_name:					'cursor',
 			_BM:						_BM,
 			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
-				me._TM(),
+				_TM,
 				Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(
-					me._TM(),
+					_TM,
 					me.cursor_pos
 				)
 			),
@@ -404,7 +400,7 @@ export const Game_Manager_ƒ = {
 		})
 	},
 
-	do_live_game_processing: (me: Game_Manager_Data, _BM: Blit_Manager_Data): Game_Manager_Data => {
+	do_live_game_processing: (me: Game_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data): Game_Manager_Data => {
 		/*
 			Process all of the existing creatures.
 			
@@ -420,7 +416,7 @@ export const Game_Manager_ƒ = {
 			let master_change_list: Array<ChangeInstance> = [];
 
 			map( me.game_state.current_frame_state.creature_list, (val,idx) => {
-				const processed_results = Creature_ƒ.process_single_frame(val, me._TM(), Game_Manager_ƒ.get_time_offset(me, _BM));
+				const processed_results = Creature_ƒ.process_single_frame(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM));
 
 				map(processed_results.spawnees, (val)=>{ spawnees.push(val) });
 				map(processed_results.change_list, (val)=>{ master_change_list.push(val) });
@@ -433,7 +429,7 @@ export const Game_Manager_ƒ = {
 			*/
 			let all_objects = concat( cloneDeep(me.game_state.custom_object_list), cloneDeep(spawnees));
 			let all_objects_processed = map( all_objects, (val,idx) => {
-				return (Custom_Object_ƒ.process_single_frame(val, me._TM(), Game_Manager_ƒ.get_time_offset(me, _BM)))
+				return (Custom_Object_ƒ.process_single_frame(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM)))
 			});
 
 			let all_objects_processed_and_culled = filter( all_objects_processed, (val)=>(
@@ -473,14 +469,14 @@ export const Game_Manager_ƒ = {
 		}
 	},
 
-	do_paused_game_processing: (me: Game_Manager_Data, _BM: Blit_Manager_Data): Game_Manager_Data => {
+	do_paused_game_processing: (me: Game_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data): Game_Manager_Data => {
 		/*
 			This is considerably simpler; we just run existing custom objects through their processing.
 		*/
 
 		let all_objects = cloneDeep(me.game_state.custom_object_list);
 		let all_objects_processed = map( all_objects, (val,idx) => {
-			return (Custom_Object_ƒ.process_single_frame(val, me._TM(), Game_Manager_ƒ.get_time_offset(me, _BM)))
+			return (Custom_Object_ƒ.process_single_frame(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM)))
 		});
 
 		let all_objects_processed_and_culled = filter( all_objects_processed, (val)=>(
@@ -498,7 +494,7 @@ export const Game_Manager_ƒ = {
 	},
 
 
-	do_live_game_rendering: (me: Game_Manager_Data, _BM: Blit_Manager_Data, _AM: Asset_Manager_Data) => {
+	do_live_game_rendering: (me: Game_Manager_Data, _BM: Blit_Manager_Data, _AM: Asset_Manager_Data, _TM: Tilemap_Manager_Data) => {
 		/*
 			This is for when the game is "live" and actually progressing through time.  The player's set up their moves, and hit "go".
 		*/
@@ -506,7 +502,7 @@ export const Game_Manager_ƒ = {
 		map( me.game_state.current_frame_state.creature_list, (val,idx) => {
 			Asset_Manager_ƒ.draw_image_for_asset_name({
 				_AM:						_AM,
-				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, me._TM(), Game_Manager_ƒ.get_time_offset(me, _BM)),
+				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM)),
 				_BM:						_BM,
 				pos:						val.pixel_pos, 
 				zorder:						zorder.rocks,
@@ -556,15 +552,15 @@ export const Game_Manager_ƒ = {
 				vertically_flipped:			false,
 			})
 		})			
-		Game_Manager_ƒ.draw_cursor(me, _AM, _BM);
+		Game_Manager_ƒ.draw_cursor(me, _AM, _BM, _TM);
 	},
 
-	draw_path_for_unit: (me: Game_Manager_Data, creature: Creature_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data ) => {
+	draw_path_for_unit: (me: Game_Manager_Data, creature: Creature_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data ): Game_and_Tilemap_Manager_Data => {
 		Asset_Manager_ƒ.draw_image_for_asset_name ({
 			_AM:						_AM,
 			asset_name:					'cursor_green',
 			_BM:						_BM,
-			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM(), creature.tile_pos),
+			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, creature.tile_pos),
 			zorder:						zorder.map_cursor,
 			current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 			opacity:					1.0,
@@ -574,11 +570,15 @@ export const Game_Manager_ƒ = {
 			vertically_flipped:			false,
 		})
 
-		Tilemap_Manager_ƒ.clear_tile_map(me._TM(), 'ui');
+		
+
+		let tilemap_mgr_data: Tilemap_Manager_Data = Tilemap_Manager_ƒ.clear_tile_map(_TM, 'ui');
 
 		map(creature.path_this_turn, (path_val, path_idx) => {
-			Tilemap_Manager_ƒ.modify_tile_status(
-				me._TM(),
+			//should update each of these in succession.  Shitty, horribly inefficient, we should fix it.
+
+			tilemap_mgr_data = Tilemap_Manager_ƒ.modify_tile_status(
+				_TM,
 				path_val,
 				ƒ.if( includes(creature.path_reachable_this_turn, path_val),
 					ƒ.if(path_val == last(creature.path_reachable_this_turn),
@@ -590,19 +590,24 @@ export const Game_Manager_ƒ = {
 				'ui'
 			);
 		});
+
+		return {
+			tm: tilemap_mgr_data,
+			gm: me,
+		}
 	},
 
 
-	do_paused_game_rendering: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
+	do_paused_game_rendering: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data) => {
 		/*
 			This particularly means "paused at end of turn".
 		*/
 		map( Game_Manager_ƒ.get_current_turn_state(me).creature_list, (val,idx) => {
 			Asset_Manager_ƒ.draw_image_for_asset_name({
 				_AM:						_AM,
-				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, me._TM(), Game_Manager_ƒ.get_time_offset(me, _BM)),
+				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM)),
 				_BM:						_BM,
-				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM(), val.tile_pos),
+				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, val.tile_pos),
 				zorder:						zorder.rocks,
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
@@ -615,14 +620,14 @@ export const Game_Manager_ƒ = {
 			Asset_Manager_ƒ.draw_hitpoints({
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
 				_BM:						_BM,
-				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._TM(), val.tile_pos),
+				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, val.tile_pos),
 				zorder:						zorder.rocks,
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
 			})			
 	
 			if(me.game_state.selected_object_index == idx){
-				Game_Manager_ƒ.draw_path_for_unit(me,val, _AM, _BM)
+				Game_Manager_ƒ.draw_path_for_unit(me,val, _AM, _BM, _TM)
 			}
 
 
@@ -655,7 +660,7 @@ export const Game_Manager_ƒ = {
 				})
 			})	
 		})
-		Game_Manager_ƒ.draw_cursor(me, _AM, _BM);
+		Game_Manager_ƒ.draw_cursor(me, _AM, _BM, _TM);
 
 	},
 
@@ -696,11 +701,11 @@ export const Game_Manager_ƒ = {
 		return state ? state : Individual_Game_Turn_State_Init;
 	},
 	
-	select_object_based_on_tile_click: (me: Game_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState): Game_Manager_Data => {
+	select_object_based_on_tile_click: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState): Game_Manager_Data => {
 		/*
 			This handles two "modes" simultaneously.  If we click on an object, then we change the current selected object to be the one we clicked on (its position is occupied, and ostensibly can't be moved into - this might need to change with our game rules being what they are, but we'll cross that bridge later).  If we click on the ground, then we're intending to move the current object to that location.
 		*/
-		const new_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( me._TM(), pos );
+		const new_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, pos );
 		
 		const newly_selected_creature = findIndex( Game_Manager_ƒ.get_current_turn_state(me).creature_list, {
 			tile_pos: new_pos
@@ -723,8 +728,8 @@ export const Game_Manager_ƒ = {
 					
 					Creature_ƒ.set_path(
 						creature,
-						Pathfinder_ƒ.find_path_between_map_tiles( me._TM(), creature.tile_pos, new_pos, creature ).successful_path,
-						me._TM()
+						Pathfinder_ƒ.find_path_between_map_tiles( _TM, creature.tile_pos, new_pos, creature ).successful_path,
+						_TM
 					);
 					//Creature_ƒ.calculate_next_anim_segment(creature, me._TM, 0);
 				} else if ( buttons_pressed.right == true ){

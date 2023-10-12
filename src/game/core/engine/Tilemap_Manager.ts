@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _, { Dictionary, isArray } from "lodash";
+import _, { Dictionary, cloneDeep, isArray } from "lodash";
 
 import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
@@ -11,9 +11,12 @@ import { ƒ } from "./Utils";
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 
-interface tileViewState {
+type tileViewState = {
 	tile_maps: TileMaps,
 	initialized: boolean,
+} & CacheData;
+
+type CacheData = {
 	cache_of_tile_comparators: _TileMaps<TileComparatorMap>,
 	cache_of_image_lists: {
 		[index: string]: ImageListCache
@@ -80,11 +83,10 @@ export const Tilemap_Manager_ƒ = {
 
 /*----------------------- initialization and asset loading -----------------------*/
 
-	initialize_tiles: (me: Tilemap_Manager_Data,) => {
+	initialize_tiles: (me: Tilemap_Manager_Data): Tilemap_Manager_Data => {
 		let { consts, static_vals } = me._AM;
 
-
-		me.state.tile_maps.terrain = _.range(consts.col_height).map( (row_value, row_index) => {
+		const fresh_terrain_tilemap: TileMap = _.range(consts.col_height).map( (row_value, row_index) => {
 			return _.range(consts.row_length).map( (col_value, col_index) => {
 				return Asset_Manager_ƒ.yield_tile_name_list(me._AM)[
 					Utils.dice( _.size( Asset_Manager_ƒ.yield_tile_name_list(me._AM) ) ) -1 
@@ -92,41 +94,76 @@ export const Tilemap_Manager_ƒ = {
 			});
 		});
 
-		Tilemap_Manager_ƒ.clear_tile_map(me,'ui');	
 
-		me.state.initialized = true;
+		return {
+			...cloneDeep(me),
+			state: {
+				tile_maps: {
+					terrain: fresh_terrain_tilemap,
+					ui: Tilemap_Manager_ƒ.create_empty_tile_map(me),
+				},
+				cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
+				cache_of_image_lists: _.cloneDeep({}),
+				initialized: true,
+			}
+		}
 	},
 
-	clear_cache: (me: Tilemap_Manager_Data) => {
-		me.state.cache_of_tile_comparators = _.cloneDeep(tile_comparator_cache_init);
-		me.state.cache_of_image_lists = _.cloneDeep({});
-	},
+	cleared_cache: () : CacheData => ({
+		cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
+		cache_of_image_lists: _.cloneDeep({}),
+	}),
 
 /*----------------------- state mutation -----------------------*/
-	modify_tile_status: (me: Tilemap_Manager_Data, pos: Point2D, selected_tile_type: string, tilemap_name: TileMapKeys ): void => {
-		let { consts, static_vals } = me._AM;
+	modify_tile_status: (
+		me: Tilemap_Manager_Data,
+		pos: Point2D,
+		selected_tile_type: string,
+		tilemap_name: TileMapKeys,
+	): Tilemap_Manager_Data => {
+
+		const new_tilemap_data = cloneDeep(me);
 		
 		if(
 			Tilemap_Manager_ƒ.is_within_map_bounds( me, pos )
 		){
 			if(selected_tile_type && selected_tile_type != ''){
-				me.state.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
+				new_tilemap_data.state.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
 
-				Tilemap_Manager_ƒ.clear_cache(me);
+				return {
+					...new_tilemap_data,
+					...Tilemap_Manager_ƒ.cleared_cache(),
+				}
 			}
 		}
+
+		return {
+			...new_tilemap_data,
+		}
+
 	},
 
-	clear_tile_map: (me: Tilemap_Manager_Data, tilemap_name: TileMapKeys ) => {
+	create_empty_tile_map: (me: Tilemap_Manager_Data): TileMap => {
 		let { consts, static_vals } = me._AM;
 
-		me.state.tile_maps[tilemap_name] = _.range(consts.col_height).map( (row_value, row_index) => {
+		return _.range(consts.col_height).map( (row_value, row_index) => {
 			return _.range(consts.row_length).map( (col_value, col_index) => {
 				return ''
 			});
-		});			
+		});
+	},
 
-		Tilemap_Manager_ƒ.clear_cache(me);
+	clear_tile_map: (me: Tilemap_Manager_Data, tilemap_name: TileMapKeys ): Tilemap_Manager_Data => {
+		let { consts, static_vals } = me._AM;
+
+		const new_tilemap_data = cloneDeep(me);
+
+		new_tilemap_data.state.tile_maps[tilemap_name] = Tilemap_Manager_ƒ.create_empty_tile_map(me);
+
+		return {
+			...new_tilemap_data,
+			...Tilemap_Manager_ƒ.cleared_cache(),
+		}
 	},
 
 

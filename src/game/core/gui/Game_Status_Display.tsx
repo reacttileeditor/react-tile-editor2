@@ -39,6 +39,7 @@ interface Game_Status_Display_Props {
 	set_Game_Manager_Data: (newVal: Game_Manager_Data) => void;
 	_Asset_Manager: () => Asset_Manager_Data,
 	_Blit_Manager: () => Blit_Manager_Data,
+	_Tilemap_Manager: () => Tilemap_Manager_Data,
 }
 
 
@@ -69,8 +70,10 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 			>
 				<button
 					onClick={(evt)=>{
+						const newData = Game_Manager_ƒ.advance_turn_start(props.get_Game_Manager_Data(), props._Blit_Manager(), props._Tilemap_Manager());
+
 						props.set_Game_Manager_Data(
-							Game_Manager_ƒ.advance_turn_start(props.get_Game_Manager_Data(), props._Blit_Manager())
+							newData.gm
 						)
 					}}
 				>

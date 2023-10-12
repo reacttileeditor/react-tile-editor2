@@ -52,13 +52,15 @@ export const Editor_View = (props: Editor_View_Props) => {
 			&&
 			render_loop_interval == null
 			&&
-			props._Tilemap_Manager != null
+			props._Tilemap_Manager() != null
+			&&
+			props._Blit_Manager() != null
 			
 		){
 			console.log('EDITOR START')
 			start_render_loop();
 		}
-	}, [props.assets_loaded, props._Tilemap_Manager]);
+	}, [props.assets_loaded, props._Tilemap_Manager(), props._Blit_Manager()]);
 
 	useEffect(() => {
 

@@ -61,15 +61,20 @@ import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game
 import { Game_Status_Display } from "./Game_Status_Display";
 
 
-export const Tooltip_Manager = (props: {get_Game_Manager_Data: () => Game_Manager_Data, render_ticktock: boolean}) => {
+export const Tooltip_Manager = (props: {
+	get_Game_Manager_Data: () => Game_Manager_Data,
+	_Tilemap_Manager: () => Tilemap_Manager_Data
+	render_ticktock: boolean
+}) => {
 	const _Game_Manager_Data = props.get_Game_Manager_Data();
+	const _Tilemap_Manager_Data = props._Tilemap_Manager();
 
 	return <div className={`map-tooltip-anchor`}>
 		{
 			_Game_Manager_Data != undefined
 			&&
 			<Map_Tooltip
-				{...Game_Manager_ƒ.get_tooltip_data(_Game_Manager_Data)}
+				{...Game_Manager_ƒ.get_tooltip_data(_Game_Manager_Data, _Tilemap_Manager_Data)}
 			/>
 		}
 	</div>
@@ -86,8 +91,8 @@ export const Game_View = (props: Game_View_Props) => {
 		console.log('game view process')
 
 		Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager());
-		props.set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Blit_Manager()) );
-		Game_Manager_ƒ.do_one_frame_of_rendering(props.get_Game_Manager_Data(), props._Asset_Manager(), props._Blit_Manager());
+		props.set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Blit_Manager(), props._Tilemap_Manager()) );
+		Game_Manager_ƒ.do_one_frame_of_rendering(props.get_Game_Manager_Data(), props._Asset_Manager(), props._Blit_Manager(), props._Tilemap_Manager());
 
 
 		/*
@@ -113,7 +118,7 @@ export const Game_View = (props: Game_View_Props) => {
 	}
 
 	const handle_canvas_mouse_click = (pos: Point2D, buttons_pressed: MouseButtonState) => {
-		props.set_Game_Manager_Data( Game_Manager_ƒ.handle_click(props.get_Game_Manager_Data(), pos, buttons_pressed));
+		props.set_Game_Manager_Data( Game_Manager_ƒ.handle_click(props.get_Game_Manager_Data(),  props._Tilemap_Manager(), pos, buttons_pressed));
 	}
 
 
@@ -129,6 +134,7 @@ export const Game_View = (props: Game_View_Props) => {
 		/>
 		 <Tooltip_Manager
 			get_Game_Manager_Data={props.get_Game_Manager_Data}
+			_Tilemap_Manager={props._Tilemap_Manager}
 			render_ticktock={render_ticktock}
 		/>
 		<Game_Status_Display
@@ -136,6 +142,7 @@ export const Game_View = (props: Game_View_Props) => {
 			set_Game_Manager_Data={props.set_Game_Manager_Data}
 			_Asset_Manager={props._Asset_Manager}
 			_Blit_Manager={props._Blit_Manager}
+			_Tilemap_Manager={props._Tilemap_Manager}
 		/>
 	</div>;
 

@@ -40,8 +40,6 @@ export const Tile_Palette_Element = (props: Props) => {
 
 /*----------------------- initialization and asset loading -----------------------*/
 	useEffect(() => {
-		console.log('CANVAS TILEMANAGER INIT')
-
 		const ctx = getContext();
 		if(ctx != null){
 			initialize_tilemap_manager(ctx);

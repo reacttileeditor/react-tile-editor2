@@ -66,9 +66,11 @@ export const Primary_View = () => {
 	}, [_Blit_Manager]);
 
 	const initialize_tilemap_manager = (ctx: CanvasRenderingContext2D) => {
+		console.log('initialize_tilemap_manager', _Tilemap_Manager)
 		if( !_Tilemap_Manager ){
 			set_Blit_Manager(New_Blit_Manager(ctx, default_canvas_size, true));
 		} else {
+			console.log('blit manager context reset', _Tilemap_Manager, _Blit_Manager)
 			if(_Blit_Manager){
 				Blit_Manager_ƒ.reset_context(_Blit_Manager, ctx);
 			}
