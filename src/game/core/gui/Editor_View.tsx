@@ -19,6 +19,7 @@ interface Editor_View_Props {
 	_Blit_Manager: () => Blit_Manager_Data,
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
 	assets_loaded: boolean,
+	context_connected:  boolean,
 	connect_context_to_blit_manager: (ctx: CanvasRenderingContext2D) => void,
 	dimensions: Point2D,
 }
@@ -42,24 +43,24 @@ export const Editor_View = (props: Editor_View_Props) => {
 	}, [render_tick]);
 
 	useInterval(() => {
-		// Your custom logic here
-		set_render_tick(render_tick + 1);
-	}, 16.666 );	
-		
-	useEffect(() => {
 		if(
 			props.assets_loaded
 			&&
 			render_loop_interval == null
 			&&
-			props._Tilemap_Manager() != null
-			&&
-			props._Blit_Manager() != null
+			props.context_connected
 			
 		){
-			console.log('EDITOR START')
-			start_render_loop();
+			console.log('EDITOR RENDER TICK')
+			const bm = props._Blit_Manager();
+			set_render_tick(render_tick + 1);
 		}
+
+		// Your custom logic here
+	}, 16.666 );	
+		
+	useEffect(() => {
+
 	}, [props.assets_loaded, props._Tilemap_Manager(), props._Blit_Manager()]);
 
 	useEffect(() => {

@@ -6,7 +6,7 @@ import { Canvas_View } from "./Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ, New_Asset_Manager } from "../engine/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, New_Blit_Manager } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
-import { New_Tilemap_Manager, Tilemap_Manager_Data } from "../engine/Tilemap_Manager";
+import { New_Tilemap_Manager, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager";
 import { Game_View } from "./Game_View";
 import { Editor_View } from "./Editor_View";
 import { Point2D, Rectangle } from '../../interfaces';
@@ -33,6 +33,7 @@ export const Primary_View = () => {
 	const [_Tilemap_Manager, set_Tilemap_Manager] = useState<Tilemap_Manager_Data|null>(null);
 	const [is_edit_mode, set_is_edit_mode] = useState<boolean>(true);
 	const [assets_loaded, set_assets_loaded] = useState<boolean>(false);
+	const [context_connected, set_context_connected] = useState<boolean>(false);
 
 
 	let _Game_Manager_Data: Game_Manager_Data | undefined = undefined;
@@ -46,7 +47,11 @@ export const Primary_View = () => {
 			_Asset_Manager,
 			() => { set_assets_loaded(true); }
 		);
-		set_Tilemap_Manager(New_Tilemap_Manager());		
+
+			//might be a race condition on this one, we'll see.
+		set_Tilemap_Manager(
+			Tilemap_Manager_ƒ.initialize_tiles(New_Tilemap_Manager(), _Asset_Manager)
+		);		
 		set_Game_Manager_Data(New_Game_Manager({
 			_Blit_Manager: () => _Blit_Manager as Blit_Manager_Data,
 			_Asset_Manager: () => _Asset_Manager,
@@ -60,46 +65,13 @@ export const Primary_View = () => {
 		};		
 	}, []);
 
-	useEffect(() => {
-
-
-	}, [_Tilemap_Manager]);
-
-
-	useEffect(() => {
-		if(_Blit_Manager){
-			console.log('PRIMARY BLIT MANAGER LOADED')
-		}
-	}, [_Blit_Manager]);
 
 	const connect_context_to_blit_manager = (ctx: CanvasRenderingContext2D) => {
 		console.log('connect_context_to_blit_manager')
 		set_Blit_Manager(New_Blit_Manager(ctx, default_canvas_size, true));
+		set_context_connected(true)
 	}
 		
-		// if( !_Tilemap_Manager ){
-		// 	set_Blit_Manager(New_Blit_Manager(ctx, default_canvas_size, true));
-		// } else {
-		// 	console.log('blit manager context reset', _Tilemap_Manager, _Blit_Manager)
-		// 	if(_Blit_Manager){
-		// 		Blit_Manager_ƒ.reset_context(_Blit_Manager, ctx);
-		// 	}
-
-							
-		// }
-
-	
-
-		/*if( !_Tilemap_Manager ){
-			set_Blit_Manager(New_Blit_Manager(ctx, default_canvas_size, true));
-			set_Tilemap_Manager(New_Tilemap_Manager({_AM: _Asset_Manager, _BM: _Blit_Manager}));
-		} else {
-			if(_Blit_Manager){
-				Blit_Manager_ƒ.reset_context(_Blit_Manager, ctx);
-			}
-		}*/
-	
-
 
 
 
@@ -108,14 +80,6 @@ export const Primary_View = () => {
 			className="master_node"
 		>
 			{
-				// assets_loaded
-				// &&
-				// !isEmpty(_Asset_Manager)
-				// &&
-				// !isEmpty(_Blit_Manager)
-				// &&
-				// !isEmpty(_Tilemap_Manager)
-				// &&
 				<>
 					<button
 						onClick={ () => { set_is_edit_mode( !is_edit_mode ); } }
@@ -130,6 +94,7 @@ export const Primary_View = () => {
 							?
 							<Editor_View
 								assets_loaded={assets_loaded}
+								context_connected={context_connected}
 								dimensions={default_canvas_size}
 								_Asset_Manager={() => (_Asset_Manager)}
 								_Blit_Manager={() => (_Blit_Manager as Blit_Manager_Data)}
