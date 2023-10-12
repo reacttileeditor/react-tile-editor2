@@ -124,14 +124,15 @@ export const Editor_View = (props: Editor_View_Props) => {
 	
 	/*----------------------- I/O routines -----------------------*/
 	const handle_canvas_click = (pos: Point2D, buttons_pressed: MouseButtonState) => {
+		console.log('canvas click editor')
 		props.set_Tilemap_Manager(
-		Tilemap_Manager_ƒ.modify_tile_status(
-			props._Tilemap_Manager(),
-			props._Asset_Manager(),
-			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
-			selected_tile_type,
-			'terrain'
-		)
+			Tilemap_Manager_ƒ.modify_tile_status(
+				props._Tilemap_Manager(),
+				props._Asset_Manager(),
+				Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
+				selected_tile_type,
+				'terrain'
+			)
 		);
 	}
 

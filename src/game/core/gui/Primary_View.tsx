@@ -45,9 +45,11 @@ export const Primary_View = () => {
 	const [context_connected, set_context_connected] = useState<boolean>(false);
 
 
-	let _Game_Manager_Data: Game_Manager_Data | undefined = undefined;
-	const get_Game_Manager_Data = () => (_Game_Manager_Data as Game_Manager_Data);
-	const set_Game_Manager_Data = (newVal: Game_Manager_Data) => { _Game_Manager_Data = newVal;}
+	//let _Game_Manager_Data: Game_Manager_Data | undefined = undefined;
+	const _Game_Manager_Data = useRef<Game_Manager_Data|null>( null );
+	const get_Game_Manager_Data = () => (_Game_Manager_Data.current as Game_Manager_Data);
+	const set_Game_Manager_Data = (newVal: Game_Manager_Data) => { _Game_Manager_Data.current = newVal;}
+	const [game_manager_loaded, set_game_manager_loaded] = useState<boolean>(false);
 
 
 	useEffect(() => {
@@ -61,18 +63,30 @@ export const Primary_View = () => {
 		set_Tilemap_Manager(
 			Tilemap_Manager_ƒ.initialize_tiles(New_Tilemap_Manager(), _Asset_Manager)
 		);		
-		set_Game_Manager_Data(New_Game_Manager({
-			_Blit_Manager: () => _Blit_Manager.current as Blit_Manager_Data,
-			_Asset_Manager: () => _Asset_Manager,
-			_Tilemap_Manager: () => _Tilemap_Manager.current as Tilemap_Manager_Data,
-			get_GM_instance: get_Game_Manager_Data,
-		}));
+
 
 
 		return () => {
 			console.log('PRIMARY CLEANUP')
 		};		
 	}, []);
+	useEffect(() => {
+		console.log('considering loading game manager');
+
+		if(_Tilemap_Manager.current){
+			console.log('loading game manager');
+
+			set_Game_Manager_Data(New_Game_Manager({
+				_Blit_Manager: () => _Blit_Manager.current as Blit_Manager_Data,
+				_Asset_Manager: () => _Asset_Manager,
+				_Tilemap_Manager: () => _Tilemap_Manager.current as Tilemap_Manager_Data,
+				get_GM_instance: get_Game_Manager_Data,
+			}));
+
+			set_game_manager_loaded(true);
+		}
+
+	}, [_Tilemap_Manager]);
 
 
 	const connect_context_to_blit_manager = (ctx: CanvasRenderingContext2D) => {
@@ -115,12 +129,16 @@ export const Primary_View = () => {
 							:
 							<Game_View
 								assets_loaded={assets_loaded}
+								context_connected={context_connected}
 								dimensions={default_canvas_size}
 								_Asset_Manager={() => (_Asset_Manager)}
 								_Blit_Manager={get_Blit_Manager}
+								set_Blit_Manager={set_Blit_Manager}
 								_Tilemap_Manager={get_Tilemap_Manager}
+								set_Tilemap_Manager={set_Tilemap_Manager}
 								get_Game_Manager_Data={get_Game_Manager_Data}
 								set_Game_Manager_Data={set_Game_Manager_Data}
+								game_manager_loaded={game_manager_loaded}
 							
 								connect_context_to_blit_manager={connect_context_to_blit_manager}
 							/>

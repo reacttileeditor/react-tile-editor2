@@ -21,10 +21,14 @@ import { Custom_Object_Data, Custom_Object_ƒ } from "../../objects_core/Custom_
 interface Game_View_Props {
 	_Asset_Manager: () => Asset_Manager_Data,
 	_Blit_Manager: () => Blit_Manager_Data,
+	set_Blit_Manager: (newVal: Blit_Manager_Data) => void,
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
+	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
 	get_Game_Manager_Data: () => Game_Manager_Data,
 	set_Game_Manager_Data: (newVal: Game_Manager_Data) => void;
 	assets_loaded: boolean,
+	context_connected:  boolean,
+	game_manager_loaded: boolean,
 	connect_context_to_blit_manager: (ctx: CanvasRenderingContext2D) => void,
 	dimensions: Point2D,
 }
@@ -71,7 +75,7 @@ export const Tooltip_Manager = (props: {
 
 	return <div className={`map-tooltip-anchor`}>
 		{
-			props.get_Game_Manager_Data() != undefined
+			false && props.get_Game_Manager_Data() != undefined
 			&&
 			<Map_Tooltip
 				{...Game_Manager_ƒ.get_tooltip_data(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager())}
@@ -90,10 +94,11 @@ export const Game_View = (props: Game_View_Props) => {
 	useEffect(() => {
 		console.log('game view process')
 
-		Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
-		props.set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(),) );
-		Game_Manager_ƒ.do_one_frame_of_rendering(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
-
+		if( props.game_manager_loaded ) {
+			Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), props.set_Blit_Manager);
+			props.set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(),) );
+			Game_Manager_ƒ.do_one_frame_of_rendering(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
+		}
 
 		/*
 			Whether this is an appropriate solution gets into some deep and hard questions about React that I'm not prepared to answer; in a lot of other paradigms, we'd seize full control over the event loop.  Here, we are, instead, opting to "sleep" until our setTimeout fires.
@@ -101,7 +106,7 @@ export const Game_View = (props: Game_View_Props) => {
 			I suspect that because this setTimeout is initiated AFTER all of our rendering code finishes executing, that this solution will not cause the main failure state we're concerned about, which is a 'pileup'; a 'sorceror's apprentice' failure where callbacks are queued up faster than we can process them..
 		*/
 		render_loop_timeout = window.setTimeout( () => {set_render_ticktock( !render_ticktock )}, 16.666 );
-	}, [render_ticktock]);
+	}, [render_ticktock, props.context_connected]);
 
 
 	useEffect(() => {
@@ -114,10 +119,13 @@ export const Game_View = (props: Game_View_Props) => {
 
 	/*----------------------- IO routines -----------------------*/
 	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
-		props.set_Game_Manager_Data( Game_Manager_ƒ.set_cursor_pos(props.get_Game_Manager_Data(), pos, buttons_pressed));
+		if( props.get_Game_Manager_Data() != null ){
+			props.set_Game_Manager_Data( Game_Manager_ƒ.set_cursor_pos(props.get_Game_Manager_Data(), pos, buttons_pressed));
+		}
 	}
 
 	const handle_canvas_mouse_click = (pos: Point2D, buttons_pressed: MouseButtonState) => {
+		console.log('canvas click game')
 		props.set_Game_Manager_Data( Game_Manager_ƒ.handle_click(props.get_Game_Manager_Data(),  props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos, buttons_pressed));
 	}
 
