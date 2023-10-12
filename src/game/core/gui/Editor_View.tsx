@@ -83,7 +83,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			_AM:						props._Asset_Manager(),
 			asset_name:					'cursor',
 			_BM:						props._Blit_Manager(),
-			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( props._Tilemap_Manager(), cursor_pos ),
+			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( props._Tilemap_Manager(), props._Asset_Manager(), cursor_pos ),
 			zorder:						zorder.rocks,
 			current_milliseconds:		0,
 			opacity:					1.0,
@@ -113,7 +113,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			props._Tilemap_Manager != null
 			
 		){
-		Tilemap_Manager_ƒ.do_one_frame_of_rendering( props._Tilemap_Manager() );
+		Tilemap_Manager_ƒ.do_one_frame_of_rendering( props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager() );
 		draw_cursor();
 		}
 	}
@@ -123,14 +123,15 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const handle_canvas_click = (pos: Point2D, buttons_pressed: MouseButtonState) => {
 		Tilemap_Manager_ƒ.modify_tile_status(
 			props._Tilemap_Manager(),
-			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), pos),
+			props._Asset_Manager(),
+			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
 			selected_tile_type,
 			'terrain'
 		);
 	}
 
 	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
-		const new_tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), pos)
+		const new_tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos)
 	
 		//console.log(`pos ${pos.x},${pos.y} | ${new_tile_pos.x},${new_tile_pos.y}`)
 

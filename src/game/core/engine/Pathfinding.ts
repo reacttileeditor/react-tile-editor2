@@ -6,7 +6,7 @@ import { PriorityQueue } from 'ts-pq';
 
 import { ƒ } from "./Utils";
 
-import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
+import { Asset_Manager_Data, TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
 import { Creature_Data, Creature_ƒ } from "../../objects_core/Creature";
 import { Point2D, Rectangle } from '../../interfaces';
@@ -43,11 +43,13 @@ export type Pathfinding_Result = {
 
 export class Node_Graph_Generator {
 	_TM: Tilemap_Manager_Data;
+	_AM: Asset_Manager_Data;
 	_Creature: Creature_Data;
 
-	constructor( _TM: Tilemap_Manager_Data, _Creature: Creature_Data ) {
+	constructor( _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _Creature: Creature_Data ) {
 		
 		this._TM = _TM;
+		this._AM = _AM;
 		this._Creature = _Creature;
 	}
 	
@@ -69,7 +71,7 @@ export class Node_Graph_Generator {
 			If the tile we're checking is out of bounds, then it's blocked.
 			If the tile we're checking is open, it's a valid node connection, so we return it (so we can add it to the graph).
 		*/
-		if( Tilemap_Manager_ƒ.is_within_map_bounds( this._TM, _coords ) ){
+		if( Tilemap_Manager_ƒ.is_within_map_bounds( this._TM, this._AM, _coords ) ){
 			let weight = this.move_cost_for_coords( _grid, _coords );
 		
 			if( weight !== null ){
@@ -236,11 +238,11 @@ const a_star_search = ( _graph: NodeGraph, _start_coords: Point2D, _end_coords: 
 
 
 export const Pathfinder_ƒ = {
-	find_path_between_map_tiles: (_TM: Tilemap_Manager_Data, _start_coords: Point2D, _end_coords: Point2D, _Creature: Creature_Data) => {
+	find_path_between_map_tiles: (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _start_coords: Point2D, _end_coords: Point2D, _Creature: Creature_Data) => {
 		/*
 			We're going to go ahead and pass in the creature as a constructor argument; the idea here is that we can't really "reuse" an existing node graph generator and just pass in a new creature type; the moment anything changes about the creature we're using, we need to completely rebuild the node graph from scratch.  So there's no sense in pipelining it into the whole function tree inside the class - we have to nuke and rebuild anyways, so why not make the interface a bit simpler?
 		*/
-		const _Node_Graph_Generator = new Node_Graph_Generator(_TM, _Creature);
+		const _Node_Graph_Generator = new Node_Graph_Generator(_TM, _AM, _Creature);
 
 	
 		const _graph = _Node_Graph_Generator.build_node_graph_from_grid( _TM.state.tile_maps.terrain );

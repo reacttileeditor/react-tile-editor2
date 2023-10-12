@@ -11,6 +11,8 @@ import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Anim_Schedule_Element, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection } from "./Creature";
 import { Creature_Behavior_ƒ } from "./Creature_Behavior";
+import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
+import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
 
 
 
@@ -24,6 +26,8 @@ export const AI_Core_ƒ = {
 	reconsider_behavior: (
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
 		offset_in_ms: number,
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>
@@ -43,8 +47,8 @@ export const AI_Core_ƒ = {
 		if( size(targets) ){
 			valid_targets = filter(targets, (target)=>{
 				const distance = Tilemap_Manager_ƒ.get_tile_coord_distance_between(
-					Creature_ƒ.get_current_tile_pos_from_pixel_pos(me, _TM),
-					Creature_ƒ.get_current_tile_pos_from_pixel_pos(target, _TM)
+					Creature_ƒ.get_current_tile_pos_from_pixel_pos(me, _TM, _AM, _BM),
+					Creature_ƒ.get_current_tile_pos_from_pixel_pos(target, _TM, _AM, _BM)
 				);
 	
 				return ( distance <= Creature_ƒ.get_delegate(me.type_name).yield_weapon_range() );
@@ -58,7 +62,7 @@ export const AI_Core_ƒ = {
 				We have to set some kind of mode indicator that we're attacking, right now.
 			*/
 
-			Creature_Behavior_ƒ.perform_attack_instance(me, _TM, offset_in_ms, change_list, spawnees, valid_targets[0]);
+			Creature_Behavior_ƒ.perform_attack_instance(me, offset_in_ms, change_list, spawnees, valid_targets[0]);
 
 		} else {
 			/*
@@ -67,7 +71,7 @@ export const AI_Core_ƒ = {
 
 			//TODO gate on remaining action points
 			if( (me.remaining_action_points > 0) ){
-				Creature_Behavior_ƒ.renegotiate_path(me, _TM, offset_in_ms, change_list);
+				Creature_Behavior_ƒ.renegotiate_path(me, _TM, _AM, offset_in_ms, change_list);
 			} else {
 				Creature_Behavior_ƒ.terminate_movement(me, _TM, offset_in_ms, change_list, spawnees);
 			}

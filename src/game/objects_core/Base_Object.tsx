@@ -9,6 +9,8 @@ import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/eng
 
 import { Point2D, Rectangle } from '../interfaces';
 import { Game_Manager_Data } from "../core/engine/Game_Manager";
+import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
+import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
 
 
 
@@ -24,11 +26,19 @@ export type Base_Object_Data = {
 
 	//accessors
 	get_GM_instance: () => Game_Manager_Data;
+	_Asset_Manager: () => Asset_Manager_Data,
+	_Blit_Manager: () => Blit_Manager_Data,
+	_Tilemap_Manager: () => Tilemap_Manager_Data,
 }
 
 export const New_Base_Object = (
 	p: {
 		get_GM_instance: () => Game_Manager_Data;
+		_Asset_Manager: () => Asset_Manager_Data,
+		_Blit_Manager: () => Blit_Manager_Data,
+		_Tilemap_Manager: () => Tilemap_Manager_Data,
+	
+
 		creation_timestamp: number,
 		should_remove: boolean,
 		pixel_pos?: Point2D,
@@ -58,6 +68,10 @@ export const New_Base_Object = (
 
 		//accessors
 		get_GM_instance: p.get_GM_instance,
+		_Asset_Manager: p._Asset_Manager,
+		_Blit_Manager: p._Blit_Manager,
+		_Tilemap_Manager: p._Tilemap_Manager,
+
 	}	
 }
 
@@ -65,8 +79,8 @@ export const New_Base_Object = (
 
 export const Base_Object_ƒ = {
 
-	get_current_mid_turn_tile_pos: (me: Base_Object_Data, TM: Tilemap_Manager_Data): Point2D => (
-		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(TM, me.pixel_pos)
+	get_current_mid_turn_tile_pos: (me: Base_Object_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Point2D => (
+		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)
 	)
 }
 

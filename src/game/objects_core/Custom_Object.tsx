@@ -12,6 +12,8 @@ import { CreatureTypeName } from "./Creature";
 import { Custom_Object_Delegate, CO_Shot_ƒ, CO_Text_Label_ƒ, Custom_Object_Delegate_States, CO_Shot_State, CO_Skull_Icon_ƒ, CO_Hit_Star_BG_ƒ } from "./Custom_Object_Delegate";
 import { Base_Object_Data, New_Base_Object } from "./Base_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
+import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
+import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
  
 
 export type CustomObjectTypeName = 'shot' | 'text_label' | 'skull_icon';
@@ -27,6 +29,9 @@ export type Custom_Object_Data = {
 export const New_Custom_Object = (
 	p: {
 		get_GM_instance: () => Game_Manager_Data;
+		_Asset_Manager: () => Asset_Manager_Data,
+		_Blit_Manager: () => Blit_Manager_Data,
+		_Tilemap_Manager: () => Tilemap_Manager_Data,
 		pixel_pos: Point2D,
 		rotate: number,
 		type_name: CustomObjectTypeName,
@@ -40,6 +45,9 @@ export const New_Custom_Object = (
 	return {
 		...New_Base_Object({
 			get_GM_instance: p.get_GM_instance,
+			_Asset_Manager: p._Asset_Manager,
+			_Blit_Manager: p._Blit_Manager,
+			_Tilemap_Manager: p._Tilemap_Manager,
 			pixel_pos: cloneDeep(p.pixel_pos),
 			rotate: p.rotate,
 			unique_id: p.unique_id,
@@ -78,8 +86,8 @@ export const Custom_Object_ƒ = {
 	},
 
 /*----------------------- movement -----------------------*/
-	get_current_mid_turn_tile_pos: (me: Base_Object_Data, _TM: Tilemap_Manager_Data): Point2D => (
-		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, me.pixel_pos)
+	get_current_mid_turn_tile_pos: (me: Base_Object_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Point2D => (
+		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)
 	),
 
 	process_single_frame: (me: Custom_Object_Data, _Tilemap_Manager: Tilemap_Manager_Data, offset_in_ms: number): Custom_Object_Data => {
@@ -94,6 +102,10 @@ export const Custom_Object_ƒ = {
 
 		return New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
+			_Asset_Manager: me._Asset_Manager,
+			_Blit_Manager: me._Blit_Manager,
+			_Tilemap_Manager: me._Tilemap_Manager,
+
 			pixel_pos: processed_object.pixel_pos,
 			rotate: processed_object.rotate,
 			type_name: me.type_name,

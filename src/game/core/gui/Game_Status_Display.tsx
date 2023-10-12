@@ -70,7 +70,7 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 			>
 				<button
 					onClick={(evt)=>{
-						const newData = Game_Manager_ƒ.advance_turn_start(props.get_Game_Manager_Data(), props._Blit_Manager(), props._Tilemap_Manager());
+						const newData = Game_Manager_ƒ.advance_turn_start(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
 
 						props.set_Game_Manager_Data(
 							newData.gm

@@ -76,7 +76,9 @@ export const Primary_View = () => {
 			}
 
 			set_Game_Manager_Data(New_Game_Manager({
-				_TM: () => _Tilemap_Manager,
+				_Blit_Manager: () => _Blit_Manager as Blit_Manager_Data,
+				_Asset_Manager: () => _Asset_Manager,
+				_Tilemap_Manager: () => _Tilemap_Manager,
 				get_GM_instance: get_Game_Manager_Data,
 			}));				
 		}

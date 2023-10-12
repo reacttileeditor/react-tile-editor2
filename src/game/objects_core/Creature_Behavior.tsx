@@ -13,6 +13,8 @@ import { Creature_Delegate, CT_Hermit_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ } from "
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Anim_Schedule_Element, BehaviorMode, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection } from "./Creature";
 import { AI_Core_ƒ } from "./AI_Core";
+import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
+import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
 
 
 
@@ -155,8 +157,8 @@ export const Creature_Behavior_ƒ = {
 		end_pos: Point2D,
 		_TM: Tilemap_Manager_Data
 	):Direction => {
-		const pixel_start_pos = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, start_pos);
-		const pixel_end_pos = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, end_pos);
+		const pixel_start_pos = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), start_pos);
+		const pixel_end_pos = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), end_pos);
 
 		if( pixel_start_pos.y == pixel_end_pos.y ){
 			if(pixel_start_pos.x < pixel_end_pos.x){
@@ -196,6 +198,8 @@ export const Creature_Behavior_ƒ = {
 	process_single_frame__movement: (
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
 		offset_in_ms: number,
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>
@@ -214,7 +218,7 @@ export const Creature_Behavior_ƒ = {
 		Creature_Behavior_ƒ.update_pixel_pos(me, _TM, offset_in_ms, change_list);
 
 		if( offset_in_ms >= me.next_behavior_reconsideration_timestamp ) {
-			AI_Core_ƒ.reconsider_behavior(me, _TM, offset_in_ms, change_list, spawnees);
+			AI_Core_ƒ.reconsider_behavior(me, _TM, _AM, _BM, offset_in_ms, change_list, spawnees);
 		}
 
 	},
@@ -234,6 +238,7 @@ export const Creature_Behavior_ƒ = {
 	renegotiate_path: (
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
 		offset_in_ms: number,
 		change_list: Array<ChangeInstance>,
 	) => {
@@ -263,7 +268,7 @@ export const Creature_Behavior_ƒ = {
 
 		Creature_ƒ.set_path(
 			me,
-			Pathfinder_ƒ.find_path_between_map_tiles( _TM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
+			Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
 			_TM
 		);
 
@@ -321,7 +326,6 @@ export const Creature_Behavior_ƒ = {
 
 	perform_attack_instance: (
 		me: Creature_Data,
-		_TM: Tilemap_Manager_Data,
 		offset_in_ms: number,
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>,
@@ -334,13 +338,17 @@ export const Creature_Behavior_ƒ = {
 
 
 		const attack_direction = Tilemap_Manager_ƒ.extract_direction_from_map_vector(
-			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, me.tile_pos ),
-			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, target.tile_pos ),
+			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), me.tile_pos ),
+			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), target.tile_pos ),
 		)		
 		Creature_ƒ.set(change_list, me, 'facing_direction', attack_direction);
 
 		spawnees.push(New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
+			_Asset_Manager: me._Asset_Manager,
+			_Blit_Manager: me._Blit_Manager,
+			_Tilemap_Manager: me._Tilemap_Manager,
+
 			pixel_pos: me.pixel_pos,
 			rotate: 0,
 			type_name: 'shot' as CustomObjectTypeName,
@@ -355,6 +363,10 @@ export const Creature_Behavior_ƒ = {
 		
 		spawnees.push(New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
+			_Asset_Manager: me._Asset_Manager,
+			_Blit_Manager: me._Blit_Manager,
+			_Tilemap_Manager: me._Tilemap_Manager,
+
 			pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
 			rotate: 0,
 			type_name: 'text_label' as CustomObjectTypeName,
@@ -366,6 +378,10 @@ export const Creature_Behavior_ƒ = {
 
 		spawnees.push(New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
+			_Asset_Manager: me._Asset_Manager,
+			_Blit_Manager: me._Blit_Manager,
+			_Tilemap_Manager: me._Tilemap_Manager,
+
 			pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
 			rotate: 0,
 			type_name: 'hit_star_bg' as CustomObjectTypeName,
@@ -392,6 +408,10 @@ export const Creature_Behavior_ƒ = {
 		if( me.current_hitpoints <= 0 ) {
 			spawnees.push(New_Custom_Object({
 				get_GM_instance: me.get_GM_instance,
+				_Asset_Manager: me._Asset_Manager,
+				_Blit_Manager: me._Blit_Manager,
+				_Tilemap_Manager: me._Tilemap_Manager,
+	
 				pixel_pos: me.pixel_pos,
 				rotate: 0,
 				type_name: 'skull_icon' as CustomObjectTypeName,
@@ -409,6 +429,8 @@ export const Creature_Behavior_ƒ = {
 	process_single_frame: (
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
 		offset_in_ms: number
 	): {
 		change_list: Array<ChangeInstance>,
@@ -424,6 +446,8 @@ export const Creature_Behavior_ƒ = {
 		Creature_ƒ.process_single_frame__movement(
 			me,
 			_TM,
+			_AM,
+			_BM,
 			offset_in_ms,
 			change_list,
 			spawnees
@@ -457,8 +481,8 @@ export const Creature_Behavior_ƒ = {
 			
 			return ƒ.round_point_to_nearest_pixel( 
 				ƒ.tween_points(
-					Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, animation_segment.start_pos ),
-					Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, animation_segment.end_pos ),
+					Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), animation_segment.start_pos ),
+					Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), animation_segment.end_pos ),
 					time_offset_normalized
 				)
 			);

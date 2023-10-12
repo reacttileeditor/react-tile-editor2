@@ -11,6 +11,8 @@ import { Base_Object_Data, New_Base_Object } from "./Base_Object";
 import { Creature_Delegate, CT_Hermit_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ, CT_Undead_Javelineer_ƒ } from "./Creature_Delegate";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Creature_Behavior_ƒ } from "./Creature_Behavior";
+import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
+import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
 
 export type PathNodeWithDirection = {
 	position: Point2D,
@@ -88,7 +90,10 @@ export type Anim_Schedule_Element = {
 export const New_Creature = (
 	p: {
 		get_GM_instance: () => Game_Manager_Data;
-		_TM: Tilemap_Manager_Data,
+		_Asset_Manager: () => Asset_Manager_Data,
+		_Blit_Manager: () => Blit_Manager_Data,
+		_Tilemap_Manager: () => Tilemap_Manager_Data,
+
 		tile_pos: Point2D,
 		direction?: Direction,
 		remaining_action_points?: number,
@@ -109,7 +114,10 @@ export const New_Creature = (
 	return {
 		...New_Base_Object({
 			get_GM_instance: p.get_GM_instance,
-			pixel_pos: Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(p._TM, p.tile_pos),
+			_Asset_Manager: p._Asset_Manager,
+			_Blit_Manager: p._Blit_Manager,
+			_Tilemap_Manager: p._Tilemap_Manager,
+			pixel_pos: Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(p._Tilemap_Manager(), p._Asset_Manager(), p.tile_pos),
 			unique_id: p.unique_id,
 			should_remove: p.should_remove,
 			creation_timestamp: p.creation_timestamp,
@@ -243,8 +251,8 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 
 
 
-	get_current_tile_pos_from_pixel_pos: (me: Creature_Data, _TM: Tilemap_Manager_Data): Point2D => (
-		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, me.pixel_pos)
+	get_current_tile_pos_from_pixel_pos: (me: Creature_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Point2D => (
+		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)
 	),
 
 

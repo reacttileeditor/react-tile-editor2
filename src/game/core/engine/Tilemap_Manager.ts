@@ -54,13 +54,13 @@ const tile_comparator_cache_init = {
 
 export type Tilemap_Manager_Data = {
 	state: tileViewState;
-	_AM: Asset_Manager_Data;
-	_BM: Blit_Manager_Data;
+	// _AM: Asset_Manager_Data;
+	// _BM: Blit_Manager_Data;
 }
 
 export const New_Tilemap_Manager = (p: {
-	_AM: Asset_Manager_Data,
-	_BM: Blit_Manager_Data,
+	// _AM: Asset_Manager_Data,
+	// _BM: Blit_Manager_Data,
 }): Tilemap_Manager_Data => {
 	
 	return {
@@ -73,8 +73,8 @@ export const New_Tilemap_Manager = (p: {
 			cache_of_image_lists: _.cloneDeep({}),
 			initialized: false,
 		},
-		_AM: p._AM,
-		_BM: p._BM,
+		// _AM: p._AM,
+		// _BM: p._BM,
 	}
 }
 
@@ -83,13 +83,13 @@ export const Tilemap_Manager_ƒ = {
 
 /*----------------------- initialization and asset loading -----------------------*/
 
-	initialize_tiles: (me: Tilemap_Manager_Data): Tilemap_Manager_Data => {
-		let { consts, static_vals } = me._AM;
+	initialize_tiles: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
+		let { consts, static_vals } = _AM;
 
 		const fresh_terrain_tilemap: TileMap = _.range(consts.col_height).map( (row_value, row_index) => {
 			return _.range(consts.row_length).map( (col_value, col_index) => {
-				return Asset_Manager_ƒ.yield_tile_name_list(me._AM)[
-					Utils.dice( _.size( Asset_Manager_ƒ.yield_tile_name_list(me._AM) ) ) -1 
+				return Asset_Manager_ƒ.yield_tile_name_list(_AM)[
+					Utils.dice( _.size( Asset_Manager_ƒ.yield_tile_name_list(_AM) ) ) -1 
 				];
 			});
 		});
@@ -100,7 +100,7 @@ export const Tilemap_Manager_ƒ = {
 			state: {
 				tile_maps: {
 					terrain: fresh_terrain_tilemap,
-					ui: Tilemap_Manager_ƒ.create_empty_tile_map(me),
+					ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
 				},
 				cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
 				cache_of_image_lists: _.cloneDeep({}),
@@ -117,6 +117,7 @@ export const Tilemap_Manager_ƒ = {
 /*----------------------- state mutation -----------------------*/
 	modify_tile_status: (
 		me: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
 		pos: Point2D,
 		selected_tile_type: string,
 		tilemap_name: TileMapKeys,
@@ -125,7 +126,7 @@ export const Tilemap_Manager_ƒ = {
 		const new_tilemap_data = cloneDeep(me);
 		
 		if(
-			Tilemap_Manager_ƒ.is_within_map_bounds( me, pos )
+			Tilemap_Manager_ƒ.is_within_map_bounds( me, _AM, pos )
 		){
 			if(selected_tile_type && selected_tile_type != ''){
 				new_tilemap_data.state.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
@@ -143,8 +144,8 @@ export const Tilemap_Manager_ƒ = {
 
 	},
 
-	create_empty_tile_map: (me: Tilemap_Manager_Data): TileMap => {
-		let { consts, static_vals } = me._AM;
+	create_empty_tile_map: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): TileMap => {
+		let { consts, static_vals } = _AM;
 
 		return _.range(consts.col_height).map( (row_value, row_index) => {
 			return _.range(consts.row_length).map( (col_value, col_index) => {
@@ -153,12 +154,12 @@ export const Tilemap_Manager_ƒ = {
 		});
 	},
 
-	clear_tile_map: (me: Tilemap_Manager_Data, tilemap_name: TileMapKeys ): Tilemap_Manager_Data => {
-		let { consts, static_vals } = me._AM;
+	clear_tile_map: (me: Tilemap_Manager_Data, tilemap_name: TileMapKeys, _AM: Asset_Manager_Data ): Tilemap_Manager_Data => {
+		let { consts, static_vals } = _AM;
 
 		const new_tilemap_data = cloneDeep(me);
 
-		new_tilemap_data.state.tile_maps[tilemap_name] = Tilemap_Manager_ƒ.create_empty_tile_map(me);
+		new_tilemap_data.state.tile_maps[tilemap_name] = Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM);
 
 		return {
 			...new_tilemap_data,
@@ -170,16 +171,16 @@ export const Tilemap_Manager_ƒ = {
 /*----------------------- draw ops -----------------------*/
 
 	
-	draw_tiles: (me: Tilemap_Manager_Data) => {
-		let zorder_list = Asset_Manager_ƒ.yield_full_zorder_list(me._AM);
+	draw_tiles: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
+		let zorder_list = Asset_Manager_ƒ.yield_full_zorder_list(_AM);
 
 		zorder_list.map( (value,index) => {
-			Tilemap_Manager_ƒ.draw_tiles_for_zorder(me, value);
+			Tilemap_Manager_ƒ.draw_tiles_for_zorder(me, _AM, _BM, value);
 		})
 		
 	},
 
-	draw_tiles_for_zorder: (me: Tilemap_Manager_Data, zorder: number) => {
+	draw_tiles_for_zorder: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, zorder: number) => {
 
 		_.map(me.state.tile_maps as unknown as Dictionary<TileMap>, (tile_map, tilemap_name) => {
 			tile_map.map( (row_value, row_index) => {
@@ -189,22 +190,24 @@ export const Tilemap_Manager_ƒ = {
 					
 
 					Tilemap_Manager_ƒ.draw_tile_at_coords(
-												me,
-												pos,
-												tile_name,
-												zorder,
-												tilemap_name as unknown as TileMapKeys
-											);
+						me,
+						_AM,
+						_BM,
+						pos,
+						tile_name,
+						zorder,
+						tilemap_name as unknown as TileMapKeys
+					);
 				});
 			});
 
-			me._AM.TileRNG.reset();
+			_AM.TileRNG.reset();
 		});
 	},
 
 	
-	draw_tile_at_coords: ( me: Tilemap_Manager_Data, pos: Point2D, tile_name: string, zorder: number, tilemap_name: TileMapKeys) => {
-		let { consts } = me._AM;
+	draw_tile_at_coords: ( me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, tile_name: string, zorder: number, tilemap_name: TileMapKeys) => {
+		let { consts } = _AM;
 
 		/*
 			This is the special bit of logic which makes the different rows (since we're hex tiles) be offset from each other by "half" a tile.
@@ -222,8 +225,8 @@ export const Tilemap_Manager_ƒ = {
 		const image_list: ImageListCache = ƒ.if( cached_value != undefined,
 			cached_value,
 			Asset_Manager_ƒ.get_images_for_tile_type_at_zorder_and_pos({
-				_AM: me._AM,
-				_BM: me._BM,
+				_AM: _AM,
+				_BM: _BM,
 				zorder: zorder,
 				pos: real_pos,
 				tile_name: tile_name,
@@ -236,33 +239,33 @@ export const Tilemap_Manager_ƒ = {
 		}
 
 		Asset_Manager_ƒ.draw_images_at_zorder_and_pos({
-			_AM: me._AM,
-			_BM: me._BM,
+			_AM: _AM,
+			_BM: _BM,
 			zorder: zorder,
 			pos: real_pos,
 			image_list: image_list,
-			current_milliseconds: ticks_to_ms(me._BM.time_tracker.current_tick)
+			current_milliseconds: ticks_to_ms(_BM.time_tracker.current_tick)
 		})			
 	},
 
 	
-	do_one_frame_of_rendering: (me: Tilemap_Manager_Data) => {
+	do_one_frame_of_rendering: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
 		if(me.state.initialized){
-			Blit_Manager_ƒ.fill_canvas_with_solid_color(me._BM);
-			Tilemap_Manager_ƒ.draw_tiles(me);
-			Blit_Manager_ƒ.draw_entire_frame(me._BM);
+			Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM);
+			Tilemap_Manager_ƒ.draw_tiles(me, _AM, _BM);
+			Blit_Manager_ƒ.draw_entire_frame(_BM);
 		} else {
-			Tilemap_Manager_ƒ.initialize_tiles(me);
+			Tilemap_Manager_ƒ.initialize_tiles(me, _AM);
 		}
 	},
 	
 	
 /*----------------------- info ops -----------------------*/
-	is_within_map_bounds: (me: Tilemap_Manager_Data, pos: Point2D ): boolean => (
+	is_within_map_bounds: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, pos: Point2D ): boolean => (
 		pos.x >= 0 &&
 		pos.y >= 0 && 
-		pos.x < me._AM.consts.row_length &&
-		pos.y < me._AM.consts.col_height 
+		pos.x < _AM.consts.row_length &&
+		pos.y < _AM.consts.col_height 
 	),
 
 
@@ -336,9 +339,9 @@ export const Tilemap_Manager_ƒ = {
 	
 
 
-	convert_pixel_coords_to_tile_coords: ( me: Tilemap_Manager_Data, pos: Point2D) => {
-		let { consts } = me._AM;
-		let position = Blit_Manager_ƒ.yield_world_coords_for_absolute_coords(me._BM, {x: pos.x, y: pos.y});
+	convert_pixel_coords_to_tile_coords: ( me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D) => {
+		let { consts } = _AM;
+		let position = Blit_Manager_ƒ.yield_world_coords_for_absolute_coords(_BM, {x: pos.x, y: pos.y});
 
 		let odd_row_offset = Utils.modulo(
 			Math.floor((
@@ -369,10 +372,10 @@ export const Tilemap_Manager_ƒ = {
 		return tile_coords_revised;
 	},
 	
-	convert_tile_coords_to_pixel_coords: (me: Tilemap_Manager_Data, pos : Point2D) => ({
-		x:	pos.x * me._AM.consts.tile_width +
-			(( Utils.modulo(pos.y, 2) == 1) ? Math.floor(me._AM.consts.tile_width / 2) : 0),
-		y:	pos.y * me._AM.consts.tile_height
+	convert_tile_coords_to_pixel_coords: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, pos : Point2D) => ({
+		x:	pos.x * _AM.consts.tile_width +
+			(( Utils.modulo(pos.y, 2) == 1) ? Math.floor(_AM.consts.tile_width / 2) : 0),
+		y:	pos.y * _AM.consts.tile_height
 	}),
 
 
