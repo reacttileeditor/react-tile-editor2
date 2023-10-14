@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { cloneDeep, concat, filter, find, findIndex, includes, isEmpty, isNil, isNumber, last, map, reduce, size, toArray, uniq } from "lodash";
+import { cloneDeep, concat, filter, find, findIndex, isEmpty, isEqual, isNil, isNumber, last, map, reduce, size, toArray, uniq } from "lodash";
+import { includes } from "ramda"
 
 import { ƒ } from "./Utils";
 
@@ -8,7 +9,7 @@ import { Canvas_View, MouseButtonState } from "../gui/Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager";
 import { Blit_Manager_Data, ticks_to_ms } from "./Blit_Manager";
 import { Tile_Palette_Element } from "../gui/Tile_Palette_Element";
-import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
+import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ, TileMap } from "./Tilemap_Manager";
 import { Pathfinder_ƒ } from "./Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance } from "../../objects_core/Creature";
@@ -64,7 +65,7 @@ interface AnimationState {
 type ObjectiveTypes = 'extermination' | 'decapitation';
 
 
-type Game_and_Tilemap_Manager_Data = {
+export type Game_and_Tilemap_Manager_Data = {
 	gm: Game_Manager_Data,
 	tm: Tilemap_Manager_Data,
 }
@@ -367,14 +368,14 @@ export const Game_Manager_ƒ = {
 		tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me, _TM, _AM, _BM)}`
 	}),
 
-	do_one_frame_of_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_Manager_Data => {
+	do_one_frame_of_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_and_Tilemap_Manager_Data => {
 		//me.update_game_state_for_ui(me.game_state);
 		//me.update_tooltip_state( Game_Manager_ƒ.get_tooltip_data(me));
 		
 
 		return ƒ.if(me.animation_state.is_animating_live_game,
 			Game_Manager_ƒ.do_live_game_processing(me, _TM, _AM, _BM),
-			Game_Manager_ƒ.do_paused_game_processing(me, _BM, _TM)
+			Game_Manager_ƒ.do_paused_game_processing(me, _TM, _AM, _BM)
 		);
 	},
 
@@ -413,7 +414,7 @@ export const Game_Manager_ƒ = {
 		})
 	},
 
-	do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_Manager_Data => {
+	do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_and_Tilemap_Manager_Data => {
 		/*
 			Process all of the existing creatures.
 			
@@ -422,7 +423,10 @@ export const Game_Manager_ƒ = {
 
 		if( Game_Manager_ƒ.is_turn_finished(me) ){
 
-			return Game_Manager_ƒ.advance_turn_finish(me, _BM);
+			return {
+				gm: Game_Manager_ƒ.advance_turn_finish(me, _BM),
+				tm: _TM,
+			};
 
 		} else {		
 			let spawnees: Array<Custom_Object_Data> = [];
@@ -464,14 +468,17 @@ export const Game_Manager_ƒ = {
 			
 			
 			return {
-				...cloneDeep(me),
-				game_state: {
-					...cloneDeep(me.game_state),
-					current_frame_state: {
-						creature_list: all_creatures_processed_and_culled,
-					},
-					custom_object_list: all_objects_processed_and_culled,
-				}
+				gm: {
+					...cloneDeep(me),
+					game_state: {
+						...cloneDeep(me.game_state),
+						current_frame_state: {
+							creature_list: all_creatures_processed_and_culled,
+						},
+						custom_object_list: all_objects_processed_and_culled,
+					}
+				},
+				tm: _TM
 			}
 			
 			// me.game_state.current_frame_state = {
@@ -482,7 +489,7 @@ export const Game_Manager_ƒ = {
 		}
 	},
 
-	do_paused_game_processing: (me: Game_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data): Game_Manager_Data => {
+	do_paused_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_and_Tilemap_Manager_Data => {
 		/*
 			This is considerably simpler; we just run existing custom objects through their processing.
 		*/
@@ -496,13 +503,28 @@ export const Game_Manager_ƒ = {
 			val.should_remove !== true
 		) );
 
+	
+		let selected_creature = Game_Manager_ƒ.get_selected_creature(me);
+
+		if(selected_creature){
+			let new_data = Game_Manager_ƒ.adjust_tiles_to_display_unit_path(me, selected_creature, _AM, _BM, _TM).tm
+		}
+
 
 		return {
-			...cloneDeep(me),
-			game_state: {
-				...cloneDeep(me.game_state),
-				custom_object_list: all_objects_processed_and_culled,
-			}
+			gm: {
+				...cloneDeep(me),
+				game_state: {
+					...cloneDeep(me.game_state),
+					custom_object_list: all_objects_processed_and_culled,
+				}
+			},
+			tm: selected_creature != undefined
+				?
+				Game_Manager_ƒ.adjust_tiles_to_display_unit_path(me, selected_creature, _AM, _BM, _TM).tm
+				:
+				_TM
+			
 		}
 	},
 
@@ -568,7 +590,7 @@ export const Game_Manager_ƒ = {
 		Game_Manager_ƒ.draw_cursor(me, _AM, _BM, _TM);
 	},
 
-	draw_path_for_unit: (me: Game_Manager_Data, creature: Creature_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data ): Game_and_Tilemap_Manager_Data => {
+	adjust_tiles_to_display_unit_path: (me: Game_Manager_Data, creature: Creature_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data ): Game_and_Tilemap_Manager_Data => {
 		Asset_Manager_ƒ.draw_image_for_asset_name ({
 			_AM:						_AM,
 			asset_name:					'cursor_green',
@@ -585,28 +607,71 @@ export const Game_Manager_ƒ = {
 
 		
 
-		let tilemap_mgr_data: Tilemap_Manager_Data = Tilemap_Manager_ƒ.clear_tile_map(_TM, 'ui', _AM);
+		//let tilemap_mgr_data: Tilemap_Manager_Data = Tilemap_Manager_ƒ.clear_tile_map(_TM, 'ui', _AM);
 
-		map(creature.path_this_turn, (path_val, path_idx) => {
-			//should update each of these in succession.  Shitty, horribly inefficient, we should fix it.
+		let new_tile_map: TileMap = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
 
-			tilemap_mgr_data = Tilemap_Manager_ƒ.modify_tile_status(
-				_TM,
-				_AM,
-				path_val,
-				ƒ.if( includes(creature.path_reachable_this_turn, path_val),
-					ƒ.if(path_val == last(creature.path_reachable_this_turn),
-						'arrowhead-green',
-						'arrow-green',
-					),
-					'red-path-unreachable-dot'
-				),
-				'ui'
-			);
-		});
+		new_tile_map = map( _TM.state.tile_maps.ui, (y_val, y_idx) => {
+			return map (y_val, (x_val, x_idx)=>{
+
+				/*
+					iterate over each of the path values.
+
+					Here we have to do something really fucking stupid, because lodash doesn't default to deep-comparison, nor even allows a customizer function, so it compares objects by address, which is damned near useless.
+				*/
+				// let prtt = map(creature.path_reachable_this_turn, (val)=> ( [val.x, val.y]));
+				// let ptt = map(creature.path_this_turn, (val)=> ( [val.x, val.y]));
+
+				// console.log(creature.path_reachable_this_turn);
+				// console.log(
+				// 	`${includes(creature.path_reachable_this_turn, {x: x_idx, y: y_idx} )} x:${x_idx}, y:${y_idx}`
+				// )
+				// if( !isEmpty(creature.path_reachable_this_turn)){
+				// 	debugger;
+				// }
+				return ƒ.if(  includes({x: x_idx, y: y_idx}, creature.path_this_turn ),
+
+					ƒ.if( includes({x: x_idx, y: y_idx}, creature.path_reachable_this_turn),
+							ƒ.if( isEqual({x: x_idx, y: y_idx}, last(creature.path_reachable_this_turn)),
+								'arrowhead-green',
+								'arrow-green',
+							),
+							'red-path-unreachable-dot'
+						),
+					''
+				)
+			})
+		})
+
+		// map(creature.path_this_turn, (path_val, path_idx) => {
+		// 	//should update each of these in succession.  Shitty, horribly inefficient, we should fix it.
+
+		// 	tilemap_mgr_data = Tilemap_Manager_ƒ.modify_tile_status(
+		// 		tilemap_mgr_data,
+		// 		_AM,
+		// 		path_val,
+		// 		ƒ.if( includes(creature.path_reachable_this_turn, path_val),
+		// 			ƒ.if(path_val == last(creature.path_reachable_this_turn),
+		// 				'arrowhead-green',
+		// 				'arrow-green',
+		// 			),
+		// 			'red-path-unreachable-dot'
+		// 		),
+		// 		'ui'
+		// 	);
+		// });
 
 		return {
-			tm: tilemap_mgr_data,
+			tm: {
+				...cloneDeep(_TM),
+				state: {
+					...cloneDeep(_TM.state),
+					tile_maps: {
+						...cloneDeep(_TM.state.tile_maps),
+						ui: new_tile_map,
+					}
+				}
+			},
 			gm: me,
 		}
 	},
@@ -639,10 +704,6 @@ export const Game_Manager_ƒ = {
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
 			})			
-	
-			if(me.game_state.selected_object_index == idx){
-				Game_Manager_ƒ.draw_path_for_unit(me,val, _AM, _BM, _TM)
-			}
 
 
 			map( me.game_state.custom_object_list, (val,idx) => {

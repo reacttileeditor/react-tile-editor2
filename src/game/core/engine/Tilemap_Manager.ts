@@ -34,7 +34,7 @@ type TileMaps =  _TileMaps<TileMap>;
 
 type TileMapKeys = keyof TileMaps;
 
-type TileMap = Array<Array<string>>;
+export type TileMap = Array<Array<string>>;
 
 export type Direction = 
 	'north_east' |

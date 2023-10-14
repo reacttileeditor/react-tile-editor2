@@ -61,7 +61,7 @@ const Map_Tooltip = (props: TooltipData) => {
 }
 
 import Foot_Icon from '../../../assets/feet-icon.png';
-import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game_Manager } from "../engine/Game_Manager";
+import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, Game_and_Tilemap_Manager_Data, New_Game_Manager } from "../engine/Game_Manager";
 import { Game_Status_Display } from "./Game_Status_Display";
 
 
@@ -96,7 +96,12 @@ export const Game_View = (props: Game_View_Props) => {
 
 		if( props.game_manager_loaded ) {
 			Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), props.set_Blit_Manager);
-			props.set_Game_Manager_Data( Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(),) );
+
+			let new_state: Game_and_Tilemap_Manager_Data = Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
+
+			props.set_Game_Manager_Data( new_state.gm );
+			props.set_Tilemap_Manager( new_state.tm );
+
 			Game_Manager_ƒ.do_one_frame_of_rendering(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
 		}
 

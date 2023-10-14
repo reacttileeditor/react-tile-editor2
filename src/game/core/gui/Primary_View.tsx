@@ -32,11 +32,11 @@ export const Primary_View = () => {
 	//const [_Blit_Manager, set_Blit_Manager] = useState<Blit_Manager_Data|null>(null);
 
 	const _Blit_Manager = useRef<Blit_Manager_Data|null>( null );
-	const set_Blit_Manager = (newVal: Blit_Manager_Data) => { _Blit_Manager.current = newVal;  console.log('set blit manager') }
+	const set_Blit_Manager = (newVal: Blit_Manager_Data) => { _Blit_Manager.current = newVal;   }
 	const get_Blit_Manager = () => (_Blit_Manager.current as Blit_Manager_Data);
 
 	const _Tilemap_Manager = useRef<Tilemap_Manager_Data|null>( null );
-	const set_Tilemap_Manager = (newVal: Tilemap_Manager_Data) => { _Tilemap_Manager.current = newVal;  console.log('set tile manager') }
+	const set_Tilemap_Manager = (newVal: Tilemap_Manager_Data) => { _Tilemap_Manager.current = newVal;   }
 	const get_Tilemap_Manager = () => (_Tilemap_Manager.current as Tilemap_Manager_Data);
 
 	//const [_Tilemap_Manager, set_Tilemap_Manager] = useState<Tilemap_Manager_Data|null>(null);
