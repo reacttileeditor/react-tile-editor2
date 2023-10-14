@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { cloneDeep, concat, filter, find, findIndex, includes, isEmpty, isNil, isNumber, last, map, reduce, size, uniq } from "lodash";
+import { cloneDeep, concat, filter, find, findIndex, includes, isEmpty, isNil, isNumber, last, map, reduce, size, toArray, uniq } from "lodash";
 
 import { ƒ } from "./Utils";
 
@@ -721,15 +721,23 @@ export const Game_Manager_ƒ = {
 		*/
 		const new_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, pos );
 		
-		const newly_selected_creature = findIndex( Game_Manager_ƒ.get_current_turn_state(me).creature_list, {
+		let newly_selected_creature_index: number|undefined = findIndex( Game_Manager_ƒ.get_current_turn_state(me).creature_list, {
 			tile_pos: new_pos
 		} );
 		
-		let new_index = undefined;
 
-		if(newly_selected_creature === -1){
-			//do move command
+		let new_creature: Creature_Data|undefined = undefined;
+		let new_creature_array = cloneDeep(me.game_state.current_frame_state.creature_list);
+
+		if(newly_selected_creature_index === -1){
+			/*
+				The player didn't click on any unit; they clicked on terrain, so this is a move command.
+			*/
 			if( me.game_state.selected_object_index != undefined ){
+				/*
+					That said; it's not a move command if nobody's selected.
+				*/
+
 
 				const creature = Game_Manager_ƒ.get_current_turn_state(me).creature_list[ me.game_state.selected_object_index ];
 				/*
@@ -738,30 +746,45 @@ export const Game_Manager_ƒ = {
 				*/
 
 				if( buttons_pressed.left == true ){
-					creature.planned_tile_pos = new_pos;
-					
-					Creature_ƒ.set_path(
-						creature,
-						Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, creature.tile_pos, new_pos, creature ).successful_path,
-						_TM
-					);
-					//Creature_ƒ.calculate_next_anim_segment(creature, me._TM, 0);
+					new_creature = {
+						...Creature_ƒ.set_path(
+							creature,
+							Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, creature.tile_pos, new_pos, creature ).successful_path,
+							_TM
+						),
+						planned_tile_pos: new_pos,
+					}
+
+					new_creature_array[me.game_state.selected_object_index] = new_creature;
+
 				} else if ( buttons_pressed.right == true ){
-					Creature_ƒ.clear_path(creature);
+					new_creature = {
+						...Creature_ƒ.clear_path(creature),
+					}
+
+					new_creature_array[me.game_state.selected_object_index] = new_creature;
 				}
 			}
-		} else if(newly_selected_creature === me.game_state.selected_object_index ) {
-			new_index = undefined;
+		} else if(newly_selected_creature_index === me.game_state.selected_object_index ) {
+			/*
+				We just clicked, a second time, on the current unit, so instead of selecting it, we actually want to toggle; to de-select it.
+			*/
+			newly_selected_creature_index = undefined;
 		} else {
-		
-			new_index = newly_selected_creature;
+			/*
+				We've clicked on a new creature, so we want to pass along the index to the return statement, which means we don't need to do anything.
+			*/
 		}
+
+		let new_turn_list = cloneDeep(me.game_state.turn_list);
+		new_turn_list[size(new_turn_list) - 1].creature_list =  new_creature_array;
 
 		return {
 			...cloneDeep(me),
 			game_state: {
 				...cloneDeep(me.game_state),
-				selected_object_index: new_index,
+				selected_object_index: newly_selected_creature_index == -1 ? me.game_state.selected_object_index : newly_selected_creature_index,
+				turn_list: new_turn_list
 			}
 		}
 	}

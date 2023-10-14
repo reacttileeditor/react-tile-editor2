@@ -24,24 +24,30 @@ export const Creature_Behavior_ƒ = {
 
 /*----------------------- movement -----------------------*/
 
-	set_path: (me: Creature_Data, new_path: Array<Point2D>, _TM: Tilemap_Manager_Data) => {
-		me.path_this_turn = new_path;
-		me.path_reachable_this_turn = Creature_ƒ.yield_path_reachable_this_turn(me, _TM, new_path);
-		
-		me.path_this_turn_with_directions = Creature_ƒ.build_directional_path_from_path(
-			me,
-			me.path_this_turn,
-			_TM
-		);
+	set_path: (me: Creature_Data, new_path: Array<Point2D>, _TM: Tilemap_Manager_Data): Creature_Data => {
 
-		me.path_reachable_this_turn_with_directions = Creature_ƒ.yield_directional_path_reachable_this_turn(me, _TM, me.path_this_turn_with_directions);
+
+		return {
+			...cloneDeep(me),
+			path_this_turn: new_path,
+			path_reachable_this_turn:Creature_ƒ.yield_path_reachable_this_turn(me, _TM, new_path),
+			path_this_turn_with_directions: Creature_ƒ.build_directional_path_from_path(
+				me,
+				me.path_this_turn,
+				_TM
+			),
+			path_reachable_this_turn_with_directions: Creature_ƒ.yield_directional_path_reachable_this_turn(me, _TM, me.path_this_turn_with_directions)
+		}
 	},
 
-	clear_path: (me: Creature_Data) => {
-		me.path_this_turn = [];
-		me.path_reachable_this_turn = [];
-		me.path_this_turn_with_directions = [];
-		me.path_reachable_this_turn_with_directions	= [];
+	clear_path: (me: Creature_Data): Creature_Data => {
+		return {
+			...cloneDeep(me),
+			path_this_turn: [],
+			path_reachable_this_turn: [],
+			path_this_turn_with_directions: [],
+			path_reachable_this_turn_with_directions: [],
+		}
 	},
 	
 	yield_path_reachable_this_turn: (me: Creature_Data, _TM: Tilemap_Manager_Data, new_path: Array<Point2D>):Array<Point2D> => {
