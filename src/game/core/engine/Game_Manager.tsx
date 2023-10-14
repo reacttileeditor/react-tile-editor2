@@ -611,7 +611,7 @@ export const Game_Manager_ƒ = {
 
 		let new_tile_map: TileMap = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
 
-		new_tile_map = map( _TM.state.tile_maps.ui, (y_val, y_idx) => {
+		new_tile_map = map( _TM.tile_maps.ui, (y_val, y_idx) => {
 			return map (y_val, (x_val, x_idx)=>{
 
 				/*
@@ -663,14 +663,12 @@ export const Game_Manager_ƒ = {
 
 		return {
 			tm: {
-				...cloneDeep(_TM),
-				state: {
-					...cloneDeep(_TM.state),
-					tile_maps: {
-						...cloneDeep(_TM.state.tile_maps),
-						ui: new_tile_map,
-					}
-				}
+				tile_maps: {
+					...cloneDeep(_TM.tile_maps),
+					ui: new_tile_map,
+				},
+				initialized: true,
+				...Tilemap_Manager_ƒ.cleared_cache(),
 			},
 			gm: me,
 		}

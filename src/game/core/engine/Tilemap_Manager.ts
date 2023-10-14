@@ -11,7 +11,7 @@ import { ƒ } from "./Utils";
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 
-type tileViewState = {
+type TileViewState = {
 	tile_maps: TileMaps,
 	initialized: boolean,
 } & CacheData;
@@ -52,24 +52,19 @@ const tile_comparator_cache_init = {
 
 
 
-export type Tilemap_Manager_Data = {
-	state: tileViewState;
-	// _AM: Asset_Manager_Data;
-	// _BM: Blit_Manager_Data;
-}
+export type Tilemap_Manager_Data = TileViewState & CacheData;
+
 
 export const New_Tilemap_Manager = (): Tilemap_Manager_Data => {
 	
 	return {
-		state: {
-			tile_maps: {
-				terrain: [['']],
-				ui: [['']],
-			},
-			cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
-			cache_of_image_lists: _.cloneDeep({}),
-			initialized: false,
+		tile_maps: {
+			terrain: [['']],
+			ui: [['']],
 		},
+		cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
+		cache_of_image_lists: _.cloneDeep({}),
+		initialized: false,
 	}
 }
 
@@ -91,16 +86,13 @@ export const Tilemap_Manager_ƒ = {
 
 
 		return {
-			...cloneDeep(me),
-			state: {
-				tile_maps: {
-					terrain: fresh_terrain_tilemap,
-					ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
-				},
-				cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
-				cache_of_image_lists: _.cloneDeep({}),
-				initialized: true,
-			}
+			tile_maps: {
+				terrain: fresh_terrain_tilemap,
+				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
+			},
+			cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
+			cache_of_image_lists: _.cloneDeep({}),
+			initialized: true,
 		}
 	},
 
@@ -124,7 +116,7 @@ export const Tilemap_Manager_ƒ = {
 			Tilemap_Manager_ƒ.is_within_map_bounds( me, _AM, pos )
 		){
 			if(selected_tile_type && selected_tile_type != ''){
-				new_tilemap_data.state.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
+				new_tilemap_data.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
 
 				return {
 					...new_tilemap_data,
@@ -154,7 +146,7 @@ export const Tilemap_Manager_ƒ = {
 
 		const new_tilemap_data = cloneDeep(me);
 
-		new_tilemap_data.state.tile_maps[tilemap_name] = Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM);
+		new_tilemap_data.tile_maps[tilemap_name] = Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM);
 
 		return {
 			...new_tilemap_data,
@@ -177,7 +169,7 @@ export const Tilemap_Manager_ƒ = {
 
 	draw_tiles_for_zorder: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, zorder: number) => {
 
-		_.map(me.state.tile_maps as unknown as Dictionary<TileMap>, (tile_map, tilemap_name) => {
+		_.map(me.tile_maps as unknown as Dictionary<TileMap>, (tile_map, tilemap_name) => {
 			tile_map.map( (row_value, row_index) => {
 				row_value.map( (tile_name, col_index) => {
 
@@ -215,7 +207,7 @@ export const Tilemap_Manager_ƒ = {
 
 
 		const cache_hash = `${pos.x}_${pos.y}_${tile_name}_${zorder}}`;
-		const cached_value = me.state.cache_of_image_lists[cache_hash];
+		const cached_value = me.cache_of_image_lists[cache_hash];
 
 		const image_list: ImageListCache = ƒ.if( cached_value != undefined,
 			cached_value,
@@ -230,7 +222,7 @@ export const Tilemap_Manager_ƒ = {
 		);
 
 		if( !cached_value ){
-			me.state.cache_of_image_lists[cache_hash] = image_list;
+			me.cache_of_image_lists[cache_hash] = image_list;
 		}
 
 		Asset_Manager_ƒ.draw_images_at_zorder_and_pos({
@@ -245,7 +237,7 @@ export const Tilemap_Manager_ƒ = {
 
 	
 	do_one_frame_of_rendering: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, set_Blit_Manager: (newVal: Blit_Manager_Data) => void) => {
-		if(me.state.initialized){
+		if(me.initialized){
 			Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM);
 			Tilemap_Manager_ƒ.draw_tiles(me, _AM, _BM);
 
@@ -269,7 +261,7 @@ export const Tilemap_Manager_ƒ = {
 
 
 	get_tile_comparator_sample_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ): TileComparatorSample => {
-		const cached_value = me.state.cache_of_tile_comparators[tilemap_name]?.[pos.y]?.[pos.x];
+		const cached_value = me.cache_of_tile_comparators[tilemap_name]?.[pos.y]?.[pos.x];
 
 		if( cached_value != undefined ){
 			return cached_value;
@@ -283,11 +275,11 @@ export const Tilemap_Manager_ƒ = {
 			});
 			
 			//some funny-business to cache it:
-			if( !isArray(me.state.cache_of_tile_comparators[tilemap_name][pos.y]) ){
-				me.state.cache_of_tile_comparators[tilemap_name][pos.y] = [];
-				me.state.cache_of_tile_comparators[tilemap_name][pos.y][pos.x] = (val as TileComparatorSample);
+			if( !isArray(me.cache_of_tile_comparators[tilemap_name][pos.y]) ){
+				me.cache_of_tile_comparators[tilemap_name][pos.y] = [];
+				me.cache_of_tile_comparators[tilemap_name][pos.y][pos.x] = (val as TileComparatorSample);
 			} else {
-				me.state.cache_of_tile_comparators[tilemap_name][pos.y][pos.x] = (val as TileComparatorSample);
+				me.cache_of_tile_comparators[tilemap_name][pos.y][pos.x] = (val as TileComparatorSample);
 			}
 
 			return (val as TileComparatorSample); //casting this because Typescript is being extra insistent that the tuple lengths match, but we can't guarantee this without dramatically complicating our code in a particularly bad way.
@@ -324,14 +316,14 @@ export const Tilemap_Manager_ƒ = {
 			This enforces "safe access", and will always return a string.  If it's outside the bounds of the tile map, we return an empty string.
 		*/
 		if(
-			pos.y > (_.size(me.state.tile_maps[tilemap_name]) - 1) ||
+			pos.y > (_.size(me.tile_maps[tilemap_name]) - 1) ||
 			pos.y < 0 ||
-			pos.x > (_.size(me.state.tile_maps[tilemap_name][pos.y]) - 1) ||
+			pos.x > (_.size(me.tile_maps[tilemap_name][pos.y]) - 1) ||
 			pos.x < 0
 		){
 			return '';
 		} else {
-			return me.state.tile_maps[tilemap_name][pos.y][pos.x];
+			return me.tile_maps[tilemap_name][pos.y][pos.x];
 		}
 	},
 	

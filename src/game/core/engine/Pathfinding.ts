@@ -245,7 +245,7 @@ export const Pathfinder_ƒ = {
 		const _Node_Graph_Generator = new Node_Graph_Generator(_TM, _AM, _Creature);
 
 	
-		const _graph = _Node_Graph_Generator.build_node_graph_from_grid( _TM.state.tile_maps.terrain );
+		const _graph = _Node_Graph_Generator.build_node_graph_from_grid( _TM.tile_maps.terrain );
 		return a_star_search( _graph, _start_coords, _end_coords, _Creature );
 	}
 }
