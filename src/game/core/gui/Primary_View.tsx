@@ -23,6 +23,21 @@ interface State {
 }
 
 
+let _Blit_Manager: Blit_Manager_Data|null = ( null );
+const set_Blit_Manager = (newVal: Blit_Manager_Data) => { _Blit_Manager = newVal;   }
+const get_Blit_Manager = () => (_Blit_Manager as Blit_Manager_Data);
+
+let _Tilemap_Manager: Tilemap_Manager_Data|null = ( null );
+const set_Tilemap_Manager = (newVal: Tilemap_Manager_Data) => { _Tilemap_Manager = newVal;   }
+const get_Tilemap_Manager = () => (_Tilemap_Manager as Tilemap_Manager_Data);
+
+let _Game_Manager_Data: Game_Manager_Data|null = ( null );
+const get_Game_Manager_Data = () => (_Game_Manager_Data as Game_Manager_Data);
+const set_Game_Manager_Data = (newVal: Game_Manager_Data) => { _Game_Manager_Data = newVal;}
+
+
+
+
 
 
 export const Primary_View = () => {
@@ -31,13 +46,6 @@ export const Primary_View = () => {
 
 	//const [_Blit_Manager, set_Blit_Manager] = useState<Blit_Manager_Data|null>(null);
 
-	const _Blit_Manager = useRef<Blit_Manager_Data|null>( null );
-	const set_Blit_Manager = (newVal: Blit_Manager_Data) => { _Blit_Manager.current = newVal;   }
-	const get_Blit_Manager = () => (_Blit_Manager.current as Blit_Manager_Data);
-
-	const _Tilemap_Manager = useRef<Tilemap_Manager_Data|null>( null );
-	const set_Tilemap_Manager = (newVal: Tilemap_Manager_Data) => { _Tilemap_Manager.current = newVal;   }
-	const get_Tilemap_Manager = () => (_Tilemap_Manager.current as Tilemap_Manager_Data);
 
 	//const [_Tilemap_Manager, set_Tilemap_Manager] = useState<Tilemap_Manager_Data|null>(null);
 	const [is_edit_mode, set_is_edit_mode] = useState<boolean>(true);
@@ -46,9 +54,6 @@ export const Primary_View = () => {
 
 
 	//let _Game_Manager_Data: Game_Manager_Data | undefined = undefined;
-	const _Game_Manager_Data = useRef<Game_Manager_Data|null>( null );
-	const get_Game_Manager_Data = () => (_Game_Manager_Data.current as Game_Manager_Data);
-	const set_Game_Manager_Data = (newVal: Game_Manager_Data) => { _Game_Manager_Data.current = newVal;}
 	const [game_manager_loaded, set_game_manager_loaded] = useState<boolean>(false);
 
 
@@ -73,13 +78,13 @@ export const Primary_View = () => {
 	useEffect(() => {
 		console.log('considering loading game manager');
 
-		if(_Tilemap_Manager.current){
+		if(_Tilemap_Manager){
 			console.log('loading game manager');
 
 			set_Game_Manager_Data(New_Game_Manager({
-				_Blit_Manager: () => _Blit_Manager.current as Blit_Manager_Data,
+				_Blit_Manager: () => _Blit_Manager as Blit_Manager_Data,
 				_Asset_Manager: () => _Asset_Manager,
-				_Tilemap_Manager: () => _Tilemap_Manager.current as Tilemap_Manager_Data,
+				_Tilemap_Manager: () => _Tilemap_Manager as Tilemap_Manager_Data,
 				get_GM_instance: get_Game_Manager_Data,
 			}));
 

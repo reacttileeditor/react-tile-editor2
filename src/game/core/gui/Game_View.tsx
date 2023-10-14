@@ -75,7 +75,7 @@ export const Tooltip_Manager = (props: {
 
 	return <div className={`map-tooltip-anchor`}>
 		{
-			false && props.get_Game_Manager_Data() != undefined
+			props.get_Game_Manager_Data() != undefined
 			&&
 			<Map_Tooltip
 				{...Game_Manager_ƒ.get_tooltip_data(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager())}
