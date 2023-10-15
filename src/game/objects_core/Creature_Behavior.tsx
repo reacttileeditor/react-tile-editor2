@@ -274,11 +274,16 @@ export const Creature_Behavior_ƒ = {
 
 		Creature_ƒ.add(change_list, me, 'remaining_move_points', -prior_tile_cost);
 
-		Creature_ƒ.set_path(
-			me,
-			Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
-			_TM
-		);
+
+		//TODO major thing we gotta fix for the functional refactor:
+		me = {
+			...cloneDeep(me),
+			...Creature_ƒ.set_path(
+				me,
+				Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
+				_TM
+			),
+		};
 
 		let next_tile_pos = me.tile_pos;
 		if( size(me.path_reachable_this_turn_with_directions) > 1){
