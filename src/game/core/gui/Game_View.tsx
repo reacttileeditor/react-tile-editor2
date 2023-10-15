@@ -102,7 +102,7 @@ export const Game_View = (props: Game_View_Props) => {
 			props.set_Game_Manager_Data( new_state.gm );
 			props.set_Tilemap_Manager( new_state.tm );
 
-			Game_Manager_ƒ.do_one_frame_of_rendering(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
+			Game_Manager_ƒ.do_one_frame_of_rendering( new_state.gm , new_state.tm, props._Asset_Manager(), props._Blit_Manager());
 		}
 
 		/*

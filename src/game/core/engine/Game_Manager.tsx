@@ -283,12 +283,7 @@ export const Game_Manager_ƒ = {
 			creature_list: map(new_turn_state.creature_list, (val)=>( Creature_ƒ.copy_for_new_turn(val) )),
 		};
 
-		me.game_state.turn_list = concat(
-			me.game_state.turn_list,
-			[new_turn_state]
-		);
 		console.log(`finishing turn #${me.game_state.current_turn}`)
-
 
 		return {
 			...cloneDeep(me),
@@ -299,6 +294,10 @@ export const Game_Manager_ƒ = {
 			},
 			game_state: {
 				...cloneDeep(me.game_state),
+				turn_list: concat(
+					me.game_state.turn_list,
+					[new_turn_state]
+				),
 				objective_text: Game_Manager_ƒ.write_full_objective_text(me, Game_Manager_ƒ.get_game_state(me).objective_type, Game_Manager_ƒ.get_game_state(me)),
 				current_turn: me.game_state.current_turn + 1,
 			},
@@ -372,11 +371,11 @@ export const Game_Manager_ƒ = {
 		//me.update_game_state_for_ui(me.game_state);
 		//me.update_tooltip_state( Game_Manager_ƒ.get_tooltip_data(me));
 		
-
-		return ƒ.if(me.animation_state.is_animating_live_game,
-			Game_Manager_ƒ.do_live_game_processing(me, _TM, _AM, _BM),
-			Game_Manager_ƒ.do_paused_game_processing(me, _TM, _AM, _BM)
-		);
+		if(me.animation_state.is_animating_live_game){
+			return Game_Manager_ƒ.do_live_game_processing(me, _TM, _AM, _BM);
+		} else {
+			return Game_Manager_ƒ.do_paused_game_processing(me, _TM, _AM, _BM);
+		}
 	},
 
 	do_one_frame_of_rendering: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): void => {
@@ -454,12 +453,12 @@ export const Game_Manager_ƒ = {
 			) );
 
 			let all_creatures_processed = map( me.game_state.current_frame_state.creature_list, (creature) => (
-				Creature_ƒ.apply_changes(
+				cloneDeep(Creature_ƒ.apply_changes(
 					creature,
 					filter( master_change_list, (val)=> (
 						val.target_obj_uuid == creature.unique_id
 					))
-				)
+				))
 			))
 
 			let all_creatures_processed_and_culled = filter( all_creatures_processed, (val)=>(
@@ -617,18 +616,9 @@ export const Game_Manager_ƒ = {
 				/*
 					iterate over each of the path values.
 
-					Here we have to do something really fucking stupid, because lodash doesn't default to deep-comparison, nor even allows a customizer function, so it compares objects by address, which is damned near useless.
+					Here we build a brand new tilemap for the unit path, from scratch.
 				*/
-				// let prtt = map(creature.path_reachable_this_turn, (val)=> ( [val.x, val.y]));
-				// let ptt = map(creature.path_this_turn, (val)=> ( [val.x, val.y]));
 
-				// console.log(creature.path_reachable_this_turn);
-				// console.log(
-				// 	`${includes(creature.path_reachable_this_turn, {x: x_idx, y: y_idx} )} x:${x_idx}, y:${y_idx}`
-				// )
-				// if( !isEmpty(creature.path_reachable_this_turn)){
-				// 	debugger;
-				// }
 				return ƒ.if(  includes({x: x_idx, y: y_idx}, creature.path_this_turn ),
 
 					ƒ.if( includes({x: x_idx, y: y_idx}, creature.path_reachable_this_turn),
@@ -642,24 +632,6 @@ export const Game_Manager_ƒ = {
 				)
 			})
 		})
-
-		// map(creature.path_this_turn, (path_val, path_idx) => {
-		// 	//should update each of these in succession.  Shitty, horribly inefficient, we should fix it.
-
-		// 	tilemap_mgr_data = Tilemap_Manager_ƒ.modify_tile_status(
-		// 		tilemap_mgr_data,
-		// 		_AM,
-		// 		path_val,
-		// 		ƒ.if( includes(creature.path_reachable_this_turn, path_val),
-		// 			ƒ.if(path_val == last(creature.path_reachable_this_turn),
-		// 				'arrowhead-green',
-		// 				'arrow-green',
-		// 			),
-		// 			'red-path-unreachable-dot'
-		// 		),
-		// 		'ui'
-		// 	);
-		// });
 
 		return {
 			tm: {
@@ -806,11 +778,11 @@ export const Game_Manager_ƒ = {
 
 				if( buttons_pressed.left == true ){
 					new_creature = {
-						...Creature_ƒ.set_path(
+						...cloneDeep(Creature_ƒ.set_path(
 							creature,
 							Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, creature.tile_pos, new_pos, creature ).successful_path,
 							_TM
-						),
+						)),
 						planned_tile_pos: new_pos,
 					}
 
@@ -818,7 +790,7 @@ export const Game_Manager_ƒ = {
 
 				} else if ( buttons_pressed.right == true ){
 					new_creature = {
-						...Creature_ƒ.clear_path(creature),
+						...cloneDeep(Creature_ƒ.clear_path(creature)),
 					}
 
 					new_creature_array[me.game_state.selected_object_index] = new_creature;
@@ -836,7 +808,7 @@ export const Game_Manager_ƒ = {
 		}
 
 		let new_turn_list = cloneDeep(me.game_state.turn_list);
-		new_turn_list[size(new_turn_list) - 1].creature_list =  new_creature_array;
+		new_turn_list[size(new_turn_list) - 1].creature_list = new_creature_array;
 
 		return {
 			...cloneDeep(me),
