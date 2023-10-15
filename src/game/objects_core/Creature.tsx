@@ -63,7 +63,6 @@ export type Creature_Data = {
 	current_hitpoints: number,
 	last_changed_hitpoints: number,
 	next_behavior_reconsideration_timestamp: number,
-	current_walk_anim_segment?: Anim_Schedule_Element,
 	is_done_with_turn: boolean,
 	behavior_mode: BehaviorMode,
 
@@ -101,7 +100,6 @@ export const New_Creature = (
 		current_hitpoints?: number,
 		last_changed_hitpoints?: number,
 		next_behavior_reconsideration_timestamp?: number,
-		current_walk_anim_segment?: Anim_Schedule_Element,
 		is_done_with_turn: boolean,
 		behavior_mode: BehaviorMode,
 		planned_tile_pos: Point2D,
@@ -147,7 +145,6 @@ export const New_Creature = (
 			p.next_behavior_reconsideration_timestamp,
 			0,
 		),
-		current_walk_anim_segment: p.current_walk_anim_segment,
 		behavior_mode: p.behavior_mode,
 		is_done_with_turn: p.is_done_with_turn,
 

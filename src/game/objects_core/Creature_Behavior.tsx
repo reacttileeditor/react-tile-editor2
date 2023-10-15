@@ -25,18 +25,18 @@ export const Creature_Behavior_ƒ = {
 /*----------------------- movement -----------------------*/
 
 	set_path: (me: Creature_Data, new_path: Array<Point2D>, _TM: Tilemap_Manager_Data): Creature_Data => {
-
+		const path_this_turn_with_directions = Creature_ƒ.build_directional_path_from_path(
+			me,
+			new_path,
+			_TM
+		);
 
 		return {
 			...cloneDeep(me),
 			path_this_turn: new_path,
 			path_reachable_this_turn:Creature_ƒ.yield_path_reachable_this_turn(me, _TM, new_path),
-			path_this_turn_with_directions: Creature_ƒ.build_directional_path_from_path(
-				me,
-				me.path_this_turn,
-				_TM
-			),
-			path_reachable_this_turn_with_directions: Creature_ƒ.yield_directional_path_reachable_this_turn(me, _TM, me.path_this_turn_with_directions)
+			path_this_turn_with_directions: path_this_turn_with_directions,
+			path_reachable_this_turn_with_directions: Creature_ƒ.yield_directional_path_reachable_this_turn(me, _TM, path_this_turn_with_directions)
 		}
 	},
 
@@ -97,20 +97,22 @@ export const Creature_Behavior_ƒ = {
 	
 
 
-	calculate_next_anim_segment: (me: Creature_Data, _TM: Tilemap_Manager_Data, initial_time_so_far: number = 0) => {
+	calculate_current_walk_anim_segment: (me: Creature_Data, _TM: Tilemap_Manager_Data, initial_time_so_far: number = 0): Anim_Schedule_Element|undefined => {
 		var time_so_far = initial_time_so_far;
 
 		const first_tile = first(me.path_reachable_this_turn_with_directions);
 		const second_tile = me.path_reachable_this_turn_with_directions[1];
 
-		me.current_walk_anim_segment = ƒ.if((first_tile != undefined) && (second_tile != undefined),
+		return (((first_tile != undefined) && (second_tile != undefined))
+			?
 			{
-				direction: (first_tile as PathNodeWithDirection).direction,
+				direction: first_tile.direction,
 				duration: 300,
 				start_time: time_so_far,
-				start_pos: (first_tile as PathNodeWithDirection).position,
-				end_pos: (second_tile as PathNodeWithDirection).position,
-			},
+				start_pos: first_tile.position,
+				end_pos: second_tile.position,
+			}
+			:
 			undefined
 		);
 	},
@@ -280,13 +282,10 @@ export const Creature_Behavior_ƒ = {
 
 		let next_tile_pos = me.tile_pos;
 		if( size(me.path_reachable_this_turn_with_directions) > 1){
-			Creature_ƒ.calculate_next_anim_segment(me, _TM, offset_in_ms);
 			next_tile_pos = me.path_reachable_this_turn_with_directions[1].position;
 
 			Creature_ƒ.set(change_list, me, 'behavior_mode', 'walk');
 		} else {
-			me.current_walk_anim_segment = undefined;
-
 			Creature_ƒ.set(change_list, me, 'behavior_mode', 'stand');
 		}
 
@@ -299,10 +298,14 @@ export const Creature_Behavior_ƒ = {
 			Because we want not *merely* a tile, but also a direction, grab the first element from our new path.  We already know the tile (we had to to calculate the path), but this gives us the direction as well.
 		*/ 
 
+		const current_anim_segment = Creature_ƒ.calculate_current_walk_anim_segment(me, _TM);
+
 		const new_position = {
 			position: next_tile_pos,
-			direction: ƒ.if(me.current_walk_anim_segment != undefined,
-				me.current_walk_anim_segment?.direction,
+			direction: (current_anim_segment != undefined
+				?
+				current_anim_segment.direction
+				:
 				me.facing_direction
 			),
 		};
@@ -322,8 +325,6 @@ export const Creature_Behavior_ƒ = {
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>
 	) => {
-		me.current_walk_anim_segment = undefined;
-	
 		Creature_ƒ.set(change_list, me, 'is_done_with_turn', true);
 	},
 	
@@ -479,7 +480,7 @@ export const Creature_Behavior_ƒ = {
 /*----------------------- animation — walking parts -----------------------*/
 
 	yield_walk_anim_position: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number):Point2D => {
-		const animation_segment = me.current_walk_anim_segment;
+		const animation_segment = Creature_ƒ.calculate_current_walk_anim_segment(me, _TM);
 
 		if( animation_segment ){
 			let time_offset_in_anim_segment = (offset_in_ms - animation_segment.start_time);
