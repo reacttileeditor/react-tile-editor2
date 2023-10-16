@@ -154,7 +154,7 @@ export const CT_Skeleton_ƒ: Creature_Delegate = {
 export const CT_Undead_Javelineer_ƒ: Creature_Delegate = {
 	...Creature_Delegate_Base_ƒ,
 
-	yield_moves_per_turn: () => 6,
+	yield_moves_per_turn: () => 16,
 	yield_creature_image: () => 'undead-javelineer-se',
 	yield_prettyprint_name: () => 'Hanged Man',
 	yield_damage: (): number => ( 3 ),

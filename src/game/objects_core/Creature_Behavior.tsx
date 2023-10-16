@@ -95,11 +95,11 @@ export const Creature_Behavior_ƒ = {
 	
 
 
-	calculate_current_walk_anim_segment: (me: Creature_Data, _TM: Tilemap_Manager_Data, initial_time_so_far: number = 0): Anim_Schedule_Element|undefined => {
+	calculate_current_walk_anim_segment: (me: Creature_Data, _TM: Tilemap_Manager_Data, path_data: Path_Data, initial_time_so_far: number = 0): Anim_Schedule_Element|undefined => {
 		var time_so_far = initial_time_so_far;
 
-		const first_tile = first(me.path_data.path_reachable_this_turn_with_directions);
-		const second_tile = me.path_data.path_reachable_this_turn_with_directions[1];
+		const first_tile = first(path_data.path_reachable_this_turn_with_directions);
+		const second_tile = path_data.path_reachable_this_turn_with_directions[1];
 
 		return (((first_tile != undefined) && (second_tile != undefined))
 			?
@@ -272,7 +272,6 @@ export const Creature_Behavior_ƒ = {
 
 		Creature_ƒ.add(change_list, me, 'remaining_move_points', -prior_tile_cost);
 
-
 		//TODO major thing we gotta fix for the functional refactor:
 		const new_path_data = Creature_ƒ.set_path(
 				me,
@@ -300,7 +299,7 @@ export const Creature_Behavior_ƒ = {
 			Because we want not *merely* a tile, but also a direction, grab the first element from our new path.  We already know the tile (we had to to calculate the path), but this gives us the direction as well.
 		*/ 
 
-		const current_anim_segment = Creature_ƒ.calculate_current_walk_anim_segment(me, _TM);
+		const current_anim_segment = Creature_ƒ.calculate_current_walk_anim_segment(me, _TM, new_path_data);
 
 		const new_position = {
 			position: next_tile_pos,
@@ -482,7 +481,11 @@ export const Creature_Behavior_ƒ = {
 /*----------------------- animation — walking parts -----------------------*/
 
 	yield_walk_anim_position: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number):Point2D => {
-		const animation_segment = Creature_ƒ.calculate_current_walk_anim_segment(me, _TM);
+		const animation_segment = Creature_ƒ.calculate_current_walk_anim_segment(me, _TM, me.path_data);
+
+		if(me.type_name == 'undead_javelineer'){
+			//debugger;
+		}
 
 		if( animation_segment ){
 			let time_offset_in_anim_segment = (offset_in_ms - animation_segment.start_time);
