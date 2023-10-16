@@ -41,38 +41,28 @@ export type Pathfinding_Result = {
 }
 
 
-export class Node_Graph_Generator {
-	_TM: Tilemap_Manager_Data;
-	_AM: Asset_Manager_Data;
-	_Creature: Creature_Data;
+export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _Creature: Creature_Data, grid: TileGrid ): NodeGraph => {
 
-	constructor( _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _Creature: Creature_Data ) {
-		
-		this._TM = _TM;
-		this._AM = _AM;
-		this._Creature = _Creature;
-	}
-	
 	
 /*----------------------- core functionality -----------------------*/
-	move_cost_for_coords = ( _grid: TileGrid, _coords: Point2D ): number|null => (
-		Creature_ƒ.yield_move_cost_for_tile_type( this._Creature, _grid[_coords.y][_coords.x] )
+	const move_cost_for_coords = ( _grid: TileGrid, _coords: Point2D ): number|null => (
+		Creature_ƒ.yield_move_cost_for_tile_type( _Creature, _grid[_coords.y][_coords.x] )
 	)
 	
 	
-	push_if_not_null = (_array: Array<WeightedNode>, _push_val: WeightedNode|null): void => {
+	const push_if_not_null = (_array: Array<WeightedNode>, _push_val: WeightedNode|null): void => {
 		if(_push_val != null){
 			_array.push( _push_val );
 		}
 	}
 	
-	check_tile = ( _grid: TileGrid, _coords: Point2D ): WeightedNode|null => {
+	const check_tile = ( _grid: TileGrid, _coords: Point2D ): WeightedNode|null => {
 		/*
 			If the tile we're checking is out of bounds, then it's blocked.
 			If the tile we're checking is open, it's a valid node connection, so we return it (so we can add it to the graph).
 		*/
-		if( Tilemap_Manager_ƒ.is_within_map_bounds( this._TM, this._AM, _coords ) ){
-			let weight = this.move_cost_for_coords( _grid, _coords );
+		if( Tilemap_Manager_ƒ.is_within_map_bounds( _TM, _AM, _coords ) ){
+			let weight = move_cost_for_coords( _grid, _coords );
 		
 			if( weight !== null ){
 				return {
@@ -88,39 +78,41 @@ export class Node_Graph_Generator {
 	};
 
 
-	check_adjacencies = ( _grid: TileGrid, _coords: Point2D ): Array<WeightedNode> => {
-		const tile_data: TilePositionComparatorSample = Tilemap_Manager_ƒ.get_tile_position_comparator_for_pos(this._TM, _coords);
+	const check_adjacencies = ( _grid: TileGrid, _coords: Point2D ): Array<WeightedNode> => {
+		const tile_data: TilePositionComparatorSample = Tilemap_Manager_ƒ.get_tile_position_comparator_for_pos(_TM, _coords);
 		var adjacent_nodes: Array<WeightedNode> = [];
 
 		/*
 			Check every adjacent tile in clockwise order, starting from the north.
 			Skip the very middle tile [1][1] in the comparator, because we're attempting to build a graph of "vectors" (i.e. directions we can move towards), and this will break the algorithm if we include it.  Probably. 
 		*/
-		this.push_if_not_null( adjacent_nodes, this.check_tile ( _grid, tile_data[0][0] ));
-		this.push_if_not_null( adjacent_nodes, this.check_tile ( _grid, tile_data[0][1] ));
-		this.push_if_not_null( adjacent_nodes, this.check_tile ( _grid, tile_data[1][0] ));
-		this.push_if_not_null( adjacent_nodes, this.check_tile ( _grid, tile_data[1][2] ));
-		this.push_if_not_null( adjacent_nodes, this.check_tile ( _grid, tile_data[2][0] ));
-		this.push_if_not_null( adjacent_nodes, this.check_tile ( _grid, tile_data[2][1] ));
+		push_if_not_null( adjacent_nodes, check_tile ( _grid, tile_data[0][0] ));
+		push_if_not_null( adjacent_nodes, check_tile ( _grid, tile_data[0][1] ));
+		push_if_not_null( adjacent_nodes, check_tile ( _grid, tile_data[1][0] ));
+		push_if_not_null( adjacent_nodes, check_tile ( _grid, tile_data[1][2] ));
+		push_if_not_null( adjacent_nodes, check_tile ( _grid, tile_data[2][0] ));
+		push_if_not_null( adjacent_nodes, check_tile ( _grid, tile_data[2][1] ));
 
 		return adjacent_nodes;
 	}
 	
-	build_node_graph_from_grid = ( _grid: TileGrid ): NodeGraph => {
+	const build_node_graph_from_grid = ( _grid: TileGrid ): NodeGraph => {
 		var graph_as_adjacency_list: Array<string> = [];
 		
 		_.map( _grid, (row_value: Array<string>, row_index) => {
 			_.map( row_value, (col_value, col_index) => {
 
 				//using this to skip solid tiles; we already handle tracking adjacencies *into* solid tile in the check_adjacencies function, but we need to skip looking *outwards* from solid tiles as well.
-				if( this.move_cost_for_coords( _grid, {x: col_index, y: row_index} ) !== null ){
-					(graph_as_adjacency_list[`${col_index},${row_index}` as any] as any) = this.check_adjacencies( _grid, { x: col_index, y: row_index } );
+				if( move_cost_for_coords( _grid, {x: col_index, y: row_index} ) !== null ){
+					(graph_as_adjacency_list[`${col_index},${row_index}` as any] as any) = check_adjacencies( _grid, { x: col_index, y: row_index } );
 				}
 			})
 		});
 		
 		return graph_as_adjacency_list as unknown as NodeGraph;
 	}
+
+	return build_node_graph_from_grid(grid);
 }
 
 const addr_to_tuple = (the_string: string): Point2D => {
@@ -242,10 +234,13 @@ export const Pathfinder_ƒ = {
 		/*
 			We're going to go ahead and pass in the creature as a constructor argument; the idea here is that we can't really "reuse" an existing node graph generator and just pass in a new creature type; the moment anything changes about the creature we're using, we need to completely rebuild the node graph from scratch.  So there's no sense in pipelining it into the whole function tree inside the class - we have to nuke and rebuild anyways, so why not make the interface a bit simpler?
 		*/
-		const _Node_Graph_Generator = new Node_Graph_Generator(_TM, _AM, _Creature);
+		//const _Node_Graph_Generator = new Node_Graph_Generator(_TM, _AM, _Creature);
 
 	
-		const _graph = _Node_Graph_Generator.build_node_graph_from_grid( _TM.tile_maps.terrain );
+		//const _graph = _Node_Graph_Generator.build_node_graph_from_grid( _TM.tile_maps.terrain );
+
+		const _graph = Node_Graph_Generate(_TM, _AM, _Creature, _TM.tile_maps.terrain);
+
 		return a_star_search( _graph, _start_coords, _end_coords, _Creature );
 	}
 }
