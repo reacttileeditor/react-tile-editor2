@@ -35,7 +35,7 @@ export type BehaviorMode =
 
 export type ChangeInstance = {
 	type: ChangeType,
-	value: ChangeValue,
+	value: Change_Value,
 	target_variable: keyof Creature_Data,
 	target_obj_uuid: string, //uuid, actually
 };
@@ -44,10 +44,10 @@ type CreatureKeys = keyof Creature_Data & keyof Base_Object_Data;
 
 export type VariableSpecificChangeInstance = {
 	type: ChangeType,
-	value: ChangeValue,
+	value: Change_Value,
 }
 
-type ChangeValue = (number|string|Point2D|boolean);
+export type Change_Value = (number|string|Point2D|boolean|Path_Data);
 
 
 export type Creature_Data = {
@@ -68,11 +68,8 @@ export type Creature_Data = {
 
 	//intended moves
 	planned_tile_pos: Point2D;
-	path_this_turn: Array<Point2D>;
-	path_this_turn_with_directions: Array<PathNodeWithDirection>;
-	path_reachable_this_turn: Array<Point2D>;
-	path_reachable_this_turn_with_directions: Array<PathNodeWithDirection>;
-	animation_this_turn: Array<Anim_Schedule_Element>;	
+	animation_this_turn: Array<Anim_Schedule_Element>;
+	path_data: Path_Data; 
 } & Base_Object_Data;
 
 export type Anim_Schedule_Element = {
@@ -83,7 +80,19 @@ export type Anim_Schedule_Element = {
 	end_pos: Point2D,
 }
 
+export type Path_Data = {
+	path_this_turn: Array<Point2D>;
+	path_this_turn_with_directions: Array<PathNodeWithDirection>;
+	path_reachable_this_turn: Array<Point2D>;
+	path_reachable_this_turn_with_directions: Array<PathNodeWithDirection>;
+}
 
+const path_data_init = {
+	path_this_turn: [],
+	path_this_turn_with_directions: [],
+	path_reachable_this_turn: [],
+	path_reachable_this_turn_with_directions: [],
+}
 
 
 export const New_Creature = (
@@ -151,11 +160,8 @@ export const New_Creature = (
 
 		//intended moves
 		planned_tile_pos: p.planned_tile_pos,
-		path_this_turn: [],
-		path_this_turn_with_directions: [],
-		path_reachable_this_turn: [],
-		path_reachable_this_turn_with_directions: [],
 		animation_this_turn: [],
+		path_data: cloneDeep(path_data_init),
 	}	
 }
 
@@ -179,11 +185,8 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		next_behavior_reconsideration_timestamp: 0,
 		remaining_action_points: 1,
 		planned_tile_pos: me.tile_pos,
-		path_this_turn: [],
-		path_this_turn_with_directions: [],
-		path_reachable_this_turn: [],
-		path_reachable_this_turn_with_directions: [],
 		animation_this_turn: [],
+		path_data: cloneDeep(path_data_init),
 		behavior_mode: 'stand',
 		is_done_with_turn: false,
 		remaining_move_points: Creature_ƒ.get_delegate(me.type_name).yield_moves_per_turn()
@@ -196,6 +199,10 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		return _.isObject(value) && (value as Point2D).x !== undefined && (value as Point2D).y !== undefined;
 	},
 
+	isPathData: (value: ValueOf<Creature_Data>): value is Path_Data => {
+		return _.isObject(value) && (value as Path_Data).path_reachable_this_turn !== undefined && (value as Path_Data).path_reachable_this_turn_with_directions !== undefined;
+	},
+
 	isDirection: (value: ValueOf<Creature_Data>): value is Direction => {
 		return value as Direction in ['north_east',
 		'east',
@@ -205,13 +212,15 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		'south_west']
 	},
 
-	get_value_type: (value: ValueOf<Creature_Data>): 'Point2D' | 'Direction' | 'string' | 'number' | 'boolean' => {
+	get_value_type: (value: ValueOf<Creature_Data>): 'Point2D' | 'Direction' | 'string' | 'number' | 'boolean' | 'Path_Data' => {
 		if( isBoolean(value) ){
 			return 'boolean';
 		} else if( Creature_ƒ.isPoint2D(value) ){
 			return 'Point2D';
 		} else if ( Creature_ƒ.isDirection(value) ){
 			return 'Direction';
+		} else if ( Creature_ƒ.isPathData(value) ){
+			return 'Path_Data';
 		} else if ( _.isString(value) ){
 			return 'string';
 		} else {
@@ -332,7 +341,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		me: Creature_Data,
 		incoming_changes: Array<VariableSpecificChangeInstance>,
 		key: CreatureKeys
-	):number|string|Point2D|boolean|Direction => {
+	):Change_Value => {
 		/*
 			If we have a set operation on this frame, then it overwrites any changes made by an add op.  Make sure the set operations come after any add operations. 
 		*/
@@ -354,7 +363,8 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 							number: (b.value as unknown as number),
 							Direction: (b.value as unknown as Direction),
 							Point2D: (b.value as unknown as Point2D),
-							boolean: (b.value as unknown as boolean)
+							boolean: (b.value as unknown as boolean),
+							Path_Data: (b.value as unknown as Path_Data)
 						}[Creature_ƒ.get_value_type(a.value)]
 					},
 					{
@@ -364,7 +374,8 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 							number: (a.value as unknown as number) + (b.value as unknown as number),
 							Direction: (b.value as unknown as Direction), //no coherent way to add Directions, so we treat it as 'set'
 							Point2D: Add_Point_2D( (a.value as unknown as Point2D), (b.value as unknown as Point2D) ),
-							boolean: (a.value as unknown as boolean) && (b.value as unknown as boolean)
+							boolean: (a.value as unknown as boolean) && (b.value as unknown as boolean),
+							Path_Data: (b.value as unknown as Path_Data), //no coherent way to add Paths, so we treat it as 'set'
 						}[Creature_ƒ.get_value_type(a.value)]
 					}
 				);
@@ -381,7 +392,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		change_list: Array<ChangeInstance>,
 		me: Creature_Data,
 		target_variable: keyof Creature_Data,
-		value: ChangeValue,
+		value: Change_Value,
 	) => {
 
 		change_list.push({
@@ -396,7 +407,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		change_list: Array<ChangeInstance>,
 		me: Creature_Data,
 		target_variable: keyof Creature_Data,
-		value: ChangeValue,
+		value: Change_Value,
 	) => {
 
 		change_list.push({

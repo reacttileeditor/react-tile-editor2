@@ -11,7 +11,7 @@ import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_
 import { Base_Object_Data, New_Base_Object } from "./Base_Object";
 import { Creature_Delegate, CT_Hermit_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ } from "./Creature_Delegate";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
-import { Anim_Schedule_Element, BehaviorMode, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection } from "./Creature";
+import { Anim_Schedule_Element, BehaviorMode, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection, Path_Data } from "./Creature";
 import { AI_Core_ƒ } from "./AI_Core";
 import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
@@ -24,7 +24,7 @@ export const Creature_Behavior_ƒ = {
 
 /*----------------------- movement -----------------------*/
 
-	set_path: (me: Creature_Data, new_path: Array<Point2D>, _TM: Tilemap_Manager_Data): Creature_Data => {
+	set_path: (me: Creature_Data, new_path: Array<Point2D>, _TM: Tilemap_Manager_Data): Path_Data => {
 		const path_this_turn_with_directions = Creature_ƒ.build_directional_path_from_path(
 			me,
 			new_path,
@@ -32,7 +32,6 @@ export const Creature_Behavior_ƒ = {
 		);
 
 		return {
-			...cloneDeep(me),
 			path_this_turn: new_path,
 			path_reachable_this_turn:Creature_ƒ.yield_path_reachable_this_turn(me, _TM, new_path),
 			path_this_turn_with_directions: path_this_turn_with_directions,
@@ -40,9 +39,8 @@ export const Creature_Behavior_ƒ = {
 		}
 	},
 
-	clear_path: (me: Creature_Data): Creature_Data => {
+	clear_path: (me: Creature_Data): Path_Data => {
 		return {
-			...cloneDeep(me),
 			path_this_turn: [],
 			path_reachable_this_turn: [],
 			path_this_turn_with_directions: [],
@@ -100,8 +98,8 @@ export const Creature_Behavior_ƒ = {
 	calculate_current_walk_anim_segment: (me: Creature_Data, _TM: Tilemap_Manager_Data, initial_time_so_far: number = 0): Anim_Schedule_Element|undefined => {
 		var time_so_far = initial_time_so_far;
 
-		const first_tile = first(me.path_reachable_this_turn_with_directions);
-		const second_tile = me.path_reachable_this_turn_with_directions[1];
+		const first_tile = first(me.path_data.path_reachable_this_turn_with_directions);
+		const second_tile = me.path_data.path_reachable_this_turn_with_directions[1];
 
 		return (((first_tile != undefined) && (second_tile != undefined))
 			?
@@ -257,7 +255,7 @@ export const Creature_Behavior_ƒ = {
 
 			First, however, deduct the cost of our current tile from our existing move_points:
 		*/
-		const prior_tile_pos = first(me.path_reachable_this_turn);
+		const prior_tile_pos = first(me.path_data.path_reachable_this_turn);
 		let current_tile_type = '';
 		if( prior_tile_pos != undefined) {
 			current_tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
@@ -276,18 +274,17 @@ export const Creature_Behavior_ƒ = {
 
 
 		//TODO major thing we gotta fix for the functional refactor:
-		me = {
-			...cloneDeep(me),
-			...Creature_ƒ.set_path(
+		const new_path_data = Creature_ƒ.set_path(
 				me,
 				Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
 				_TM
-			),
-		};
+			);
+		Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
+
 
 		let next_tile_pos = me.tile_pos;
-		if( size(me.path_reachable_this_turn_with_directions) > 1){
-			next_tile_pos = me.path_reachable_this_turn_with_directions[1].position;
+		if( size(me.path_data.path_reachable_this_turn_with_directions) > 1){
+			next_tile_pos = me.path_data.path_reachable_this_turn_with_directions[1].position;
 
 			Creature_ƒ.set(change_list, me, 'behavior_mode', 'walk');
 		} else {

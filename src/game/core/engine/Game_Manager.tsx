@@ -619,10 +619,10 @@ export const Game_Manager_ƒ = {
 					Here we build a brand new tilemap for the unit path, from scratch.
 				*/
 
-				return ƒ.if(  includes({x: x_idx, y: y_idx}, creature.path_this_turn ),
+				return ƒ.if(  includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn ),
 
-					ƒ.if( includes({x: x_idx, y: y_idx}, creature.path_reachable_this_turn),
-							ƒ.if( isEqual({x: x_idx, y: y_idx}, last(creature.path_reachable_this_turn)),
+					ƒ.if( includes({x: x_idx, y: y_idx}, creature.path_data.path_reachable_this_turn),
+							ƒ.if( isEqual({x: x_idx, y: y_idx}, last(creature.path_data.path_reachable_this_turn)),
 								'arrowhead-green',
 								'arrow-green',
 							),
@@ -778,11 +778,12 @@ export const Game_Manager_ƒ = {
 
 				if( buttons_pressed.left == true ){
 					new_creature = {
-						...cloneDeep(Creature_ƒ.set_path(
+						...cloneDeep(creature),
+						path_data: Creature_ƒ.set_path(
 							creature,
 							Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, creature.tile_pos, new_pos, creature ).successful_path,
 							_TM
-						)),
+						),
 						planned_tile_pos: new_pos,
 					}
 
@@ -790,7 +791,8 @@ export const Game_Manager_ƒ = {
 
 				} else if ( buttons_pressed.right == true ){
 					new_creature = {
-						...cloneDeep(Creature_ƒ.clear_path(creature)),
+						...cloneDeep(creature),
+						path_data: Creature_ƒ.clear_path(creature),
 					}
 
 					new_creature_array[me.game_state.selected_object_index] = new_creature;
