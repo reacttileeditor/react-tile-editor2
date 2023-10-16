@@ -273,17 +273,20 @@ export const Creature_Behavior_ƒ = {
 		Creature_ƒ.add(change_list, me, 'remaining_move_points', -prior_tile_cost);
 
 		//TODO major thing we gotta fix for the functional refactor:
-		const new_path_data = Creature_ƒ.set_path(
+		const new_path_data = cloneDeep(Creature_ƒ.set_path(
 				me,
 				Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
 				_TM
-			);
+			));
 		Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
-
+		Creature_ƒ.set(change_list, me, 'walk_segment_start_time', offset_in_ms);
+		if(me.type_name == 'undead_javelineer'){
+			//debugger;
+		}
 
 		let next_tile_pos = me.tile_pos;
-		if( size(me.path_data.path_reachable_this_turn_with_directions) > 1){
-			next_tile_pos = me.path_data.path_reachable_this_turn_with_directions[1].position;
+		if( size(new_path_data.path_reachable_this_turn_with_directions) > 1){
+			next_tile_pos = new_path_data.path_reachable_this_turn_with_directions[1].position;
 
 			Creature_ƒ.set(change_list, me, 'behavior_mode', 'walk');
 		} else {
@@ -483,12 +486,9 @@ export const Creature_Behavior_ƒ = {
 	yield_walk_anim_position: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number):Point2D => {
 		const animation_segment = Creature_ƒ.calculate_current_walk_anim_segment(me, _TM, me.path_data);
 
-		if(me.type_name == 'undead_javelineer'){
-			//debugger;
-		}
 
 		if( animation_segment ){
-			let time_offset_in_anim_segment = (offset_in_ms - animation_segment.start_time);
+			let time_offset_in_anim_segment = (offset_in_ms - me.walk_segment_start_time);//animation_segment.start_time);
 			let time_offset_normalized = 1.0 - (time_offset_in_anim_segment / animation_segment.duration)
 			
 			return ƒ.round_point_to_nearest_pixel( 

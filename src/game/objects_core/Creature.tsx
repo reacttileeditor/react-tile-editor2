@@ -69,6 +69,7 @@ export type Creature_Data = {
 	//intended moves
 	planned_tile_pos: Point2D;
 	animation_this_turn: Array<Anim_Schedule_Element>;
+	walk_segment_start_time: number,
 	path_data: Path_Data; 
 } & Base_Object_Data;
 
@@ -161,6 +162,7 @@ export const New_Creature = (
 		//intended moves
 		planned_tile_pos: p.planned_tile_pos,
 		animation_this_turn: [],
+		walk_segment_start_time: 0,
 		path_data: cloneDeep(path_data_init),
 	}	
 }
