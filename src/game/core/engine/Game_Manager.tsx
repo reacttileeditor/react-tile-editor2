@@ -294,6 +294,7 @@ export const Game_Manager_ƒ = {
 			},
 			game_state: {
 				...cloneDeep(me.game_state),
+				current_frame_state: new_turn_state,
 				turn_list: concat(
 					me.game_state.turn_list,
 					[new_turn_state]
