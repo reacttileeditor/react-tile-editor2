@@ -162,9 +162,9 @@ export const CT_Undead_Javelineer_ƒ: Creature_Delegate = {
 
 	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
 		{
-			'north_east':	'undead_javelineer_se_stand',
-			'north_west':	'undead_javelineer_se_stand',
-			'east':			'undead_javelineer_se_stand',
+			'north_east':	'undead_javelineer_ne_stand',
+			'north_west':	'undead_javelineer_ne_stand',
+			'east':			'undead_javelineer_ne_stand',
 			'south_east':	'undead_javelineer_se_stand',
 			'west':			'undead_javelineer_se_stand',
 			'south_west':	'undead_javelineer_se_stand',	
@@ -173,9 +173,9 @@ export const CT_Undead_Javelineer_ƒ: Creature_Delegate = {
 
 	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
 		{
-			'north_east':	'undead_javelineer_se_stand',
-			'north_west':	'undead_javelineer_se_stand',
-			'east':			'undead_javelineer_se_stand',
+			'north_east':	'undead_javelineer_ne_stand',
+			'north_west':	'undead_javelineer_ne_stand',
+			'east':			'undead_javelineer_ne_stand',
 			'south_east':	'undead_javelineer_se_stand',
 			'west':			'undead_javelineer_se_stand',
 			'south_west':	'undead_javelineer_se_stand',	
