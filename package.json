@@ -13,6 +13,7 @@
     "@types/react-dom": "^18.0.10",
     "@types/uuid": "^3.4.7",
     "lodash": "^4.17.11",
+    "perlin-simplex": "^0.0.3",
     "prando": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
