@@ -198,7 +198,7 @@ export const CT_Undead_Javelineer_ƒ: Creature_Delegate = {
 export const CT_Human_Footman_ƒ: Creature_Delegate = {
 	...Creature_Delegate_Base_ƒ,
 
-	yield_moves_per_turn: () => 6,
+	yield_moves_per_turn: () => 10,
 	yield_creature_image: () => 'human_footman_se_stand',
 	yield_prettyprint_name: () => 'Footman',
 	yield_damage: (): number => ( 7 ),
@@ -219,9 +219,9 @@ export const CT_Human_Footman_ƒ: Creature_Delegate = {
 			'north_east':	'human_footman_ne_stand',
 			'north_west':	'human_footman_ne_stand',
 			'east':			'human_footman_ne_stand',
-			'south_east':	'human_footman_se_stand',
-			'west':			'human_footman_se_stand',
-			'south_west':	'human_footman_se_stand',	
+			'south_east':	'human_footman_se_walk',
+			'west':			'human_footman_se_walk',
+			'south_west':	'human_footman_se_walk',	
 		}[direction]
 	),
 	
