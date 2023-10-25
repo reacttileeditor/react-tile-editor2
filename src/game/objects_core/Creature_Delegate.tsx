@@ -216,9 +216,9 @@ export const CT_Human_Footman_ƒ: Creature_Delegate = {
 
 	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
 		{
-			'north_east':	'human_footman_ne_stand',
-			'north_west':	'human_footman_ne_stand',
-			'east':			'human_footman_ne_stand',
+			'north_east':	'human_footman_ne_walk',
+			'north_west':	'human_footman_ne_walk',
+			'east':			'human_footman_ne_walk',
 			'south_east':	'human_footman_se_walk',
 			'west':			'human_footman_se_walk',
 			'south_west':	'human_footman_se_walk',	
