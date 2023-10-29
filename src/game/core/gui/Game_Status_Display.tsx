@@ -40,6 +40,7 @@ interface Game_Status_Display_Props {
 	_Asset_Manager: () => Asset_Manager_Data,
 	_Blit_Manager: () => Blit_Manager_Data,
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
+	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
 }
 
 
@@ -75,6 +76,10 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 
 						props.set_Game_Manager_Data(
 							newData.gm
+						)
+
+						props.set_Tilemap_Manager(
+							newData.tm
 						)
 					}}
 				>

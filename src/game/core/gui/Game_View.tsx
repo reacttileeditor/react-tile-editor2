@@ -161,6 +161,7 @@ export const Game_View = (props: Game_View_Props) => {
 			_Asset_Manager={props._Asset_Manager}
 			_Blit_Manager={props._Blit_Manager}
 			_Tilemap_Manager={props._Tilemap_Manager}
+			set_Tilemap_Manager={props.set_Tilemap_Manager}
 		/>
 	</div>;
 
