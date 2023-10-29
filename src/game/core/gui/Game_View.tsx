@@ -131,7 +131,10 @@ export const Game_View = (props: Game_View_Props) => {
 
 	const handle_canvas_mouse_click = (pos: Point2D, buttons_pressed: MouseButtonState) => {
 		console.log('canvas click game')
-		props.set_Game_Manager_Data( Game_Manager_ƒ.handle_click(props.get_Game_Manager_Data(),  props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos, buttons_pressed));
+
+		const new_game_data = Game_Manager_ƒ.handle_click(props.get_Game_Manager_Data,  props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos, buttons_pressed);
+
+		props.set_Game_Manager_Data( new_game_data );
 	}
 
 

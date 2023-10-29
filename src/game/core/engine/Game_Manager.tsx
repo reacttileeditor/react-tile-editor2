@@ -210,8 +210,8 @@ export const Game_Manager_ƒ = {
 	},
 
 
-	handle_click: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState): Game_Manager_Data => (
-		Game_Manager_ƒ.select_object_based_on_tile_click(me, _TM, _AM, _BM, pos, buttons_pressed)
+	handle_click: (get_game_state: () => Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState): Game_Manager_Data => (
+		Game_Manager_ƒ.select_object_based_on_tile_click(get_game_state, _TM, _AM, _BM, pos, buttons_pressed)
 	),
 		
 	
@@ -747,11 +747,12 @@ export const Game_Manager_ƒ = {
 		return state ? state : Individual_Game_Turn_State_Init;
 	},
 	
-	select_object_based_on_tile_click: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState): Game_Manager_Data => {
+	select_object_based_on_tile_click: (get_game_state: () => Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState): Game_Manager_Data => {
 		/*
 			This handles two "modes" simultaneously.  If we click on an object, then we change the current selected object to be the one we clicked on (its position is occupied, and ostensibly can't be moved into - this might need to change with our game rules being what they are, but we'll cross that bridge later).  If we click on the ground, then we're intending to move the current object to that location.
 		*/
 		const new_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, pos );
+		const me = get_game_state();
 		
 		let newly_selected_creature_index: number|undefined = findIndex( Game_Manager_ƒ.get_current_turn_state(me).creature_list, {
 			tile_pos: new_pos
@@ -817,6 +818,9 @@ export const Game_Manager_ƒ = {
 			...cloneDeep(me),
 			game_state: {
 				...cloneDeep(me.game_state),
+				current_frame_state: {
+					creature_list: new_creature_array
+				},
 				selected_object_index: newly_selected_creature_index == -1 ? me.game_state.selected_object_index : newly_selected_creature_index,
 				turn_list: new_turn_list
 			}

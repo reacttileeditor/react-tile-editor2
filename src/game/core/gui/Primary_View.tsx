@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import _, { isEmpty } from "lodash";
+import _, { cloneDeep, isEmpty } from "lodash";
 
 import { Canvas_View } from "./Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ, New_Asset_Manager } from "../engine/Asset_Manager";
@@ -33,7 +33,7 @@ const get_Tilemap_Manager = () => (_Tilemap_Manager as Tilemap_Manager_Data);
 
 let _Game_Manager_Data: Game_Manager_Data|null = ( null );
 const get_Game_Manager_Data = () => (_Game_Manager_Data as Game_Manager_Data);
-const set_Game_Manager_Data = (newVal: Game_Manager_Data) => { _Game_Manager_Data = newVal;}
+const set_Game_Manager_Data = (newVal: Game_Manager_Data) => { _Game_Manager_Data = cloneDeep(newVal);}
 
 
 
