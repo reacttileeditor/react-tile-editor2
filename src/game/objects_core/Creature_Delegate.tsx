@@ -162,9 +162,9 @@ export const CT_Undead_Javelineer_ƒ: Creature_Delegate = {
 
 	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
 		{
-			'north_east':	'undead_javelineer_se_stand',
-			'north_west':	'undead_javelineer_se_stand',
-			'east':			'undead_javelineer_se_stand',
+			'north_east':	'undead_javelineer_ne_stand',
+			'north_west':	'undead_javelineer_ne_stand',
+			'east':			'undead_javelineer_ne_stand',
 			'south_east':	'undead_javelineer_se_stand',
 			'west':			'undead_javelineer_se_stand',
 			'south_west':	'undead_javelineer_se_stand',	
@@ -173,9 +173,9 @@ export const CT_Undead_Javelineer_ƒ: Creature_Delegate = {
 
 	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
 		{
-			'north_east':	'undead_javelineer_se_stand',
-			'north_west':	'undead_javelineer_se_stand',
-			'east':			'undead_javelineer_se_stand',
+			'north_east':	'undead_javelineer_ne_stand',
+			'north_west':	'undead_javelineer_ne_stand',
+			'east':			'undead_javelineer_ne_stand',
 			'south_east':	'undead_javelineer_se_stand',
 			'west':			'undead_javelineer_se_stand',
 			'south_west':	'undead_javelineer_se_stand',	
@@ -190,6 +190,49 @@ export const CT_Undead_Javelineer_ƒ: Creature_Delegate = {
 			'south_east':	'undead_javelineer_se_attack',
 			'west':			'undead_javelineer_se_attack',
 			'south_west':	'undead_javelineer_se_attack',	
+		}[direction]
+	),
+}
+
+
+export const CT_Human_Footman_ƒ: Creature_Delegate = {
+	...Creature_Delegate_Base_ƒ,
+
+	yield_moves_per_turn: () => 10,
+	yield_creature_image: () => 'human_footman_se_stand',
+	yield_prettyprint_name: () => 'Footman',
+	yield_damage: (): number => ( 7 ),
+
+	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
+		{
+			'north_east':	'human_footman_ne_stand',
+			'north_west':	'human_footman_ne_stand',
+			'east':			'human_footman_ne_stand',
+			'south_east':	'human_footman_se_stand',
+			'west':			'human_footman_se_stand',
+			'south_west':	'human_footman_se_stand',	
+		}[direction]
+	),
+
+	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
+		{
+			'north_east':	'human_footman_ne_walk',
+			'north_west':	'human_footman_ne_walk',
+			'east':			'human_footman_ne_walk',
+			'south_east':	'human_footman_se_walk',
+			'west':			'human_footman_se_walk',
+			'south_west':	'human_footman_se_walk',	
+		}[direction]
+	),
+	
+	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
+		{
+			'north_east':	'human_footman_ne_stand',
+			'north_west':	'human_footman_ne_stand',
+			'east':			'human_footman_ne_stand',
+			'south_east':	'human_footman_se_stand',
+			'west':			'human_footman_se_stand',
+			'south_west':	'human_footman_se_stand',	
 		}[direction]
 	),
 }

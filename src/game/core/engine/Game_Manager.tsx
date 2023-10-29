@@ -134,6 +134,17 @@ export const New_Game_Manager = (p: {
 			is_done_with_turn: false,
 		}), New_Creature({
 			get_GM_instance: p.get_GM_instance,
+			tile_pos: {x: 3, y: 11},
+			_TM: p._TM,
+			planned_tile_pos: {x: 3, y: 11},
+			type_name: 'human_footman',
+			team: 1,
+			creation_timestamp: 0,
+			should_remove: false,
+			behavior_mode: 'stand',
+			is_done_with_turn: false,
+		}), New_Creature({
+			get_GM_instance: p.get_GM_instance,
 			tile_pos: {x: 4, y: 4},
 			_Asset_Manager: p._Asset_Manager,
 			_Blit_Manager: p._Blit_Manager,
