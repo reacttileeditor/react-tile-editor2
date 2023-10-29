@@ -135,7 +135,9 @@ export const New_Game_Manager = (p: {
 		}), New_Creature({
 			get_GM_instance: p.get_GM_instance,
 			tile_pos: {x: 3, y: 11},
-			_TM: p._TM,
+			_Asset_Manager: p._Asset_Manager,
+			_Blit_Manager: p._Blit_Manager,
+			_Tilemap_Manager: p._Tilemap_Manager,
 			planned_tile_pos: {x: 3, y: 11},
 			type_name: 'human_footman',
 			team: 1,
