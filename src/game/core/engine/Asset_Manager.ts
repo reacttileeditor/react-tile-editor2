@@ -1,4 +1,4 @@
-import _, { isEmpty, map } from "lodash";
+import _, { isEmpty, isString, map } from "lodash";
 import Prando from 'prando';
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "./Blit_Manager";
 import * as Utils from "./Utils";
@@ -196,6 +196,16 @@ export const Asset_Manager_ƒ = {
 			var temp_url = PATH_PREFIX + value.url;
 			
 			temp_image.src = temp_url;
+
+			temp_image.onerror = (evt: string|Event) => {
+				if( isString(evt) ){ 
+					throw new Error(evt)
+				} else if (evt != null) {
+					if( evt.target != null ){
+						throw new Error( `Could not load image with URL: ${(evt.target as HTMLImageElement).src}` )
+					}
+				}
+			}
 
 			temp_image.onload = () => {
 				me.static_vals.raw_image_list[ value.name ] = temp_image;

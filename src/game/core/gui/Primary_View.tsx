@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ErrorInfo, PropsWithChildren, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import _, { cloneDeep, isEmpty } from "lodash";
 
@@ -104,6 +104,7 @@ export const Primary_View = () => {
 
 
 	return (
+		<ErrorBoundary>
 		<div
 			className="master_node"
 		>
@@ -164,5 +165,42 @@ export const Primary_View = () => {
 				</>
 			}
 		</div>
+		</ErrorBoundary>
 	);
+}
+
+type ErrorBoundaryState = {
+	hasError: boolean,
+	errorText: string,
+}
+
+class ErrorBoundary extends React.Component<
+	PropsWithChildren<Record<string, unknown>>,
+	ErrorBoundaryState
+> {
+	state: ErrorBoundaryState = {
+		hasError: false,
+		errorText: ''
+	}
+  
+	static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+		// Update state so the next render will show the fallback UI.
+		return {
+			hasError: true,
+			errorText: error.message
+		};
+	}
+  
+	componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+		// You can also log the error to an error reporting service
+	  	//logErrorToMyService(error, errorInfo);
+	}
+  
+	render() {
+		if (this.state.hasError) {
+			return <h1>{this.state.errorText}</h1>;
+		}
+
+		return this.props.children; 
+	}
 }
