@@ -94,8 +94,18 @@ export const asset_list: StaticValues = {
 		url: "characters/undead_javelineer_ne_stand.png",
 		name: "undead_javelineer_ne_stand",
 	},{
-		url: "characters/human_footman_se_stand.png",
+		url: "characters/human_footman_stand_se.png",
 		name: "human_footman_se_stand",
+		frames: 5,
+		frame_duration: 170,
+		ping_pong: true,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 58,
+			h: 158,
+		},
 	},{
 		url: "characters/human_footman_ne_stand.png",
 		name: "human_footman_ne_stand",
