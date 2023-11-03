@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Primary_View } from "./game/core/gui/Primary_View";
+import { ErrorBoundary } from './game/core/gui/Error_Boundary';
 
 //import reportWebVitals from './reportWebVitals';
 
@@ -10,7 +11,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
 	<React.StrictMode>
-		<Primary_View />
+		<ErrorBoundary>
+			<Primary_View />
+		</ErrorBoundary>
 	</React.StrictMode>
 );
 
