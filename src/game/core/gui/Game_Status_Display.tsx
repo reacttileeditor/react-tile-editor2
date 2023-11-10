@@ -47,7 +47,7 @@ interface Game_Status_Display_Props {
 export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 
 	const _GS = props.get_Game_Manager_Data()?.game_state;
-
+	const _GM = props.get_Game_Manager_Data();
 
 
 
@@ -70,6 +70,7 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 				className="game_status_display"
 			>
 				<button
+					disabled={ _GM.animation_state.is_animating_live_game }
 					onClick={(evt)=>{
 						const newData = Game_Manager_ƒ.advance_turn_start(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
 
