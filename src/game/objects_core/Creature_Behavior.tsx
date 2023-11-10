@@ -236,7 +236,14 @@ export const Creature_Behavior_ƒ = {
 		change_list: Array<ChangeInstance>,
 	) => {
 		/*-------- Updating pixel position --------*/
-		let new_pos = Creature_ƒ.yield_walk_anim_position(me, _TM, offset_in_ms);
+		const anim_type = Creature_ƒ.yield_current_animation_type( me, _TM, offset_in_ms);
+
+		let new_pos = {
+			walk: Creature_ƒ.yield_walk_anim_position(me, _TM, offset_in_ms),
+			attack: me.pixel_pos,
+			stand: me.pixel_pos,
+		}[anim_type];
+
 
 		Creature_ƒ.set(change_list, me, 'pixel_pos', new_pos);
 	},
