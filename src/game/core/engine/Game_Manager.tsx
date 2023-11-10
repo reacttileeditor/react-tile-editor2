@@ -57,6 +57,7 @@ export const GameStateInit: Game_State = {
 };
 
 interface AnimationState {
+	processing_tick: number,
 	is_animating_live_game: boolean,
 	time_live_game_anim_started__in_ticks: number,
 	time_paused_game_anim_started__in_ticks: number,
@@ -94,6 +95,7 @@ export const New_Game_Manager = (p: {
 		cursor_pos: {x: 0, y: 0},
 
 		animation_state: {
+			processing_tick: 0,
 			is_animating_live_game: false,
 			time_live_game_anim_started__in_ticks: 0,
 			time_paused_game_anim_started__in_ticks: 0,
@@ -272,6 +274,7 @@ export const Game_Manager_ƒ = {
 			gm: {
 				...cloneDeep(me),
 				animation_state: {
+					processing_tick: 0,
 					is_animating_live_game: true,
 					time_live_game_anim_started__in_ticks: _BM.time_tracker.current_tick,
 					time_paused_game_anim_started__in_ticks: me.animation_state.time_paused_game_anim_started__in_ticks,
@@ -301,6 +304,7 @@ export const Game_Manager_ƒ = {
 		return {
 			...cloneDeep(me),
 			animation_state: {
+				processing_tick: me.animation_state.processing_tick,
 				is_animating_live_game: false,
 				time_live_game_anim_started__in_ticks: me.animation_state.time_live_game_anim_started__in_ticks,
 				time_paused_game_anim_started__in_ticks: _BM.time_tracker.current_tick,
@@ -434,6 +438,8 @@ export const Game_Manager_ƒ = {
 			The result of this will give us two lists;  one is a list of any Custom_Objects they're going to spawn, the other is a list of changes we would like to apply to our list of creatures.
 		*/
 
+		const tick = me.animation_state.processing_tick;
+
 		if( Game_Manager_ƒ.is_turn_finished(me) ){
 
 			return {
@@ -459,7 +465,7 @@ export const Game_Manager_ƒ = {
 			*/
 			let all_objects = concat( cloneDeep(me.game_state.custom_object_list), cloneDeep(spawnees));
 			let all_objects_processed = map( all_objects, (val,idx) => {
-				return (Custom_Object_ƒ.process_single_frame(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM)))
+				return (Custom_Object_ƒ.process_single_frame(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM), tick))
 			});
 
 			let all_objects_processed_and_culled = filter( all_objects_processed, (val)=>(
@@ -483,6 +489,10 @@ export const Game_Manager_ƒ = {
 			return {
 				gm: {
 					...cloneDeep(me),
+					animation_state: {
+						...cloneDeep(me.animation_state),
+						processing_tick: tick + 1,
+					},
 					game_state: {
 						...cloneDeep(me.game_state),
 						current_frame_state: {
@@ -506,10 +516,11 @@ export const Game_Manager_ƒ = {
 		/*
 			This is considerably simpler; we just run existing custom objects through their processing.
 		*/
+		const tick = me.animation_state.processing_tick;
 
 		let all_objects = cloneDeep(me.game_state.custom_object_list);
 		let all_objects_processed = map( all_objects, (val,idx) => {
-			return (Custom_Object_ƒ.process_single_frame(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM)))
+			return (Custom_Object_ƒ.process_single_frame(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM), tick))
 		});
 
 		let all_objects_processed_and_culled = filter( all_objects_processed, (val)=>(
@@ -527,6 +538,10 @@ export const Game_Manager_ƒ = {
 		return {
 			gm: {
 				...cloneDeep(me),
+				animation_state: {
+					...cloneDeep(me.animation_state),
+					processing_tick: tick + 1,
+				},
 				game_state: {
 					...cloneDeep(me.game_state),
 					custom_object_list: all_objects_processed_and_culled,

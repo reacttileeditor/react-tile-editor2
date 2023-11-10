@@ -90,14 +90,15 @@ export const Custom_Object_ƒ = {
 		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)
 	),
 
-	process_single_frame: (me: Custom_Object_Data, _Tilemap_Manager: Tilemap_Manager_Data, offset_in_ms: number): Custom_Object_Data => {
+	process_single_frame: (me: Custom_Object_Data, _Tilemap_Manager: Tilemap_Manager_Data, offset_in_ms: number, tick: number): Custom_Object_Data => {
 
 
 		const processed_object = Custom_Object_ƒ.get_delegate(me.type_name).process_single_frame(
 			me.pixel_pos,
 			me.rotate,
 			me.get_GM_instance(),
-			me.delegate_state
+			me.delegate_state,
+			tick,
 		);
 
 		return New_Custom_Object({

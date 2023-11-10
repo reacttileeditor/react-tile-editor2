@@ -29,6 +29,7 @@ export type Custom_Object_Delegate = {
 		prior_rotation: number,
 		GM: Game_Manager_Data,	
 		prior_delegate_state: Custom_Object_Delegate_States,
+		tick: number,
 	) => {
 		pixel_pos: Point2D,
 		rotate: number,
@@ -45,6 +46,7 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 		prior_rotation: number,
 		GM: Game_Manager_Data,		
 		prior_delegate_state: Custom_Object_Delegate_States,
+		tick: number,
 	): {
 		pixel_pos: Point2D,
 		rotate: number,
@@ -75,6 +77,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 		prior_rotation: number,
 		GM: Game_Manager_Data,	
 		prior_delegate_state: Custom_Object_Delegate_States,
+		tick: number,
 	): {
 		pixel_pos: Point2D,
 		rotate: number,
@@ -82,6 +85,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 	} => {
 		const _prior_delegate_state = prior_delegate_state as CO_Shot_State;
 
+		console.log( 'tick', tick)
 
 		const target = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.target_obj );
 		const source = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.source_obj );
@@ -123,6 +127,7 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 		prior_rotation: number,
 		GM: Game_Manager_Data,	
 		prior_delegate_state: Custom_Object_Delegate_States,
+		tick: number,
 	): {
 		pixel_pos: Point2D,
 		rotate: number,
@@ -151,6 +156,7 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
 		prior_rotation: number,
 		GM: Game_Manager_Data,
 		prior_delegate_state: Custom_Object_Delegate_States,
+		tick: number,
 	): {
 		pixel_pos: Point2D,
 		rotate: number,
@@ -181,6 +187,7 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 		prior_rotation: number,
 		GM: Game_Manager_Data,
 		prior_delegate_state: Custom_Object_Delegate_States,
+		tick: number,
 	): {
 		pixel_pos: Point2D,
 		rotate: number,
