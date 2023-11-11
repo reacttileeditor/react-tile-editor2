@@ -63,6 +63,7 @@ const Map_Tooltip = (props: TooltipData) => {
 import Foot_Icon from '../../../assets/feet-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, Game_and_Tilemap_Manager_Data, New_Game_Manager } from "../engine/Game_Manager";
 import { Game_Status_Display } from "./Game_Status_Display";
+import { Game_Info_Modal } from "./Game_Info_Modal";
 
 
 export const Tooltip_Manager = (props: {
@@ -148,12 +149,15 @@ export const Game_View = (props: Game_View_Props) => {
 			handle_canvas_keys_down={ ()=>{ /*console.log('game_keydown')*/} }
 			handle_canvas_mouse_move={handle_canvas_mouse_move}
 		/>
-		 <Tooltip_Manager
+		<Tooltip_Manager
 			get_Game_Manager_Data={props.get_Game_Manager_Data}
 			_Asset_Manager={props._Asset_Manager}
 			_Blit_Manager={props._Blit_Manager}
 			_Tilemap_Manager={props._Tilemap_Manager}
 			render_ticktock={render_ticktock}
+		/>
+		<Game_Info_Modal
+
 		/>
 		<Game_Status_Display
 			get_Game_Manager_Data={props.get_Game_Manager_Data}
