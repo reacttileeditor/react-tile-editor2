@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumber, last, map, reduce, size, uniq } from "lodash";
 
@@ -36,10 +36,20 @@ export const Game_Info_Modal = (props: {
 	announcement_modal_hidden: boolean,	
 	set_announcement_modal_hidden: Dispatch<SetStateAction<boolean>>,
 }) => {
+	const [last_turn_number_shown, set_last_turn_number_shown] = useState<number>(-1);
+
 
 	const _GS = props.get_Game_Manager_Data()?.game_state;
 	const _GM = props.get_Game_Manager_Data();
 
+
+
+	useEffect(() => {
+		if( _GS.current_turn > last_turn_number_shown){
+			set_last_turn_number_shown(_GS.current_turn);
+			props.set_announcement_modal_hidden(false);
+		}
+	}, [_GS.current_turn]);
 
 
 	return <div className={`game-info-modal-anchor`}>
@@ -49,7 +59,7 @@ export const Game_Info_Modal = (props: {
 				if( _GS.current_turn == 0 ){
 					return <div>{`Starting Game`}</div>
 				} else {
-					return <div>{`Starting Turn ${_GS.current_turn}`}</div>
+					return <div>{`Turn ${_GS.current_turn}`}</div>
 				}
 			})()
 			
