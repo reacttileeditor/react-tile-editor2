@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
 import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumber, last, map, reduce, size, uniq } from "lodash";
 
@@ -31,13 +31,16 @@ interface Game_Status_Display_Props {
 }
 
 
-export const Game_Info_Modal = (props: {}) => {
+export const Game_Info_Modal = (props: {
+	announcement_modal_hidden: boolean,	
+	set_announcement_modal_hidden: Dispatch<SetStateAction<boolean>>,
+}) => {
 
 
 
 
 	return <div className={`game-info-modal-anchor`}>
-		<div className={`game-info-modal`}>
+		<div className={`game-info-modal ${props.announcement_modal_hidden ? 'hidden':''}`}>
 		{
 			`Turn Begun`
 		}

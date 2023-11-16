@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
 import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumber, last, map, reduce, size, uniq } from "lodash";
 
@@ -73,7 +73,6 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 					disabled={ _GM.animation_state.is_animating_live_game }
 					onClick={(evt)=>{
 						const newData = Game_Manager_ƒ.advance_turn_start(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
-
 
 						props.set_Game_Manager_Data(
 							newData.gm
