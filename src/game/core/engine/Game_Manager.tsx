@@ -194,6 +194,7 @@ export const New_Game_Manager = (p: {
 		...game_manager.game_state,
 		turn_list: [first_turn_state_init],
 		current_frame_state: first_turn_state_init,
+		objective_text: Game_Manager_ƒ.write_full_objective_text(game_manager, Game_Manager_ƒ.get_game_state(game_manager).objective_type, Game_Manager_ƒ.get_game_state(game_manager)),
 	}
 
 
