@@ -57,7 +57,10 @@ export const Game_Info_Modal = (props: {
 		{
 			(()=>{
 				if( _GS.current_turn == 0 ){
-					return <div>{`Starting Game`}</div>
+					return <>
+						<div>{`Starting Game`}</div>
+						<div className='body'>{`${_GS.objective_text}`}</div>
+					</>
 				} else {
 					return <div>{`Turn ${_GS.current_turn}`}</div>
 				}
