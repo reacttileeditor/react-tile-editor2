@@ -161,6 +161,7 @@ export const Game_View = (props: Game_View_Props) => {
 		<Game_Info_Modal
 			announcement_modal_hidden={announcement_modal_hidden}
 			set_announcement_modal_hidden={set_announcement_modal_hidden}
+			get_Game_Manager_Data={props.get_Game_Manager_Data}
 		/>
 		<Game_Status_Display
 			get_Game_Manager_Data={props.get_Game_Manager_Data}

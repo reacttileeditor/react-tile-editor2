@@ -32,17 +32,27 @@ interface Game_Status_Display_Props {
 
 
 export const Game_Info_Modal = (props: {
+	get_Game_Manager_Data: () => Game_Manager_Data,
 	announcement_modal_hidden: boolean,	
 	set_announcement_modal_hidden: Dispatch<SetStateAction<boolean>>,
 }) => {
 
+	const _GS = props.get_Game_Manager_Data()?.game_state;
+	const _GM = props.get_Game_Manager_Data();
 
 
 
 	return <div className={`game-info-modal-anchor`}>
 		<div className={`game-info-modal ${props.announcement_modal_hidden ? 'hidden':''}`}>
 		{
-			`Turn Begun`
+			(()=>{
+				if( _GS.current_turn == 0 ){
+					return <div>{`Starting Game`}</div>
+				} else {
+					return <div>{`Starting Turn ${_GS.current_turn}`}</div>
+				}
+			})()
+			
 		}
 		</div>
 	</div>
