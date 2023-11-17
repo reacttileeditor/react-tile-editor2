@@ -22,7 +22,7 @@
 					font-family: 'pixel';
 					font-size: 2.5rem;
 					font-weight: 0.5;
-					padding: 0.5rem 1.0rem;
+					padding: 0.0rem 0.5rem;
 					color: white;
 //					border-radius: 0.5rem;
 					position: relative;
@@ -58,6 +58,21 @@
 						image-rendering: pixelated;
 						top: 0%;
 						left: 0;	
+					}
+
+					.right-bg {
+						z-index: -1;
+						position: absolute;
+						width: calc(50% - 45px);
+						height: 100%;
+
+						border-image-source: url('~/src/game/assets/modal-right-border.png');
+						border-image-slice: 30 34 30 0 fill;
+						border-image-width: 60px 68px 60px 0px;
+						border-image-outset: 60px 68px 60px 0px;
+						image-rendering: pixelated;
+						top: 0%;
+						right: 0;	
 					}
 
 					.shadow {

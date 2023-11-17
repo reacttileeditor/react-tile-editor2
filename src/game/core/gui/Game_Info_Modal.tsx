@@ -74,6 +74,7 @@ export const Game_Info_Modal = (props: {
 			}
 			</div>
 			<div className="left-bg" />
+			<div className="right-bg" />
 			<div className="core-bg" />
 			<div className="shadow" />
 		</div>
