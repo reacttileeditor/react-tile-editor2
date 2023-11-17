@@ -257,7 +257,7 @@ export const Game_Manager_ƒ = {
 	),
 
 	write_full_objective_text: (me: Game_Manager_Data, objective_type: ObjectiveTypes, _game_state: Game_State): string => (
-		`The game will be won by the first team to: ${Game_Manager_ƒ.describe_objectives(objective_type)}\n${
+		`The game will be won by the first team to:\n${Game_Manager_ƒ.describe_objectives(objective_type)} ${
 			ƒ.if( Game_Manager_ƒ.validate_objectives(me, _game_state).is_won,
 				`Team #${Game_Manager_ƒ.validate_objectives(me, _game_state).team_winner} has won the game!`,
 				`No team has won the game, yet.`

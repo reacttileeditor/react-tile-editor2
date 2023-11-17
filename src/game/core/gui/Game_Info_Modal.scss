@@ -23,11 +23,54 @@
 					font-size: 2.5rem;
 					font-weight: 0.5;
 					padding: 0.5rem 1.0rem;
-					background: rgba(0, 0, 0, 0.75);
 					color: white;
-					border-radius: 0.5rem;
+//					border-radius: 0.5rem;
 					position: relative;
 					display: inline-block;
+					z-index: 0;
+				
+
+					.core-bg {
+						z-index: -1;
+						position: absolute;
+						width: 90px;
+						height: 100%;
+
+						border-image-source: url('~/src/game/assets/modal-border.png');
+						border-image-slice: 39 0 39 0 fill;
+						border-image-width: 78px 0px;
+						border-image-outset: 78px 0px;
+						image-rendering: pixelated;
+						top: 0%;
+						left: calc(50% - 45px);	
+					}
+
+					.left-bg {
+						z-index: -1;
+						position: absolute;
+						width: calc(50% - 45px);
+						height: 100%;
+
+						border-image-source: url('~/src/game/assets/modal-left-border.png');
+						border-image-slice: 30 0 30 34 fill;
+						border-image-width: 60px 0px 60px 68px;
+						border-image-outset: 60px 0px 60px 68px;
+						image-rendering: pixelated;
+						top: 0%;
+						left: 0;	
+					}
+
+					.shadow {
+						z-index: -2;
+						background: rgba(0, 0, 0, 0.4);
+						animation: shadow-float 6s ease-in-out infinite;
+						height: 100%;
+						width: 100%;
+						position: absolute;
+						top: 110px;
+						left: 0;
+					}
+
 
 					.data-row {
 						display: flex;
@@ -39,9 +82,10 @@
 						}
 					}
 
-//					&.floating_anim {
-						animation: float 6s ease-in-out infinite;
-//					}
+					animation: float 6s ease-in-out infinite;
+
+
+
 
 					&.hidden {
 						animation: disappear 0.6s ease-out 0.2s 1 both;
@@ -90,15 +134,27 @@
 
 @keyframes float {
 	0% {
-	  box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6);
-	  transform: translatey(0px);
+		transform: translatey(0px);
 	}
 	50% {
-	  box-shadow: 0 25px 15px 0px rgba(0,0,0,0.2);
-	  transform: translatey(-10px);
+		transform: translatey(-10px);
 	}
 	100% {
-	  box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6);
-	  transform: translatey(0px);
+		transform: translatey(0px);
 	}
-  }
+}
+
+@keyframes shadow-float {
+	0% {
+		filter: blur(5px);
+		transform: translatey(0px);
+	}
+	50% {
+		filter: blur(15px);
+		transform: translatey(-10px);
+	}
+	100% {
+		filter: blur(5px);
+		transform: translatey(0px);
+	}
+}
