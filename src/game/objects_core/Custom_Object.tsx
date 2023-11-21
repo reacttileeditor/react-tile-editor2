@@ -14,6 +14,7 @@ import { Base_Object_Data, New_Base_Object } from "./Base_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
 import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
+import { filter, map } from "ramda";
  
 
 export type CustomObjectTypeName = 'shot' | 'text_label' | 'skull_icon';
@@ -22,9 +23,13 @@ export type Custom_Object_Data = {
 	type_name: CustomObjectTypeName,
 	text: string,
 	delegate_state: Custom_Object_Delegate_States,
+	scheduled_events: Array<Scheduled_Event>,
 } & Base_Object_Data;
 
-
+export type Scheduled_Event = {
+	tick_offset: number,
+	command: () => Custom_Object_Data,
+}
 
 export const New_Custom_Object = (
 	p: {
@@ -39,6 +44,7 @@ export const New_Custom_Object = (
 		should_remove: boolean,
 		unique_id?: string,
 		text?: string,
+		scheduled_events?: Array<Scheduled_Event>,
 		delegate_state: Custom_Object_Delegate_States,
 	}): Custom_Object_Data => {
 
@@ -58,6 +64,10 @@ export const New_Custom_Object = (
 		text: ƒ.if(p.text != undefined,
 			p.text,
 			''
+		),
+		scheduled_events: ƒ.if(p.scheduled_events != undefined,
+			p.scheduled_events,
+			[]
 		),
 		delegate_state: Custom_Object_ƒ.cast_delegate_state(p.type_name, p.delegate_state),
 	}
@@ -101,6 +111,17 @@ export const Custom_Object_ƒ = {
 			tick,
 		);
 
+		let scheduled_events = me.scheduled_events;
+		
+		let current_events = filter( (val)=>(
+			val.tick_offset == tick
+		), scheduled_events);
+
+		map( (val)=>{
+			val.command();
+		}, current_events );
+
+
 		return New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
 			_Asset_Manager: me._Asset_Manager,
@@ -114,6 +135,7 @@ export const Custom_Object_ƒ = {
 			should_remove: ƒ.if( (offset_in_ms - me.creation_timestamp) > 900, true, false ),
 			text: me.text,
 			unique_id: me.unique_id,
+			scheduled_events: scheduled_events,
 			delegate_state: processed_object.delegate_state,
 		})
 	},
