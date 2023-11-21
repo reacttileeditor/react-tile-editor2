@@ -350,7 +350,7 @@ export const Creature_Behavior_ƒ = {
 		target: Creature_Data,
 	) => {
 
-		Creature_ƒ.add(change_list, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
+
 		Creature_ƒ.set(change_list, me, 'last_changed_hitpoints', offset_in_ms);
 		Creature_ƒ.set(change_list, me, 'behavior_mode', 'attack');
 
@@ -377,6 +377,14 @@ export const Creature_Behavior_ƒ = {
 				target_obj: target.unique_id,
 				source_obj: me.unique_id,
 			},
+			scheduled_events: [{
+				tick_offset: 100,
+				command: () => {
+					alert('damage')
+
+					Creature_ƒ.add(change_list, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
+				}
+			}],
 		}));
 		
 		spawnees.push(New_Custom_Object({

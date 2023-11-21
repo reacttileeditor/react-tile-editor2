@@ -14,7 +14,7 @@ import { Base_Object_Data, New_Base_Object } from "./Base_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
 import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
-import { filter, map } from "ramda";
+import { filter, map, without } from "ramda";
  
 
 export type CustomObjectTypeName = 'shot' | 'text_label' | 'skull_icon';
@@ -28,7 +28,7 @@ export type Custom_Object_Data = {
 
 export type Scheduled_Event = {
 	tick_offset: number,
-	command: () => Custom_Object_Data,
+	command: () => void,
 }
 
 export const New_Custom_Object = (
@@ -121,6 +121,7 @@ export const Custom_Object_ƒ = {
 			val.command();
 		}, current_events );
 
+		scheduled_events = without( current_events, scheduled_events);
 
 		return New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
