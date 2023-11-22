@@ -465,9 +465,25 @@ export const Game_Manager_ƒ = {
 				Add the new custom_objects to our existing list, and then process all custom_objects (existing and new).
 			*/
 			let all_objects = concat( cloneDeep(me.game_state.custom_object_list), cloneDeep(spawnees));
-			let all_objects_processed = map( all_objects, (val,idx) => {
+			let all_objects_processed_data = map( all_objects, (val,idx) => {
 				return (Custom_Object_ƒ.process_single_frame(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM), tick))
 			});
+
+			/*
+				collate all of the changes and new objects
+			*/
+			map( all_objects_processed_data, (obj_val)=>{
+				map(obj_val.spawnees, (val)=>{ spawnees.push(val) });
+				map(obj_val.change_list, (val)=>{ master_change_list.push(val) });
+			} );
+
+			/*
+				get the list of new objects
+			*/
+			const all_objects_processed = map(all_objects_processed_data, (val)=>(
+				val.new_object
+			));
+
 
 			let all_objects_processed_and_culled = filter( all_objects_processed, (val)=>(
 				val.should_remove !== true
@@ -520,9 +536,18 @@ export const Game_Manager_ƒ = {
 		const tick = me.animation_state.processing_tick;
 
 		let all_objects = cloneDeep(me.game_state.custom_object_list);
-		let all_objects_processed = map( all_objects, (val,idx) => {
+		let all_objects_processed_data = map( all_objects, (val,idx) => {
 			return (Custom_Object_ƒ.process_single_frame(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM), tick))
 		});
+
+		/*
+			get the list of new objects
+
+			Yes, we're just completely ignoring the potential for spawnees/changes, and throwing them away.  Spawnees is likely bad for us to do, but changes puts in a firewall against unit effects.
+		*/
+		const all_objects_processed = map(all_objects_processed_data, (val)=>(
+			val.new_object
+		));
 
 		let all_objects_processed_and_culled = filter( all_objects_processed, (val)=>(
 			val.should_remove !== true

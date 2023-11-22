@@ -379,10 +379,10 @@ export const Creature_Behavior_ƒ = {
 			},
 			scheduled_events: [{
 				tick_offset: 100,
-				command: () => {
+				command: (change_list_inner: Array<ChangeInstance>) => {
 					alert('damage')
 
-					Creature_ƒ.add(change_list, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
+					Creature_ƒ.add(change_list_inner, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
 				}
 			}],
 		}));

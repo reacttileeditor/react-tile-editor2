@@ -10,6 +10,8 @@ import { Direction } from "../core/engine/Tilemap_Manager";
 import { Point2D, Rectangle } from '../interfaces';
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { zorder } from "../core/constants/zorder";
+import { ChangeInstance } from "./Creature";
+import { Custom_Object_Data } from "./Custom_Object";
 
 
 export type CustomObjectTypeName = 'shot';
@@ -21,6 +23,11 @@ export type CO_Shot_State = {
 	source_obj: string,
 }
 
+export type Custom_Object_Update = {
+	pixel_pos: Point2D,
+	rotate: number,
+	delegate_state: Custom_Object_Delegate_States,
+}
 
 
 export type Custom_Object_Delegate = {
@@ -31,9 +38,9 @@ export type Custom_Object_Delegate = {
 		prior_delegate_state: Custom_Object_Delegate_States,
 		tick: number,
 	) => {
-		pixel_pos: Point2D,
-		rotate: number,
-		delegate_state: Custom_Object_Delegate_States,
+		data: Custom_Object_Update,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>,
 	},
 
 	yield_image: () => string,
@@ -48,15 +55,19 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 		prior_delegate_state: Custom_Object_Delegate_States,
 		tick: number,
 	): {
-		pixel_pos: Point2D,
-		rotate: number,
-		delegate_state: Custom_Object_Delegate_States,
+		data: Custom_Object_Update,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>,
 	} => {
 
 		return {
-			pixel_pos: prior_pixel_pos,
-			rotate: prior_rotation,
-			delegate_state: prior_delegate_state,
+			data: {
+				pixel_pos: prior_pixel_pos,
+				rotate: prior_rotation,
+				delegate_state: prior_delegate_state,
+			},
+			change_list: [],
+			spawnees: [],
 		}
 	},
 
@@ -79,9 +90,9 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 		prior_delegate_state: Custom_Object_Delegate_States,
 		tick: number,
 	): {
-		pixel_pos: Point2D,
-		rotate: number,
-		delegate_state: CO_Shot_State,
+		data: Custom_Object_Update,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>,
 	} => {
 		const _prior_delegate_state = prior_delegate_state as CO_Shot_State;
 
@@ -111,9 +122,13 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 		}
 
 		return {
-			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
-			rotate: rotate,
-			delegate_state: _prior_delegate_state,
+			data: {
+				pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
+				rotate: rotate,
+				delegate_state: _prior_delegate_state,
+			},
+			change_list: [],
+			spawnees: [],
 		}
 	},
 	yield_image: () => 'arrow_placeholder',
@@ -129,9 +144,9 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 		prior_delegate_state: Custom_Object_Delegate_States,
 		tick: number,
 	): {
-		pixel_pos: Point2D,
-		rotate: number,
-		delegate_state: {},
+		data: Custom_Object_Update,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>,
 	} => {
 
 
@@ -139,9 +154,13 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 		let addend = {x: 0, y: 0};
 
 		return {
-			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
-			rotate: prior_rotation,
-			delegate_state: prior_delegate_state,
+			data: {
+				pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
+				rotate: prior_rotation,
+				delegate_state: prior_delegate_state,
+			},
+			change_list: [],
+			spawnees: [],
 		}
 	},
 	yield_image: () => 'omit_image',
@@ -158,9 +177,9 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
 		prior_delegate_state: Custom_Object_Delegate_States,
 		tick: number,
 	): {
-		pixel_pos: Point2D,
-		rotate: number,
-		delegate_state: {},
+		data: Custom_Object_Update,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>,
 	} => {
 
 
@@ -168,9 +187,13 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
 		let addend = {x: 0, y: -1};
 
 		return {
-			pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
-			rotate: prior_rotation,
-			delegate_state: prior_delegate_state,
+			data: {
+				pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
+				rotate: prior_rotation,
+				delegate_state: prior_delegate_state,
+			},
+			change_list: [],
+			spawnees: [],
 		}
 	},
 	yield_image: () => 'deaths_head',
@@ -189,9 +212,9 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 		prior_delegate_state: Custom_Object_Delegate_States,
 		tick: number,
 	): {
-		pixel_pos: Point2D,
-		rotate: number,
-		delegate_state: {},
+		data: Custom_Object_Update,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>,
 	} => {
 
 
@@ -199,9 +222,13 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 		let addend = {x: 0, y: 0};
 
 		return {
-			pixel_pos: prior_pixel_pos,
-			rotate: prior_rotation,
-			delegate_state: prior_delegate_state,
+			data: {
+				pixel_pos: prior_pixel_pos,
+				rotate: prior_rotation,
+				delegate_state: prior_delegate_state,
+			},
+			change_list: [],
+			spawnees: [],
 		}
 	},
 	yield_image: () => 'hit_star',

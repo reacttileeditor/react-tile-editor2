@@ -8,7 +8,7 @@ import { ƒ } from "../core/engine/Utils";
 import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
-import { CreatureTypeName } from "./Creature";
+import { ChangeInstance, CreatureTypeName } from "./Creature";
 import { Custom_Object_Delegate, CO_Shot_ƒ, CO_Text_Label_ƒ, Custom_Object_Delegate_States, CO_Shot_State, CO_Skull_Icon_ƒ, CO_Hit_Star_BG_ƒ } from "./Custom_Object_Delegate";
 import { Base_Object_Data, New_Base_Object } from "./Base_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
@@ -28,7 +28,7 @@ export type Custom_Object_Data = {
 
 export type Scheduled_Event = {
 	tick_offset: number,
-	command: () => void,
+	command: (change_list_inner: Array<ChangeInstance>) => void,
 }
 
 export const New_Custom_Object = (
@@ -100,16 +100,25 @@ export const Custom_Object_ƒ = {
 		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)
 	),
 
-	process_single_frame: (me: Custom_Object_Data, _Tilemap_Manager: Tilemap_Manager_Data, offset_in_ms: number, tick: number): Custom_Object_Data => {
+	process_single_frame: (me: Custom_Object_Data, _Tilemap_Manager: Tilemap_Manager_Data, offset_in_ms: number, tick: number): {
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>,
+		new_object: Custom_Object_Data
+	} => {
 
 
-		const processed_object = Custom_Object_ƒ.get_delegate(me.type_name).process_single_frame(
+		const processed_results = Custom_Object_ƒ.get_delegate(me.type_name).process_single_frame(
 			me.pixel_pos,
 			me.rotate,
 			me.get_GM_instance(),
 			me.delegate_state,
 			tick,
 		);
+
+		const processed_data = processed_results.data;
+
+		const change_list: Array<ChangeInstance> = [];
+
 
 		let scheduled_events = me.scheduled_events;
 		
@@ -118,27 +127,35 @@ export const Custom_Object_ƒ = {
 		), scheduled_events);
 
 		map( (val)=>{
-			val.command();
+			val.command(change_list);
 		}, current_events );
 
 		scheduled_events = without( current_events, scheduled_events);
 
-		return New_Custom_Object({
-			get_GM_instance: me.get_GM_instance,
-			_Asset_Manager: me._Asset_Manager,
-			_Blit_Manager: me._Blit_Manager,
-			_Tilemap_Manager: me._Tilemap_Manager,
 
-			pixel_pos: processed_object.pixel_pos,
-			rotate: processed_object.rotate,
-			type_name: me.type_name,
-			creation_timestamp: me.creation_timestamp,
-			should_remove: ƒ.if( (offset_in_ms - me.creation_timestamp) > 900, true, false ),
-			text: me.text,
-			unique_id: me.unique_id,
-			scheduled_events: scheduled_events,
-			delegate_state: processed_object.delegate_state,
-		})
+
+
+
+		return { 
+			change_list: change_list,
+			spawnees: [],
+			new_object: New_Custom_Object({
+				get_GM_instance: me.get_GM_instance,
+				_Asset_Manager: me._Asset_Manager,
+				_Blit_Manager: me._Blit_Manager,
+				_Tilemap_Manager: me._Tilemap_Manager,
+
+				pixel_pos: processed_data.pixel_pos,
+				rotate: processed_data.rotate,
+				type_name: me.type_name,
+				creation_timestamp: me.creation_timestamp,
+				should_remove: ƒ.if( (offset_in_ms - me.creation_timestamp) > 900, true, false ),
+				text: me.text,
+				unique_id: me.unique_id,
+				scheduled_events: scheduled_events,
+				delegate_state: processed_data.delegate_state,
+			})
+		}
 	},
 
 	yield_image: (me: Custom_Object_Data) => (
