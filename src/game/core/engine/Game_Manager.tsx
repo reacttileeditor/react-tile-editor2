@@ -335,6 +335,11 @@ export const Game_Manager_ƒ = {
 	},
 	
 	is_turn_finished: (me: Game_Manager_Data):boolean => {
+
+		return Game_Manager_ƒ.is_turn_finished_for_creatures(me) && Game_Manager_ƒ.is_turn_finished_for_custom_objects(me)
+	},
+
+	is_turn_finished_for_creatures: (me: Game_Manager_Data):boolean => {
 		const creatures = me.game_state.current_frame_state.creature_list;
 
 		if( size(creatures) > 0){
@@ -349,6 +354,24 @@ export const Game_Manager_ƒ = {
 			return true;
 		}
 	},
+
+	is_turn_finished_for_custom_objects: (me: Game_Manager_Data):boolean => {
+		const c_objects = me.game_state.custom_object_list;
+
+		console.log( map(c_objects, (val)=> val.is_done_with_turn ) )
+
+		if( size(c_objects) > 0){
+			return reduce(
+				map(
+					c_objects,
+					(val) => ( val.is_done_with_turn )
+				),
+				(left, right) => ( left && right )
+			) as boolean;
+		} else {
+			return true;
+		}
+	},	
 	
 	get_flip_state_from_direction: ( direction: Direction ): boolean => (
 		ƒ.if(	direction == 'north_west' ||

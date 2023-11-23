@@ -385,6 +385,7 @@ export const Creature_Behavior_ƒ = {
 					Creature_ƒ.add(change_list_inner, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
 				}
 			}],
+			is_done_with_turn: false,
 		}));
 		
 		spawnees.push(New_Custom_Object({
@@ -399,6 +400,7 @@ export const Creature_Behavior_ƒ = {
 			creation_timestamp: offset_in_ms,
 			should_remove: false,
 			text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
+			is_done_with_turn: false,
 			delegate_state: {},
 		}));
 
@@ -413,6 +415,7 @@ export const Creature_Behavior_ƒ = {
 			type_name: 'hit_star_bg' as CustomObjectTypeName,
 			creation_timestamp: offset_in_ms,
 			should_remove: false,
+			is_done_with_turn: false,
 			text: ``,
 			delegate_state: {},
 		}));
@@ -445,6 +448,7 @@ export const Creature_Behavior_ƒ = {
 				should_remove: false,
 				text: ``,
 				delegate_state: {},
+				is_done_with_turn: false,
 			}));
 
 

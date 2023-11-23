@@ -129,6 +129,7 @@ export const New_Creature = (
 			unique_id: p.unique_id,
 			should_remove: p.should_remove,
 			creation_timestamp: p.creation_timestamp,
+			is_done_with_turn: p.is_done_with_turn,
 		}),
 
 		//static values
@@ -156,7 +157,6 @@ export const New_Creature = (
 			0,
 		),
 		behavior_mode: p.behavior_mode,
-		is_done_with_turn: p.is_done_with_turn,
 
 
 		//intended moves

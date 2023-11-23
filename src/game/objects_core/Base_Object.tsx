@@ -23,6 +23,7 @@ export type Base_Object_Data = {
 	pixel_pos: Point2D;
 	rotate: number,
 	should_remove: boolean,
+	is_done_with_turn: boolean,
 
 	//accessors
 	get_GM_instance: () => Game_Manager_Data;
@@ -42,6 +43,7 @@ export const New_Base_Object = (
 		creation_timestamp: number,
 		should_remove: boolean,
 		pixel_pos?: Point2D,
+		is_done_with_turn: boolean,
 		rotate?: number,
 		unique_id?: string,
 	}): Base_Object_Data => {
@@ -54,6 +56,7 @@ export const New_Base_Object = (
 		),
 		creation_timestamp: p.creation_timestamp,
 		should_remove: p.should_remove,
+		is_done_with_turn: p.is_done_with_turn,
 		
 		//state	
 		pixel_pos: ƒ.if(p.pixel_pos != undefined,

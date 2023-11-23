@@ -96,7 +96,6 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 	} => {
 		const _prior_delegate_state = prior_delegate_state as CO_Shot_State;
 
-		console.log( 'tick', tick)
 
 		const target = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.target_obj );
 		const source = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.source_obj );

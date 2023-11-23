@@ -14,7 +14,7 @@ import { Base_Object_Data, New_Base_Object } from "./Base_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
 import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
-import { filter, map, without } from "ramda";
+import { filter, isEmpty, map, without } from "ramda";
  
 
 export type CustomObjectTypeName = 'shot' | 'text_label' | 'skull_icon';
@@ -42,6 +42,7 @@ export const New_Custom_Object = (
 		type_name: CustomObjectTypeName,
 		creation_timestamp: number,
 		should_remove: boolean,
+		is_done_with_turn: boolean,
 		unique_id?: string,
 		text?: string,
 		scheduled_events?: Array<Scheduled_Event>,
@@ -59,6 +60,7 @@ export const New_Custom_Object = (
 			unique_id: p.unique_id,
 			creation_timestamp: p.creation_timestamp,
 			should_remove: p.should_remove,
+			is_done_with_turn: p.is_done_with_turn,
 		}),
 		type_name: p.type_name,
 		text: ƒ.if(p.text != undefined,
@@ -106,6 +108,7 @@ export const Custom_Object_ƒ = {
 		new_object: Custom_Object_Data
 	} => {
 
+		console.log('tick:', tick)
 
 		const processed_results = Custom_Object_ƒ.get_delegate(me.type_name).process_single_frame(
 			me.pixel_pos,
@@ -133,7 +136,9 @@ export const Custom_Object_ƒ = {
 		scheduled_events = without( current_events, scheduled_events);
 
 
-
+		if( me.type_name == 'shot'){
+			console.log( `offset: ${offset_in_ms}, ct: ${me.creation_timestamp}` )
+		}
 
 
 		return { 
@@ -148,8 +153,9 @@ export const Custom_Object_ƒ = {
 				pixel_pos: processed_data.pixel_pos,
 				rotate: processed_data.rotate,
 				type_name: me.type_name,
+				is_done_with_turn: false, //isEmpty(scheduled_events),
 				creation_timestamp: me.creation_timestamp,
-				should_remove: ƒ.if( (offset_in_ms - me.creation_timestamp) > 900, true, false ),
+				should_remove: ƒ.if( (offset_in_ms - me.creation_timestamp) > 2000, true, false ),
 				text: me.text,
 				unique_id: me.unique_id,
 				scheduled_events: scheduled_events,
