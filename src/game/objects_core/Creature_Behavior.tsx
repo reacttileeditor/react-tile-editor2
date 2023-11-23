@@ -207,6 +207,7 @@ export const Creature_Behavior_ƒ = {
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 		offset_in_ms: number,
+		tick: number,
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>
 	) => {
@@ -224,7 +225,7 @@ export const Creature_Behavior_ƒ = {
 		Creature_Behavior_ƒ.update_pixel_pos(me, _TM, offset_in_ms, change_list);
 
 		if( offset_in_ms >= me.next_behavior_reconsideration_timestamp ) {
-			AI_Core_ƒ.reconsider_behavior(me, _TM, _AM, _BM, offset_in_ms, change_list, spawnees);
+			AI_Core_ƒ.reconsider_behavior(me, _TM, _AM, _BM, offset_in_ms, tick, change_list, spawnees);
 		}
 
 	},
@@ -253,6 +254,7 @@ export const Creature_Behavior_ƒ = {
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		offset_in_ms: number,
+		tick: number,
 		change_list: Array<ChangeInstance>,
 	) => {
 		//console.log(me.remaining_move_points, me.is_done_with_turn);
@@ -333,6 +335,7 @@ export const Creature_Behavior_ƒ = {
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
 		offset_in_ms: number,
+		tick: number,
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>
 	) => {
@@ -345,6 +348,7 @@ export const Creature_Behavior_ƒ = {
 	perform_attack_instance: (
 		me: Creature_Data,
 		offset_in_ms: number,
+		tick: number,
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>,
 		target: Creature_Data,
@@ -370,7 +374,7 @@ export const Creature_Behavior_ƒ = {
 			pixel_pos: me.pixel_pos,
 			rotate: 0,
 			type_name: 'shot' as CustomObjectTypeName,
-			creation_timestamp: offset_in_ms,
+			creation_timestamp: tick,
 			should_remove: false,
 			text: ``,
 			delegate_state: {
@@ -397,7 +401,7 @@ export const Creature_Behavior_ƒ = {
 			pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
 			rotate: 0,
 			type_name: 'text_label' as CustomObjectTypeName,
-			creation_timestamp: offset_in_ms,
+			creation_timestamp: tick,
 			should_remove: false,
 			text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
 			is_done_with_turn: false,
@@ -413,7 +417,7 @@ export const Creature_Behavior_ƒ = {
 			pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
 			rotate: 0,
 			type_name: 'hit_star_bg' as CustomObjectTypeName,
-			creation_timestamp: offset_in_ms,
+			creation_timestamp: tick,
 			should_remove: false,
 			is_done_with_turn: false,
 			text: ``,
@@ -431,6 +435,7 @@ export const Creature_Behavior_ƒ = {
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
 		offset_in_ms: number,
+		tick: number,
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>
 	) => {
@@ -444,7 +449,7 @@ export const Creature_Behavior_ƒ = {
 				pixel_pos: me.pixel_pos,
 				rotate: 0,
 				type_name: 'skull_icon' as CustomObjectTypeName,
-				creation_timestamp: offset_in_ms,
+				creation_timestamp: tick,
 				should_remove: false,
 				text: ``,
 				delegate_state: {},
@@ -461,7 +466,8 @@ export const Creature_Behavior_ƒ = {
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
-		offset_in_ms: number
+		offset_in_ms: number,
+		tick: number,
 	): {
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>
@@ -479,6 +485,7 @@ export const Creature_Behavior_ƒ = {
 			_AM,
 			_BM,
 			offset_in_ms,
+			tick,
 			change_list,
 			spawnees
 		);
@@ -487,6 +494,7 @@ export const Creature_Behavior_ƒ = {
 			me,
 			_TM,
 			offset_in_ms,
+			tick,
 			change_list,
 			spawnees
 		);

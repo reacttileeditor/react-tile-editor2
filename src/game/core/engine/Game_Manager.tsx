@@ -476,7 +476,7 @@ export const Game_Manager_ƒ = {
 			let master_change_list: Array<ChangeInstance> = [];
 
 			map( me.game_state.current_frame_state.creature_list, (val,idx) => {
-				const processed_results = Creature_ƒ.process_single_frame(val, _TM, _AM, _BM, Game_Manager_ƒ.get_time_offset(me, _BM));
+				const processed_results = Creature_ƒ.process_single_frame(val, _TM, _AM, _BM, Game_Manager_ƒ.get_time_offset(me, _BM), tick);
 
 				map(processed_results.spawnees, (val)=>{ spawnees.push(val) });
 				map(processed_results.change_list, (val)=>{ master_change_list.push(val) });

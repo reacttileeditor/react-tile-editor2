@@ -43,6 +43,12 @@ export type Custom_Object_Delegate = {
 		spawnees: Array<Custom_Object_Data>,
 	},
 
+	should_be_removed: (
+		me: Custom_Object_Data,
+		tick: number,
+		offset_in_ms: number,
+	) => boolean,
+
 	yield_image: () => string,
 	yield_zorder: () => number,
 }
@@ -71,6 +77,15 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 		}
 	},
 
+	should_be_removed: (
+		me: Custom_Object_Data,
+		tick: number,
+		offset_in_ms: number,
+	) => {
+		return ƒ.if( (tick - me.creation_timestamp) > 300, true, false )
+	},
+	
+	
 	yield_image: () => (
 		'red_dot'
 	),

@@ -29,6 +29,7 @@ export const AI_Core_ƒ = {
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 		offset_in_ms: number,
+		tick: number,
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>
 	) => {
@@ -62,7 +63,7 @@ export const AI_Core_ƒ = {
 				We have to set some kind of mode indicator that we're attacking, right now.
 			*/
 
-			Creature_Behavior_ƒ.perform_attack_instance(me, offset_in_ms, change_list, spawnees, valid_targets[0]);
+			Creature_Behavior_ƒ.perform_attack_instance(me, offset_in_ms, tick, change_list, spawnees, valid_targets[0]);
 
 		} else {
 			/*
@@ -71,9 +72,9 @@ export const AI_Core_ƒ = {
 
 			//TODO gate on remaining action points
 			if( (me.remaining_action_points > 0) ){
-				Creature_Behavior_ƒ.renegotiate_path(me, _TM, _AM, offset_in_ms, change_list);
+				Creature_Behavior_ƒ.renegotiate_path(me, _TM, _AM, offset_in_ms, tick, change_list);
 			} else {
-				Creature_Behavior_ƒ.terminate_movement(me, _TM, offset_in_ms, change_list, spawnees);
+				Creature_Behavior_ƒ.terminate_movement(me, _TM, offset_in_ms, tick, change_list, spawnees);
 			}
 		}
 	},

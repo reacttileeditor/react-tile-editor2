@@ -155,7 +155,11 @@ export const Custom_Object_ƒ = {
 				type_name: me.type_name,
 				is_done_with_turn: false, //isEmpty(scheduled_events),
 				creation_timestamp: me.creation_timestamp,
-				should_remove: ƒ.if( (offset_in_ms - me.creation_timestamp) > 2000, true, false ),
+				should_remove: Custom_Object_ƒ.get_delegate(me.type_name).should_be_removed(
+					me,
+					tick,
+					offset_in_ms
+				),
 				text: me.text,
 				unique_id: me.unique_id,
 				scheduled_events: scheduled_events,
