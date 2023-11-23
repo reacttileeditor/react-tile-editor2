@@ -383,46 +383,48 @@ export const Creature_Behavior_ƒ = {
 			},
 			scheduled_events: [{
 				tick_offset: 100,
-				command: (change_list_inner: Array<ChangeInstance>) => {
-					alert('damage')
+				command: (change_list_: Array<ChangeInstance>, spawnees_: Array<Custom_Object_Data>) => {
+					//alert('damage')
 
-					Creature_ƒ.add(change_list_inner, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
+					Creature_ƒ.add(change_list_, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
+
+					spawnees_.push(New_Custom_Object({
+						get_GM_instance: me.get_GM_instance,
+						_Asset_Manager: me._Asset_Manager,
+						_Blit_Manager: me._Blit_Manager,
+						_Tilemap_Manager: me._Tilemap_Manager,
+			
+						pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
+						rotate: 0,
+						type_name: 'text_label' as CustomObjectTypeName,
+						creation_timestamp: tick,
+						should_remove: false,
+						text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
+						is_done_with_turn: false,
+						delegate_state: {},
+					}));
+			
+					spawnees_.push(New_Custom_Object({
+						get_GM_instance: me.get_GM_instance,
+						_Asset_Manager: me._Asset_Manager,
+						_Blit_Manager: me._Blit_Manager,
+						_Tilemap_Manager: me._Tilemap_Manager,
+			
+						pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
+						rotate: 0,
+						type_name: 'hit_star_bg' as CustomObjectTypeName,
+						creation_timestamp: tick,
+						should_remove: false,
+						is_done_with_turn: false,
+						text: ``,
+						delegate_state: {},
+					}));					
 				}
 			}],
 			is_done_with_turn: false,
 		}));
 		
-		spawnees.push(New_Custom_Object({
-			get_GM_instance: me.get_GM_instance,
-			_Asset_Manager: me._Asset_Manager,
-			_Blit_Manager: me._Blit_Manager,
-			_Tilemap_Manager: me._Tilemap_Manager,
-
-			pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
-			rotate: 0,
-			type_name: 'text_label' as CustomObjectTypeName,
-			creation_timestamp: tick,
-			should_remove: false,
-			text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
-			is_done_with_turn: false,
-			delegate_state: {},
-		}));
-
-		spawnees.push(New_Custom_Object({
-			get_GM_instance: me.get_GM_instance,
-			_Asset_Manager: me._Asset_Manager,
-			_Blit_Manager: me._Blit_Manager,
-			_Tilemap_Manager: me._Tilemap_Manager,
-
-			pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
-			rotate: 0,
-			type_name: 'hit_star_bg' as CustomObjectTypeName,
-			creation_timestamp: tick,
-			should_remove: false,
-			is_done_with_turn: false,
-			text: ``,
-			delegate_state: {},
-		}));
+		
 
 		Creature_ƒ.add(change_list, me, 'remaining_action_points', -1);
 

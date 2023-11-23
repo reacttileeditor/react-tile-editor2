@@ -358,8 +358,6 @@ export const Game_Manager_ƒ = {
 	is_turn_finished_for_custom_objects: (me: Game_Manager_Data):boolean => {
 		const c_objects = me.game_state.custom_object_list;
 
-		console.log( map(c_objects, (val)=> val.is_done_with_turn ) )
-
 		if( size(c_objects) > 0){
 			return reduce(
 				map(
@@ -492,13 +490,18 @@ export const Game_Manager_ƒ = {
 				return (Custom_Object_ƒ.process_single_frame(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM), tick))
 			});
 
+
+
+			let spawnees_phase2: Array<Custom_Object_Data> = [];
+
 			/*
 				collate all of the changes and new objects
 			*/
 			map( all_objects_processed_data, (obj_val)=>{
-				map(obj_val.spawnees, (val)=>{ spawnees.push(val) });
+				map(obj_val.spawnees, (val)=>{ spawnees_phase2.push(val) });
 				map(obj_val.change_list, (val)=>{ master_change_list.push(val) });
 			} );
+
 
 			/*
 				get the list of new objects
@@ -507,11 +510,18 @@ export const Game_Manager_ƒ = {
 				val.new_object
 			));
 
+			/*
+				TODO: Major conundrum here!  We may want a recursive solution to ensure all processing happens in the same frame.  For the time being, this is too difficult to do, so we're doing the awful compromise that "objects spawned this turn" don't get a chance to process.
+
+				This is important because otherwise any attempt to spawn an "object tree" is going to spread out all subsequent spawns frame by frame, which will be disastrous if we've got compound objects.
+			*/
+			map( spawnees_phase2, (val) => all_objects_processed.push(val) );
 
 			let all_objects_processed_and_culled = filter( all_objects_processed, (val)=>(
 				val.should_remove !== true
 			) );
 
+			
 			let all_creatures_processed = map( me.game_state.current_frame_state.creature_list, (creature) => (
 				cloneDeep(Creature_ƒ.apply_changes(
 					creature,

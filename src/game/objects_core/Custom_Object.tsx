@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { cloneDeep, find } from "lodash";
+import { cloneDeep, find, size } from "lodash";
 import { v4 as uuid } from "uuid";
 
 import { ƒ } from "../core/engine/Utils";
@@ -28,7 +28,10 @@ export type Custom_Object_Data = {
 
 export type Scheduled_Event = {
 	tick_offset: number,
-	command: (change_list_inner: Array<ChangeInstance>) => void,
+	command: (
+		change_list_inner: Array<ChangeInstance>,
+		spawnees_: Array<Custom_Object_Data>,
+	) => void,
 }
 
 export const New_Custom_Object = (
@@ -108,8 +111,6 @@ export const Custom_Object_ƒ = {
 		new_object: Custom_Object_Data
 	} => {
 
-		console.log('tick:', tick)
-
 		const processed_results = Custom_Object_ƒ.get_delegate(me.type_name).process_single_frame(
 			me.pixel_pos,
 			me.rotate,
@@ -121,7 +122,7 @@ export const Custom_Object_ƒ = {
 		const processed_data = processed_results.data;
 
 		const change_list: Array<ChangeInstance> = [];
-
+		const spawnees: Array<Custom_Object_Data> = [];
 
 		let scheduled_events = me.scheduled_events;
 		
@@ -130,20 +131,24 @@ export const Custom_Object_ƒ = {
 		), scheduled_events);
 
 		map( (val)=>{
-			val.command(change_list);
+			val.command(change_list, spawnees);
+
+			console.warn( change_list, spawnees )
 		}, current_events );
 
+
+		if( me.type_name == 'shot' && size(scheduled_events) > 0){
+			console.log( spawnees )
+		}
+				
 		scheduled_events = without( current_events, scheduled_events);
 
 
-		if( me.type_name == 'shot'){
-			console.log( `offset: ${offset_in_ms}, ct: ${me.creation_timestamp}` )
-		}
 
 
 		return { 
 			change_list: change_list,
-			spawnees: [],
+			spawnees: spawnees,
 			new_object: New_Custom_Object({
 				get_GM_instance: me.get_GM_instance,
 				_Asset_Manager: me._Asset_Manager,
