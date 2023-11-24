@@ -18,10 +18,6 @@ export type CustomObjectTypeName = 'shot';
 
 export type Custom_Object_Delegate_States = {} | CO_Shot_State;
 
-export type CO_Shot_State = {
-	target_obj: string, //uuid
-	source_obj: string,
-}
 
 export type Custom_Object_Update = {
 	pixel_pos: Point2D,
@@ -95,6 +91,13 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 	),
 }
 
+
+export type CO_Shot_State = {
+	target_obj: string, //uuid
+	source_obj: string,
+	original_pos: Point2D,
+}
+
 export const CO_Shot_ƒ: Custom_Object_Delegate = {
 	...Custom_Object_Delegate_Base_ƒ,
 
@@ -125,12 +128,13 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 			//console.log(target.pixel_pos)
 			const target_pos = target.pixel_pos;
 			const source_pos = source.pixel_pos;
+			const original_pos = _prior_delegate_state.original_pos;
 
-			const angle = Math.atan2(  target_pos.y - prior_pixel_pos.y , target_pos.x - prior_pixel_pos.x )
+			const angle = Math.atan2(  target_pos.y - original_pos.y , target_pos.x - original_pos.x )
 			rotate = 90 + angle * 180 / Math.PI ;
 			//const magnitude = 0.5;
 
-			const magnitude = Math.hypot( (source_pos.x - target_pos.x), (source_pos.y - target_pos.y) ) / 30.0;
+			const magnitude = Math.hypot( (original_pos.x - target_pos.x), (original_pos.y - target_pos.y) ) / 100.0;
 
 			addend = { x: magnitude * Math.cos(angle), y: magnitude * Math.sin(angle) }
 		}
@@ -146,6 +150,15 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 		}
 	},
 	yield_image: () => 'arrow_placeholder',
+
+	should_be_removed: (
+		me: Custom_Object_Data,
+		tick: number,
+		offset_in_ms: number,
+	) => {
+		return ƒ.if( (tick - me.creation_timestamp) > 100, true, false )
+	},
+
 }
 
 export const CO_Text_Label_ƒ: Custom_Object_Delegate = {

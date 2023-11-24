@@ -380,6 +380,7 @@ export const Creature_Behavior_ƒ = {
 			delegate_state: {
 				target_obj: target.unique_id,
 				source_obj: me.unique_id,
+				original_pos: me.pixel_pos,
 			},
 			scheduled_events: [{
 				tick_offset: 100,
