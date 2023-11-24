@@ -134,10 +134,13 @@ export const Game_View = (props: Game_View_Props) => {
 	const handle_canvas_mouse_click = (pos: Point2D, buttons_pressed: MouseButtonState) => {
 		console.log('canvas click game')
 
-		set_announcement_modal_hidden(true);
-		const new_game_data = Game_Manager_ƒ.handle_click(props.get_Game_Manager_Data,  props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos, buttons_pressed);
+		if( !announcement_modal_hidden ){
+			set_announcement_modal_hidden(true);
+		} else {
+			const new_game_data = Game_Manager_ƒ.handle_click(props.get_Game_Manager_Data,  props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos, buttons_pressed);
 
-		props.set_Game_Manager_Data( new_game_data );
+			props.set_Game_Manager_Data( new_game_data );
+		}
 	}
 
 

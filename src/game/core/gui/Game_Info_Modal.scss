@@ -103,7 +103,7 @@
 
 
 					&.hidden {
-						animation: disappear 0.6s ease-out 0.2s 1 both;
+						animation: disappear 0.4s ease-out 0.2s 1 both;
 					}
 
 
@@ -134,15 +134,15 @@
 	40% {
 		opacity: 0.3;
 		filter: blur(10px);
-		transform: scale(140%);
+		transform: scale(120%);
 		margin-bottom: 3rem;
 	}
 	
 	100% {
 		opacity: 0.0;
-		filter: blur(100px);
-		transform: scale(200%);
-		margin-bottom: 20rem;
+		filter: blur(30px);
+		transform: scale(150%);
+		margin-bottom: 9rem;
 	}
 }
 
