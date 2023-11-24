@@ -41,6 +41,7 @@ interface Game_Status_Display_Props {
 	_Blit_Manager: () => Blit_Manager_Data,
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
 	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
+	set_announcement_modal_hidden: Dispatch<SetStateAction<boolean>>,
 }
 
 
@@ -72,6 +73,8 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 				<button
 					disabled={ _GM.animation_state.is_animating_live_game }
 					onClick={(evt)=>{
+						props.set_announcement_modal_hidden(true);
+
 						const newData = Game_Manager_ƒ.advance_turn_start(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
 
 						props.set_Game_Manager_Data(
