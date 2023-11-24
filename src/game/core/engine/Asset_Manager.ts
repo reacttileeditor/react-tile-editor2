@@ -459,6 +459,29 @@ export const Asset_Manager_ƒ = {
 		) ;
 	},
 	
+	get_current_frame_number: (image_data: ImageData, current_milliseconds: number) => {
+		let frame_count = image_data.frames ? image_data.frames : 1;
+		let frame_duration = image_data.frame_duration ? image_data.frame_duration : 20;
+		/*
+			And this is where we get into the business of calculating the current frame.
+			We start by doing a pretty simple absolute division operation; check our current millisec timer, and see what that would be in frames.
+			This is the number we feed into our various formulas.
+		*/
+		let absolute_frame_num = Math.floor(current_milliseconds / frame_duration);
+		let current_frame_num;
+		
+		/*
+			For relatively simple setups, like a straightforward 1,2,3 frame ordering, it's a piece of cake:
+		*/
+		if( !image_data.ping_pong ){
+			current_frame_num = Utils.modulo(absolute_frame_num, frame_count);
+		} else {
+			current_frame_num = Asset_Manager_ƒ.calculate_pingpong_frame_num( absolute_frame_num, frame_count );	
+		}
+
+		return current_frame_num;
+	},
+
 	draw_image_for_asset_name: (p: {
 		_AM: Asset_Manager_Data,
 		asset_name: string,
@@ -487,26 +510,9 @@ export const Asset_Manager_ƒ = {
 			} else {
 				let dim = metadata ? metadata.dim : { w: 20, h: 20 };  //safe-access
 
-				let frame_count = image_data.frames ? image_data.frames : 1;
-				let frame_duration = image_data.frame_duration ? image_data.frame_duration : 20;
 				let frame_padding = image_data.pad ? image_data.pad : 0;
 
-				/*
-					And this is where we get into the business of calculating the current frame.
-					We start by doing a pretty simple absolute division operation; check our current millisec timer, and see what that would be in frames.
-					This is the number we feed into our various formulas.
-				*/
-				let absolute_frame_num = Math.floor(p.current_milliseconds / frame_duration);
-				let current_frame_num;
-				
-				/*
-					For relatively simple setups, like a straightforward 1,2,3 frame ordering, it's a piece of cake:
-				*/
-				if( !image_data.ping_pong ){
-					current_frame_num = Utils.modulo(absolute_frame_num, frame_count);
-				} else {
-					current_frame_num = Asset_Manager_ƒ.calculate_pingpong_frame_num( absolute_frame_num, frame_count );	
-				}
+				const current_frame_num = Asset_Manager_ƒ.get_current_frame_number(image_data, p.current_milliseconds);
 
 				/*
 					This assumes the canvas is pre-translated so our draw position is at the final point, so we don't have to do any calculation for that, here.
