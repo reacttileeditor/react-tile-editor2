@@ -232,13 +232,25 @@ export const Creature_Behavior_ƒ = {
 
 
 		if(image_data != undefined){
-			const time_since_start = offset_in_ms - me.last_behavior_reconsideration_timestamp;
+			const time_since_start = Creature_ƒ.get_time_since_mode_start(me, offset_in_ms);
 
 			const current_frame_cycle = Asset_Manager_ƒ.get_current_frame_cycle( image_data, time_since_start);
 
 			if( current_frame_cycle > 1 && me.behavior_mode == 'attack' ){
 				Creature_ƒ.set(change_list, me, 'behavior_mode', 'stand');
 			}
+		}
+	},
+
+	get_time_since_mode_start: (me: Creature_Data, offset_in_ms: number ): number => {
+		return offset_in_ms - me.last_behavior_reconsideration_timestamp
+	},
+
+	get_intended_animation_time_offset: (me: Creature_Data, offset_in_ms: number ): number => {
+		if( me.behavior_mode == 'attack'){
+			return Creature_ƒ.get_time_since_mode_start(me, offset_in_ms);
+		} else {
+			return offset_in_ms
 		}
 	},
 

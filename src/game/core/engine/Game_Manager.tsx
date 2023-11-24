@@ -626,13 +626,16 @@ export const Game_Manager_ƒ = {
 		*/
 
 		map( me.game_state.current_frame_state.creature_list, (val,idx) => {
+			const timestamp = Game_Manager_ƒ.get_time_offset(me, _BM)
+			const timestamp_according_to_creature = Creature_ƒ.get_intended_animation_time_offset(val, timestamp);
+
 			Asset_Manager_ƒ.draw_image_for_asset_name({
 				_AM:						_AM,
-				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM)),
+				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, _TM, timestamp_according_to_creature),
 				_BM:						_BM,
 				pos:						val.pixel_pos, 
 				zorder:						zorder.rocks,
-				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
+				current_milliseconds:		timestamp_according_to_creature,
 				opacity:					1.0,
 				rotate:						val.rotate,
 				brightness:					ƒ.if( (Game_Manager_ƒ.get_time_offset(me, _BM) - val.last_changed_hitpoints) < 80, 3.0, 1.0),
