@@ -226,9 +226,13 @@ export const Game_Manager_ƒ = {
 	},
 
 
-	handle_click: (get_game_state: () => Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState): Game_Manager_Data => (
-		Game_Manager_ƒ.select_object_based_on_tile_click(get_game_state, _TM, _AM, _BM, pos, buttons_pressed)
-	),
+	handle_click: (get_game_state: () => Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState): Game_Manager_Data => {
+		if( !get_game_state().animation_state.is_animating_live_game ){
+			return Game_Manager_ƒ.select_object_based_on_tile_click(get_game_state, _TM, _AM, _BM, pos, buttons_pressed)
+		} else {
+			return get_game_state();
+		}
+	},
 		
 	
 /*----------------------- objective management -----------------------*/
