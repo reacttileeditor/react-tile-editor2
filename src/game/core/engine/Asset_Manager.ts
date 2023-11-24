@@ -502,6 +502,33 @@ export const Asset_Manager_ƒ = {
 		return current_frame_num;
 	},
 
+	get_raw_image_for_asset_name: (
+		_AM: Asset_Manager_Data,
+		asset_name: string,
+	): HTMLImageElement => {
+		let { raw_image_list, image_data_list, assets_meta } = _AM.static_vals;
+
+		return raw_image_list[ asset_name ]!;
+	},
+
+	get_image_data_for_asset_name: (
+		_AM: Asset_Manager_Data,
+		asset_name: string,
+	): ImageData|undefined => {
+		let { raw_image_list, image_data_list, assets_meta } = _AM.static_vals;
+
+		return _.find(image_data_list, {name: asset_name});
+	},
+
+	get_image_metadata_for_asset_name: (
+		_AM: Asset_Manager_Data,
+		asset_name: string,
+	): AssetsMetaSpritesheetItem|AssetsMetaSingleImageData => {
+		let { raw_image_list, image_data_list, assets_meta } = _AM.static_vals;
+
+		return assets_meta[ asset_name ]!;
+	},
+
 	draw_image_for_asset_name: (p: {
 		_AM: Asset_Manager_Data,
 		asset_name: string,
@@ -519,11 +546,10 @@ export const Asset_Manager_ƒ = {
 			Before we get started, we have a special 'magic name' used to make various objects (such as floating hp numbers) skip drawing a sprite entirely.
 		*/
 		if( p.asset_name !== 'omit_image' ){
-			let { raw_image_list, image_data_list, assets_meta } = p._AM.static_vals;
+			const image = Asset_Manager_ƒ.get_raw_image_for_asset_name(p._AM, p.asset_name);
+			const metadata = Asset_Manager_ƒ.get_image_metadata_for_asset_name(p._AM, p.asset_name);
+			const image_data = Asset_Manager_ƒ.get_image_data_for_asset_name(p._AM, p.asset_name);
 
-			let image = raw_image_list[ p.asset_name ]!;
-			let metadata = assets_meta[ p.asset_name ]!;
-			let image_data = _.find(image_data_list, {name: p.asset_name});
 			
 			if(image_data == undefined){
 				console.error(`Could not find an image in our image_data_list for the asset named ${p.asset_name}.`); 

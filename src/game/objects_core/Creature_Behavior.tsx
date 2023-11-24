@@ -13,7 +13,7 @@ import { Creature_Delegate, CT_Hermit_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ } from "
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Anim_Schedule_Element, BehaviorMode, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection, Path_Data } from "./Creature";
 import { AI_Core_ƒ } from "./AI_Core";
-import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ } from "../core/engine/Asset_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
 
 
@@ -228,6 +228,18 @@ export const Creature_Behavior_ƒ = {
 			AI_Core_ƒ.reconsider_behavior(me, _TM, _AM, _BM, offset_in_ms, tick, change_list, spawnees);
 		}
 
+		const image_data = Asset_Manager_ƒ.get_image_data_for_asset_name(_AM, Creature_ƒ.yield_attack_asset_for_direction( me, me.facing_direction ));
+
+
+		if(image_data != undefined){
+			const time_since_start = offset_in_ms - me.last_behavior_reconsideration_timestamp;
+
+			const current_frame_cycle = Asset_Manager_ƒ.get_current_frame_cycle( image_data, time_since_start);
+
+			if( current_frame_cycle > 1 && me.behavior_mode == 'attack' ){
+				Creature_ƒ.set(change_list, me, 'behavior_mode', 'stand');
+			}
+		}
 	},
 
 	update_pixel_pos: (
@@ -324,6 +336,7 @@ export const Creature_Behavior_ƒ = {
 		};
 		
 
+		Creature_ƒ.set(change_list, me, 'last_behavior_reconsideration_timestamp', offset_in_ms);
 		Creature_ƒ.set(change_list, me, 'next_behavior_reconsideration_timestamp', offset_in_ms + 300);
 
 		Creature_ƒ.set(change_list, me, 'tile_pos', new_position.position);
