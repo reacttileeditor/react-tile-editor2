@@ -458,8 +458,28 @@ export const Asset_Manager_ƒ = {
 				0
 		) ;
 	},
-	
-	get_current_frame_number: (image_data: ImageData, current_milliseconds: number) => {
+
+	get_current_frame_cycle: (image_data: ImageData, current_milliseconds: number): number => {
+		/*
+			aka "at this ms timestamp, how many times would this animation have played"
+		*/
+
+		let frame_count = image_data.frames ? image_data.frames : 1;
+		let frame_duration = image_data.frame_duration ? image_data.frame_duration : 20;
+
+		/*
+			warning:  There might be some fuckery here if the pingponging doesn't mirror/double the middle frame.  That'd be the -1 component in the math, if that's the culprit.
+		*/
+		let animation_duration = !image_data.ping_pong
+		?
+		(frame_count * frame_duration)
+		:
+		((frame_count * 2 - 1) * frame_duration);
+
+		return current_milliseconds / animation_duration;
+	},
+
+	get_current_frame_number: (image_data: ImageData, current_milliseconds: number): number => {
 		let frame_count = image_data.frames ? image_data.frames : 1;
 		let frame_duration = image_data.frame_duration ? image_data.frame_duration : 20;
 		/*
