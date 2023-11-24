@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _, { find } from "lodash";
+import _, { cloneDeep, find } from "lodash";
 import { v4 as uuid } from "uuid";
 
 import { ƒ } from "../core/engine/Utils";
@@ -113,33 +113,43 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 		const source = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.source_obj );
 		const lifetime_tick = (tick - me.creation_timestamp);
 
-		let addend = {x: 0, y: 0};
+		let next_pos = cloneDeep(original_pos);
 
 		let visual_rotate_angle = me.rotate;
 
 		if(target){
-			//console.log(target.pixel_pos)
 			const target_pos = target.pixel_pos;
 			const source_pos = source.pixel_pos;
 
 			const angle = Math.atan2(  target_pos.y - original_pos.y , target_pos.x - original_pos.x )
-			//const magnitude = 0.5;
 
 			const magnitude = Math.hypot( (original_pos.x - target_pos.x), (original_pos.y - target_pos.y) ) / 100.0;
 
 
 			const arcing_height = -40 * Math.sin( (lifetime_tick / 100) * Math.PI );
 
-			visual_rotate_angle = Math.atan2(  target_pos.y - prior_pos.y , target_pos.x - prior_pos.x )
+
+
+
+
+
+			const addend: Point2D = { x: lifetime_tick * magnitude * Math.cos(angle), y: lifetime_tick * magnitude * Math.sin(angle) + arcing_height }
+
+			next_pos = {x: original_pos.x + addend.x, y: original_pos.y + addend.y}
+
+			/*
+				The calculations for the visual angle are a fair bit different, since we don't care about the final position, but rather, the position of the very next "key point"
+			*/
+
+			visual_rotate_angle = Math.atan2(  next_pos.y - prior_pos.y , next_pos.x - prior_pos.x )
 			visual_rotate_angle = 90 + visual_rotate_angle * 180 / Math.PI ;
 			console.error(visual_rotate_angle)
 
-			addend = { x: lifetime_tick * magnitude * Math.cos(angle), y: lifetime_tick * magnitude * Math.sin(angle) + arcing_height }
 		}
 
 		return {
 			data: {
-				pixel_pos: {x: original_pos.x + addend.x, y: original_pos.y + addend.y},
+				pixel_pos: next_pos,
 				rotate: visual_rotate_angle,
 				delegate_state: _prior_delegate_state,
 			},
