@@ -28,10 +28,7 @@ export type Custom_Object_Update = {
 
 export type Custom_Object_Delegate = {
 	process_single_frame: (
-		prior_pixel_pos: Point2D,
-		prior_rotation: number,
-		GM: Game_Manager_Data,	
-		prior_delegate_state: Custom_Object_Delegate_States,
+		me: Custom_Object_Data,
 		tick: number,
 	) => {
 		data: Custom_Object_Update,
@@ -51,10 +48,7 @@ export type Custom_Object_Delegate = {
 
 const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 	process_single_frame: (
-		prior_pixel_pos: Point2D, 
-		prior_rotation: number,
-		GM: Game_Manager_Data,		
-		prior_delegate_state: Custom_Object_Delegate_States,
+		me: Custom_Object_Data,
 		tick: number,
 	): {
 		data: Custom_Object_Update,
@@ -64,9 +58,9 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 
 		return {
 			data: {
-				pixel_pos: prior_pixel_pos,
-				rotate: prior_rotation,
-				delegate_state: prior_delegate_state,
+				pixel_pos: me.pixel_pos,
+				rotate: me.rotate,
+				delegate_state: me.delegate_state,
 			},
 			change_list: [],
 			spawnees: [],
@@ -102,47 +96,51 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 	...Custom_Object_Delegate_Base_ƒ,
 
 	process_single_frame: (
-		prior_pixel_pos: Point2D, 
-		prior_rotation: number,
-		GM: Game_Manager_Data,	
-		prior_delegate_state: Custom_Object_Delegate_States,
+		me: Custom_Object_Data,
 		tick: number,
 	): {
 		data: Custom_Object_Update,
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>,
 	} => {
-		const _prior_delegate_state = prior_delegate_state as CO_Shot_State;
+		const _prior_delegate_state = me.delegate_state as CO_Shot_State;
+		const GM = me.get_GM_instance();
+		const prior_pos = me.pixel_pos;
+		const original_pos = _prior_delegate_state.original_pos;
 
 
 		const target = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.target_obj );
 		const source = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.source_obj );
-
+		const lifetime_tick = (tick - me.creation_timestamp);
 
 		let addend = {x: 0, y: 0};
-		let rotate = prior_rotation;
 
-
+		let visual_rotate_angle = me.rotate;
 
 		if(target){
 			//console.log(target.pixel_pos)
 			const target_pos = target.pixel_pos;
 			const source_pos = source.pixel_pos;
-			const original_pos = _prior_delegate_state.original_pos;
 
 			const angle = Math.atan2(  target_pos.y - original_pos.y , target_pos.x - original_pos.x )
-			rotate = 90 + angle * 180 / Math.PI ;
 			//const magnitude = 0.5;
 
 			const magnitude = Math.hypot( (original_pos.x - target_pos.x), (original_pos.y - target_pos.y) ) / 100.0;
 
-			addend = { x: magnitude * Math.cos(angle), y: magnitude * Math.sin(angle) }
+
+			const arcing_height = -40 * Math.sin( (lifetime_tick / 100) * Math.PI );
+
+			visual_rotate_angle = Math.atan2(  target_pos.y - prior_pos.y , target_pos.x - prior_pos.x )
+			visual_rotate_angle = 90 + visual_rotate_angle * 180 / Math.PI ;
+			console.error(visual_rotate_angle)
+
+			addend = { x: lifetime_tick * magnitude * Math.cos(angle), y: lifetime_tick * magnitude * Math.sin(angle) + arcing_height }
 		}
 
 		return {
 			data: {
-				pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
-				rotate: rotate,
+				pixel_pos: {x: original_pos.x + addend.x, y: original_pos.y + addend.y},
+				rotate: visual_rotate_angle,
 				delegate_state: _prior_delegate_state,
 			},
 			change_list: [],
@@ -165,10 +163,7 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 	...Custom_Object_Delegate_Base_ƒ,
 
 	process_single_frame: (
-		prior_pixel_pos: Point2D, 
-		prior_rotation: number,
-		GM: Game_Manager_Data,	
-		prior_delegate_state: Custom_Object_Delegate_States,
+		me: Custom_Object_Data,
 		tick: number,
 	): {
 		data: Custom_Object_Update,
@@ -182,9 +177,9 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 
 		return {
 			data: {
-				pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
-				rotate: prior_rotation,
-				delegate_state: prior_delegate_state,
+				pixel_pos: {x: me.pixel_pos.x + addend.x, y: me.pixel_pos.y + addend.y},
+				rotate: me.rotate,
+				delegate_state: me.delegate_state,
 			},
 			change_list: [],
 			spawnees: [],
@@ -198,10 +193,7 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
 	...Custom_Object_Delegate_Base_ƒ,
 
 	process_single_frame: (
-		prior_pixel_pos: Point2D, 
-		prior_rotation: number,
-		GM: Game_Manager_Data,
-		prior_delegate_state: Custom_Object_Delegate_States,
+		me: Custom_Object_Data,
 		tick: number,
 	): {
 		data: Custom_Object_Update,
@@ -215,9 +207,9 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
 
 		return {
 			data: {
-				pixel_pos: {x: prior_pixel_pos.x + addend.x, y: prior_pixel_pos.y + addend.y},
-				rotate: prior_rotation,
-				delegate_state: prior_delegate_state,
+				pixel_pos: {x: me.pixel_pos.x + addend.x, y: me.pixel_pos.y + addend.y},
+				rotate: me.rotate,
+				delegate_state: me.delegate_state,
 			},
 			change_list: [],
 			spawnees: [],
@@ -233,10 +225,7 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 	...Custom_Object_Delegate_Base_ƒ,
 
 	process_single_frame: (
-		prior_pixel_pos: Point2D, 
-		prior_rotation: number,
-		GM: Game_Manager_Data,
-		prior_delegate_state: Custom_Object_Delegate_States,
+		me: Custom_Object_Data,
 		tick: number,
 	): {
 		data: Custom_Object_Update,
@@ -250,9 +239,9 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 
 		return {
 			data: {
-				pixel_pos: prior_pixel_pos,
-				rotate: prior_rotation,
-				delegate_state: prior_delegate_state,
+				pixel_pos: me.pixel_pos,
+				rotate: me.rotate,
+				delegate_state: me.delegate_state,
 			},
 			change_list: [],
 			spawnees: [],

@@ -112,10 +112,7 @@ export const Custom_Object_ƒ = {
 	} => {
 
 		const processed_results = Custom_Object_ƒ.get_delegate(me.type_name).process_single_frame(
-			me.pixel_pos,
-			me.rotate,
-			me.get_GM_instance(),
-			me.delegate_state,
+			me,
 			tick,
 		);
 
@@ -137,10 +134,6 @@ export const Custom_Object_ƒ = {
 		}, current_events );
 
 
-		if( me.type_name == 'shot' && size(scheduled_events) > 0){
-			console.log( spawnees )
-		}
-				
 		scheduled_events = without( current_events, scheduled_events);
 
 
