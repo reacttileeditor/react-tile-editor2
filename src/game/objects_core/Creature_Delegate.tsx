@@ -25,6 +25,7 @@ export type Creature_Delegate = {
 	yield_damage: () => number,
 	yield_max_hitpoints: () => number,
 	yield_weapon_range: () => number,
+	action_delay_for_animation: (animation_name: string) => number,
 }
 
 
@@ -62,6 +63,7 @@ const Creature_Delegate_Base_ƒ: Creature_Delegate = {
 	yield_damage: (): number => ( 5 ),
 	yield_max_hitpoints: (): number => ( 100 ),
 	yield_weapon_range: () => ( 1 ),
+	action_delay_for_animation: (animation_name: string) => ( 0 ),
 }
 
 
@@ -192,6 +194,8 @@ export const CT_Undead_Javelineer_ƒ: Creature_Delegate = {
 			'south_west':	'undead_javelineer_se_attack',	
 		}[direction]
 	),
+
+	action_delay_for_animation: (animation_name: string) => ( 700 ),
 }
 
 

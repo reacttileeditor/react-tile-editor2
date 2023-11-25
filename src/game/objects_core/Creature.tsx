@@ -40,14 +40,14 @@ export type ChangeInstance = {
 	target_obj_uuid: string, //uuid, actually
 };
 
-type CreatureKeys = keyof Creature_Data & keyof Base_Object_Data;
+type CreatureKeys = (keyof Creature_Data & keyof Base_Object_Data);
 
 export type VariableSpecificChangeInstance = {
 	type: ChangeType,
 	value: Change_Value,
 }
 
-export type Change_Value = (number|string|Point2D|boolean|Path_Data);
+export type Change_Value = (number|string|Point2D|boolean|Path_Data|Creature_Data);
 
 
 export type Creature_Data = {
@@ -71,7 +71,8 @@ export type Creature_Data = {
 	planned_tile_pos: Point2D;
 	animation_this_turn: Array<Anim_Schedule_Element>;
 	walk_segment_start_time: number,
-	path_data: Path_Data; 
+	path_data: Path_Data;
+	target?: Creature_Data;
 } & Base_Object_Data;
 
 export type Anim_Schedule_Element = {
@@ -115,6 +116,7 @@ export const New_Creature = (
 		is_done_with_turn: boolean,
 		behavior_mode: BehaviorMode,
 		planned_tile_pos: Point2D,
+		target?: Creature_Data
 		type_name: CreatureTypeName,
 		team: number,
 		unique_id?: string,
@@ -162,6 +164,7 @@ export const New_Creature = (
 			p.next_behavior_reconsideration_timestamp,
 			0,
 		),
+		target: p.target,
 		behavior_mode: p.behavior_mode,
 
 
@@ -196,6 +199,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		animation_this_turn: [],
 		path_data: cloneDeep(path_data_init),
 		behavior_mode: 'stand',
+		target: undefined,
 		is_done_with_turn: false,
 		remaining_move_points: Creature_ƒ.get_delegate(me.type_name).yield_moves_per_turn()
 	})
@@ -211,6 +215,11 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		return _.isObject(value) && (value as Path_Data).path_reachable_this_turn !== undefined && (value as Path_Data).path_reachable_this_turn_with_directions !== undefined;
 	},
 
+	isCreatureData: (value: ValueOf<Creature_Data>): value is Creature_Data => {
+		return _.isObject(value) && (value as Creature_Data).behavior_mode !== undefined && (value as Creature_Data).is_done_with_turn !== undefined;
+	},
+	
+	
 	isDirection: (value: ValueOf<Creature_Data>): value is Direction => {
 		return value as Direction in ['north_east',
 		'east',
@@ -220,9 +229,11 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		'south_west']
 	},
 
-	get_value_type: (value: ValueOf<Creature_Data>): 'Point2D' | 'Direction' | 'string' | 'number' | 'boolean' | 'Path_Data' => {
+	get_value_type: (value: ValueOf<Creature_Data>): 'Point2D' | 'Direction' | 'string' | 'number' | 'undefined' | 'boolean' | 'Path_Data' | 'Creature_Data' => {
 		if( isBoolean(value) ){
 			return 'boolean';
+		} else if ( _.isUndefined(value) ) {
+			return 'undefined';
 		} else if( Creature_ƒ.isPoint2D(value) ){
 			return 'Point2D';
 		} else if ( Creature_ƒ.isDirection(value) ){
@@ -231,6 +242,8 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 			return 'Path_Data';
 		} else if ( _.isString(value) ){
 			return 'string';
+		} else if ( Creature_ƒ.isCreatureData(value) ){
+			return 'Creature_Data';
 		} else {
 			return 'number';
 		}
@@ -345,6 +358,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		//do some run time type alleging here
 	}*/
 
+
 		//@ts-ignore
 	reduce_individual_change_type: (
 		me: Creature_Data,
@@ -361,9 +375,30 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 			)
 		)) 
 		
+
+		// this is some absolute hobgoblin shit because apparently, javascript object children which we're using for a concise switch statement (because we can't have proper Pattern Matching) are actually evaluated greedily, and I'm too lazy to back that out right now.  Fuck JS.
+		let guard = (condition: boolean, action: Function) => {
+			if(condition){
+				return action();
+			}
+		}
+
 		let reduced_values: VariableSpecificChangeInstance = _.reduce(
 			sorted_values,
 			(a, b) => {
+				/*
+					If we're undefined, we're probably setting some variable that's optional; i.e. it's either a real type, or undefined when empty.
+					
+					Either it's an identity op (setting undefined to undefined), or we can determine the value from one of the two parameters.  With just a ternary, we ought to be able to "pick A if not empty, else B", and if B's still empty, then we've established they both are. 
+				*/
+				let value_type = Creature_ƒ.get_value_type(a.value) != 'undefined' ? Creature_ƒ.get_value_type(a.value) : Creature_ƒ.get_value_type(b.value)
+
+				// if(key == 'target'){
+				// 	debugger;
+				// }
+
+
+
 				return 	ƒ.if(b.type == 'set',
 					{
 						type: 'set', //we're passing this to satisfy the typechecker, but it's going to be ignored.
@@ -373,8 +408,10 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 							Direction: (b.value as unknown as Direction),
 							Point2D: (b.value as unknown as Point2D),
 							boolean: (b.value as unknown as boolean),
-							Path_Data: (b.value as unknown as Path_Data)
-						}[Creature_ƒ.get_value_type(a.value)]
+							Path_Data: (b.value as unknown as Path_Data),
+							Creature_Data: (b.value as unknown as Creature_Data),
+							undefined: undefined,
+						}[value_type]
 					},
 					{
 						type: 'add',
@@ -382,10 +419,12 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 							string: (a.value as unknown as string) + (b.value as unknown as string),
 							number: (a.value as unknown as number) + (b.value as unknown as number),
 							Direction: (b.value as unknown as Direction), //no coherent way to add Directions, so we treat it as 'set'
-							Point2D: Add_Point_2D( (a.value as unknown as Point2D), (b.value as unknown as Point2D) ),
+							Point2D: guard(value_type=='Point2D', ()=> Add_Point_2D( (a.value as unknown as Point2D), (b.value as unknown as Point2D) )),
 							boolean: (a.value as unknown as boolean) && (b.value as unknown as boolean),
 							Path_Data: (b.value as unknown as Path_Data), //no coherent way to add Paths, so we treat it as 'set'
-						}[Creature_ƒ.get_value_type(a.value)]
+							Creature_Data: (b.value as unknown as Creature_Data),  //no coherent way to add Creatures, so we treat it as 'set'
+							undefined: undefined,
+						}[value_type]
 					}
 				);
 			},

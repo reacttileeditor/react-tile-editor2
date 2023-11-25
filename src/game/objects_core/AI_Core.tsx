@@ -63,7 +63,7 @@ export const AI_Core_ƒ = {
 				We have to set some kind of mode indicator that we're attacking, right now.
 			*/
 
-			Creature_Behavior_ƒ.perform_attack_instance(me, offset_in_ms, tick, change_list, spawnees, valid_targets[0]);
+			Creature_Behavior_ƒ.begin_attack_mode(me, offset_in_ms, tick, change_list, spawnees, valid_targets[0]);
 
 		} else {
 			/*

@@ -224,9 +224,6 @@ export const Creature_Behavior_ƒ = {
 
 		Creature_Behavior_ƒ.update_pixel_pos(me, _TM, offset_in_ms, change_list);
 
-		if( offset_in_ms >= me.next_behavior_reconsideration_timestamp ) {
-			AI_Core_ƒ.reconsider_behavior(me, _TM, _AM, _BM, offset_in_ms, tick, change_list, spawnees);
-		}
 
 		const image_data = Asset_Manager_ƒ.get_image_data_for_asset_name(_AM, Creature_ƒ.yield_attack_asset_for_direction( me, me.facing_direction ));
 
@@ -370,7 +367,7 @@ export const Creature_Behavior_ƒ = {
 
 
 
-	perform_attack_instance: (
+	begin_attack_mode: (
 		me: Creature_Data,
 		offset_in_ms: number,
 		tick: number,
@@ -380,7 +377,6 @@ export const Creature_Behavior_ƒ = {
 	) => {
 
 
-		Creature_ƒ.set(change_list, me, 'last_changed_hitpoints', offset_in_ms);
 		Creature_ƒ.set(change_list, me, 'behavior_mode', 'attack');
 
 
@@ -390,6 +386,50 @@ export const Creature_Behavior_ƒ = {
 		)		
 		Creature_ƒ.set(change_list, me, 'facing_direction', attack_direction);
 
+
+		Creature_ƒ.set(change_list, me, 'target', target);
+		
+
+		Creature_ƒ.add(change_list, me, 'remaining_action_points', -1);
+
+		if(me.remaining_action_points - 1 < 0){
+			Creature_ƒ.set(change_list, me, 'is_done_with_turn', true);
+		}
+	},
+
+	process_single_frame__attacking: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		offset_in_ms: number,
+		tick: number,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>
+	) => {
+		let timestamp = Creature_ƒ.get_time_since_mode_start(me, offset_in_ms)
+
+		if( me.target && timestamp == Creature_ƒ.get_delegate(me.type_name).action_delay_for_animation('attack') ){
+			Creature_ƒ.perform_attack_instance(
+				me,
+				offset_in_ms,
+				tick,
+				change_list,
+				spawnees,
+				me.target
+			);
+		}
+	},
+
+	perform_attack_instance: (
+		me: Creature_Data,
+		offset_in_ms: number,
+		tick: number,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>,
+		target: Creature_Data,
+
+	) => {
 		spawnees.push(New_Custom_Object({
 			get_GM_instance: me.get_GM_instance,
 			_Asset_Manager: me._Asset_Manager,
@@ -413,6 +453,7 @@ export const Creature_Behavior_ƒ = {
 					//alert('damage')
 
 					Creature_ƒ.add(change_list_, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
+					Creature_ƒ.set(change_list, target, 'last_changed_hitpoints', offset_in_ms);
 
 					spawnees_.push(New_Custom_Object({
 						get_GM_instance: me.get_GM_instance,
@@ -449,15 +490,9 @@ export const Creature_Behavior_ƒ = {
 			}],
 			is_done_with_turn: false,
 		}));
-		
-		
-
-		Creature_ƒ.add(change_list, me, 'remaining_action_points', -1);
-
-		if(me.remaining_action_points - 1 < 0){
-			Creature_ƒ.set(change_list, me, 'is_done_with_turn', true);
-		}
 	},
+
+
 
 	process_single_frame__damage: (
 		me: Creature_Data,
@@ -504,20 +539,37 @@ export const Creature_Behavior_ƒ = {
 		const spawnees: Array<Custom_Object_Data> = [];
 
 
+		if( offset_in_ms >= me.next_behavior_reconsideration_timestamp ) {
+			AI_Core_ƒ.reconsider_behavior(me, _TM, _AM, _BM, offset_in_ms, tick, change_list, spawnees);
+		}
 
+		if(me.behavior_mode == 'walk'){
+			/*-------- handle any ongoing behavior related to movement --------*/
+			Creature_ƒ.process_single_frame__movement(
+				me,
+				_TM,
+				_AM,
+				_BM,
+				offset_in_ms,
+				tick,
+				change_list,
+				spawnees
+			);
+		} else if(me.behavior_mode == 'attack') {
+			/*-------- handle any ongoing behavior related to attacking --------*/
+			Creature_ƒ.process_single_frame__attacking(
+				me,
+				_TM,
+				_AM,
+				_BM,
+				offset_in_ms,
+				tick,
+				change_list,
+				spawnees
+			);
+		}
 
-		/*-------- Delegating the actual work to sub-functions --------*/
-		Creature_ƒ.process_single_frame__movement(
-			me,
-			_TM,
-			_AM,
-			_BM,
-			offset_in_ms,
-			tick,
-			change_list,
-			spawnees
-		);
-
+		/*-------- handle any ongoing behavior (really, just "the potential for death") related to taking damage --------*/
 		Creature_ƒ.process_single_frame__damage(
 			me,
 			_TM,
