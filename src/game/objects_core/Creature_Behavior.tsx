@@ -201,43 +201,6 @@ export const Creature_Behavior_ƒ = {
 
 
 /*----------------------- turn processing management -----------------------*/
-	process_single_frame__movement: (
-		me: Creature_Data,
-		_TM: Tilemap_Manager_Data,
-		_AM: Asset_Manager_Data,
-		_BM: Blit_Manager_Data,
-		offset_in_ms: number,
-		tick: number,
-		change_list: Array<ChangeInstance>,
-		spawnees: Array<Custom_Object_Data>
-	) => {
-		/*
-			MOVEMENT:
-		*/
-
-		/*
-			If we are at a different tile position, we need to renegotiate our path — in the act of attempting to move to a new tile, we can assume that the next tile will be guaranteed to be open for movement (this is a temporary lie we're adopting to expedite development; we'll need to reconsider this, possibly on a per-frame basis of checking the tile we're moving towards and seeing if it's occupied, and thus, we're "bumped").
-
-			Once we're at the new tile, though, we must reassess everything about what our plan of action is.  In the future, we'll reassess whether we're even walking further at all (perhaps we switch to attacking if available), but for now, we retain our "intended destination", and continue to walk towards it. 
-		*/
-		//let current_tile_pos = Creature_ƒ.get_current_tile_pos_from_pixel_pos(me, _TM);
-
-		Creature_Behavior_ƒ.update_pixel_pos(me, _TM, offset_in_ms, change_list);
-
-
-		const image_data = Asset_Manager_ƒ.get_image_data_for_asset_name(_AM, Creature_ƒ.yield_attack_asset_for_direction( me, me.facing_direction ));
-
-
-		if(image_data != undefined){
-			const time_since_start = Creature_ƒ.get_time_since_mode_start(me, offset_in_ms);
-
-			const current_frame_cycle = Asset_Manager_ƒ.get_current_frame_cycle( image_data, time_since_start);
-
-			if( current_frame_cycle > 1 && me.behavior_mode == 'attack' ){
-				Creature_ƒ.set(change_list, me, 'behavior_mode', 'stand');
-			}
-		}
-	},
 
 	get_time_since_mode_start: (me: Creature_Data, offset_in_ms: number ): number => {
 		return offset_in_ms - me.last_behavior_reconsideration_timestamp
@@ -397,6 +360,34 @@ export const Creature_Behavior_ƒ = {
 		}
 	},
 
+
+/*----------------------- processing commands -----------------------*/
+
+	process_single_frame__movement: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		offset_in_ms: number,
+		tick: number,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>
+	) => {
+		/*
+			MOVEMENT:
+		*/
+
+		/*
+			If we are at a different tile position, we need to renegotiate our path — in the act of attempting to move to a new tile, we can assume that the next tile will be guaranteed to be open for movement (this is a temporary lie we're adopting to expedite development; we'll need to reconsider this, possibly on a per-frame basis of checking the tile we're moving towards and seeing if it's occupied, and thus, we're "bumped").
+
+			Once we're at the new tile, though, we must reassess everything about what our plan of action is.  In the future, we'll reassess whether we're even walking further at all (perhaps we switch to attacking if available), but for now, we retain our "intended destination", and continue to walk towards it. 
+		*/
+		//let current_tile_pos = Creature_ƒ.get_current_tile_pos_from_pixel_pos(me, _TM);
+
+		Creature_Behavior_ƒ.update_pixel_pos(me, _TM, offset_in_ms, change_list);
+
+	},
+
 	process_single_frame__attacking: (
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
@@ -419,6 +410,21 @@ export const Creature_Behavior_ƒ = {
 				me.target
 			);
 		}
+
+
+		const image_data = Asset_Manager_ƒ.get_image_data_for_asset_name(_AM, Creature_ƒ.yield_attack_asset_for_direction( me, me.facing_direction ));
+
+
+		if(image_data != undefined){
+			const time_since_start = Creature_ƒ.get_time_since_mode_start(me, offset_in_ms);
+
+			const current_frame_cycle = Asset_Manager_ƒ.get_current_frame_cycle( image_data, time_since_start);
+
+			if( current_frame_cycle > 1 ){
+				Creature_ƒ.set(change_list, me, 'behavior_mode', 'stand');
+			}
+		}
+
 	},
 
 	perform_attack_instance: (
