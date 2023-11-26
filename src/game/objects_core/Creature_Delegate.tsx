@@ -150,6 +150,7 @@ export const CT_Skeleton_ƒ: Creature_Delegate = {
 		}[direction]
 	),
 
+	action_delay_for_animation: (animation_name: string) => ( 600 ),
 
 }
 

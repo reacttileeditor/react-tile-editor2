@@ -11,7 +11,8 @@ import { Point2D, Rectangle } from '../interfaces';
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { zorder } from "../core/constants/zorder";
 import { ChangeInstance } from "./Creature";
-import { Custom_Object_Data } from "./Custom_Object";
+import { Custom_Object_Data, Custom_Object_ƒ } from "./Custom_Object";
+import { Vals } from "../core/constants/Constants";
 
 
 export type CustomObjectTypeName = 'shot';
@@ -44,6 +45,7 @@ export type Custom_Object_Delegate = {
 
 	yield_image: () => string,
 	yield_zorder: () => number,
+	time_to_live: () => number,
 }
 
 const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
@@ -72,9 +74,11 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 		tick: number,
 		offset_in_ms: number,
 	) => {
-		return ƒ.if( (tick - me.creation_timestamp) > 300, true, false )
+		return ƒ.if( (tick - me.creation_timestamp) > Custom_Object_ƒ.get_delegate(me.type_name).time_to_live(), true, false )
 	},
 	
+	time_to_live: () => 300,
+
 	
 	yield_image: () => (
 		'red_dot'
@@ -123,10 +127,10 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 
 			const angle = Math.atan2(  target_pos.y - original_pos.y , target_pos.x - original_pos.x )
 
-			const magnitude = Math.hypot( (original_pos.x - target_pos.x), (original_pos.y - target_pos.y) ) / 100.0;
+			const magnitude = Math.hypot( (original_pos.x - target_pos.x), (original_pos.y - target_pos.y) ) / Vals.shot_flight_duration;
 
 
-			const arcing_height = -40 * Math.sin( (lifetime_tick / 100) * Math.PI );
+			const arcing_height = -40 * Math.sin( (lifetime_tick / Vals.shot_flight_duration) * Math.PI );
 
 
 
@@ -164,7 +168,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 		tick: number,
 		offset_in_ms: number,
 	) => {
-		return ƒ.if( (tick - me.creation_timestamp) > 100, true, false )
+		return ƒ.if( (tick - me.creation_timestamp) > Vals.shot_flight_duration, true, false )
 	},
 
 }
@@ -197,6 +201,9 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 	},
 	yield_image: () => 'omit_image',
 	yield_zorder: () => zorder.text,
+	time_to_live: () => 100,
+
+	
 }
 
 export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
@@ -259,4 +266,5 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 	},
 	yield_image: () => 'hit_star',
 	yield_zorder: () => zorder.fx,
+	time_to_live: () => 100,
 }

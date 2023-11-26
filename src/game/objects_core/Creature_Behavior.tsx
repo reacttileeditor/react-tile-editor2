@@ -15,6 +15,7 @@ import { Anim_Schedule_Element, BehaviorMode, ChangeInstance, Creature_Data, Cre
 import { AI_Core_ƒ } from "./AI_Core";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../core/engine/Asset_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
+import { Vals } from "../core/constants/Constants";
 
 
 
@@ -436,66 +437,102 @@ export const Creature_Behavior_ƒ = {
 		target: Creature_Data,
 
 	) => {
-		spawnees.push(New_Custom_Object({
-			get_GM_instance: me.get_GM_instance,
-			_Asset_Manager: me._Asset_Manager,
-			_Blit_Manager: me._Blit_Manager,
-			_Tilemap_Manager: me._Tilemap_Manager,
 
-			pixel_pos: me.pixel_pos,
-			rotate: 0,
-			type_name: 'shot' as CustomObjectTypeName,
-			creation_timestamp: tick,
-			should_remove: false,
-			text: ``,
-			delegate_state: {
-				target_obj: target.unique_id,
-				source_obj: me.unique_id,
-				original_pos: me.pixel_pos,
-			},
-			scheduled_events: [{
-				tick_offset: 100,
-				command: (change_list_: Array<ChangeInstance>, spawnees_: Array<Custom_Object_Data>) => {
-					//alert('damage')
+		if( Creature_ƒ.get_delegate(me.type_name).yield_weapon_range() > 1 ){
 
-					Creature_ƒ.add(change_list_, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
-					Creature_ƒ.set(change_list, target, 'last_changed_hitpoints', offset_in_ms);
+			spawnees.push(New_Custom_Object({
+				get_GM_instance: me.get_GM_instance,
+				_Asset_Manager: me._Asset_Manager,
+				_Blit_Manager: me._Blit_Manager,
+				_Tilemap_Manager: me._Tilemap_Manager,
 
-					spawnees_.push(New_Custom_Object({
-						get_GM_instance: me.get_GM_instance,
-						_Asset_Manager: me._Asset_Manager,
-						_Blit_Manager: me._Blit_Manager,
-						_Tilemap_Manager: me._Tilemap_Manager,
-			
-						pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
-						rotate: 0,
-						type_name: 'text_label' as CustomObjectTypeName,
-						creation_timestamp: tick,
-						should_remove: false,
-						text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
-						is_done_with_turn: false,
-						delegate_state: {},
-					}));
-			
-					spawnees_.push(New_Custom_Object({
-						get_GM_instance: me.get_GM_instance,
-						_Asset_Manager: me._Asset_Manager,
-						_Blit_Manager: me._Blit_Manager,
-						_Tilemap_Manager: me._Tilemap_Manager,
-			
-						pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
-						rotate: 0,
-						type_name: 'hit_star_bg' as CustomObjectTypeName,
-						creation_timestamp: tick,
-						should_remove: false,
-						is_done_with_turn: false,
-						text: ``,
-						delegate_state: {},
-					}));					
-				}
-			}],
-			is_done_with_turn: false,
-		}));
+				pixel_pos: me.pixel_pos,
+				rotate: 0,
+				type_name: 'shot' as CustomObjectTypeName,
+				creation_timestamp: tick,
+				should_remove: false,
+				text: ``,
+				delegate_state: {
+					target_obj: target.unique_id,
+					source_obj: me.unique_id,
+					original_pos: me.pixel_pos,
+				},
+				scheduled_events: [{
+					tick_offset: tick + Vals.shot_flight_duration,
+					command: (change_list_: Array<ChangeInstance>, spawnees_: Array<Custom_Object_Data>) => {
+						//alert('damage')
+
+						Creature_ƒ.add(change_list_, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
+						Creature_ƒ.set(change_list, target, 'last_changed_hitpoints', offset_in_ms);
+
+						spawnees_.push(New_Custom_Object({
+							get_GM_instance: me.get_GM_instance,
+							_Asset_Manager: me._Asset_Manager,
+							_Blit_Manager: me._Blit_Manager,
+							_Tilemap_Manager: me._Tilemap_Manager,
+				
+							pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
+							rotate: 0,
+							type_name: 'text_label' as CustomObjectTypeName,
+							creation_timestamp: tick,
+							should_remove: false,
+							text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
+							is_done_with_turn: false,
+							delegate_state: {},
+						}));
+				
+						spawnees_.push(New_Custom_Object({
+							get_GM_instance: me.get_GM_instance,
+							_Asset_Manager: me._Asset_Manager,
+							_Blit_Manager: me._Blit_Manager,
+							_Tilemap_Manager: me._Tilemap_Manager,
+				
+							pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
+							rotate: 0,
+							type_name: 'hit_star_bg' as CustomObjectTypeName,
+							creation_timestamp: tick,
+							should_remove: false,
+							is_done_with_turn: false,
+							text: ``,
+							delegate_state: {},
+						}));					
+					}
+				}],
+				is_done_with_turn: false,
+			}));
+		} else {
+			spawnees.push(New_Custom_Object({
+				get_GM_instance: me.get_GM_instance,
+				_Asset_Manager: me._Asset_Manager,
+				_Blit_Manager: me._Blit_Manager,
+				_Tilemap_Manager: me._Tilemap_Manager,
+	
+				pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
+				rotate: 0,
+				type_name: 'text_label' as CustomObjectTypeName,
+				creation_timestamp: tick,
+				should_remove: false,
+				text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
+				is_done_with_turn: false,
+				delegate_state: {},
+			}));
+	
+			spawnees.push(New_Custom_Object({
+				get_GM_instance: me.get_GM_instance,
+				_Asset_Manager: me._Asset_Manager,
+				_Blit_Manager: me._Blit_Manager,
+				_Tilemap_Manager: me._Tilemap_Manager,
+	
+				pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
+				rotate: 0,
+				type_name: 'hit_star_bg' as CustomObjectTypeName,
+				creation_timestamp: tick,
+				should_remove: false,
+				is_done_with_turn: false,
+				text: ``,
+				delegate_state: {},
+			}));				
+		}
 	},
 
 
