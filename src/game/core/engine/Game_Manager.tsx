@@ -447,7 +447,7 @@ export const Game_Manager_ƒ = {
 					me.cursor_pos
 				)
 			),
-			zorder:						zorder.rocks,
+			zorder:						zorder.map_cursor_low,
 			current_milliseconds:		0,
 			opacity:					1.0,
 			rotate:						0,

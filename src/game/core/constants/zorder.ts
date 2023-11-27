@@ -6,6 +6,7 @@ export const zorder = {
 	grass: 3,
 	rocks: 12,
 
+	map_cursor_low: 9,
 	map_cursor: 10,
 	characters: 13,
 	fx: 20,
