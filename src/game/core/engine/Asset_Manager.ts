@@ -124,7 +124,7 @@ export const New_Asset_Manager = (): Asset_Manager_Data => {
 	return {
 		consts: {
 			tile_width: 38, //38
-			tile_height: 15, //21
+			tile_height: 16, //21
 			row_length: 14,
 			col_height: 20,
 		},
