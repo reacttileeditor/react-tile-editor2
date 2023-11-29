@@ -1,4 +1,4 @@
-import _, { isEmpty, isString, map } from "lodash";
+import _, { isEmpty, isString, map, range } from "lodash";
 import Prando from 'prando';
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "./Blit_Manager";
 import * as Utils from "./Utils";
@@ -210,6 +210,7 @@ export const Asset_Manager_ƒ = {
 			temp_image.onload = () => {
 				me.static_vals.raw_image_list[ value.name ] = temp_image;
 				
+
 				me.static_vals.assets_meta[ value.name ] = {
 					dim: {
 						w: temp_image.naturalWidth,
@@ -217,6 +218,9 @@ export const Asset_Manager_ƒ = {
 					},
 					bounds: value.bounds,
 				};
+
+				//me.static_vals.raw_image_list[ value.name ].src = Asset_Manager_ƒ.apply_magic_color_transparency(temp_image);
+
 				Asset_Manager_ƒ.launch_if_all_assets_are_loaded(me, do_once_app_ready);
 			};
 		});
@@ -232,6 +236,58 @@ export const Asset_Manager_ƒ = {
 		if( _.size( me.static_vals.image_data_list ) == _.size( me.static_vals.raw_image_list ) ) {
 			do_once_app_ready();
 		}
+	},
+
+
+
+/*----------------------- magic color processing -----------------------*/
+	component_to_hex: (c: number): string => {
+		var hex = c.toString(16);
+		return hex.length == 1 ? "0" + hex : hex;
+	},
+
+	rgba_to_hex: (rgba: Uint8ClampedArray): string => {
+		return "#" + Asset_Manager_ƒ.component_to_hex(rgba[0]) + Asset_Manager_ƒ.component_to_hex(rgba[1]) + Asset_Manager_ƒ.component_to_hex(rgba[2]) + Asset_Manager_ƒ.component_to_hex(rgba[3]);
+	},
+
+
+	apply_magic_color_transparency: (temp_image: HTMLImageElement): string => {
+
+		const osb = document.createElement('canvas');
+		osb.width = temp_image.naturalWidth;
+		osb.height = temp_image.naturalHeight;
+		const osb_ctx = (osb.getContext("2d") as CanvasRenderingContext2D);
+		osb_ctx.drawImage(temp_image, 0, 0 );
+		const image_data: globalThis.ImageData = osb_ctx.getImageData(0, 0, temp_image.naturalWidth, temp_image.naturalHeight);
+
+		// map( range(temp_image.naturalWidth), (col_val,col_idx) => {
+		// 	return 	map( range(temp_image.naturalHeight), (row_val,row_idx) => {
+		// 		//const color = osb_ctx.getImageData(col_idx, row_idx, 1, 1).data;
+
+		// 		if( Asset_Manager_ƒ.rgba_to_hex(color) == "#f9303d00"){
+		// 			alert('magic color!')
+		// 		}
+		// 	})
+		// })
+
+		// map( image_data.data, (val,idx)=> {
+			
+		// })
+
+		for (let i = 0; i < image_data.data.length; i += 4) {
+			if(
+				image_data.data[i + 0] == 249 &&
+				image_data.data[i + 1] == 48 &&
+				image_data.data[i + 2] == 61
+			){
+				image_data.data[i + 3] = 0;
+			}
+		}
+		osb_ctx.putImageData(image_data, 0, 0);
+		const new_image = osb.toDataURL();
+
+		osb.remove()
+		return new_image;
 	},
 
 
