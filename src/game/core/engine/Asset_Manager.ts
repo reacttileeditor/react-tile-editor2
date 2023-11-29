@@ -219,8 +219,9 @@ export const Asset_Manager_ƒ = {
 					bounds: value.bounds,
 				};
 
-				//me.static_vals.raw_image_list[ value.name ].src = Asset_Manager_ƒ.apply_magic_color_transparency(temp_image);
+				/*me.static_vals.raw_image_list[ value.name ].src =*/ Asset_Manager_ƒ.apply_magic_color_transparency(temp_image);
 
+				temp_image.onload = null;
 				Asset_Manager_ƒ.launch_if_all_assets_are_loaded(me, do_once_app_ready);
 			};
 		});
@@ -251,7 +252,7 @@ export const Asset_Manager_ƒ = {
 	},
 
 
-	apply_magic_color_transparency: (temp_image: HTMLImageElement): string => {
+	apply_magic_color_transparency: (temp_image: HTMLImageElement): void => {
 
 		const osb = document.createElement('canvas');
 		osb.width = temp_image.naturalWidth;
@@ -284,10 +285,28 @@ export const Asset_Manager_ƒ = {
 			}
 		}
 		osb_ctx.putImageData(image_data, 0, 0);
-		const new_image = osb.toDataURL();
+		// const new_image = osb.toDataURL();
 
-		osb.remove()
-		return new_image;
+		// osb.remove()
+		//return new_image;
+
+		osb.toBlob((blob: Blob|null) => {
+			if(blob != null){
+				//const newImg = document.createElement("img");
+				const url = URL.createObjectURL(blob);
+			
+				temp_image.onload = () => {
+				// no longer need to read the blob so it's revoked
+					URL.revokeObjectURL(url);
+					temp_image.onload = null;
+				};
+			
+				temp_image.src = url;
+				console.warn('processing')
+			}
+		})
+
+
 	},
 
 
