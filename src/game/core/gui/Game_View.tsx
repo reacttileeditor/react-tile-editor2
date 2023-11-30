@@ -37,6 +37,8 @@ interface Game_View_Props {
 
 export type TooltipData = {
 	pos: Point2D,
+	tile_pos: Point2D,
+	unit_pos?: Point2D,
 	tile_name: string,
 	tile_cost: string,
 };
@@ -44,6 +46,10 @@ export type TooltipData = {
 
 
 const Map_Tooltip = (props: TooltipData) => {
+	let distance = !isNil(props.unit_pos) ? Tilemap_Manager_ƒ.get_tile_coord_distance_between(props.tile_pos, props.unit_pos) : 0;
+
+
+
 	return <div
 		className="map-tooltip"
 		style={{
@@ -57,6 +63,12 @@ const Map_Tooltip = (props: TooltipData) => {
 			&&
 			<div className="data-row"> {`${props.tile_cost}`}<img src={Foot_Icon}/></div>
 		}
+		{
+			!isNil(props.unit_pos)
+			&&
+			<div className="data-row"> {`dist: ${distance}`}<img src={Foot_Icon}/></div>
+		}
+
 	</div>
 }
 

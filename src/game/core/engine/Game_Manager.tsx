@@ -403,6 +403,8 @@ export const Game_Manager_ƒ = {
 
 	get_tooltip_data: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): TooltipData => ({
 		pos: me.cursor_pos,
+		tile_pos: Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos ),
+		unit_pos: !isNil(me.game_state.selected_object_index) ? me.game_state.current_frame_state.creature_list[me.game_state.selected_object_index].tile_pos : undefined,
 		tile_name: Tilemap_Manager_ƒ.get_tile_name_for_pos(
 			_TM,
 			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos ),
