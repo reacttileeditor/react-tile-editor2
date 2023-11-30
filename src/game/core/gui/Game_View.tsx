@@ -66,13 +66,14 @@ const Map_Tooltip = (props: TooltipData) => {
 		{
 			!isNil(props.unit_pos)
 			&&
-			<div className="data-row"> {`dist: ${distance}`}<img src={Foot_Icon}/></div>
+			<div className="data-row"> {`${distance}`}<img src={Distance_Icon}/></div>
 		}
 
 	</div>
 }
 
 import Foot_Icon from '../../../assets/feet-icon.png';
+import Distance_Icon from '../../../assets/distance-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, Game_and_Tilemap_Manager_Data, New_Game_Manager } from "../engine/Game_Manager";
 import { Game_Status_Display } from "./Game_Status_Display";
 import { Game_Info_Modal } from "./Game_Info_Modal";
