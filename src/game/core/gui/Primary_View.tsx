@@ -50,6 +50,7 @@ export const Primary_View = () => {
 	//const [_Tilemap_Manager, set_Tilemap_Manager] = useState<Tilemap_Manager_Data|null>(null);
 	const [is_edit_mode, set_is_edit_mode] = useState<boolean>(true);
 	const [assets_loaded, set_assets_loaded] = useState<boolean>(false);
+	const [loaded_fraction, set_loaded_fraction] = useState<number>(0);
 	const [context_connected, set_context_connected] = useState<boolean>(false);
 
 
@@ -61,7 +62,8 @@ export const Primary_View = () => {
 		console.log('PRIMARY LAUNCH')
 		Asset_Manager_ƒ.launch_app(
 			_Asset_Manager,
-			() => { set_assets_loaded(true); }
+			() => { set_assets_loaded(true); },
+			set_loaded_fraction,
 		);
 
 			//might be a race condition on this one, we'll see.
@@ -171,7 +173,7 @@ export const Primary_View = () => {
 							<div className="loading_node">
 								<div className="canvas_holder">
 									<div className="loading_screen">
-										Loading...
+										{`Loading...  ${Math.round(loaded_fraction * 100)}%`} 
 									</div>
 								</div>
 							</div>

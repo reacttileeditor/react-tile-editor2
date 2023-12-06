@@ -5,6 +5,7 @@ import * as Utils from "./Utils";
 import { Point2D, Rectangle } from '../../interfaces';
 import { asset_list } from "./Asset_List";
 import { ƒ } from "./Utils";
+import { Dispatch, SetStateAction } from "react";
 
 interface ImageData {
 	url: string,
@@ -191,7 +192,11 @@ export const Asset_Manager_ƒ = {
 	},
 
 
-	launch_app: ( me: Asset_Manager_Data, do_once_app_ready: ()=>void ) => {
+	launch_app: (
+		me: Asset_Manager_Data,
+		do_once_app_ready: ()=>void,
+		set_loaded_fraction: Dispatch<SetStateAction<number>>,
+	) => {
 		me.static_vals.image_data_list.map( ( value, index ) => {
 
 			var temp_image = new Image();
@@ -222,26 +227,37 @@ export const Asset_Manager_ƒ = {
 					preprocessed: false,
 				};
 
-				Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, value.name, do_once_app_ready );
+				Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, value.name, do_once_app_ready, set_loaded_fraction );
 
 				temp_image.onload = null;
 			};
 		});
 	},
 
-	launch_if_all_assets_are_loaded: ( me: Asset_Manager_Data, do_once_app_ready: ()=>void ) => {
+	launch_if_all_assets_are_loaded: (
+		me: Asset_Manager_Data,
+		do_once_app_ready: ()=>void,
+		set_loaded_fraction: Dispatch<SetStateAction<number>>,
+	) => {
 		/*
 			There's a big problem most canvas apps have, which is that the canvas will start doing its thing right away and start trying to render, even if you haven't loaded any of the images yet.  What we want to do is have it wait until all the images are done loading, so we're rolling a minimalist "asset manager" here.  The only way (I'm aware of) to tell if an image has loaded is the onload callback.  Thus, we register one of these on each and every image, before attempting to load it.
 
 			Because we carefully wait to populate the values of `loadedAssets` until we're actually **in** the callback, we can just do a size comparison to determine if all of the loaded images are there.
 		*/
 
-		if( _.size( me.static_vals.image_data_list ) == _.size( me.static_vals.raw_image_list ) ) {
-			console.log( 'preprocessed:', _.size(  _.filter( me.static_vals.assets_meta, (val)=> (val.preprocessed == true) ) ) );
+		const raw_image_list___size = _.size( me.static_vals.raw_image_list );
+		const image_data_list___size = _.size( me.static_vals.image_data_list );
+		const preprocessed_image_list___size =  _.size(  _.filter( me.static_vals.assets_meta, (val)=> (val.preprocessed == true) ) );
 
-			if( _.size(  _.filter( me.static_vals.assets_meta, (val)=> (val.preprocessed == true) ) )
+
+		set_loaded_fraction( (image_data_list___size + preprocessed_image_list___size) / (raw_image_list___size * 2) );
+
+		if( image_data_list___size == raw_image_list___size) {
+			console.log( 'preprocessed:', preprocessed_image_list___size);
+
+			if( preprocessed_image_list___size
 				==
-				_.size( me.static_vals.raw_image_list )
+				raw_image_list___size
 			){
 				do_once_app_ready();
 			}
@@ -266,6 +282,7 @@ export const Asset_Manager_ƒ = {
 		temp_image: HTMLImageElement,
 		image_name: string,
 		do_once_app_ready: ()=>void,
+		set_loaded_fraction: Dispatch<SetStateAction<number>>,
 	): void => {
 
 		const osb = document.createElement('canvas');
@@ -321,7 +338,7 @@ export const Asset_Manager_ƒ = {
 					...me.static_vals.assets_meta[ image_name ],
 					preprocessed: true,
 				}
-				Asset_Manager_ƒ.launch_if_all_assets_are_loaded(me, do_once_app_ready);
+				Asset_Manager_ƒ.launch_if_all_assets_are_loaded(me, do_once_app_ready, set_loaded_fraction);
 
 			}
 		})
