@@ -114,53 +114,69 @@ export const Primary_View = () => {
 					>
 						{is_edit_mode ? 'Toggle to Game' : 'Toggle to Editor'}
 					</button>
-					<div
-						className="master_flex_wrapper"
-					>
-						{
-							is_edit_mode
-							?
-							<Editor_View
-								assets_loaded={assets_loaded}
-								context_connected={context_connected}
-								dimensions={default_canvas_size}
-								_Asset_Manager={() => (_Asset_Manager)}
-								_Blit_Manager={get_Blit_Manager}
-								set_Blit_Manager={set_Blit_Manager}
-								_Tilemap_Manager={get_Tilemap_Manager}
-								set_Tilemap_Manager={set_Tilemap_Manager}
-								connect_context_to_blit_manager={connect_context_to_blit_manager}
-							/>
-							:
-							<Game_View
-								assets_loaded={assets_loaded}
-								context_connected={context_connected}
-								dimensions={default_canvas_size}
-								_Asset_Manager={() => (_Asset_Manager)}
-								_Blit_Manager={get_Blit_Manager}
-								set_Blit_Manager={set_Blit_Manager}
-								_Tilemap_Manager={get_Tilemap_Manager}
-								set_Tilemap_Manager={set_Tilemap_Manager}
-								get_Game_Manager_Data={get_Game_Manager_Data}
-								set_Game_Manager_Data={set_Game_Manager_Data}
-								game_manager_loaded={game_manager_loaded}
-							
-								connect_context_to_blit_manager={connect_context_to_blit_manager}
-							/>
-						}
-						<div className="instructional_text">
+					<>{
+						assets_loaded
+						?
+						<div
+							className="master_flex_wrapper"
+						>
 							{
 								is_edit_mode
 								?
-								<>Press <strong>Arrow Keys</strong> to scroll the map.<br/>
-								Select tiles from the sidebar to place them on the map.</>
+								<Editor_View
+									assets_loaded={assets_loaded}
+									context_connected={context_connected}
+									dimensions={default_canvas_size}
+									_Asset_Manager={() => (_Asset_Manager)}
+									_Blit_Manager={get_Blit_Manager}
+									set_Blit_Manager={set_Blit_Manager}
+									_Tilemap_Manager={get_Tilemap_Manager}
+									set_Tilemap_Manager={set_Tilemap_Manager}
+									connect_context_to_blit_manager={connect_context_to_blit_manager}
+								/>
 								:
-								<>Press <strong>Arrow Keys</strong> to scroll the map.<br/>
-								Select units by clicking on them.<br/>Select a destination for those units by clicking on the destination tile, or click back on the original tile to cancel a move.<br/>
-								Once all units have orders, click <strong>Next Turn</strong>.</>
+								<Game_View
+									assets_loaded={assets_loaded}
+									context_connected={context_connected}
+									dimensions={default_canvas_size}
+									_Asset_Manager={() => (_Asset_Manager)}
+									_Blit_Manager={get_Blit_Manager}
+									set_Blit_Manager={set_Blit_Manager}
+									_Tilemap_Manager={get_Tilemap_Manager}
+									set_Tilemap_Manager={set_Tilemap_Manager}
+									get_Game_Manager_Data={get_Game_Manager_Data}
+									set_Game_Manager_Data={set_Game_Manager_Data}
+									game_manager_loaded={game_manager_loaded}
+								
+									connect_context_to_blit_manager={connect_context_to_blit_manager}
+								/>
 							}
+							<div className="instructional_text">
+								{
+									is_edit_mode
+									?
+									<>Press <strong>Arrow Keys</strong> to scroll the map.<br/>
+									Select tiles from the sidebar to place them on the map.</>
+									:
+									<>Press <strong>Arrow Keys</strong> to scroll the map.<br/>
+									Select units by clicking on them.<br/>Select a destination for those units by clicking on the destination tile, or click back on the original tile to cancel a move.<br/>
+									Once all units have orders, click <strong>Next Turn</strong>.</>
+								}
+							</div>
 						</div>
-					</div>
+						:
+						<div
+							className="master_flex_wrapper"
+						>
+							<div className="loading_node">
+								<div className="canvas_holder">
+									<div className="loading_screen">
+										Loading...
+									</div>
+								</div>
+							</div>
+						</div>
+					}</>
 				</>
 			}
 		</div>

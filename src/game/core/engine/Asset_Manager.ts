@@ -33,6 +33,7 @@ interface AssetsMetaDict {
 }
 
 interface AssetsMetaSpritesheetItem {
+	preprocessed: boolean,
 	dim: {
 		w: number,
 		h: number,
@@ -41,6 +42,7 @@ interface AssetsMetaSpritesheetItem {
 }
 
 interface AssetsMetaSingleImageData {
+	preprocessed: boolean,
 	dim: {
 		w: number,
 		h: number,
@@ -217,12 +219,12 @@ export const Asset_Manager_ƒ = {
 						h: temp_image.naturalHeight
 					},
 					bounds: value.bounds,
+					preprocessed: false,
 				};
 
-				/*me.static_vals.raw_image_list[ value.name ].src =*/ Asset_Manager_ƒ.apply_magic_color_transparency(temp_image);
+				Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, value.name, do_once_app_ready );
 
 				temp_image.onload = null;
-				Asset_Manager_ƒ.launch_if_all_assets_are_loaded(me, do_once_app_ready);
 			};
 		});
 	},
@@ -235,7 +237,14 @@ export const Asset_Manager_ƒ = {
 		*/
 
 		if( _.size( me.static_vals.image_data_list ) == _.size( me.static_vals.raw_image_list ) ) {
-			do_once_app_ready();
+			console.log( 'preprocessed:', _.size(  _.filter( me.static_vals.assets_meta, (val)=> (val.preprocessed == true) ) ) );
+
+			if( _.size(  _.filter( me.static_vals.assets_meta, (val)=> (val.preprocessed == true) ) )
+				==
+				_.size( me.static_vals.raw_image_list )
+			){
+				do_once_app_ready();
+			}
 		}
 	},
 
@@ -252,7 +261,12 @@ export const Asset_Manager_ƒ = {
 	},
 
 
-	apply_magic_color_transparency: (temp_image: HTMLImageElement): void => {
+	apply_magic_color_transparency: (
+		me: Asset_Manager_Data,
+		temp_image: HTMLImageElement,
+		image_name: string,
+		do_once_app_ready: ()=>void,
+	): void => {
 
 		const osb = document.createElement('canvas');
 		osb.width = temp_image.naturalWidth;
@@ -302,7 +316,13 @@ export const Asset_Manager_ƒ = {
 				};
 			
 				temp_image.src = url;
-				console.warn('processing')
+
+				me.static_vals.assets_meta[ image_name ] = {
+					...me.static_vals.assets_meta[ image_name ],
+					preprocessed: true,
+				}
+				Asset_Manager_ƒ.launch_if_all_assets_are_loaded(me, do_once_app_ready);
+
 			}
 		})
 

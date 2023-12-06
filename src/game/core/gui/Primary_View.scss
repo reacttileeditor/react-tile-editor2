@@ -51,10 +51,31 @@ body {
 	.master_flex_wrapper {
 		padding-top: 2rem;
 		
-		.editor_node, .game_node {
+		.editor_node, .game_node, .loading_node {
 			display: flex;
 			flex-flow: row nowrap;
 			justify-content: space-between;
+		}
+
+		.loading_node {
+			.canvas_holder {
+				.loading_screen {
+					background: black;
+					color: white;
+					font-size: 1.5rem;
+					font-weight: bold;
+					display: flex;
+					flex-flow: row nowrap;
+					justify-content: center;
+					align-items: center;
+
+					box-shadow: darkslategrey 0px 4px 8px;
+					image-rendering: pixelated;
+					image-rendering: crisp-edges;
+					width: calc(567px * 2);
+					height: calc(325px * 2);					
+				}
+			}
 		}
 
 		.game_node {
