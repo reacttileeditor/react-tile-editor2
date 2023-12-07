@@ -173,7 +173,10 @@ export const Primary_View = () => {
 							<div className="loading_node">
 								<div className="canvas_holder">
 									<div className="loading_screen">
-										{`Loading...  ${Math.round(loaded_fraction * 100)}%`} 
+										<div>{`Loading...  ${Math.round(loaded_fraction * 100)}%`}</div>
+										<div className="loading_bar">
+											<div className="loading_bar_fill" style={{width: `${Math.min(Math.round(loaded_fraction * 100), 100)}%`}} />
+										</div>
 									</div>
 								</div>
 							</div>
