@@ -10,7 +10,7 @@ import { Blit_Manager_Data, ticks_to_ms } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager";
 
-import "./Game_Info_Modal.scss";
+import "./Announcement_Modal.scss";
 
 import Foot_Icon from '../../../assets/feet-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game_Manager } from "../engine/Game_Manager";
@@ -31,7 +31,7 @@ interface Game_Status_Display_Props {
 }
 
 
-export const Game_Info_Modal = (props: {
+export const Announcement_Modal = (props: {
 	get_Game_Manager_Data: () => Game_Manager_Data,
 	announcement_modal_hidden: boolean,	
 	set_announcement_modal_hidden: Dispatch<SetStateAction<boolean>>,

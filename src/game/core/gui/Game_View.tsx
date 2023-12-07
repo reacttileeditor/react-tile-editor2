@@ -76,7 +76,7 @@ import Foot_Icon from '../../../assets/feet-icon.png';
 import Distance_Icon from '../../../assets/distance-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, Game_and_Tilemap_Manager_Data, New_Game_Manager } from "../engine/Game_Manager";
 import { Game_Status_Display } from "./Game_Status_Display";
-import { Game_Info_Modal } from "./Game_Info_Modal";
+import { Announcement_Modal } from "./Announcement_Modal";
 
 
 export const Tooltip_Manager = (props: {
@@ -176,7 +176,7 @@ export const Game_View = (props: Game_View_Props) => {
 			_Tilemap_Manager={props._Tilemap_Manager}
 			render_ticktock={render_ticktock}
 		/>
-		<Game_Info_Modal
+		<Announcement_Modal
 			announcement_modal_hidden={announcement_modal_hidden}
 			set_announcement_modal_hidden={set_announcement_modal_hidden}
 			get_Game_Manager_Data={props.get_Game_Manager_Data}
