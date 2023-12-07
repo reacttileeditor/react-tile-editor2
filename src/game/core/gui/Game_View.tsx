@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumber, last, map, reduce, size, uniq } from "lodash";
 
@@ -31,6 +31,8 @@ interface Game_View_Props {
 	game_manager_loaded: boolean,
 	connect_context_to_blit_manager: (ctx: CanvasRenderingContext2D) => void,
 	dimensions: Point2D,
+	is_edit_mode: boolean,	
+	set_is_edit_mode: Dispatch<SetStateAction<boolean>>,
 }
 
 
@@ -158,38 +160,47 @@ export const Game_View = (props: Game_View_Props) => {
 	}
 
 
-	return <div className="game_node">
-		<Canvas_View
-			assets_loaded={props.assets_loaded}
-			connect_context_to_blit_manager={props.connect_context_to_blit_manager}
-			_Tilemap_Manager={props._Tilemap_Manager()}
-			dimensions={props.dimensions}
-			handle_canvas_click={handle_canvas_mouse_click}
-			handle_canvas_keys_down={ ()=>{ /*console.log('game_keydown')*/} }
-			handle_canvas_mouse_move={handle_canvas_mouse_move}
-		/>
-		<Tooltip_Manager
-			announcement_modal_hidden={announcement_modal_hidden}
-			get_Game_Manager_Data={props.get_Game_Manager_Data}
-			_Asset_Manager={props._Asset_Manager}
-			_Blit_Manager={props._Blit_Manager}
-			_Tilemap_Manager={props._Tilemap_Manager}
-			render_ticktock={render_ticktock}
-		/>
-		<Announcement_Modal
-			announcement_modal_hidden={announcement_modal_hidden}
-			set_announcement_modal_hidden={set_announcement_modal_hidden}
-			get_Game_Manager_Data={props.get_Game_Manager_Data}
-		/>
-		<Game_Status_Display
-			set_announcement_modal_hidden={set_announcement_modal_hidden}
-			get_Game_Manager_Data={props.get_Game_Manager_Data}
-			set_Game_Manager_Data={props.set_Game_Manager_Data}
-			_Asset_Manager={props._Asset_Manager}
-			_Blit_Manager={props._Blit_Manager}
-			_Tilemap_Manager={props._Tilemap_Manager}
-			set_Tilemap_Manager={props.set_Tilemap_Manager}
-		/>
+	return <div className="game_screen">
+		<div className="toolbar">
+			<button
+				onClick={ () => { props.set_is_edit_mode( !props.is_edit_mode ); } }
+			>
+				{'Toggle to Editor'}
+			</button>
+		</div>
+		<div className="game_node">
+			<Canvas_View
+				assets_loaded={props.assets_loaded}
+				connect_context_to_blit_manager={props.connect_context_to_blit_manager}
+				_Tilemap_Manager={props._Tilemap_Manager()}
+				dimensions={props.dimensions}
+				handle_canvas_click={handle_canvas_mouse_click}
+				handle_canvas_keys_down={ ()=>{ /*console.log('game_keydown')*/} }
+				handle_canvas_mouse_move={handle_canvas_mouse_move}
+			/>
+			<Tooltip_Manager
+				announcement_modal_hidden={announcement_modal_hidden}
+				get_Game_Manager_Data={props.get_Game_Manager_Data}
+				_Asset_Manager={props._Asset_Manager}
+				_Blit_Manager={props._Blit_Manager}
+				_Tilemap_Manager={props._Tilemap_Manager}
+				render_ticktock={render_ticktock}
+			/>
+			<Announcement_Modal
+				announcement_modal_hidden={announcement_modal_hidden}
+				set_announcement_modal_hidden={set_announcement_modal_hidden}
+				get_Game_Manager_Data={props.get_Game_Manager_Data}
+			/>
+			<Game_Status_Display
+				set_announcement_modal_hidden={set_announcement_modal_hidden}
+				get_Game_Manager_Data={props.get_Game_Manager_Data}
+				set_Game_Manager_Data={props.set_Game_Manager_Data}
+				_Asset_Manager={props._Asset_Manager}
+				_Blit_Manager={props._Blit_Manager}
+				_Tilemap_Manager={props._Tilemap_Manager}
+				set_Tilemap_Manager={props.set_Tilemap_Manager}
+			/>
+		</div>
 	</div>;
 
 }

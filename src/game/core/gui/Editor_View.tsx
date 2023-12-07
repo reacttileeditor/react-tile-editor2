@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
 
@@ -24,6 +24,8 @@ interface Editor_View_Props {
 	context_connected:  boolean,
 	connect_context_to_blit_manager: (ctx: CanvasRenderingContext2D) => void,
 	dimensions: Point2D,
+	is_edit_mode: boolean,	
+	set_is_edit_mode: Dispatch<SetStateAction<boolean>>,
 }
 
 
@@ -177,31 +179,40 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 
 
-	return <div className="editor_node">
-		<Canvas_View
-			assets_loaded={props.assets_loaded}
-			connect_context_to_blit_manager={props.connect_context_to_blit_manager}
-			_Tilemap_Manager={props._Tilemap_Manager()}
-			dimensions={props.dimensions}
-			handle_canvas_click={handle_canvas_click}
-			handle_canvas_keys_down={handle_canvas_keys_down}
-			handle_canvas_mouse_move={handle_canvas_mouse_move}
-		/>
-		<div className="tile_palette">
-		{
-			props.assets_loaded
-			&&
-			Asset_Manager_ƒ.yield_tile_name_list(props._Asset_Manager()).map( (value, index) => {
-				return	<Tile_Palette_Element
-							asset_manager={props._Asset_Manager()}
-							tile_name={value}
-							asset_name={''}
-							key={value}
-							highlight={ selected_tile_type == value }
-							handle_click={ () => set_selected_tile_type( value ) }
-						/>
-			})
-		}
+	return <div className="editor_screen">
+		<div className="toolbar">
+			<button
+				onClick={ () => { props.set_is_edit_mode( !props.is_edit_mode ); } }
+			>
+				{'Toggle to Game'}
+			</button>
+		</div>
+		<div className="editor_node">
+			<Canvas_View
+				assets_loaded={props.assets_loaded}
+				connect_context_to_blit_manager={props.connect_context_to_blit_manager}
+				_Tilemap_Manager={props._Tilemap_Manager()}
+				dimensions={props.dimensions}
+				handle_canvas_click={handle_canvas_click}
+				handle_canvas_keys_down={handle_canvas_keys_down}
+				handle_canvas_mouse_move={handle_canvas_mouse_move}
+			/>
+			<div className="tile_palette">
+			{
+				props.assets_loaded
+				&&
+				Asset_Manager_ƒ.yield_tile_name_list(props._Asset_Manager()).map( (value, index) => {
+					return	<Tile_Palette_Element
+								asset_manager={props._Asset_Manager()}
+								tile_name={value}
+								asset_name={''}
+								key={value}
+								highlight={ selected_tile_type == value }
+								handle_click={ () => set_selected_tile_type( value ) }
+							/>
+				})
+			}
+			</div>
 		</div>
 	</div>;
 }

@@ -111,11 +111,6 @@ export const Primary_View = () => {
 		>
 			{
 				<>
-					<button
-						onClick={ () => { set_is_edit_mode( !is_edit_mode ); } }
-					>
-						{is_edit_mode ? 'Toggle to Game' : 'Toggle to Editor'}
-					</button>
 					<>{
 						assets_loaded
 						?
@@ -126,6 +121,8 @@ export const Primary_View = () => {
 								is_edit_mode
 								?
 								<Editor_View
+									is_edit_mode={is_edit_mode}
+									set_is_edit_mode={set_is_edit_mode}
 									assets_loaded={assets_loaded}
 									context_connected={context_connected}
 									dimensions={default_canvas_size}
@@ -138,6 +135,8 @@ export const Primary_View = () => {
 								/>
 								:
 								<Game_View
+									is_edit_mode={is_edit_mode}
+									set_is_edit_mode={set_is_edit_mode}
 									assets_loaded={assets_loaded}
 									context_connected={context_connected}
 									dimensions={default_canvas_size}
@@ -170,12 +169,15 @@ export const Primary_View = () => {
 						<div
 							className="master_flex_wrapper"
 						>
-							<div className="loading_node">
-								<div className="canvas_holder">
-									<div className="loading_screen">
-										<div>{`Loading...  ${Math.round(loaded_fraction * 100)}%`}</div>
-										<div className="loading_bar">
-											<div className="loading_bar_fill" style={{width: `${Math.min(Math.round(loaded_fraction * 100), 100)}%`}} />
+							<div className="loading_screen">
+								<div className="toolbar" />
+								<div className="loading_node">
+									<div className="canvas_holder">
+										<div className="loading_screen">
+											<div>{`Loading...  ${Math.round(loaded_fraction * 100)}%`}</div>
+											<div className="loading_bar">
+												<div className="loading_bar_fill" style={{width: `${Math.min(Math.round(loaded_fraction * 100), 100)}%`}} />
+											</div>
 										</div>
 									</div>
 								</div>

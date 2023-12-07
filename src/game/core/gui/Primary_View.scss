@@ -51,6 +51,22 @@ body {
 	.master_flex_wrapper {
 		padding-top: 2rem;
 		
+		.editor_screen, .game_screen, .loading_screen {
+			.toolbar {
+				@include stone-border;
+				@include stone-bg;
+
+				display: flex;
+				flex-flow: row nowrap;
+				justify-content: flex-start;
+				align-items: center;
+				
+				min-height: 3rem;
+				margin-bottom: 1rem;
+				padding-left: 1rem;
+			}			
+		}
+
 		.editor_node, .game_node, .loading_node {
 			display: flex;
 			flex-flow: row nowrap;
