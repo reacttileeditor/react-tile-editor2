@@ -10,6 +10,7 @@ import { ƒ } from "./Utils";
 
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
+import localforage from "localforage";
 
 type TileViewState = {
 	tile_maps: TileMaps,
@@ -102,17 +103,39 @@ export const Tilemap_Manager_ƒ = {
 	}),
 
 /*----------------------- file writing -----------------------*/
-	load_level: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
-		return {
-			tile_maps: {
-				terrain: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
-				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
-			},
-			cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
-			cache_of_image_lists: _.cloneDeep({}),
-			initialized: true,
-		}
+	load_level: (
+		me: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void
+	): void => {
+		let level_data: TileMaps = {
+			terrain: [['']],
+			ui: [['']],
+		};
+
+		localforage.getItem<TileMaps>('level').then((value) => {
+			if(value != null){
+				level_data = value;
+			}
+
+			set_Tilemap_Manager( {
+				tile_maps: level_data,
+				cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
+				cache_of_image_lists: _.cloneDeep({}),
+				initialized: true,
+			})
+		}).catch((value) => {
+			set_Tilemap_Manager(me);			
+		});
+
+
 	},
+
+	save_level: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): void => {
+		localforage.setItem('level', me.tile_maps)
+	},
+
+
 
 
 

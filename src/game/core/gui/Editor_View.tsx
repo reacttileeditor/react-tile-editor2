@@ -187,15 +187,15 @@ export const Editor_View = (props: Editor_View_Props) => {
 				{'Toggle to Game'}
 			</button>
 			<button
-				onClick={ () => {  } }
+				onClick={ () => {  
+					Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager())
+				} }
 			>
 				{'Save'}
 			</button>
 			<button
 				onClick={ () => { 
-					props.set_Tilemap_Manager(
-						Tilemap_Manager_ƒ.load_level(props._Tilemap_Manager(), props._Asset_Manager())
-					);		
+					Tilemap_Manager_ƒ.load_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager)
 				} }
 			>
 				{'Load'}

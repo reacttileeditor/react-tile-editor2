@@ -13,6 +13,7 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@types/uuid": "^3.4.7",
+    "localforage": "^1.10.0",
     "lodash": "^4.17.11",
     "prando": "^4.0.0",
     "ramda": "^0.29.1",
