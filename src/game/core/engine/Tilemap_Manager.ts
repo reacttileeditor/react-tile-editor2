@@ -101,6 +101,22 @@ export const Tilemap_Manager_ƒ = {
 		cache_of_image_lists: _.cloneDeep({}),
 	}),
 
+/*----------------------- file writing -----------------------*/
+	load_level: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
+		return {
+			tile_maps: {
+				terrain: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
+				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
+			},
+			cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
+			cache_of_image_lists: _.cloneDeep({}),
+			initialized: true,
+		}
+	},
+
+
+
+
 /*----------------------- state mutation -----------------------*/
 	modify_tile_status: (
 		me: Tilemap_Manager_Data,

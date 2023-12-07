@@ -186,6 +186,20 @@ export const Editor_View = (props: Editor_View_Props) => {
 			>
 				{'Toggle to Game'}
 			</button>
+			<button
+				onClick={ () => {  } }
+			>
+				{'Save'}
+			</button>
+			<button
+				onClick={ () => { 
+					props.set_Tilemap_Manager(
+						Tilemap_Manager_ƒ.load_level(props._Tilemap_Manager(), props._Asset_Manager())
+					);		
+				} }
+			>
+				{'Load'}
+			</button>
 		</div>
 		<div className="editor_node">
 			<Canvas_View
