@@ -83,11 +83,12 @@ export const Tooltip_Manager = (props: {
 	get_Game_Manager_Data: () => Game_Manager_Data,
 	_Asset_Manager: () => Asset_Manager_Data,
 	_Blit_Manager: () => Blit_Manager_Data,
-	_Tilemap_Manager: () => Tilemap_Manager_Data
-	render_ticktock: boolean
+	_Tilemap_Manager: () => Tilemap_Manager_Data,
+	render_ticktock: boolean,
+	announcement_modal_hidden: boolean,
 }) => {
 
-	return <div className={`map-tooltip-anchor`}>
+	return <div className={`map-tooltip-anchor`} style={{display: `${props.announcement_modal_hidden ? 'block' : 'none'}`}}>
 		{
 			props.get_Game_Manager_Data() != undefined
 			&&
@@ -168,6 +169,7 @@ export const Game_View = (props: Game_View_Props) => {
 			handle_canvas_mouse_move={handle_canvas_mouse_move}
 		/>
 		<Tooltip_Manager
+			announcement_modal_hidden={announcement_modal_hidden}
 			get_Game_Manager_Data={props.get_Game_Manager_Data}
 			_Asset_Manager={props._Asset_Manager}
 			_Blit_Manager={props._Blit_Manager}
