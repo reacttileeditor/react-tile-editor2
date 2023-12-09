@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
 import _, { Dictionary, cloneDeep, isArray } from "lodash";
 
@@ -11,6 +11,7 @@ import { ƒ } from "./Utils";
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import localforage from "localforage";
+import { concat, uniq } from "ramda";
 
 type TileViewState = {
 	tile_maps: TileMaps,
@@ -44,6 +45,7 @@ export type Direction =
 	'north_west' |
 	'west' |
 	'south_west';
+
 
 
 const tile_comparator_cache_init = {
@@ -125,17 +127,34 @@ export const Tilemap_Manager_ƒ = {
 				initialized: true,
 			})
 		}).catch((value) => {
+			throw("couldn't load level")
 			set_Tilemap_Manager(me);			
 		});
 
 
 	},
 
-	save_level: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): void => {
-		localforage.setItem('level', me.tile_maps)
+	save_level: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, level_name: string, level_name_list: Array<string>): void => {
+		if(level_name == 'level_names'){
+			throw("if you're reading this, we should put in validation on the input field.")
+		} else {
+			localforage.setItem(level_name, me.tile_maps);
+			localforage.setItem("level_names", uniq(concat(level_name_list, [level_name])));
+		}
 	},
 
-
+	load_levelname_list: (
+		set_level_filename_list: Dispatch<SetStateAction<Array<string>>>,
+	): void => {
+		localforage.getItem<Array<string>>('level_names').then((value) => {
+			if(value != null){
+				set_level_filename_list(value);
+			}
+		
+		}).catch((value) => {
+			throw("couldn't load level list")
+		});
+	},
 
 
 

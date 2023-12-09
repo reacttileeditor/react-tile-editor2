@@ -12,7 +12,7 @@ import "./Primary_View.scss";
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { useInterval } from "../engine/Utils";
-import { Button, Modal } from "rsuite";
+import { Button, List, Modal } from "rsuite";
 
 
 interface Editor_View_Props {
@@ -41,7 +41,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [render_tick, set_render_tick] = useState<number>(0);
 
 	const [show_load_dialog, set_show_load_dialog] = useState<boolean>(false);
-
+	const [level_filename_list, set_level_filename_list] = useState<Array<string>>([]);
 
 	useEffect(() => {
 		if(render_tick > 0){
@@ -191,7 +191,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			</button>
 			<button
 				onClick={ () => {  
-					Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager())
+					Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager(), 'level', level_filename_list);
 				} }
 			>
 				{'Save'}
@@ -205,7 +205,8 @@ export const Editor_View = (props: Editor_View_Props) => {
 			</button>
 			<button
 				onClick={ () => { 
-					set_show_load_dialog(true)
+					set_show_load_dialog(true);
+					Tilemap_Manager_ƒ.load_levelname_list(set_level_filename_list);
 				} }
 			>
 				{'Load...'}
@@ -217,6 +218,18 @@ export const Editor_View = (props: Editor_View_Props) => {
 				onClose={()=>set_show_load_dialog(false)}
 			>
 				<div>Select level to load:</div>
+				<List>
+				{
+					_.map(level_filename_list, (val, idx)=>(
+						<List.Item
+							key={idx}
+						>
+							{val}
+						</List.Item>
+					))
+
+				}
+				</List>
 				<Button onClick={ () => { 
 					Tilemap_Manager_ƒ.load_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager)
 				} }>Load</Button>
