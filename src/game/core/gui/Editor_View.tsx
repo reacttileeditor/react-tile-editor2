@@ -12,7 +12,7 @@ import "./Primary_View.scss";
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { useInterval } from "../engine/Utils";
-import { Button, List, Modal } from "rsuite";
+import { Button, Input, List, Modal } from "rsuite";
 import { Icon, Page } from "@rsuite/icons";
 
 
@@ -42,6 +42,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [render_tick, set_render_tick] = useState<number>(0);
 
 	const [show_load_dialog, set_show_load_dialog] = useState<boolean>(false);
+	const [show_save_dialog, set_show_save_dialog] = useState<boolean>(false);
 	const [level_filename_list, set_level_filename_list] = useState<Array<string>>([]);
 
 	useEffect(() => {
@@ -199,6 +200,14 @@ export const Editor_View = (props: Editor_View_Props) => {
 			</button>
 			<button
 				onClick={ () => { 
+					set_show_save_dialog(true);
+					Tilemap_Manager_ƒ.load_levelname_list(set_level_filename_list);
+				} }
+			>
+				{'Save As...'}
+			</button>
+			<button
+				onClick={ () => { 
 					set_show_load_dialog(true);
 					Tilemap_Manager_ƒ.load_levelname_list(set_level_filename_list);
 				} }
@@ -219,6 +228,14 @@ export const Editor_View = (props: Editor_View_Props) => {
 			<Load_File_Modal
 				show_load_dialog={show_load_dialog}
 				set_show_load_dialog={set_show_load_dialog}
+				level_filename_list={level_filename_list}
+				_Asset_Manager={props._Asset_Manager}
+				_Tilemap_Manager={props._Tilemap_Manager}
+				set_Tilemap_Manager={props.set_Tilemap_Manager}
+			/>
+			<Save_File_Modal
+				show_save_dialog={show_save_dialog}
+				set_show_save_dialog={set_show_save_dialog}
 				level_filename_list={level_filename_list}
 				_Asset_Manager={props._Asset_Manager}
 				_Tilemap_Manager={props._Tilemap_Manager}
@@ -287,9 +304,56 @@ export const Load_File_Modal = (props: {
 		<Button
 			disabled={selected_file == ''}
 			onClick={ () => { 
-				Tilemap_Manager_ƒ.load_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, selected_file)
+				Tilemap_Manager_ƒ.load_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, selected_file);
+				props.set_show_load_dialog(false);
 			}}
 		>Load</Button>
+	</Modal>
+}
+
+export const Save_File_Modal = (props: {
+	show_save_dialog: boolean,
+	set_show_save_dialog: Dispatch<SetStateAction<boolean>>,
+	level_filename_list: Array<string>,
+	_Asset_Manager: () => Asset_Manager_Data,
+	_Tilemap_Manager: () => Tilemap_Manager_Data,
+	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
+}) => {
+	const [selected_file, set_selected_file] = useState<string>('');
+
+	return <Modal
+		open={props.show_save_dialog}
+		onClose={()=>props.set_show_save_dialog(false)}
+	>
+		<div>Existing Levels:</div>
+		<List
+			hover
+		>
+		{
+			_.map(props.level_filename_list, (val, idx)=>(
+				<List.Item
+					key={idx}
+					onClick={()=>{set_selected_file(val)}}
+				>
+					<Icon as={Page}/>{val}
+				</List.Item>
+			))
+
+		}
+		</List>
+		<label>File Name:</label>
+   		<Input
+			value={selected_file}
+			onChange={(value: string, event) => { set_selected_file(value) }}		
+		/>
+
+		<Button
+			disabled={selected_file == ''}
+			onClick={ () => { 
+				Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager(), selected_file, props.level_filename_list)
+				props.set_show_save_dialog(false)
+			}}
+		>Save</Button>
 	</Modal>
 }
 
