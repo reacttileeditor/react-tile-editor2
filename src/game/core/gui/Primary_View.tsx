@@ -12,6 +12,7 @@ import { Editor_View } from "./Editor_View";
 import { Point2D, Rectangle } from '../../interfaces';
 
 import "./Primary_View.scss";
+import 'rsuite/dist/rsuite-no-reset.min.css';
 import { Game_Manager_Data, New_Game_Manager } from "../engine/Game_Manager";
 
 interface Props {

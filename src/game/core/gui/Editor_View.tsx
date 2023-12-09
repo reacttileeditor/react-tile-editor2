@@ -12,6 +12,7 @@ import "./Primary_View.scss";
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { useInterval } from "../engine/Utils";
+import { Button, Modal } from "rsuite";
 
 
 interface Editor_View_Props {
@@ -38,6 +39,8 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [selected_tile_type, set_selected_tile_type] = useState<string>('');
 	const [cursor_pos, set_cursor_pos] = useState<Point2D>({ x: 0, y: 0 });
 	const [render_tick, set_render_tick] = useState<number>(0);
+
+	const [show_load_dialog, set_show_load_dialog] = useState<boolean>(false);
 
 
 	useEffect(() => {
@@ -200,8 +203,24 @@ export const Editor_View = (props: Editor_View_Props) => {
 			>
 				{'Load'}
 			</button>
+			<button
+				onClick={ () => { 
+					set_show_load_dialog(true)
+				} }
+			>
+				{'Load...'}
+			</button>
 		</div>
 		<div className="editor_node">
+			<Modal
+				open={show_load_dialog}
+				onClose={()=>set_show_load_dialog(false)}
+			>
+				<div>Select level to load:</div>
+				<Button onClick={ () => { 
+					Tilemap_Manager_ƒ.load_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager)
+				} }>Load</Button>
+			</Modal>
 			<Canvas_View
 				assets_loaded={props.assets_loaded}
 				connect_context_to_blit_manager={props.connect_context_to_blit_manager}
