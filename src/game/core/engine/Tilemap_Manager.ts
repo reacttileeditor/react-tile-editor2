@@ -12,6 +12,7 @@ import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Mana
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import localforage from "localforage";
 import { concat, uniq } from "ramda";
+import { Page } from '@rsuite/icons';
 
 type TileViewState = {
 	tile_maps: TileMaps,
@@ -108,14 +109,15 @@ export const Tilemap_Manager_ƒ = {
 	load_level: (
 		me: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
-		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void
+		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
+		level_name: string,
 	): void => {
 		let level_data: TileMaps = {
 			terrain: [['']],
 			ui: [['']],
 		};
 
-		localforage.getItem<TileMaps>('level').then((value) => {
+		localforage.getItem<TileMaps>(level_name).then((value) => {
 			if(value != null){
 				level_data = value;
 			}

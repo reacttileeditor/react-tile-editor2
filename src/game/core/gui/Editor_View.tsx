@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import _ from "lodash";
+import _, { isString } from "lodash";
 
 import { Canvas_View, MouseButtonState } from "./Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager";
@@ -13,6 +13,7 @@ import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { useInterval } from "../engine/Utils";
 import { Button, List, Modal } from "rsuite";
+import { Icon, Page } from "@rsuite/icons";
 
 
 interface Editor_View_Props {
@@ -198,42 +199,31 @@ export const Editor_View = (props: Editor_View_Props) => {
 			</button>
 			<button
 				onClick={ () => { 
-					Tilemap_Manager_ƒ.load_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager)
-				} }
-			>
-				{'Load'}
-			</button>
-			<button
-				onClick={ () => { 
 					set_show_load_dialog(true);
 					Tilemap_Manager_ƒ.load_levelname_list(set_level_filename_list);
 				} }
 			>
 				{'Load...'}
 			</button>
+			<button
+				onClick={ () => {
+					props.set_Tilemap_Manager(
+						Tilemap_Manager_ƒ.initialize_tiles(props._Tilemap_Manager(), props._Asset_Manager())
+					);
+				} }
+			>
+				{'Generate Map'}
+			</button>
 		</div>
 		<div className="editor_node">
-			<Modal
-				open={show_load_dialog}
-				onClose={()=>set_show_load_dialog(false)}
-			>
-				<div>Select level to load:</div>
-				<List>
-				{
-					_.map(level_filename_list, (val, idx)=>(
-						<List.Item
-							key={idx}
-						>
-							{val}
-						</List.Item>
-					))
-
-				}
-				</List>
-				<Button onClick={ () => { 
-					Tilemap_Manager_ƒ.load_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager)
-				} }>Load</Button>
-			</Modal>
+			<Load_File_Modal
+				show_load_dialog={show_load_dialog}
+				set_show_load_dialog={set_show_load_dialog}
+				level_filename_list={level_filename_list}
+				_Asset_Manager={props._Asset_Manager}
+				_Tilemap_Manager={props._Tilemap_Manager}
+				set_Tilemap_Manager={props.set_Tilemap_Manager}
+			/>
 			<Canvas_View
 				assets_loaded={props.assets_loaded}
 				connect_context_to_blit_manager={props.connect_context_to_blit_manager}
@@ -262,3 +252,44 @@ export const Editor_View = (props: Editor_View_Props) => {
 		</div>
 	</div>;
 }
+
+
+export const Load_File_Modal = (props: {
+	show_load_dialog: boolean,
+	set_show_load_dialog: Dispatch<SetStateAction<boolean>>,
+	level_filename_list: Array<string>,
+	_Asset_Manager: () => Asset_Manager_Data,
+	_Tilemap_Manager: () => Tilemap_Manager_Data,
+	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
+}) => {
+	const [selected_file, set_selected_file] = useState<string>('');
+
+	return <Modal
+		open={props.show_load_dialog}
+		onClose={()=>props.set_show_load_dialog(false)}
+	>
+		<div>Select level to load:</div>
+		<List
+			hover
+		>
+		{
+			_.map(props.level_filename_list, (val, idx)=>(
+				<List.Item
+					key={idx}
+					onClick={()=>{set_selected_file(val)}}
+				>
+					<Icon as={Page}/>{val}
+				</List.Item>
+			))
+
+		}
+		</List>
+		<Button
+			disabled={selected_file == ''}
+			onClick={ () => { 
+				Tilemap_Manager_ƒ.load_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, selected_file)
+			}}
+		>Load</Button>
+	</Modal>
+}
+
