@@ -1,0 +1,45 @@
+.master_node {
+	.master_flex_wrapper {
+		
+		.editor_screen {
+			.toolbar {
+
+			}
+			.editor_node {
+
+			}
+		}
+	}
+}
+
+.rs-modal-wrapper {
+	.Load_File_Modal, .Save_File_Modal {
+		.label {
+			margin-top: 1rem;
+			margin-bottom: 0.25rem;
+			color: #aaa;
+			font-weight: bold;
+		}
+
+		.rs-list-item {
+			display: flex;
+			padding-left: 1rem;
+			flex-flow: row nowrap;
+			justify-content: flex-start;
+			align-items: center;
+
+			.file-icon {
+				margin-right: 0.5rem;
+				color: #bbb;
+			}
+		}
+
+		.button-strip {
+			margin-top: 1rem;
+			display: flex;
+			flex-flow: row nowrap;
+			justify-content: flex-end;
+			gap: 1rem;
+		}
+	}
+}

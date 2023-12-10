@@ -8,12 +8,13 @@ import { Blit_Manager_Data, Blit_Manager_ƒ } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager";
 
-import "./Primary_View.scss";
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { useInterval } from "../engine/Utils";
 import { Button, Input, List, Modal } from "rsuite";
 import { Icon, Page } from "@rsuite/icons";
+
+import "./Editor_View.scss";
 
 
 interface Editor_View_Props {
@@ -284,9 +285,10 @@ export const Load_File_Modal = (props: {
 	return <Modal
 		open={props.show_load_dialog}
 		onClose={()=>props.set_show_load_dialog(false)}
-		className="yes"
+		className="Load_File_Modal"
 	>
-		<div>Select level to load:</div>
+		<h3>Load</h3>
+		<div className="label">Select level to load:</div>
 		<List
 			hover
 		>
@@ -297,19 +299,27 @@ export const Load_File_Modal = (props: {
 					onClick={()=>{set_selected_file(val)}}
 					style={ val == selected_file ? {backgroundColor: '#5684ac', color: 'white'} : {} }
 				>
-					<Icon as={Page}/>{val}
+					<Icon as={Page} className="file-icon"/>{val}
 				</List.Item>
 			))
 
 		}
 		</List>
-		<Button
-			disabled={selected_file == ''}
-			onClick={ () => { 
-				Tilemap_Manager_ƒ.load_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, selected_file);
-				props.set_show_load_dialog(false);
-			}}
-		>Load</Button>
+		<div className="button-strip">
+			<Button
+				appearance="subtle"
+				onClick={ () => { 
+					props.set_show_load_dialog(false)
+				}}
+			>Cancel</Button>
+			<Button
+				disabled={selected_file == ''}
+				onClick={ () => { 
+					Tilemap_Manager_ƒ.load_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, selected_file);
+					props.set_show_load_dialog(false);
+				}}
+			>Load</Button>
+		</div>
 	</Modal>
 }
 
@@ -326,8 +336,10 @@ export const Save_File_Modal = (props: {
 	return <Modal
 		open={props.show_save_dialog}
 		onClose={()=>props.set_show_save_dialog(false)}
+		className="Save_File_Modal"
 	>
-		<div>Existing Levels:</div>
+		<h3>Save</h3>
+		<div className="label">Existing Levels:</div>
 		<List
 			hover
 		>
@@ -336,27 +348,34 @@ export const Save_File_Modal = (props: {
 				<List.Item
 					key={idx}
 					onClick={()=>{set_selected_file(val)}}
-					style={ val == selected_file ? {backgroundColor: '#5684ac', color: 'white'} : {} }
+					style={ val == selected_file ? {backgroundColor: 'rgb(21 56 87)'} : {} }
 				>
-					<Icon as={Page}/>{val}
+					<Icon as={Page} className="file-icon"/>{val}
 				</List.Item>
 			))
 
 		}
 		</List>
-		<label>File Name:</label>
+		<div className="label">File Name:</div>
    		<Input
 			value={selected_file}
 			onChange={(value: string, event) => { set_selected_file(value) }}		
 		/>
-
-		<Button
-			disabled={selected_file == ''}
-			onClick={ () => { 
-				Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager(), selected_file, props.level_filename_list)
-				props.set_show_save_dialog(false)
-			}}
-		>Save</Button>
+		<div className="button-strip">
+			<Button
+				appearance="subtle"
+				onClick={ () => { 
+					props.set_show_save_dialog(false)
+				}}
+			>Cancel</Button>
+			<Button
+				disabled={selected_file == ''}
+				onClick={ () => { 
+					Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager(), selected_file, props.level_filename_list)
+					props.set_show_save_dialog(false)
+				}}
+			>Save</Button>
+		</div>
 	</Modal>
 }
 
