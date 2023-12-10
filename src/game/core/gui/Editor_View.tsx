@@ -284,6 +284,7 @@ export const Load_File_Modal = (props: {
 	return <Modal
 		open={props.show_load_dialog}
 		onClose={()=>props.set_show_load_dialog(false)}
+		className="yes"
 	>
 		<div>Select level to load:</div>
 		<List
@@ -294,6 +295,7 @@ export const Load_File_Modal = (props: {
 				<List.Item
 					key={idx}
 					onClick={()=>{set_selected_file(val)}}
+					style={ val == selected_file ? {backgroundColor: '#5684ac', color: 'white'} : {} }
 				>
 					<Icon as={Page}/>{val}
 				</List.Item>
@@ -334,6 +336,7 @@ export const Save_File_Modal = (props: {
 				<List.Item
 					key={idx}
 					onClick={()=>{set_selected_file(val)}}
+					style={ val == selected_file ? {backgroundColor: '#5684ac', color: 'white'} : {} }
 				>
 					<Icon as={Page}/>{val}
 				</List.Item>
