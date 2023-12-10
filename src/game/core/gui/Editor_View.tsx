@@ -187,35 +187,35 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 	return <div className="editor_screen">
 		<div className="toolbar">
-			<button
+			<Button
 				onClick={ () => { props.set_is_edit_mode( !props.is_edit_mode ); } }
 			>
 				{'Toggle to Game'}
-			</button>
-			<button
+			</Button>
+			<Button
 				onClick={ () => {  
 					Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager(), 'level', level_filename_list);
 				} }
 			>
 				{'Save'}
-			</button>
-			<button
+			</Button>
+			<Button
 				onClick={ () => { 
 					set_show_save_dialog(true);
 					Tilemap_Manager_ƒ.load_levelname_list(set_level_filename_list);
 				} }
 			>
 				{'Save As...'}
-			</button>
-			<button
+			</Button>
+			<Button
 				onClick={ () => { 
 					set_show_load_dialog(true);
 					Tilemap_Manager_ƒ.load_levelname_list(set_level_filename_list);
 				} }
 			>
 				{'Load...'}
-			</button>
-			<button
+			</Button>
+			<Button
 				onClick={ () => {
 					props.set_Tilemap_Manager(
 						Tilemap_Manager_ƒ.initialize_tiles(props._Tilemap_Manager(), props._Asset_Manager())
@@ -223,7 +223,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 				} }
 			>
 				{'Generate Map'}
-			</button>
+			</Button>
 		</div>
 		<div className="editor_node">
 			<Load_File_Modal

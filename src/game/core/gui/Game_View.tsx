@@ -79,6 +79,7 @@ import Distance_Icon from '../../../assets/distance-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, Game_and_Tilemap_Manager_Data, New_Game_Manager } from "../engine/Game_Manager";
 import { Game_Status_Display } from "./Game_Status_Display";
 import { Announcement_Modal } from "./Announcement_Modal";
+import { Button } from "rsuite";
 
 
 export const Tooltip_Manager = (props: {
@@ -162,11 +163,11 @@ export const Game_View = (props: Game_View_Props) => {
 
 	return <div className="game_screen">
 		<div className="toolbar">
-			<button
+			<Button
 				onClick={ () => { props.set_is_edit_mode( !props.is_edit_mode ); } }
 			>
 				{'Toggle to Editor'}
-			</button>
+			</Button>
 		</div>
 		<div className="game_node">
 			<Canvas_View

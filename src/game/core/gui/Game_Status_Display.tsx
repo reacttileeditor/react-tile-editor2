@@ -20,6 +20,7 @@ import { Custom_Object_Data, Custom_Object_ƒ } from "../../objects_core/Custom_
 
 import Foot_Icon from '../../../assets/feet-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game_Manager } from "../engine/Game_Manager";
+import { Button } from "rsuite";
 
 
 
@@ -70,7 +71,7 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 			<div
 				className="game_status_display"
 			>
-				<button
+				<Button
 					disabled={ _GM.animation_state.is_animating_live_game }
 					onClick={(evt)=>{
 						props.set_announcement_modal_hidden(true);
@@ -87,7 +88,7 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 					}}
 				>
 					Next Turn
-				</button>
+				</Button>
 				<Label_and_Data_Pair
 					label={'Turn #:'}
 					data={`${_GS.current_turn}`}
