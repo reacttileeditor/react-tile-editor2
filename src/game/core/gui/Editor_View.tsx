@@ -11,7 +11,7 @@ import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Mana
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { useInterval } from "../engine/Utils";
-import { Button, Input, List, Modal } from "rsuite";
+import { Button, Input, List, Modal, Tooltip, Whisper } from "rsuite";
 import { Icon, Page } from "@rsuite/icons";
 
 import "./Editor_View.scss";
@@ -192,13 +192,18 @@ export const Editor_View = (props: Editor_View_Props) => {
 			>
 				{'Toggle to Game'}
 			</Button>
-			<Button
-				onClick={ () => {  
-					Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager(), 'level', level_filename_list);
-				} }
-			>
-				{'Save'}
-			</Button>
+			<Whisper placement='top' speaker={<Tooltip>{props._Tilemap_Manager().level_name == '' ? "Can't quicksave until we know which file we'd save to.  Try 'Load…' or 'Save As…' first." : `This will save to: "${props._Tilemap_Manager().level_name}"`}</Tooltip>}>
+				<span>
+					<Button
+						disabled={props._Tilemap_Manager().level_name == ''}
+						onClick={ () => {  
+							Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, props._Tilemap_Manager().level_name, level_filename_list);
+						} }
+					>
+						{`Save`}
+					</Button>
+				</span>
+			</Whisper>
 			<Button
 				onClick={ () => { 
 					set_show_save_dialog(true);
@@ -371,7 +376,7 @@ export const Save_File_Modal = (props: {
 			<Button
 				disabled={selected_file == ''}
 				onClick={ () => { 
-					Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager(), selected_file, props.level_filename_list)
+					Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, selected_file, props.level_filename_list)
 					props.set_show_save_dialog(false)
 				}}
 			>Save</Button>

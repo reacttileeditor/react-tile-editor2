@@ -15,6 +15,7 @@ import { concat, uniq } from "ramda";
 import { Page } from '@rsuite/icons';
 
 type TileViewState = {
+	level_name: string,
 	tile_maps: TileMaps,
 	initialized: boolean,
 } & CacheData;
@@ -62,6 +63,7 @@ export type Tilemap_Manager_Data = TileViewState & CacheData;
 export const New_Tilemap_Manager = (): Tilemap_Manager_Data => {
 	
 	return {
+		level_name: '',
 		tile_maps: {
 			terrain: [['']],
 			ui: [['']],
@@ -90,6 +92,7 @@ export const Tilemap_Manager_ƒ = {
 
 
 		return {
+			level_name: me.level_name,
 			tile_maps: {
 				terrain: fresh_terrain_tilemap,
 				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
@@ -123,6 +126,7 @@ export const Tilemap_Manager_ƒ = {
 			}
 
 			set_Tilemap_Manager( {
+				level_name: level_name,
 				tile_maps: level_data,
 				cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
 				cache_of_image_lists: _.cloneDeep({}),
@@ -136,12 +140,22 @@ export const Tilemap_Manager_ƒ = {
 
 	},
 
-	save_level: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, level_name: string, level_name_list: Array<string>): void => {
+	save_level: (
+		me: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
+		level_name: string,
+		level_name_list: Array<string>
+	): void => {
 		if(level_name == 'level_names'){
 			throw("if you're reading this, we should put in validation on the input field.")
 		} else {
 			localforage.setItem(level_name, me.tile_maps);
 			localforage.setItem("level_names", uniq(concat(level_name_list, [level_name])));
+			set_Tilemap_Manager( {
+				...me,
+				level_name: level_name,
+			})
 		}
 	},
 
