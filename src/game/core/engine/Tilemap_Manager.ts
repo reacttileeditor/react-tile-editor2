@@ -11,7 +11,7 @@ import { ƒ } from "./Utils";
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import localforage from "localforage";
-import { concat, uniq } from "ramda";
+import { concat, filter, uniq } from "ramda";
 import { Page } from '@rsuite/icons';
 
 type TileViewState = {
@@ -172,6 +172,20 @@ export const Tilemap_Manager_ƒ = {
 		});
 	},
 
+	delete_level: (
+		me: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
+		level_name: string,
+		level_name_list: Array<string>
+	): void => {
+		if(level_name == 'level_names'){
+			throw("if you're reading this, we should put in validation on the input field.")
+		} else {
+			localforage.setItem(level_name, null);
+			localforage.setItem("level_names", uniq(filter((val)=>(val != level_name),level_name_list)));
+		}
+	},
 
 
 

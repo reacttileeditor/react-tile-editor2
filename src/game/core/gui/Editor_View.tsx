@@ -326,14 +326,20 @@ export const Load_File_Modal = (props: {
 				<div>{`Are you sure you want to delete the file named "${deletion_target}"?`}</div>
 				<div className="button-strip">
 					<Button
+						appearance="subtle"
 						onClick={ () => { 
 							set_deletion_target('');
-							alert(`"deleted" ${deletion_target}`);
+						}}
+					>Cancel</Button>
+					<Button
+						onClick={ () => { 
+							Tilemap_Manager_ƒ.delete_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, deletion_target, props.level_filename_list);
+							set_deletion_target('');
+							props.set_show_load_dialog(false);
 						}}
 					>Delete</Button>
 				</div>
 			</div>
-
 		}
 		<div className="button-strip">
 			<Button
@@ -362,6 +368,7 @@ export const Save_File_Modal = (props: {
 	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
 }) => {
 	const [selected_file, set_selected_file] = useState<string>('');
+	const [deletion_target, set_deletion_target] = useState<string>('');
 
 	return <Modal
 		open={props.show_save_dialog}
@@ -380,12 +387,42 @@ export const Save_File_Modal = (props: {
 					onClick={()=>{set_selected_file(val)}}
 					style={ val == selected_file ? {backgroundColor: 'rgb(21 56 87)'} : {} }
 				>
-					<Icon as={Page} className="file-icon"/>{val}
+					<span><Icon as={Page} className="file-icon"/>{val}</span>
+					<Icon
+						as={Trash} className="delete-icon"
+						onClick={(evt)=>{
+							evt.preventDefault();
+							evt.stopPropagation();
+							set_deletion_target(val);
+						}}
+					/>
 				</List.Item>
 			))
 
 		}
 		</List>
+		{
+			deletion_target != ''
+			&&
+			<div className="delete-confirm">
+				<div>{`Are you sure you want to delete the file named "${deletion_target}"?`}</div>
+				<div className="button-strip">
+					<Button
+						appearance="subtle"
+						onClick={ () => { 
+							set_deletion_target('');
+						}}
+					>Cancel</Button>
+					<Button
+						onClick={ () => { 
+							Tilemap_Manager_ƒ.delete_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, deletion_target, props.level_filename_list);
+							set_deletion_target('');
+							props.set_show_save_dialog(false);
+						}}
+					>Delete</Button>
+				</div>
+			</div>
+		}
 		<div className="label">File Name:</div>
    		<Input
 			value={selected_file}
