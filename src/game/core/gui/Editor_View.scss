@@ -23,17 +23,27 @@
 
 		.rs-list-item {
 			display: flex;
-			padding-left: 1rem;
+			padding: 0.9rem 1rem;
 			flex-flow: row nowrap;
-			justify-content: flex-start;
+			justify-content: space-between;
 			align-items: center;
 
 			.file-icon {
 				margin-right: 0.5rem;
 				color: #bbb;
 			}
-		}
+			.delete-icon {
+				color: #bc5a5a;
+			}
 
+		}
+		.delete-confirm {
+			background-color: #6b0e0e;
+			padding: 1rem;
+			margin: 1rem 0rem;
+			border-radius: 0.3rem;
+			border: 0.2rem solid #a00;
+		}
 		.button-strip {
 			margin-top: 1rem;
 			display: flex;

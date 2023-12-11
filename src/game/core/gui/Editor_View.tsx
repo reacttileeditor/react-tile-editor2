@@ -12,7 +12,7 @@ import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { useInterval } from "../engine/Utils";
 import { Button, Input, List, Modal, Tooltip, Whisper } from "rsuite";
-import { Icon, Page } from "@rsuite/icons";
+import { Icon, Page, Trash } from "@rsuite/icons";
 
 import "./Editor_View.scss";
 
@@ -286,6 +286,7 @@ export const Load_File_Modal = (props: {
 	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
 }) => {
 	const [selected_file, set_selected_file] = useState<string>('');
+	const [deletion_target, set_deletion_target] = useState<string>('');
 
 	return <Modal
 		open={props.show_load_dialog}
@@ -304,12 +305,36 @@ export const Load_File_Modal = (props: {
 					onClick={()=>{set_selected_file(val)}}
 					style={ val == selected_file ? {backgroundColor: '#5684ac', color: 'white'} : {} }
 				>
-					<Icon as={Page} className="file-icon"/>{val}
+					<span><Icon as={Page} className="file-icon"/>{val}</span>
+					<Icon
+						as={Trash} className="delete-icon"
+						onClick={(evt)=>{
+							evt.preventDefault();
+							evt.stopPropagation();
+							set_deletion_target(val);
+						}}
+					/>
 				</List.Item>
 			))
 
 		}
 		</List>
+		{
+			deletion_target != ''
+			&&
+			<div className="delete-confirm">
+				<div>{`Are you sure you want to delete the file named "${deletion_target}"?`}</div>
+				<div className="button-strip">
+					<Button
+						onClick={ () => { 
+							set_deletion_target('');
+							alert(`"deleted" ${deletion_target}`);
+						}}
+					>Delete</Button>
+				</div>
+			</div>
+
+		}
 		<div className="button-strip">
 			<Button
 				appearance="subtle"
