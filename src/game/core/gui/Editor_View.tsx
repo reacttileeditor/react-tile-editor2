@@ -303,7 +303,7 @@ export const Load_File_Modal = (props: {
 				<List.Item
 					key={idx}
 					onClick={()=>{set_selected_file(val)}}
-					style={ val == selected_file ? {backgroundColor: '#5684ac', color: 'white'} : {} }
+					className={ val == selected_file ? 'selected' : ''}
 				>
 					<span><Icon as={Page} className="file-icon"/>{val}</span>
 					<Icon
@@ -385,7 +385,7 @@ export const Save_File_Modal = (props: {
 				<List.Item
 					key={idx}
 					onClick={()=>{set_selected_file(val)}}
-					style={ val == selected_file ? {backgroundColor: 'rgb(21 56 87)'} : {} }
+					className={ val == selected_file ? 'selected' : ''}
 				>
 					<span><Icon as={Page} className="file-icon"/>{val}</span>
 					<Icon

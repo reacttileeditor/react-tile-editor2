@@ -36,6 +36,9 @@
 				color: #bc5a5a;
 			}
 
+			&.selected {
+				background-color: rgb(21, 56, 87);
+			}
 		}
 		.delete-confirm {
 			background-color: #6b0e0e;
