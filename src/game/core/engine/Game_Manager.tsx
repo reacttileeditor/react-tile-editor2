@@ -733,6 +733,7 @@ export const Game_Manager_ƒ = {
 		return {
 			tm: {
 				level_name: _TM.level_name,
+				metadata: cloneDeep(_TM.metadata),
 				tile_maps: {
 					...cloneDeep(_TM.tile_maps),
 					ui: new_tile_map,

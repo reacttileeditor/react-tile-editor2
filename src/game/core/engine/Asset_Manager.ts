@@ -116,8 +116,6 @@ export type Asset_Manager_Data = {
 	consts: {
 		tile_width: number,
 		tile_height: number,
-		row_length: number,
-		col_height: number,
 	};
 	static_vals: StaticValues;
 	TileRNG: Prando;
@@ -128,8 +126,6 @@ export const New_Asset_Manager = (): Asset_Manager_Data => {
 		consts: {
 			tile_width: 38, //38
 			tile_height: 16, //21
-			row_length: 14,
-			col_height: 20,
 		},
 
 		static_vals: asset_list,

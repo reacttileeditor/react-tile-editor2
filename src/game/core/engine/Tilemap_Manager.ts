@@ -16,6 +16,7 @@ import { Page } from '@rsuite/icons';
 
 type TileViewState = {
 	level_name: string,
+	metadata: MetaData,
 	tile_maps: TileMaps,
 	initialized: boolean,
 } & CacheData;
@@ -26,6 +27,21 @@ type CacheData = {
 		[index: string]: ImageListCache
 	}
 }
+
+type PersistData = {
+	tile_maps: TileMaps,
+	metadata: MetaData,
+};
+
+type MetaData = {
+	row_length: number,
+	col_height: number,
+};
+
+const metadata_init = {
+	row_length: 14,
+	col_height: 20,
+};
 
 type TileComparatorMap = Array<Array<TileComparatorSample|undefined>>;
 
@@ -64,6 +80,7 @@ export const New_Tilemap_Manager = (): Tilemap_Manager_Data => {
 	
 	return {
 		level_name: '',
+		metadata: _.cloneDeep(metadata_init),
 		tile_maps: {
 			terrain: [['']],
 			ui: [['']],
@@ -80,10 +97,9 @@ export const Tilemap_Manager_ƒ = {
 /*----------------------- initialization and asset loading -----------------------*/
 
 	initialize_tiles: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
-		let { consts, static_vals } = _AM;
 
-		const fresh_terrain_tilemap: TileMap = _.range(consts.col_height).map( (row_value, row_index) => {
-			return _.range(consts.row_length).map( (col_value, col_index) => {
+		const fresh_terrain_tilemap: TileMap = _.range(me.metadata.col_height).map( (row_value, row_index) => {
+			return _.range(me.metadata.row_length).map( (col_value, col_index) => {
 				return Asset_Manager_ƒ.yield_tile_name_list(_AM)[
 					Utils.dice( _.size( Asset_Manager_ƒ.yield_tile_name_list(_AM) ) ) -1 
 				];
@@ -93,6 +109,7 @@ export const Tilemap_Manager_ƒ = {
 
 		return {
 			level_name: me.level_name,
+			metadata: _.cloneDeep(me.metadata),
 			tile_maps: {
 				terrain: fresh_terrain_tilemap,
 				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
@@ -115,19 +132,23 @@ export const Tilemap_Manager_ƒ = {
 		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
 		level_name: string,
 	): void => {
-		let level_data: TileMaps = {
-			terrain: [['']],
-			ui: [['']],
+		let level_data: PersistData = {
+			metadata: _.cloneDeep(metadata_init),
+			tile_maps: {
+				terrain: [['']],
+				ui: [['']],
+			},
 		};
 
-		localforage.getItem<TileMaps>(level_name).then((value) => {
+		localforage.getItem<PersistData>(level_name).then((value) => {
 			if(value != null){
 				level_data = value;
 			}
 
 			set_Tilemap_Manager( {
 				level_name: level_name,
-				tile_maps: level_data,
+				metadata: _.cloneDeep(level_data.metadata),
+				tile_maps: _.cloneDeep(level_data.tile_maps),
 				cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
 				cache_of_image_lists: _.cloneDeep({}),
 				initialized: true,
@@ -150,7 +171,12 @@ export const Tilemap_Manager_ƒ = {
 		if(level_name == 'level_names'){
 			throw("if you're reading this, we should put in validation on the input field.")
 		} else {
-			localforage.setItem(level_name, me.tile_maps);
+			const save_data: PersistData = {
+				metadata: me.metadata,
+				tile_maps: me.tile_maps,
+			}
+
+			localforage.setItem(level_name, save_data);
 			localforage.setItem("level_names", uniq(concat(level_name_list, [level_name])));
 			set_Tilemap_Manager( {
 				...me,
@@ -220,10 +246,8 @@ export const Tilemap_Manager_ƒ = {
 	},
 
 	create_empty_tile_map: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): TileMap => {
-		let { consts, static_vals } = _AM;
-
-		return _.range(consts.col_height).map( (row_value, row_index) => {
-			return _.range(consts.row_length).map( (col_value, col_index) => {
+		return _.range(me.metadata.col_height).map( (row_value, row_index) => {
+			return _.range(me.metadata.row_length).map( (col_value, col_index) => {
 				return ''
 			});
 		});
@@ -342,8 +366,8 @@ export const Tilemap_Manager_ƒ = {
 	is_within_map_bounds: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, pos: Point2D ): boolean => (
 		pos.x >= 0 &&
 		pos.y >= 0 && 
-		pos.x < _AM.consts.row_length &&
-		pos.y < _AM.consts.col_height 
+		pos.x < me.metadata.row_length &&
+		pos.y < me.metadata.col_height 
 	),
 
 
