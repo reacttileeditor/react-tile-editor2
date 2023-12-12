@@ -33,7 +33,7 @@ type PersistData = {
 	metadata: MetaData,
 };
 
-type MetaData = {
+export type MetaData = {
 	row_length: number,
 	col_height: number,
 };

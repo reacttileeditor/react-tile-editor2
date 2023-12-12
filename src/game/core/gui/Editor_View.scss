@@ -40,6 +40,18 @@
 				background-color: rgb(21, 56, 87);
 			}
 		}
+		.input-strip {
+			display: flex;
+			flex-flow: row nowrap;
+			justify-content: space-between;
+			align-items: center;
+			gap: 2rem;
+
+			.input-pair {
+				flex-basis: 50%;				
+			}
+		}
+
 		.delete-confirm {
 			background-color: #6b0e0e;
 			padding: 1rem;

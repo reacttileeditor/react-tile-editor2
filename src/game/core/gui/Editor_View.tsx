@@ -1,12 +1,12 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import _, { isString } from "lodash";
+import _, { isString, toNumber } from "lodash";
 
 import { Canvas_View, MouseButtonState } from "./Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
-import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager";
+import { MetaData, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
@@ -44,6 +44,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 	const [show_load_dialog, set_show_load_dialog] = useState<boolean>(false);
 	const [show_save_dialog, set_show_save_dialog] = useState<boolean>(false);
+	const [show_metadata_dialog, set_show_metadata_dialog] = useState<boolean>(false);
 	const [level_filename_list, set_level_filename_list] = useState<Array<string>>([]);
 
 	useEffect(() => {
@@ -221,6 +222,12 @@ export const Editor_View = (props: Editor_View_Props) => {
 				{'Load...'}
 			</Button>
 			<Button
+				onClick={ () => { 
+					set_show_metadata_dialog(true);
+				} }
+			>
+				{'Edit Metadata...'}
+			</Button>			<Button
 				onClick={ () => {
 					props.set_Tilemap_Manager(
 						Tilemap_Manager_ƒ.initialize_tiles(props._Tilemap_Manager(), props._Asset_Manager())
@@ -244,6 +251,14 @@ export const Editor_View = (props: Editor_View_Props) => {
 				set_show_save_dialog={set_show_save_dialog}
 				level_filename_list={level_filename_list}
 				_Asset_Manager={props._Asset_Manager}
+				_Tilemap_Manager={props._Tilemap_Manager}
+				set_Tilemap_Manager={props.set_Tilemap_Manager}
+			/>
+			<Edit_Metadata_Modal
+				show_metadata_dialog={show_metadata_dialog}
+				set_show_metadata_dialog={set_show_metadata_dialog}
+				_Asset_Manager={props._Asset_Manager}
+				level_metadata={props._Tilemap_Manager().metadata}
 				_Tilemap_Manager={props._Tilemap_Manager}
 				set_Tilemap_Manager={props.set_Tilemap_Manager}
 			/>
@@ -440,6 +455,86 @@ export const Save_File_Modal = (props: {
 				onClick={ () => { 
 					Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, selected_file, props.level_filename_list)
 					props.set_show_save_dialog(false)
+				}}
+			>Save</Button>
+		</div>
+	</Modal>
+}
+
+export const Edit_Metadata_Modal = (props: {
+	show_metadata_dialog: boolean,
+	set_show_metadata_dialog: Dispatch<SetStateAction<boolean>>,
+	level_metadata: MetaData,
+	_Asset_Manager: () => Asset_Manager_Data,
+	_Tilemap_Manager: () => Tilemap_Manager_Data,
+	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
+}) => {
+	const [map_width, set_map_width] = useState<number>(0);
+	const [map_height, set_map_height] = useState<number>(0);
+	const [origin_x, set_origin_x] = useState<number>(0);
+	const [origin_y, set_origin_y] = useState<number>(0);
+
+	useEffect(() => {
+		set_map_width(props.level_metadata.row_length);
+		set_map_height(props.level_metadata.col_height);
+	}, [props.level_metadata]);
+
+
+	return <Modal
+		open={props.show_metadata_dialog}
+		onClose={()=>props.set_show_metadata_dialog(false)}
+		className="Save_File_Modal"
+	>
+		<h3>Edit Metadata</h3>
+		<div className="label">Warning: shrinking the map is a destructive operation that will delete tiles which are out of bounds.</div>
+		<div className="input-strip">
+			<div className="input-pair">
+				<div className="label">Map Width:</div>
+				<Input
+					value={map_width}
+					type="number"
+					onChange={(value: string, event) => { set_map_width(toNumber(value)) }}		
+				/>
+			</div>
+			<div className="input-pair">
+				<div className="label">Map Height:</div>
+				<Input
+					value={map_height}
+					type="number"
+					onChange={(value: string, event) => { set_map_height(toNumber(value)) }}		
+				/>
+			</div>
+		</div>
+		<div className="input-strip">
+			<div className="input-pair">
+				<div className="label">Origin X:</div>
+				<Input
+					value={origin_x}
+					type="number"
+					onChange={(value: string, event) => { set_origin_x(toNumber(value)) }}		
+				/>
+			</div>
+			<div className="input-pair">
+				<div className="label">Origin Y:</div>
+				<Input
+					value={origin_y}
+					type="number"
+					onChange={(value: string, event) => { set_origin_y(toNumber(value)) }}		
+				/>
+			</div>
+		</div>
+		<div className="button-strip">
+			<Button
+				appearance="subtle"
+				onClick={ () => { 
+					props.set_show_metadata_dialog(false)
+				}}
+			>Cancel</Button>
+			<Button
+				disabled={false}
+				onClick={ () => { 
+					//Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, selected_file, props.level_filename_list)
+					props.set_show_metadata_dialog(false)
 				}}
 			>Save</Button>
 		</div>
