@@ -475,18 +475,27 @@ export const Edit_Metadata_Modal = (props: {
 	const [origin_y, set_origin_y] = useState<number>(0);
 
 	useEffect(() => {
+		reset_values();
+	}, [props.level_metadata]);
+
+	const reset_values = () => {
 		set_map_width(props.level_metadata.row_length);
 		set_map_height(props.level_metadata.col_height);
-	}, [props.level_metadata]);
+		set_origin_x(props.level_metadata.origin.x);
+		set_origin_y(props.level_metadata.origin.y);
+	}
 
 
 	return <Modal
 		open={props.show_metadata_dialog}
-		onClose={()=>props.set_show_metadata_dialog(false)}
+		onClose={()=>{
+			reset_values();
+			props.set_show_metadata_dialog(false);
+		}}
 		className="Save_File_Modal"
 	>
 		<h3>Edit Metadata</h3>
-		<div className="label">Warning: shrinking the map is a destructive operation that will delete tiles which are out of bounds.</div>
+		<div className="label">Warning: don't use this dialog right now; the edits will be destructive and cause undefined behavior.  The values will be set, but the tilemap manager doesn't know how to gracefully handle them getting rug-pulled underneath it.</div>
 		<div className="input-strip">
 			<div className="input-pair">
 				<div className="label">Map Width:</div>
@@ -527,13 +536,23 @@ export const Edit_Metadata_Modal = (props: {
 			<Button
 				appearance="subtle"
 				onClick={ () => { 
-					props.set_show_metadata_dialog(false)
+					reset_values();
+					props.set_show_metadata_dialog(false);
 				}}
 			>Cancel</Button>
 			<Button
 				disabled={false}
 				onClick={ () => { 
-					//Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, selected_file, props.level_filename_list)
+					props.set_Tilemap_Manager(
+						Tilemap_Manager_ƒ.set_metadata(props._Tilemap_Manager(), {
+							row_length: map_width,
+							col_height: map_height,
+							origin: {
+								x: origin_x,
+								y: origin_y,
+							}
+						})
+					)
 					props.set_show_metadata_dialog(false)
 				}}
 			>Save</Button>

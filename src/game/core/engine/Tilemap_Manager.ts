@@ -36,11 +36,16 @@ type PersistData = {
 export type MetaData = {
 	row_length: number,
 	col_height: number,
+	origin: Point2D,
 };
 
 const metadata_init = {
 	row_length: 14,
 	col_height: 20,
+	origin: {
+		x: 0,
+		y: 0,
+	}
 };
 
 type TileComparatorMap = Array<Array<TileComparatorSample|undefined>>;
@@ -157,8 +162,6 @@ export const Tilemap_Manager_ƒ = {
 			throw("couldn't load level")
 			set_Tilemap_Manager(me);			
 		});
-
-
 	},
 
 	save_level: (
@@ -213,6 +216,20 @@ export const Tilemap_Manager_ƒ = {
 		}
 	},
 
+	set_metadata: (me: Tilemap_Manager_Data, new_metadata: MetaData): Tilemap_Manager_Data => {
+		/*
+			TODO: we really ought to be doing something sophisticated here, but I'd like to pivot to having these map operations be totally non-destructive to your tiles.  I.e. all out-of-bounds tiles are preserved, the map is stored sparsely, etc, etc.   It's a tall ask, and probably something for an alternate git branch.
+
+			So right now we're doing the most violent ape shit of just setting the values, and declaring "fuck it lmao" as to the consequences, in the finest traditions of Undefined Behavior.
+
+			It's not useless; when we "handle the change gracefully", these set-variable parts will carry over unchanged, I'm just skipping an implementation of a far less graceful change to map boundaries.
+		*/
+
+		return {
+			...me,
+			metadata: _.cloneDeep(new_metadata),
+		}
+	},
 
 
 /*----------------------- state mutation -----------------------*/
