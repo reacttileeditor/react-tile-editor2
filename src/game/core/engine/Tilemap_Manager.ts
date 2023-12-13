@@ -11,7 +11,7 @@ import { ƒ } from "./Utils";
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import localforage from "localforage";
-import { concat, filter, map, uniq } from "ramda";
+import { concat, filter, map, range, uniq } from "ramda";
 import { Page } from '@rsuite/icons';
 
 type TileViewState = {
@@ -285,19 +285,49 @@ export const Tilemap_Manager_ƒ = {
 	): Tilemap_Manager_Data => {
 
 		const new_tilemap_data = cloneDeep(me);
-		
-		if(
-			Tilemap_Manager_ƒ.is_within_map_bounds( me, _AM, pos )
-		){
+		let new_scales = new_tilemap_data.tile_map_scales[tilemap_name];
+
+		// if(
+		// 	Tilemap_Manager_ƒ.is_within_map_bounds( me, _AM, pos )
+		// ){
 			if(selected_tile_type && selected_tile_type != ''){
-				new_tilemap_data.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
+				//special handling for map sparseness
+				//let new_row_count_required = 0;
+
+				let row_padding_needed = 0;
+
+				if(pos.x < me.tile_map_scales[tilemap_name].row_origins[pos.y]){
+					/*
+						We're actually before the origin, so we need to pad in additional empty array cells to compensate.
+						However, the very first cell is the one we clicked on, so it needs to be the new tile.
+					*/
+					row_padding_needed = me.tile_map_scales[tilemap_name].row_origins[pos.y] + pos.x;
+					
+					let new_row = concat(
+						_.map(_.range( Math.abs(row_padding_needed)), (val,idx)=>( idx == 0 ? selected_tile_type : '') ),
+						new_tilemap_data.tile_maps[tilemap_name][pos.y]
+					)
+					
+					new_tilemap_data.tile_maps[tilemap_name][pos.y] = new_row
+					new_scales.row_origins[pos.y] = me.tile_map_scales[tilemap_name].row_origins[pos.y] + row_padding_needed;
+
+					debugger;
+				} else {
+
+					new_tilemap_data.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
+
+				}
 
 				return {
 					...new_tilemap_data,
+					tile_map_scales: {
+						...new_tilemap_data.tile_map_scales,
+						[tilemap_name]:	new_scales,
+					},
 					...Tilemap_Manager_ƒ.cleared_cache(),
 				}
 			}
-		}
+		// }
 
 		return {
 			...new_tilemap_data,
@@ -372,9 +402,10 @@ export const Tilemap_Manager_ƒ = {
 			This is the special bit of logic which makes the different rows (since we're hex tiles) be offset from each other by "half" a tile.
 		*/
 		let universal_hex_offset = Utils.modulo(pos.y, 2) == 1 ? Math.floor(consts.tile_width / 2) : 0;
+		let adjusted_pos = Tilemap_Manager_ƒ.adjust_tile_pos_for_sparse_map(me, pos, tilemap_name);
 		let real_pos: Point2D = {
-			x: (pos.x + 0) * consts.tile_width + universal_hex_offset,
-			y: (pos.y + 0) * consts.tile_height
+			x: (adjusted_pos.x + 0) * consts.tile_width + universal_hex_offset,
+			y: (adjusted_pos.y + 0) * consts.tile_height
 		};
 
 
@@ -487,18 +518,28 @@ export const Tilemap_Manager_ƒ = {
 		/*
 			This enforces "safe access", and will always return a string.  If it's outside the bounds of the tile map, we return an empty string.
 		*/
+		let adjusted_pos = Tilemap_Manager_ƒ.adjust_tile_pos_for_sparse_map(me, pos, tilemap_name);
+
 		if(
 			pos.y > (_.size(me.tile_maps[tilemap_name]) - 1) ||
 			pos.y < 0 ||
-			pos.x > (_.size(me.tile_maps[tilemap_name][pos.y]) - 1) ||
-			pos.x < 0
+			adjusted_pos.x > (_.size(me.tile_maps[tilemap_name][pos.y]) - 1) ||
+			adjusted_pos.x < 0
 		){
 			return '';
 		} else {
-			return me.tile_maps[tilemap_name][pos.y][pos.x];
+			return me.tile_maps[tilemap_name][pos.y][adjusted_pos.x];
 		}
 	},
 	
+	adjust_tile_pos_for_sparse_map: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ): Point2D => {
+		let adjusted_pos = {
+			x: pos.x + me.tile_map_scales[tilemap_name].row_origins[pos.y],
+			y: pos.y
+		}
+
+		return adjusted_pos;
+	},
 
 
 	convert_pixel_coords_to_tile_coords: ( me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D) => {
