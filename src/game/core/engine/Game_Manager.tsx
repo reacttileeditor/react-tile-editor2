@@ -738,6 +738,13 @@ export const Game_Manager_ƒ = {
 					...cloneDeep(_TM.tile_maps),
 					ui: new_tile_map,
 				},
+				tile_map_scales: {
+					terrain: cloneDeep(_TM.tile_map_scales.terrain),
+					ui: {
+						col_origin: 0,
+						row_origins: map(new_tile_map, (val)=>(0) )
+					},
+				},
 				initialized: true,
 				...Tilemap_Manager_ƒ.cleared_cache(),
 			},

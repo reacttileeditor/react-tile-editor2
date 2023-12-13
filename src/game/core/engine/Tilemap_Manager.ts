@@ -11,15 +11,13 @@ import { ƒ } from "./Utils";
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import localforage from "localforage";
-import { concat, filter, uniq } from "ramda";
+import { concat, filter, map, uniq } from "ramda";
 import { Page } from '@rsuite/icons';
 
 type TileViewState = {
 	level_name: string,
-	metadata: MetaData,
-	tile_maps: TileMaps,
 	initialized: boolean,
-} & CacheData;
+} & CacheData & PersistData;
 
 type CacheData = {
 	cache_of_tile_comparators: _TileMaps<TileComparatorMap>,
@@ -30,10 +28,30 @@ type CacheData = {
 
 type PersistData = {
 	tile_maps: TileMaps,
+	tile_map_scales: TileMapScales,
 	metadata: MetaData,
 };
 
+export type TileMapScale = {
+	/*
+		To enable sparse storage, we store each tilemap with a couple of additional bits of data.  The col_origin is just a number, and says where the map starts storing (under regular use, I can't see this being anything but 0 or a negative number).   Basically if we start drawing tiles "off the top edge" in the editor, they'll suddenly declare that "uh oh, we need more rows" and inject additional rows at the start of the data storage to accomodate this — bumping the number to some negative value to accomodate this.
+
+		row_origins is the exact same thing, on a horizontal basis, for each row.
+
+
+		The purpose of all this is to allow an infinite canvas in the editor; if you realize you want more space at the top of the map, you literally just start drawing up there, and the map "grows" to accomodate you.  Needless to say, this then demands that we have a solution to at least *attempt* to store as little as possible. 
+	*/
+	col_origin: number,
+	row_origins: Array<number>,
+};
+
+type TileMapScales =  _TileMaps<TileMapScale>;
+
+
 export type MetaData = {
+	/*
+		This Metadata doesn't refer to the actual storage of the map; it's possible to have tiles which extend off the horizontal box boundaries here.  However, these will only be visible in the editor.  These values basically describe a rectangular box that's "cut out" of the actual available map tiles, and represents the only valid tiles you're allowed to play on.
+	*/
 	row_length: number,
 	col_height: number,
 	origin: Point2D,
@@ -70,11 +88,26 @@ export type Direction =
 	'south_west';
 
 
+const tile_map_scale_init = {
+	terrain: {
+		col_origin: 0,
+		row_origins: [0],
+	},
+	ui: {
+		col_origin: 0,
+		row_origins: [0],
+	}
+};
 
 const tile_comparator_cache_init = {
 	terrain: [[]],
 	ui: [[]],
 };
+
+const emptiest_tilemap_init = {
+	terrain: [['']],
+	ui: [['']],
+}
 
 
 
@@ -86,10 +119,8 @@ export const New_Tilemap_Manager = (): Tilemap_Manager_Data => {
 	return {
 		level_name: '',
 		metadata: _.cloneDeep(metadata_init),
-		tile_maps: {
-			terrain: [['']],
-			ui: [['']],
-		},
+		tile_maps: _.cloneDeep(emptiest_tilemap_init),
+		tile_map_scales: _.cloneDeep(tile_map_scale_init),
 		cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
 		cache_of_image_lists: _.cloneDeep({}),
 		initialized: false,
@@ -111,13 +142,25 @@ export const Tilemap_Manager_ƒ = {
 			});
 		});
 
+		const fresh_ui_tilemap = Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM);
+
 
 		return {
 			level_name: me.level_name,
 			metadata: _.cloneDeep(me.metadata),
 			tile_maps: {
 				terrain: fresh_terrain_tilemap,
-				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
+				ui: fresh_ui_tilemap,
+			},
+			tile_map_scales: {
+				terrain: {
+					col_origin: 0,
+					row_origins: map( (val)=>(0), fresh_terrain_tilemap ),
+				},
+				ui: {
+					col_origin: 0,
+					row_origins: map( (val)=>(0), fresh_ui_tilemap ),
+				},
 			},
 			cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
 			cache_of_image_lists: _.cloneDeep({}),
@@ -139,10 +182,8 @@ export const Tilemap_Manager_ƒ = {
 	): void => {
 		let level_data: PersistData = {
 			metadata: _.cloneDeep(metadata_init),
-			tile_maps: {
-				terrain: [['']],
-				ui: [['']],
-			},
+			tile_maps: _.cloneDeep(emptiest_tilemap_init),
+			tile_map_scales: _.cloneDeep(tile_map_scale_init),
 		};
 
 		localforage.getItem<PersistData>(level_name).then((value) => {
@@ -154,6 +195,7 @@ export const Tilemap_Manager_ƒ = {
 				level_name: level_name,
 				metadata: _.cloneDeep(level_data.metadata),
 				tile_maps: _.cloneDeep(level_data.tile_maps),
+				tile_map_scales: _.cloneDeep(level_data.tile_map_scales),
 				cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
 				cache_of_image_lists: _.cloneDeep({}),
 				initialized: true,
@@ -177,6 +219,7 @@ export const Tilemap_Manager_ƒ = {
 			const save_data: PersistData = {
 				metadata: me.metadata,
 				tile_maps: me.tile_maps,
+				tile_map_scales: me.tile_map_scales,
 			}
 
 			localforage.setItem(level_name, save_data);
