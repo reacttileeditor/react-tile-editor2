@@ -59,6 +59,7 @@ const Map_Tooltip = (props: TooltipData) => {
 			top: `${props.pos.y * 2}px`
 		}}
 	>
+		<div className="data-row">{`${props.tile_pos.x}, ${props.tile_pos.y}`}</div>
 		<div className="data-row">{`${props.tile_name}`}</div>
 		{
 			!isEmpty(props.tile_cost) && !isNil(props.tile_cost)
