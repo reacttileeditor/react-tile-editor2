@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import _, { isString, toNumber } from "lodash";
+import _, { isNil, isString, toNumber } from "lodash";
 
 import { Canvas_View, MouseButtonState } from "./Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager";
@@ -271,6 +271,18 @@ export const Editor_View = (props: Editor_View_Props) => {
 				handle_canvas_keys_down={handle_canvas_keys_down}
 				handle_canvas_mouse_move={handle_canvas_mouse_move}
 			/>
+			{
+				render_tick > 0
+				&&
+				<Tooltip_Manager
+					cursor_pos={cursor_pos}
+					show_tooltip={true}
+					_Asset_Manager={props._Asset_Manager}
+					_Blit_Manager={props._Blit_Manager}
+					_Tilemap_Manager={props._Tilemap_Manager}
+					render_ticktock={render_tick % 1 == 1}
+				/>
+			}
 			<div className="tile_palette">
 			{
 				props.assets_loaded
@@ -560,3 +572,55 @@ export const Edit_Metadata_Modal = (props: {
 	</Modal>
 }
 
+
+
+export type EditorTooltipData = {
+	pos: Point2D,
+	tile_pos: Point2D,
+	tile_name: string,
+};
+
+export const Tooltip_Manager = (props: {
+	cursor_pos: Point2D,
+	_Asset_Manager: () => Asset_Manager_Data,
+	_Blit_Manager: () => Blit_Manager_Data,
+	_Tilemap_Manager: () => Tilemap_Manager_Data,
+	render_ticktock: boolean,
+	show_tooltip: boolean,
+}) => {
+
+	const get_tooltip_data = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): EditorTooltipData => ({
+		pos: Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, _AM, props.cursor_pos),
+		tile_pos: props.cursor_pos, //Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, props.cursor_pos ),
+		tile_name: Tilemap_Manager_ƒ.get_tile_name_for_pos(
+			_TM,
+			props.cursor_pos, //Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, props.cursor_pos ),
+			'terrain',
+		),
+	});
+
+
+	return <div className={`map-tooltip-anchor`} style={{display: `${props.show_tooltip ? 'block' : 'none'}`}}>
+		{
+			<Map_Tooltip
+				{...get_tooltip_data( props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager())}
+			/>
+		}
+	</div>
+}
+
+const Map_Tooltip = (props: EditorTooltipData) => {
+
+
+
+	return <div
+		className="map-tooltip"
+		style={{
+			left: `${props.pos.x * 2}px`,
+			top: `${props.pos.y * 2}px`
+		}}
+	>
+		<div className="data-row">{`${props.tile_pos.x}, ${props.tile_pos.y}`}</div>
+		<div className="data-row">{`${props.tile_name}`}</div>
+	</div>
+}
