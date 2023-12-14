@@ -15,6 +15,7 @@ import 'rsuite/dist/rsuite.min.css';
 import { CustomProvider } from 'rsuite';
 import "./Primary_View.scss";
 import { Game_Manager_Data, New_Game_Manager } from "../engine/Game_Manager";
+import { Vals } from "../constants/Constants";
 
 interface Props {
 }
@@ -44,7 +45,6 @@ const set_Game_Manager_Data = (newVal: Game_Manager_Data) => { _Game_Manager_Dat
 
 export const Primary_View = () => {
 	const _Asset_Manager: Asset_Manager_Data = New_Asset_Manager();
-	const default_canvas_size: Point2D = {x: 567, y: 325};
 
 	//const [_Blit_Manager, set_Blit_Manager] = useState<Blit_Manager_Data|null>(null);
 
@@ -100,7 +100,7 @@ export const Primary_View = () => {
 
 	const connect_context_to_blit_manager = (ctx: CanvasRenderingContext2D) => {
 		console.log('connect_context_to_blit_manager')
-		set_Blit_Manager(New_Blit_Manager(ctx, default_canvas_size, true));
+		set_Blit_Manager(New_Blit_Manager(ctx, Vals.default_canvas_size, true));
 		set_context_connected(true)
 	}
 		
@@ -128,7 +128,7 @@ export const Primary_View = () => {
 										set_is_edit_mode={set_is_edit_mode}
 										assets_loaded={assets_loaded}
 										context_connected={context_connected}
-										dimensions={default_canvas_size}
+										dimensions={Vals.default_canvas_size}
 										_Asset_Manager={() => (_Asset_Manager)}
 										_Blit_Manager={get_Blit_Manager}
 										set_Blit_Manager={set_Blit_Manager}
@@ -142,7 +142,7 @@ export const Primary_View = () => {
 										set_is_edit_mode={set_is_edit_mode}
 										assets_loaded={assets_loaded}
 										context_connected={context_connected}
-										dimensions={default_canvas_size}
+										dimensions={Vals.default_canvas_size}
 										_Asset_Manager={() => (_Asset_Manager)}
 										_Blit_Manager={get_Blit_Manager}
 										set_Blit_Manager={set_Blit_Manager}
