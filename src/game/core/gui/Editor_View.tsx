@@ -15,6 +15,7 @@ import { Button, Input, List, Modal, Tooltip, Whisper } from "rsuite";
 import { Icon, Page, Trash } from "@rsuite/icons";
 
 import "./Editor_View.scss";
+import { Standard_Input_ƒ } from "./Standard_Input_Handling";
 
 
 interface Editor_View_Props {
@@ -145,43 +146,25 @@ export const Editor_View = (props: Editor_View_Props) => {
 		);
 	}
 
-	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
-		const new_tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos)
-	
-		//console.log(`pos ${pos.x},${pos.y} | ${new_tile_pos.x},${new_tile_pos.y}`)
-
-		set_cursor_pos(
-			new_tile_pos
-		);
-
-		if( buttons_pressed.left == true ){
-			handle_canvas_click(pos, buttons_pressed);
-		}
-		
+	const editor_handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
+		Standard_Input_ƒ.handle_canvas_mouse_move(
+			pos,
+			buttons_pressed,
+			props._Tilemap_Manager(),
+			props._Asset_Manager(),
+			props._Blit_Manager(),
+			set_cursor_pos,
+			props.set_Blit_Manager,
+			handle_canvas_click
+		)
 	}
 
-	const handle_canvas_keys_down = (keys: Array<string>) => {
-		let move = { x: 0, y: 0};
-
-		if( _.includes(keys, 'ArrowDown') ){
-			move.y += 40;
-		}
-
-		if( _.includes(keys, 'ArrowUp') ){
-			move.y -= 40;
-		}
-
-		if( _.includes(keys, 'ArrowLeft') ){
-			move.x -= 40;
-		}
-
-		if( _.includes(keys, 'ArrowRight') ){
-			move.x += 40;
-		}
-
-		props.set_Blit_Manager(
-			Blit_Manager_ƒ.adjust_viewport_pos(props._Blit_Manager(), move.x, move.y)
-		)
+	const editor_handle_canvas_keys_down = (keys: Array<string>) => {
+		Standard_Input_ƒ.handle_canvas_keys_down(
+			keys,
+			props._Blit_Manager(),
+			props.set_Blit_Manager,
+		);
 	}
 
 
@@ -268,8 +251,8 @@ export const Editor_View = (props: Editor_View_Props) => {
 				_Tilemap_Manager={props._Tilemap_Manager()}
 				dimensions={props.dimensions}
 				handle_canvas_click={handle_canvas_click}
-				handle_canvas_keys_down={handle_canvas_keys_down}
-				handle_canvas_mouse_move={handle_canvas_mouse_move}
+				handle_canvas_keys_down={editor_handle_canvas_keys_down}
+				handle_canvas_mouse_move={editor_handle_canvas_mouse_move}
 			/>
 			{
 				render_tick > 0

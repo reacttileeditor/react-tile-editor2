@@ -6,7 +6,7 @@ import { ƒ } from "../engine/Utils";
 
 import { Canvas_View, MouseButtonState } from "./Canvas_View";
 import { Asset_Manager_Data } from "../engine/Asset_Manager";
-import { Blit_Manager_Data, ticks_to_ms } from "../engine/Blit_Manager";
+import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager";
 
@@ -81,6 +81,7 @@ import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, Game_and
 import { Game_Status_Display } from "./Game_Status_Display";
 import { Announcement_Modal } from "./Announcement_Modal";
 import { Button } from "rsuite";
+import { Standard_Input_ƒ } from "./Standard_Input_Handling";
 
 
 export const Tooltip_Manager = (props: {
@@ -161,6 +162,13 @@ export const Game_View = (props: Game_View_Props) => {
 		}
 	}
 
+	const game_handle_canvas_keys_down = (keys: Array<string>) => {
+		Standard_Input_ƒ.handle_canvas_keys_down(
+			keys,
+			props._Blit_Manager(),
+			props.set_Blit_Manager,
+		);
+	}	
 
 	return <div className="game_screen">
 		<div className="toolbar">
@@ -177,7 +185,7 @@ export const Game_View = (props: Game_View_Props) => {
 				_Tilemap_Manager={props._Tilemap_Manager()}
 				dimensions={props.dimensions}
 				handle_canvas_click={handle_canvas_mouse_click}
-				handle_canvas_keys_down={ ()=>{ /*console.log('game_keydown')*/} }
+				handle_canvas_keys_down={game_handle_canvas_keys_down}
 				handle_canvas_mouse_move={handle_canvas_mouse_move}
 			/>
 			<Tooltip_Manager
