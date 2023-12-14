@@ -287,6 +287,11 @@ export const Tilemap_Manager_ƒ = {
 		const new_tilemap_data = cloneDeep(me);
 		let new_scales = new_tilemap_data.tile_map_scales[tilemap_name];
 
+
+		const adj = (_pos: Point2D) => Tilemap_Manager_ƒ.inverse_adjust_tile_pos_for_sparse_map( me, _pos, tilemap_name);
+//		const adj = (_pos: Point2D) => _pos;
+
+
 		// if(
 		// 	Tilemap_Manager_ƒ.is_within_map_bounds( me, _AM, pos )
 		// ){
@@ -311,10 +316,23 @@ export const Tilemap_Manager_ƒ = {
 					new_tilemap_data.tile_maps[tilemap_name][pos.y] = new_row
 					new_scales.row_origins[pos.y] = me.tile_map_scales[tilemap_name].row_origins[pos.y] + row_padding_needed;
 
-					debugger;
-				} else {
+				} else if (pos.x > _.size(me.tile_maps[tilemap_name][pos.y]) - 1 ){
+					/*
+						Same story for being past the end.
+					*/
+					row_padding_needed = pos.x - _.size(me.tile_maps[tilemap_name][pos.y]) - 1;
+					let new_row_last_index = _.size(me.tile_maps[tilemap_name][pos.y]) + row_padding_needed - 1;
 
-					new_tilemap_data.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
+					let new_row = concat(
+						new_tilemap_data.tile_maps[tilemap_name][pos.y],
+						_.map(_.range( Math.abs(row_padding_needed)), (val,idx)=>( idx == new_row_last_index ? selected_tile_type : '') )
+					)
+					
+					new_tilemap_data.tile_maps[tilemap_name][pos.y] = new_row
+					//since we're just adding cells at the end, we don't need to adjust the index.
+
+				} else {
+					new_tilemap_data.tile_maps[tilemap_name][adj(pos).y][adj(pos).x] = selected_tile_type;
 
 				}
 
@@ -535,6 +553,15 @@ export const Tilemap_Manager_ƒ = {
 	adjust_tile_pos_for_sparse_map: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ): Point2D => {
 		let adjusted_pos = {
 			x: pos.x + me.tile_map_scales[tilemap_name].row_origins[pos.y],
+			y: pos.y
+		}
+
+		return adjusted_pos;
+	},
+
+	inverse_adjust_tile_pos_for_sparse_map: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ): Point2D => {
+		let adjusted_pos = {
+			x: pos.x - me.tile_map_scales[tilemap_name].row_origins[pos.y],
 			y: pos.y
 		}
 
