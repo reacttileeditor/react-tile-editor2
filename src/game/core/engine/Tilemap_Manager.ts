@@ -288,7 +288,7 @@ export const Tilemap_Manager_ƒ = {
 		let new_scales = new_tilemap_data.tile_map_scales[tilemap_name];
 
 
-		const adj = (_pos: Point2D) => Tilemap_Manager_ƒ.inverse_adjust_tile_pos_for_sparse_map( me, _pos, tilemap_name);
+		const adj = (_pos: Point2D, _new_scales: TileMapScale) => Tilemap_Manager_ƒ.inverse_adjust_tile_pos_for_sparse_map( me, _pos, _new_scales);
 //		const adj = (_pos: Point2D) => _pos;
 
 
@@ -296,43 +296,94 @@ export const Tilemap_Manager_ƒ = {
 		// 	Tilemap_Manager_ƒ.is_within_map_bounds( me, _AM, pos )
 		// ){
 			if(selected_tile_type && selected_tile_type != ''){
-				//special handling for map sparseness
-				//let new_row_count_required = 0;
+				/*
+					Here we have a bunch of special handling for map sparseness.
 
+					Basically if we're clicking a tile that's out of bounds, we need to actually *grow the map* to accomodate it, but we want to only grow the particular row we're in (or add empty columns), so we don't waste map space.
+				*/
+
+				let col_padding_needed = 0;
+				/*
+					For the columns, we're going to alter the tilemap data to pad it, so that after we're done, we can treat the new shape as final, and permanently rely on the offsets without any other funny-business.  We do the same thing with the rows.
+
+					The upside of this is that, with the columns pre-altered, letting that alteration "fall through" to the rows should then allow us to be totally blind/agnostic to the situation where we're editing an XY location that is "out of bounds" BOTH in X and Y (i.e. in the regions past the corner of the map).   Since the new rows will have already been added, we can just blindly access them like any pre-existing row.
+
+					This also means we won't actually be added the tile on the column part of the pass.  We'll just be adding empty rows during the column part.
+				*/
+
+				if(pos.y < me.tile_map_scales[tilemap_name].col_origin){
+					col_padding_needed = me.tile_map_scales[tilemap_name].col_origin + pos.y;
+
+					let new_columns = concat(
+						_.map(_.range( Math.abs(col_padding_needed)), (val,idx)=>(['']) ),
+						new_tilemap_data.tile_maps[tilemap_name]
+					)
+
+					new_tilemap_data.tile_maps[tilemap_name] = _.cloneDeep(new_columns);
+					new_scales.col_origin = me.tile_map_scales[tilemap_name].col_origin + col_padding_needed;
+					new_scales.row_origins = concat(
+						_.map(_.range( Math.abs(col_padding_needed)), (val,idx)=>( 0 ) ),
+						new_scales.row_origins
+					)
+
+					debugger;
+				} else if (pos.y > _.size(me.tile_maps[tilemap_name]) - 1 ) {
+					col_padding_needed = pos.y - (_.size(me.tile_maps[tilemap_name]) - 1);
+
+					let new_columns = concat(
+						new_tilemap_data.tile_maps[tilemap_name],
+						_.map(_.range( Math.abs(col_padding_needed)), (val,idx)=>(['']) )
+					)
+					
+					new_tilemap_data.tile_maps[tilemap_name] = _.cloneDeep(new_columns);
+					new_scales.row_origins = concat(
+						new_scales.row_origins,
+						_.map(_.range( Math.abs(col_padding_needed)), (val,idx)=>( 0 ) ),
+					)
+
+
+					debugger;
+		
+				}
+
+
+				/*
+					And now we do the aforementioned work to pad out the rows, or just add the tile to an existing array cell (including one in a new row that just got added).
+				*/
 				let row_padding_needed = 0;
 
-				if(pos.x < me.tile_map_scales[tilemap_name].row_origins[pos.y]){
+				if(pos.x < me.tile_map_scales[tilemap_name].row_origins[adj(pos, new_scales).y]){
 					/*
 						We're actually before the origin, so we need to pad in additional empty array cells to compensate.
 						However, the very first cell is the one we clicked on, so it needs to be the new tile.
 					*/
-					row_padding_needed = me.tile_map_scales[tilemap_name].row_origins[pos.y] + pos.x;
+					row_padding_needed = me.tile_map_scales[tilemap_name].row_origins[adj(pos, new_scales).y] + pos.x;
 					
 					let new_row = concat(
 						_.map(_.range( Math.abs(row_padding_needed)), (val,idx)=>( idx == 0 ? selected_tile_type : '') ),
-						new_tilemap_data.tile_maps[tilemap_name][pos.y]
+						new_tilemap_data.tile_maps[tilemap_name][adj(pos, new_scales).y]
 					)
 					
-					new_tilemap_data.tile_maps[tilemap_name][pos.y] = new_row
-					new_scales.row_origins[pos.y] = me.tile_map_scales[tilemap_name].row_origins[pos.y] + row_padding_needed;
+					new_tilemap_data.tile_maps[tilemap_name][adj(pos, new_scales).y] = new_row
+					new_scales.row_origins[adj(pos, new_scales).y] = me.tile_map_scales[tilemap_name].row_origins[adj(pos, new_scales).y] + row_padding_needed;
 
-				} else if (pos.x > _.size(me.tile_maps[tilemap_name][pos.y]) - 1 ){
+				} else if (pos.x > _.size(me.tile_maps[tilemap_name][adj(pos, new_scales).y]) - 1 ){
 					/*
 						Same story for being past the end.
 					*/
-					row_padding_needed = pos.x - _.size(me.tile_maps[tilemap_name][pos.y]) - 1;
-					let new_row_last_index = _.size(me.tile_maps[tilemap_name][pos.y]) + row_padding_needed - 1;
+					row_padding_needed = pos.x - (_.size(me.tile_maps[tilemap_name][adj(pos, new_scales).y]) - 1);
+					let new_row_last_index = _.size(me.tile_maps[tilemap_name][adj(pos, new_scales).y]) + row_padding_needed - 1;
 
 					let new_row = concat(
-						new_tilemap_data.tile_maps[tilemap_name][pos.y],
+						new_tilemap_data.tile_maps[tilemap_name][adj(pos, new_scales).y],
 						_.map(_.range( Math.abs(row_padding_needed)), (val,idx)=>( idx == new_row_last_index ? selected_tile_type : '') )
 					)
 					
-					new_tilemap_data.tile_maps[tilemap_name][pos.y] = new_row
+					new_tilemap_data.tile_maps[tilemap_name][adj(pos, new_scales).y] = new_row
 					//since we're just adding cells at the end, we don't need to adjust the index.
 
 				} else {
-					new_tilemap_data.tile_maps[tilemap_name][adj(pos).y][adj(pos).x] = selected_tile_type;
+					new_tilemap_data.tile_maps[tilemap_name][adj(pos, new_scales).y][adj(pos, new_scales).x] = selected_tile_type;
 
 				}
 
@@ -420,7 +471,7 @@ export const Tilemap_Manager_ƒ = {
 			This is the special bit of logic which makes the different rows (since we're hex tiles) be offset from each other by "half" a tile.
 		*/
 		let universal_hex_offset = Utils.modulo(pos.y, 2) == 1 ? Math.floor(consts.tile_width / 2) : 0;
-		let adjusted_pos = Tilemap_Manager_ƒ.adjust_tile_pos_for_sparse_map(me, pos, tilemap_name);
+		let adjusted_pos = Tilemap_Manager_ƒ.adjust_tile_pos_for_sparse_map(me, pos, me.tile_map_scales[tilemap_name]);
 		let real_pos: Point2D = {
 			x: (adjusted_pos.x + 0) * consts.tile_width + universal_hex_offset,
 			y: (adjusted_pos.y + 0) * consts.tile_height
@@ -536,7 +587,7 @@ export const Tilemap_Manager_ƒ = {
 		/*
 			This enforces "safe access", and will always return a string.  If it's outside the bounds of the tile map, we return an empty string.
 		*/
-		let adjusted_pos = Tilemap_Manager_ƒ.adjust_tile_pos_for_sparse_map(me, pos, tilemap_name);
+		let adjusted_pos = Tilemap_Manager_ƒ.adjust_tile_pos_for_sparse_map(me, pos, me.tile_map_scales[tilemap_name]);
 
 		if(
 			pos.y > (_.size(me.tile_maps[tilemap_name]) - 1) ||
@@ -550,19 +601,23 @@ export const Tilemap_Manager_ƒ = {
 		}
 	},
 	
-	adjust_tile_pos_for_sparse_map: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ): Point2D => {
+	adjust_tile_pos_for_sparse_map: ( me: Tilemap_Manager_Data, pos: Point2D, scale: TileMapScale ): Point2D => {
+		let new_pos_y = pos.y + scale.col_origin;
+
 		let adjusted_pos = {
-			x: pos.x + me.tile_map_scales[tilemap_name].row_origins[pos.y],
-			y: pos.y
+			x: pos.x + scale.row_origins[new_pos_y],
+			y: new_pos_y
 		}
 
 		return adjusted_pos;
 	},
 
-	inverse_adjust_tile_pos_for_sparse_map: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ): Point2D => {
+	inverse_adjust_tile_pos_for_sparse_map: ( me: Tilemap_Manager_Data, pos: Point2D, scale: TileMapScale ): Point2D => {
+		let new_pos_y = pos.y - scale.col_origin;
+
 		let adjusted_pos = {
-			x: pos.x - me.tile_map_scales[tilemap_name].row_origins[pos.y],
-			y: pos.y
+			x: pos.x - scale.row_origins[new_pos_y],
+			y: new_pos_y
 		}
 
 		return adjusted_pos;
