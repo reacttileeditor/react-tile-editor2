@@ -311,8 +311,8 @@ export const Tilemap_Manager_ƒ = {
 					This also means we won't actually be added the tile on the column part of the pass.  We'll just be adding empty rows during the column part.
 				*/
 
-				if(pos.y < me.tile_map_scales[tilemap_name].col_origin){
-					col_padding_needed = me.tile_map_scales[tilemap_name].col_origin + pos.y;
+				if(pos.y < new_scales.col_origin){
+					col_padding_needed = new_scales.col_origin + pos.y;
 
 					let new_columns = concat(
 						_.map(_.range( Math.abs(col_padding_needed)), (val,idx)=>(['']) ),
@@ -320,7 +320,7 @@ export const Tilemap_Manager_ƒ = {
 					)
 
 					new_tilemap_data.tile_maps[tilemap_name] = _.cloneDeep(new_columns);
-					new_scales.col_origin = me.tile_map_scales[tilemap_name].col_origin + col_padding_needed;
+					new_scales.col_origin = new_scales.col_origin + col_padding_needed;
 					new_scales.row_origins = concat(
 						_.map(_.range( Math.abs(col_padding_needed)), (val,idx)=>( 0 ) ),
 						new_scales.row_origins
@@ -328,7 +328,9 @@ export const Tilemap_Manager_ƒ = {
 
 					debugger;
 				} else if (pos.y > _.size(me.tile_maps[tilemap_name]) - 1 ) {
-					col_padding_needed = pos.y - (_.size(me.tile_maps[tilemap_name]) - 1);
+					const existing_col_last_index = (_.size(me.tile_maps[tilemap_name]) - 1);
+
+					col_padding_needed = pos.y - existing_col_last_index;
 
 					let new_columns = concat(
 						new_tilemap_data.tile_maps[tilemap_name],
@@ -352,12 +354,12 @@ export const Tilemap_Manager_ƒ = {
 				*/
 				let row_padding_needed = 0;
 
-				if(pos.x < me.tile_map_scales[tilemap_name].row_origins[adj(pos, new_scales).y]){
+				if(pos.x < new_scales.row_origins[adj(pos, new_scales).y]){
 					/*
 						We're actually before the origin, so we need to pad in additional empty array cells to compensate.
 						However, the very first cell is the one we clicked on, so it needs to be the new tile.
 					*/
-					row_padding_needed = me.tile_map_scales[tilemap_name].row_origins[adj(pos, new_scales).y] + pos.x;
+					row_padding_needed = new_scales.row_origins[adj(pos, new_scales).y] + pos.x;
 					
 					let new_row = concat(
 						_.map(_.range( Math.abs(row_padding_needed)), (val,idx)=>( idx == 0 ? selected_tile_type : '') ),
@@ -365,18 +367,19 @@ export const Tilemap_Manager_ƒ = {
 					)
 					
 					new_tilemap_data.tile_maps[tilemap_name][adj(pos, new_scales).y] = new_row
-					new_scales.row_origins[adj(pos, new_scales).y] = me.tile_map_scales[tilemap_name].row_origins[adj(pos, new_scales).y] + row_padding_needed;
+					new_scales.row_origins[adj(pos, new_scales).y] = new_scales.row_origins[adj(pos, new_scales).y] + row_padding_needed;
 
 				} else if (pos.x > _.size(me.tile_maps[tilemap_name][adj(pos, new_scales).y]) - 1 ){
 					/*
 						Same story for being past the end.
 					*/
-					row_padding_needed = pos.x - (_.size(me.tile_maps[tilemap_name][adj(pos, new_scales).y]) - 1);
-					let new_row_last_index = _.size(me.tile_maps[tilemap_name][adj(pos, new_scales).y]) + row_padding_needed - 1;
+					const existing_row_last_index = (_.size(me.tile_maps[tilemap_name][adj(pos, new_scales).y]) - 1)
+					row_padding_needed = pos.x - existing_row_last_index;
+					let new_row_last_index = existing_row_last_index + row_padding_needed;
 
 					let new_row = concat(
 						new_tilemap_data.tile_maps[tilemap_name][adj(pos, new_scales).y],
-						_.map(_.range( Math.abs(row_padding_needed)), (val,idx)=>( idx == new_row_last_index ? selected_tile_type : '') )
+						_.map(_.range( Math.abs(row_padding_needed)), (val,idx)=>( (existing_row_last_index + idx + 1) == new_row_last_index ? selected_tile_type : '') )
 					)
 					
 					new_tilemap_data.tile_maps[tilemap_name][adj(pos, new_scales).y] = new_row
