@@ -326,7 +326,6 @@ export const Tilemap_Manager_ƒ = {
 						new_scales.row_origins
 					)
 
-					debugger;
 				} else if (pos.y > _.size(me.tile_maps[tilemap_name]) - 1 ) {
 					const existing_col_last_index = (_.size(me.tile_maps[tilemap_name]) - 1);
 
@@ -344,7 +343,6 @@ export const Tilemap_Manager_ƒ = {
 					)
 
 
-					debugger;
 		
 				}
 
@@ -608,7 +606,7 @@ export const Tilemap_Manager_ƒ = {
 		let new_pos_y = pos.y + scale.col_origin;
 
 		let adjusted_pos = {
-			x: pos.x + scale.row_origins[new_pos_y],
+			x: pos.x + scale.row_origins[pos.y],
 			y: new_pos_y
 		}
 
@@ -619,7 +617,7 @@ export const Tilemap_Manager_ƒ = {
 		let new_pos_y = pos.y - scale.col_origin;
 
 		let adjusted_pos = {
-			x: pos.x - scale.row_origins[new_pos_y],
+			x: pos.x - scale.row_origins[pos.y],
 			y: new_pos_y
 		}
 
