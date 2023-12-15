@@ -566,18 +566,19 @@ export const Tilemap_Manager_ƒ = {
 		/*
 			This would simply grab all 8 adjacent tiles (and ourselves, for a total of 9 tiles) as a square sample.  The problem here is that, although our tiles are in fact stored as "square" data in an array, we're actually a hex grid.  Because we're a hex grid, we're actually just looking for 7 tiles, so we'll need to adjust the result.  Depending on whether we're on an even or odd row, we need to lop off the first (or last) member of the first and last rows. 	
 		*/
-	
-		return _.range(pos.y - 1, pos.y + 2).map( (row_value, row_index) => {
+		const _pos = Tilemap_Manager_ƒ.inverse_adjust_tile_pos_for_sparse_map( me, pos, me.tile_map_scales['terrain']);
+
+		return _.range(_pos.y - 1, _pos.y + 2).map( (row_value, row_index) => {
 			let horizontal_tile_indices =	row_index == 1
 											?
-											_.range(pos.x - 1, pos.x + 2)
+											_.range(_pos.x - 1, _pos.x + 2)
 											:
 											(	
-												Utils.is_even( pos.y )
+												Utils.is_even( _pos.y )
 												?
-												_.range(pos.x - 1, pos.x + 1)
+												_.range(_pos.x - 1, _pos.x + 1)
 												:
-												_.range(pos.x - 0, pos.x + 2)
+												_.range(_pos.x - 0, _pos.x + 2)
 											);
 			
 			return horizontal_tile_indices.map( (col_value: number, col_index: number) => {
@@ -590,17 +591,17 @@ export const Tilemap_Manager_ƒ = {
 		/*
 			This enforces "safe access", and will always return a string.  If it's outside the bounds of the tile map, we return an empty string.
 		*/
-		let adjusted_pos = Tilemap_Manager_ƒ.adjust_tile_pos_for_sparse_map(me, pos, me.tile_map_scales[tilemap_name]);
+		let _pos = Tilemap_Manager_ƒ.inverse_adjust_tile_pos_for_sparse_map(me, pos, me.tile_map_scales[tilemap_name]);
 
 		if(
-			pos.y > (_.size(me.tile_maps[tilemap_name]) - 1) ||
-			pos.y < 0 ||
-			adjusted_pos.x > (_.size(me.tile_maps[tilemap_name][pos.y]) - 1) ||
-			adjusted_pos.x < 0
+			_pos.y > (_.size(me.tile_maps[tilemap_name]) - 1) ||
+			_pos.y < 0 ||
+			_pos.x > (_.size(me.tile_maps[tilemap_name][_pos.y]) - 1) ||
+			_pos.x < 0
 		){
 			return '';
 		} else {
-			return me.tile_maps[tilemap_name][pos.y][adjusted_pos.x];
+			return me.tile_maps[tilemap_name][_pos.y][_pos.x];
 		}
 	},
 	
