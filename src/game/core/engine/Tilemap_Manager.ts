@@ -369,11 +369,11 @@ export const Tilemap_Manager_ƒ = {
 					new_tilemap_data.tile_maps[tilemap_name][adj(pos, new_scales).y] = new_row
 					new_scales.row_origins[adj(pos, new_scales).y] = new_scales.row_origins[adj(pos, new_scales).y] + row_padding_needed;
 
-				} else if (pos.x > _.size(me.tile_maps[tilemap_name][adj(pos, new_scales).y]) - 1 ){
+				} else if (pos.x > _.size(new_tilemap_data.tile_maps[tilemap_name][adj(pos, new_scales).y]) - 1 ){
 					/*
 						Same story for being past the end.
 					*/
-					const existing_row_last_index = (_.size(me.tile_maps[tilemap_name][adj(pos, new_scales).y]) - 1)
+					const existing_row_last_index = (_.size(new_tilemap_data.tile_maps[tilemap_name][adj(pos, new_scales).y]) - 1)
 					row_padding_needed = pos.x - existing_row_last_index;
 					let new_row_last_index = existing_row_last_index + row_padding_needed;
 
