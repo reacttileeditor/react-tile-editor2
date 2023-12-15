@@ -326,10 +326,10 @@ export const Tilemap_Manager_ƒ = {
 						new_scales.row_origins
 					)
 
-				} else if (pos.y > _.size(me.tile_maps[tilemap_name]) - 1 ) {
+				} else if (adj(pos, new_scales).y > _.size(me.tile_maps[tilemap_name]) - 1 ) {
 					const existing_col_last_index = (_.size(me.tile_maps[tilemap_name]) - 1);
 
-					col_padding_needed = pos.y - existing_col_last_index;
+					col_padding_needed = adj(pos, new_scales).y - existing_col_last_index;
 
 					let new_columns = concat(
 						new_tilemap_data.tile_maps[tilemap_name],
@@ -384,7 +384,9 @@ export const Tilemap_Manager_ƒ = {
 					//since we're just adding cells at the end, we don't need to adjust the index.
 
 				} else {
-					new_tilemap_data.tile_maps[tilemap_name][adj(pos, new_scales).y][adj(pos, new_scales).x] = selected_tile_type;
+					const x_coord = adj({x: pos.x, y: adj(pos, new_scales).y}, new_scales).x;
+
+					new_tilemap_data.tile_maps[tilemap_name][adj(pos, new_scales).y][x_coord] = selected_tile_type;
 
 				}
 
