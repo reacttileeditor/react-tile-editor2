@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
-import _, { Dictionary, cloneDeep, isArray } from "lodash";
+import _, { Dictionary, cloneDeep, isArray, size } from "lodash";
 
 import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
@@ -474,7 +474,7 @@ export const Tilemap_Manager_ƒ = {
 			This is the special bit of logic which makes the different rows (since we're hex tiles) be offset from each other by "half" a tile.
 		*/
 		let universal_hex_offset = Utils.modulo(pos.y, 2) == 1 ? Math.floor(consts.tile_width / 2) : 0;
-		let adjusted_pos = Tilemap_Manager_ƒ.adjust_tile_pos_for_sparse_map(me, pos, me.tile_map_scales[tilemap_name]);
+		let adjusted_pos = Tilemap_Manager_ƒ.full_adjust_tile_pos_for_sparse_map(me, pos, me.tile_map_scales[tilemap_name]);
 		let real_pos: Point2D = {
 			x: (adjusted_pos.x + 0) * consts.tile_width + universal_hex_offset,
 			y: (adjusted_pos.y + 0) * consts.tile_height
@@ -533,6 +533,27 @@ export const Tilemap_Manager_ƒ = {
 		pos.y < me.metadata.col_height 
 	),
 
+	is_valid_map_tile: (me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ): boolean => {
+		/*
+			This basically tries to determine if we're within the (non-rectangular) storage for map tiles.  After adjustment, neither the x nor y values should exceed zero.
+		*/
+
+		if(
+			pos.y >= me.tile_map_scales[tilemap_name].col_origin &&
+			pos.y < size(me.tile_maps[tilemap_name]) - 1 - me.tile_map_scales[tilemap_name].col_origin
+		){
+			const _pos = Tilemap_Manager_ƒ.full_inverse_adjust_tile_pos_for_sparse_map( me, pos, me.tile_map_scales[tilemap_name]);
+
+			return (
+				_pos.y >= 0 && 
+				_pos.x >= 0 &&
+				_pos.y < _.size(me.tile_maps[tilemap_name]) - 1 &&
+				_pos.x < _.size(me.tile_maps[tilemap_name][_pos.y]) - 1
+			)
+		} else {
+			return false;
+		}
+	},
 
 
 	get_tile_comparator_sample_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ): TileComparatorSample => {
@@ -566,7 +587,7 @@ export const Tilemap_Manager_ƒ = {
 		/*
 			This would simply grab all 8 adjacent tiles (and ourselves, for a total of 9 tiles) as a square sample.  The problem here is that, although our tiles are in fact stored as "square" data in an array, we're actually a hex grid.  Because we're a hex grid, we're actually just looking for 7 tiles, so we'll need to adjust the result.  Depending on whether we're on an even or odd row, we need to lop off the first (or last) member of the first and last rows. 	
 		*/
-		const _pos = Tilemap_Manager_ƒ.inverse_adjust_tile_pos_for_sparse_map( me, pos, me.tile_map_scales[tilemap_name]);
+		const _pos = pos; //Tilemap_Manager_ƒ.full_inverse_adjust_tile_pos_for_sparse_map( me, pos, me.tile_map_scales[tilemap_name]);
 
 		return _.range(_pos.y - 1, _pos.y + 2).map( (row_value, row_index) => {
 			let horizontal_tile_indices =	row_index == 1
@@ -591,27 +612,51 @@ export const Tilemap_Manager_ƒ = {
 		/*
 			This enforces "safe access", and will always return a string.  If it's outside the bounds of the tile map, we return an empty string.
 		*/
-		let _pos = Tilemap_Manager_ƒ.inverse_adjust_tile_pos_for_sparse_map(me, pos, me.tile_map_scales[tilemap_name]);
+		if( Tilemap_Manager_ƒ.is_valid_map_tile(me, pos, tilemap_name) ){
+			let _pos = Tilemap_Manager_ƒ.full_inverse_adjust_tile_pos_for_sparse_map(me, pos, me.tile_map_scales[tilemap_name]);
 
-		if(
-			_pos.y > (_.size(me.tile_maps[tilemap_name]) - 1) ||
-			_pos.y < 0 ||
-			_pos.x > (_.size(me.tile_maps[tilemap_name][_pos.y]) - 1) ||
-			_pos.x < 0
-		){
-			return '';
+			if(
+				_pos.y > (_.size(me.tile_maps[tilemap_name]) - 1) ||
+				_pos.y < 0 ||
+				_pos.x > (_.size(me.tile_maps[tilemap_name][_pos.y]) - 1) ||
+				_pos.x < 0
+			){
+				return '';
+			} else {
+				return me.tile_maps[tilemap_name][_pos.y][_pos.x];
+			}
 		} else {
-			return me.tile_maps[tilemap_name][_pos.y][_pos.x];
+			return '';
 		}
 	},
 	
-	adjust_tile_pos_for_sparse_map: ( me: Tilemap_Manager_Data, pos: Point2D, scale: TileMapScale ): Point2D => {
+	full_adjust_tile_pos_for_sparse_map: ( me: Tilemap_Manager_Data, pos: Point2D, scale: TileMapScale ): Point2D => {
 		let new_pos_y = pos.y + scale.col_origin;
 
 		let adjusted_pos = {
-			x: pos.x + scale.row_origins[pos.y],
+			x: pos.x + scale.row_origins[new_pos_y],
 			y: new_pos_y
 		}
+
+		if( isNaN(adjusted_pos.x) || isNaN(adjusted_pos.y)){
+			throw new Error(`invalid output from original pos [${pos.x},${pos.y}] being translated to [${adjusted_pos.x},${adjusted_pos.y}]`)
+		}
+
+		return adjusted_pos;
+	},
+
+	full_inverse_adjust_tile_pos_for_sparse_map: ( me: Tilemap_Manager_Data, pos: Point2D, scale: TileMapScale ): Point2D => {
+		let new_pos_y = pos.y - scale.col_origin;
+
+		let adjusted_pos = {
+			x: pos.x - scale.row_origins[new_pos_y],
+			y: new_pos_y
+		}
+
+		if( isNaN(adjusted_pos.x) || isNaN(adjusted_pos.y)){
+			debugger;
+			throw new Error(`invalid output from original pos [${pos.x},${pos.y}] being translated to [${adjusted_pos.x},${adjusted_pos.y}]`)
+		}		
 
 		return adjusted_pos;
 	},
@@ -623,6 +668,10 @@ export const Tilemap_Manager_ƒ = {
 			x: pos.x - scale.row_origins[pos.y],
 			y: new_pos_y
 		}
+
+		if( isNaN(adjusted_pos.x) || isNaN(adjusted_pos.y)){
+			throw new Error(`invalid output from original pos [${pos.x},${pos.y}] being translated to [${adjusted_pos.x},${adjusted_pos.y}]`)
+		}		
 
 		return adjusted_pos;
 	},
