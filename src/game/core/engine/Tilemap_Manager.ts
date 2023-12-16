@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
-import _, { Dictionary, cloneDeep, isArray, map, range } from "lodash";
+import _, { Dictionary, cloneDeep, isArray, map, range, size } from "lodash";
 
 import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
@@ -300,28 +300,48 @@ export const Tilemap_Manager_ƒ = {
 
 		//const new_tilemaps: TileMaps = map(me.tile_maps, (tilemap_val) =>(
 		const expand_tilemap = ( tilemap_val: TileMap ): TileMap => (
-			map(tilemap_val, (row_val)=>(
 				/*
 					Build a new map.  To spare a wall of if conditions, we'll always concat two arrays on each side (top and bottom, here).  If we're shrinking the map in the middle, we'll just made the additive arrays on the side, empty.  Likewise, we'll always slice the array in the middle, but if it turns out we're growing it, the slice will just be an identity operation. 
+
+					This code just below pads out new, empty rows if we need them.
 				*/
 
-
-				/*
-					The following code expands rows if they're too short.
-				*/
 				concat(
 					concat(
-						map( range( Math.max(0, bounds.grow_x) ), ()=>('') ),
+						map( range( Math.max(0, bounds.grow_y) ), ()=>( new_row(tilemap_val) ) ),
 						slice(
-							Math.abs(Math.min( bounds.grow_x, 0)),
-							row_val.length + Math.min( bounds.grow_x2, 0),
-							row_val
+							Math.abs(Math.min( bounds.grow_y, 0)),
+							tilemap_val.length + Math.min( bounds.grow_y2, 0),				
+							map(tilemap_val, (row_val)=>(
+								expand_row(row_val)
+							))
 						)
 					),
-					map( range( Math.max(0, bounds.grow_x2) ), ()=>('') ),
+					map( range( Math.max(0, bounds.grow_y2) ), ()=>( new_row(tilemap_val) ) ),
 				)
-			))
 		);
+		
+		const new_row = ( tilemap_val: TileMap ): Array<string> => (
+			map( range( bounds.grow_x + bounds.grow_x2 + size(tilemap_val[0]) ), ()=>(''))
+		)
+
+		const expand_row = (row_val: Array<string>): Array<string> => (
+			/*
+				The following code expands rows if they're too short.
+			*/
+			concat(
+				concat(
+					map( range( Math.max(0, bounds.grow_x) ), ()=>('') ),
+					slice(
+						Math.abs(Math.min( bounds.grow_x, 0)),
+						row_val.length + Math.min( bounds.grow_x2, 0),
+						row_val
+					)
+				),
+				map( range( Math.max(0, bounds.grow_x2) ), ()=>('') ),
+			)
+		);
+
 
 		const new_tilemaps: TileMaps = {
 			terrain: expand_tilemap(me.tile_maps['terrain']),
