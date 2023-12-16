@@ -541,7 +541,7 @@ export const Tilemap_Manager_ƒ = {
 		if( cached_value != undefined ){
 			return cached_value;
 		} else {
-			const tpc = Tilemap_Manager_ƒ.get_tile_position_comparator_for_pos(me, pos);
+			const tpc = Tilemap_Manager_ƒ.get_tile_position_comparator_for_pos(me, pos, tilemap_name);
 			
 			const val = _.map(tpc, (row_val, row_idx) => {
 				return _.map(row_val, (col_val, col_idx) => {
@@ -562,11 +562,11 @@ export const Tilemap_Manager_ƒ = {
 		}
 	},
 	
-	get_tile_position_comparator_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D ): TilePositionComparatorSample => {
+	get_tile_position_comparator_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ): TilePositionComparatorSample => {
 		/*
 			This would simply grab all 8 adjacent tiles (and ourselves, for a total of 9 tiles) as a square sample.  The problem here is that, although our tiles are in fact stored as "square" data in an array, we're actually a hex grid.  Because we're a hex grid, we're actually just looking for 7 tiles, so we'll need to adjust the result.  Depending on whether we're on an even or odd row, we need to lop off the first (or last) member of the first and last rows. 	
 		*/
-		const _pos = Tilemap_Manager_ƒ.inverse_adjust_tile_pos_for_sparse_map( me, pos, me.tile_map_scales['terrain']);
+		const _pos = Tilemap_Manager_ƒ.inverse_adjust_tile_pos_for_sparse_map( me, pos, me.tile_map_scales[tilemap_name]);
 
 		return _.range(_pos.y - 1, _pos.y + 2).map( (row_value, row_index) => {
 			let horizontal_tile_indices =	row_index == 1

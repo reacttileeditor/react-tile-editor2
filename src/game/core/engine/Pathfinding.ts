@@ -79,7 +79,7 @@ export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manage
 
 
 	const check_adjacencies = ( _grid: TileGrid, _coords: Point2D ): Array<WeightedNode> => {
-		const tile_data: TilePositionComparatorSample = Tilemap_Manager_ƒ.get_tile_position_comparator_for_pos(_TM, _coords);
+		const tile_data: TilePositionComparatorSample = Tilemap_Manager_ƒ.get_tile_position_comparator_for_pos(_TM, _coords, 'terrain');
 		var adjacent_nodes: Array<WeightedNode> = [];
 
 		/*
