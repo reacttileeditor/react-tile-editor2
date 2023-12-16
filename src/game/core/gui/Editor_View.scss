@@ -52,6 +52,34 @@
 			}
 		}
 
+		.input-grid-sizes {
+			padding: 1rem;
+			border-radius: 0.3rem;
+			margin-top: 1rem;
+			border: 0.1rem solid #101010;
+
+			display: grid;
+			grid-template-columns: 1fr 180px 1fr;
+			grid-template-rows: 1fr 180px 1fr;
+			gap: 1rem;
+
+			.image {
+				background-color: rgb(29, 122, 75);
+			}
+
+			.input-pair {
+				display: flex;
+				flex-flow: column nowrap;
+				justify-content: center;
+				align-items: center;
+
+				.rs-input {
+					max-width: 4rem;
+				}
+			}		
+		}
+
+
 		.delete-confirm {
 			background-color: #6b0e0e;
 			padding: 1rem;

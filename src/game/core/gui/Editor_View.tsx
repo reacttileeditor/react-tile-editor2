@@ -537,25 +537,8 @@ export const Edit_Metadata_Modal = (props: {
 				/>
 			</div>
 		</div>
-		<div className="input-strip">
-			<div className="input-pair">
-				<div className="label">Grow x:</div>
-				<Input
-					value={grow_x}
-					type="number"
-					onChange={(value: string, event) => { set_grow_x(toNumber(value)) }}		
-				/>
-			</div>
-			<div className="input-pair">
-				<div className="label">Grow x2:</div>
-				<Input
-					value={grow_x2}
-					type="number"
-					onChange={(value: string, event) => { set_grow_x2(toNumber(value)) }}		
-				/>
-			</div>
-		</div>
-		<div className="input-strip">
+		<div className="input-grid-sizes">
+			<div className="spacer"/>
 			<div className="input-pair">
 				<div className="label">Grow y:</div>
 				<Input
@@ -564,6 +547,27 @@ export const Edit_Metadata_Modal = (props: {
 					onChange={(value: string, event) => { set_grow_y(toNumber(value)) }}		
 				/>
 			</div>
+			<div className="spacer"/>
+
+			<div className="input-pair">
+				<div className="label">Grow x:</div>
+				<Input
+					value={grow_x}
+					type="number"
+					onChange={(value: string, event) => { set_grow_x(toNumber(value)) }}		
+				/>
+			</div>
+			<div className="image"/>
+			<div className="input-pair">
+				<div className="label">Grow x2:</div>
+				<Input
+					value={grow_x2}
+					type="number"
+					onChange={(value: string, event) => { set_grow_x2(toNumber(value)) }}		
+				/>
+			</div>
+
+			<div className="spacer"/>
 			<div className="input-pair">
 				<div className="label">Grow y2:</div>
 				<Input
@@ -572,6 +576,7 @@ export const Edit_Metadata_Modal = (props: {
 					onChange={(value: string, event) => { set_grow_y2(toNumber(value)) }}		
 				/>
 			</div>
+			<div className="spacer"/>
 		</div>
 
 		<div className="button-strip">
