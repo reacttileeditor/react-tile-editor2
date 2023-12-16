@@ -469,6 +469,12 @@ export const Edit_Metadata_Modal = (props: {
 	const [origin_x, set_origin_x] = useState<number>(0);
 	const [origin_y, set_origin_y] = useState<number>(0);
 
+	const [grow_x, set_grow_x] = useState<number>(0);
+	const [grow_x2, set_grow_x2] = useState<number>(0);
+	const [grow_y, set_grow_y] = useState<number>(0);
+	const [grow_y2, set_grow_y2] = useState<number>(0);
+
+
 	useEffect(() => {
 		reset_values();
 	}, [props.level_metadata]);
@@ -478,6 +484,10 @@ export const Edit_Metadata_Modal = (props: {
 		set_map_height(props.level_metadata.col_height);
 		set_origin_x(props.level_metadata.origin.x);
 		set_origin_y(props.level_metadata.origin.y);
+		set_grow_x(0);
+		set_grow_x2(0);
+		set_grow_y(0);
+		set_grow_y2(0);
 	}
 
 
@@ -527,6 +537,43 @@ export const Edit_Metadata_Modal = (props: {
 				/>
 			</div>
 		</div>
+		<div className="input-strip">
+			<div className="input-pair">
+				<div className="label">Grow x:</div>
+				<Input
+					value={grow_x}
+					type="number"
+					onChange={(value: string, event) => { set_grow_x(toNumber(value)) }}		
+				/>
+			</div>
+			<div className="input-pair">
+				<div className="label">Grow x2:</div>
+				<Input
+					value={grow_x2}
+					type="number"
+					onChange={(value: string, event) => { set_grow_x2(toNumber(value)) }}		
+				/>
+			</div>
+		</div>
+		<div className="input-strip">
+			<div className="input-pair">
+				<div className="label">Grow y:</div>
+				<Input
+					value={grow_y}
+					type="number"
+					onChange={(value: string, event) => { set_grow_y(toNumber(value)) }}		
+				/>
+			</div>
+			<div className="input-pair">
+				<div className="label">Grow y2:</div>
+				<Input
+					value={grow_y2}
+					type="number"
+					onChange={(value: string, event) => { set_grow_y2(toNumber(value)) }}		
+				/>
+			</div>
+		</div>
+
 		<div className="button-strip">
 			<Button
 				appearance="subtle"
@@ -538,16 +585,23 @@ export const Edit_Metadata_Modal = (props: {
 			<Button
 				disabled={false}
 				onClick={ () => { 
-					props.set_Tilemap_Manager(
-						Tilemap_Manager_ƒ.set_metadata(props._Tilemap_Manager(), {
+					props.set_Tilemap_Manager({
+						...props._Tilemap_Manager(),
+						metadata: Tilemap_Manager_ƒ.set_metadata(props._Tilemap_Manager(), {
 							row_length: map_width,
 							col_height: map_height,
 							origin: {
 								x: origin_x,
 								y: origin_y,
 							}
-						})
-					)
+						}).metadata,
+						tile_maps: Tilemap_Manager_ƒ.expand_tile_map(props._Tilemap_Manager(), {
+							grow_x: grow_x,
+							grow_x2: grow_x2,
+							grow_y: grow_y,
+							grow_y2: grow_y2,
+						}).tile_maps
+					});
 					props.set_show_metadata_dialog(false)
 				}}
 			>Save</Button>

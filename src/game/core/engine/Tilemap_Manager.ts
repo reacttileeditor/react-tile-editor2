@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
-import _, { Dictionary, cloneDeep, isArray } from "lodash";
+import _, { Dictionary, cloneDeep, isArray, map, range } from "lodash";
 
 import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
@@ -11,7 +11,7 @@ import { ƒ } from "./Utils";
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import localforage from "localforage";
-import { concat, filter, uniq } from "ramda";
+import { concat, filter, slice, uniq } from "ramda";
 import { Page } from '@rsuite/icons';
 
 type TileViewState = {
@@ -33,11 +33,13 @@ type PersistData = {
 	metadata: MetaData,
 };
 
-export type MetaData = {
+export type SizeMetaData = {
 	row_length: number,
 	col_height: number,
 	origin: Point2D,
 };
+
+export type MetaData = SizeMetaData;
 
 const metadata_init = {
 	row_length: 14,
@@ -244,7 +246,7 @@ export const Tilemap_Manager_ƒ = {
 		const new_tilemap_data = cloneDeep(me);
 		
 		if(
-			Tilemap_Manager_ƒ.is_within_map_bounds( me, _AM, pos )
+			Tilemap_Manager_ƒ.is_within_map_data_bounds( me, pos )
 		){
 			if(selected_tile_type && selected_tile_type != ''){
 				new_tilemap_data.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
@@ -283,6 +285,54 @@ export const Tilemap_Manager_ƒ = {
 		}
 	},
 
+	expand_tile_map: (
+		me: Tilemap_Manager_Data,
+		bounds: {
+			grow_x: number,
+			grow_y: number,
+			grow_x2: number,
+			grow_y2: number,
+		} ): Tilemap_Manager_Data => {
+
+		/*
+			We're going to treat all positive grow values as expansion, to make the math simpler.  This means grow_x being, say `2` will indeed expand the map by one tile in the negative direction.
+		*/
+
+		//const new_tilemaps: TileMaps = map(me.tile_maps, (tilemap_val) =>(
+		const expand_tilemap = ( tilemap_val: TileMap ): TileMap => (
+			map(tilemap_val, (row_val)=>(
+				/*
+					Build a new map.  To spare a wall of if conditions, we'll always concat two arrays on each side (top and bottom, here).  If we're shrinking the map in the middle, we'll just made the additive arrays on the side, empty.  Likewise, we'll always slice the array in the middle, but if it turns out we're growing it, the slice will just be an identity operation. 
+				*/
+
+
+				/*
+					The following code expands rows if they're too short.
+				*/
+				concat(
+					concat(
+						map( range( Math.max(0, bounds.grow_x) ), ()=>('') ),
+						slice(
+							Math.abs(Math.min( bounds.grow_x, 0)),
+							row_val.length - Math.min( bounds.grow_x2, 0),
+							row_val
+						)
+					),
+					map( range( Math.max(0, bounds.grow_x2) ), ()=>('') ),
+				)
+			))
+		);
+
+		const new_tilemaps: TileMaps = {
+			terrain: expand_tilemap(me.tile_maps['terrain']),
+			ui: expand_tilemap(me.tile_maps['ui']),
+		}
+
+		return {
+			...me,
+			tile_maps: _.cloneDeep(new_tilemaps)
+		}
+	},
 
 /*----------------------- draw ops -----------------------*/
 
@@ -387,6 +437,12 @@ export const Tilemap_Manager_ƒ = {
 		pos.y < me.metadata.col_height 
 	),
 
+	is_within_map_data_bounds: (me: Tilemap_Manager_Data, pos: Point2D ): boolean => (
+		pos.x >= 0 &&
+		pos.y >= 0 && 
+		pos.x < me.tile_maps['terrain'][0].length &&
+		pos.y < me.tile_maps['terrain'].length 
+	),	
 
 
 	get_tile_comparator_sample_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ): TileComparatorSample => {

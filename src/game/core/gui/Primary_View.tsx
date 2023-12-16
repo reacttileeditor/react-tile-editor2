@@ -39,6 +39,22 @@ const get_Game_Manager_Data = () => (_Game_Manager_Data as Game_Manager_Data);
 const set_Game_Manager_Data = (newVal: Game_Manager_Data) => { _Game_Manager_Data = cloneDeep(newVal);}
 
 
+// https://stackoverflow.com/a/62106602
+// define our parent property accessible via globalThis. Also apply the TypeScript type.
+// var app: globalAppVariables;
+
+// // define the child properties and their types. 
+// type globalAppVariables = {
+// 	set_Tilemap_Manager: Function;
+// 	get_Tilemap_Manager: Function;
+// };
+
+// // set the values.
+// //@ts-ignore
+// globalThis.app = {
+// 	set_Tilemap_Manager: set_Tilemap_Manager,
+// 	get_Tilemap_Manager: get_Tilemap_Manager,
+// };
 
 
 
