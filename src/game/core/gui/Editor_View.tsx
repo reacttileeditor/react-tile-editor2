@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import React, { Dispatch, KeyboardEventHandler, SetStateAction, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import _, { isNil, isString, toNumber } from "lodash";
 
@@ -498,15 +498,20 @@ export const Edit_Metadata_Modal = (props: {
 			props.set_show_metadata_dialog(false);
 		}}
 		className="Save_File_Modal"
+		//@ts-ignore
+		onKeyDown={(evt)=>{
+			evt.stopPropagation();
+		}}
 	>
 		<h3>Edit Metadata</h3>
-		<div className="label">Warning: don't use this dialog right now; the edits will be destructive and cause undefined behavior.  The values will be set, but the tilemap manager doesn't know how to gracefully handle them getting rug-pulled underneath it.</div>
+		<div className="label">The following were implemented to allow setting a box, subset from the actual map data, to allow the person editing the map to non-destructively trim the active area.  They will likely be removed.</div>
 		<div className="input-strip">
 			<div className="input-pair">
 				<div className="label">Map Width:</div>
 				<Input
 					value={map_width}
 					type="number"
+					disabled
 					onChange={(value: string, event) => { set_map_width(toNumber(value)) }}		
 				/>
 			</div>
@@ -515,6 +520,7 @@ export const Edit_Metadata_Modal = (props: {
 				<Input
 					value={map_height}
 					type="number"
+					disabled
 					onChange={(value: string, event) => { set_map_height(toNumber(value)) }}		
 				/>
 			</div>
@@ -525,6 +531,7 @@ export const Edit_Metadata_Modal = (props: {
 				<Input
 					value={origin_x}
 					type="number"
+					disabled
 					onChange={(value: string, event) => { set_origin_x(toNumber(value)) }}		
 				/>
 			</div>
@@ -533,14 +540,15 @@ export const Edit_Metadata_Modal = (props: {
 				<Input
 					value={origin_y}
 					type="number"
+					disabled
 					onChange={(value: string, event) => { set_origin_y(toNumber(value)) }}		
 				/>
 			</div>
 		</div>
+		<div className="label">This allows you to grow/shrink the map along the x/y axes.  Positive values add rows or columns, negative values remove them.</div>
 		<div className="input-grid-sizes">
 			<div className="spacer"/>
 			<div className="input-pair">
-				<div className="label">Grow y:</div>
 				<Input
 					value={grow_y}
 					type="number"
@@ -550,7 +558,6 @@ export const Edit_Metadata_Modal = (props: {
 			<div className="spacer"/>
 
 			<div className="input-pair">
-				<div className="label">Grow x:</div>
 				<Input
 					value={grow_x}
 					type="number"
@@ -559,7 +566,6 @@ export const Edit_Metadata_Modal = (props: {
 			</div>
 			<div className="image"/>
 			<div className="input-pair">
-				<div className="label">Grow x2:</div>
 				<Input
 					value={grow_x2}
 					type="number"
@@ -569,7 +575,6 @@ export const Edit_Metadata_Modal = (props: {
 
 			<div className="spacer"/>
 			<div className="input-pair">
-				<div className="label">Grow y2:</div>
 				<Input
 					value={grow_y2}
 					type="number"
