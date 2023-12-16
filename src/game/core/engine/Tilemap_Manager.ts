@@ -314,7 +314,7 @@ export const Tilemap_Manager_ƒ = {
 						map( range( Math.max(0, bounds.grow_x) ), ()=>('') ),
 						slice(
 							Math.abs(Math.min( bounds.grow_x, 0)),
-							row_val.length - Math.min( bounds.grow_x2, 0),
+							row_val.length + Math.min( bounds.grow_x2, 0),
 							row_val
 						)
 					),
