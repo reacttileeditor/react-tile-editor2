@@ -61,7 +61,7 @@ export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manage
 			If the tile we're checking is out of bounds, then it's blocked.
 			If the tile we're checking is open, it's a valid node connection, so we return it (so we can add it to the graph).
 		*/
-		if( Tilemap_Manager_ƒ.is_within_map_bounds( _TM, _AM, _coords ) ){
+		if( Tilemap_Manager_ƒ.is_within_map_bounds( _TM, _coords ) ){
 			let weight = move_cost_for_coords( _grid, _coords );
 		
 			if( weight !== null ){

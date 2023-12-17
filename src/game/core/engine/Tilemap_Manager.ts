@@ -246,7 +246,7 @@ export const Tilemap_Manager_ƒ = {
 		const new_tilemap_data = cloneDeep(me);
 		
 		if(
-			Tilemap_Manager_ƒ.is_within_map_data_bounds( me, pos )
+			Tilemap_Manager_ƒ.is_within_map_bounds( me, pos )
 		){
 			if(selected_tile_type && selected_tile_type != ''){
 				new_tilemap_data.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
@@ -450,19 +450,12 @@ export const Tilemap_Manager_ƒ = {
 	
 	
 /*----------------------- info ops -----------------------*/
-	is_within_map_bounds: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, pos: Point2D ): boolean => (
-		pos.x >= 0 &&
-		pos.y >= 0 && 
-		pos.x < me.metadata.row_length &&
-		pos.y < me.metadata.col_height 
-	),
-
-	is_within_map_data_bounds: (me: Tilemap_Manager_Data, pos: Point2D ): boolean => (
+	is_within_map_bounds: (me: Tilemap_Manager_Data, pos: Point2D ): boolean => (
 		pos.x >= 0 &&
 		pos.y >= 0 && 
 		pos.x < me.tile_maps['terrain'][0].length &&
 		pos.y < me.tile_maps['terrain'].length 
-	),	
+	),
 
 
 	get_tile_comparator_sample_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ): TileComparatorSample => {
