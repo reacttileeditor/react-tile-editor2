@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
-import _, { Dictionary, cloneDeep, isArray, map, range, size } from "lodash";
+import _, { Dictionary, cloneDeep, isArray, isEmpty, map, range, size } from "lodash";
 
 import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
@@ -13,6 +13,7 @@ import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import localforage from "localforage";
 import { concat, filter, slice, uniq } from "ramda";
 import { Page } from '@rsuite/icons';
+import { Vals } from "../constants/Constants";
 
 type TileViewState = {
 	level_name: string,
@@ -34,16 +35,12 @@ type PersistData = {
 };
 
 export type SizeMetaData = {
-	row_length: number,
-	col_height: number,
 	origin: Point2D,
 };
 
 export type MetaData = SizeMetaData;
 
 const metadata_init = {
-	row_length: 14,
-	col_height: 20,
 	origin: {
 		x: 0,
 		y: 0,
@@ -73,7 +70,7 @@ export type Direction =
 
 
 
-const tile_comparator_cache_init = {
+const tile_maps_init = {
 	terrain: [[]],
 	ui: [[]],
 };
@@ -88,11 +85,8 @@ export const New_Tilemap_Manager = (): Tilemap_Manager_Data => {
 	return {
 		level_name: '',
 		metadata: _.cloneDeep(metadata_init),
-		tile_maps: {
-			terrain: [['']],
-			ui: [['']],
-		},
-		cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
+		tile_maps: _.cloneDeep(tile_maps_init),
+		cache_of_tile_comparators: _.cloneDeep(tile_maps_init),
 		cache_of_image_lists: _.cloneDeep({}),
 		initialized: false,
 	}
@@ -104,9 +98,11 @@ export const Tilemap_Manager_ƒ = {
 /*----------------------- initialization and asset loading -----------------------*/
 
 	initialize_tiles: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
+		const map_size = Tilemap_Manager_ƒ.get_map_bounds(me);
 
-		const fresh_terrain_tilemap: TileMap = _.range(me.metadata.col_height).map( (row_value, row_index) => {
-			return _.range(me.metadata.row_length).map( (col_value, col_index) => {
+
+		const fresh_terrain_tilemap: TileMap = _.range(map_size.h).map( (row_value, row_index) => {
+			return _.range(map_size.w).map( (col_value, col_index) => {
 				return Asset_Manager_ƒ.yield_tile_name_list(_AM)[
 					Utils.dice( _.size( Asset_Manager_ƒ.yield_tile_name_list(_AM) ) ) -1 
 				];
@@ -121,14 +117,14 @@ export const Tilemap_Manager_ƒ = {
 				terrain: fresh_terrain_tilemap,
 				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
 			},
-			cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
+			cache_of_tile_comparators: _.cloneDeep(tile_maps_init),
 			cache_of_image_lists: _.cloneDeep({}),
 			initialized: true,
 		}
 	},
 
 	cleared_cache: () : CacheData => ({
-		cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
+		cache_of_tile_comparators: _.cloneDeep(tile_maps_init),
 		cache_of_image_lists: _.cloneDeep({}),
 	}),
 
@@ -141,10 +137,7 @@ export const Tilemap_Manager_ƒ = {
 	): void => {
 		let level_data: PersistData = {
 			metadata: _.cloneDeep(metadata_init),
-			tile_maps: {
-				terrain: [['']],
-				ui: [['']],
-			},
+			tile_maps: _.cloneDeep(tile_maps_init),
 		};
 
 		localforage.getItem<PersistData>(level_name).then((value) => {
@@ -156,7 +149,7 @@ export const Tilemap_Manager_ƒ = {
 				level_name: level_name,
 				metadata: _.cloneDeep(level_data.metadata),
 				tile_maps: _.cloneDeep(level_data.tile_maps),
-				cache_of_tile_comparators: _.cloneDeep(tile_comparator_cache_init),
+				cache_of_tile_comparators: _.cloneDeep(tile_maps_init),
 				cache_of_image_lists: _.cloneDeep({}),
 				initialized: true,
 			})
@@ -265,8 +258,11 @@ export const Tilemap_Manager_ƒ = {
 	},
 
 	create_empty_tile_map: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): TileMap => {
-		return _.range(me.metadata.col_height).map( (row_value, row_index) => {
-			return _.range(me.metadata.row_length).map( (col_value, col_index) => {
+		const map_size = Tilemap_Manager_ƒ.get_map_bounds(me);
+
+
+		return _.range(map_size.h).map( (row_value, row_index) => {
+			return _.range(map_size.w).map( (col_value, col_index) => {
 				return ''
 			});
 		});
@@ -450,11 +446,33 @@ export const Tilemap_Manager_ƒ = {
 	
 	
 /*----------------------- info ops -----------------------*/
-	is_within_map_bounds: (me: Tilemap_Manager_Data, pos: Point2D ): boolean => (
-		pos.x >= 0 &&
-		pos.y >= 0 && 
-		pos.x < me.tile_maps['terrain'][0].length &&
-		pos.y < me.tile_maps['terrain'].length 
+	is_within_map_bounds: (me: Tilemap_Manager_Data, pos: Point2D ): boolean => {
+		const bounds = Tilemap_Manager_ƒ.get_map_bounds(me);
+
+		return (
+			pos.x >= bounds.x &&
+			pos.y >= bounds.y && 
+			pos.x < bounds.w &&
+			pos.y < bounds.h 
+		)
+	},
+
+	get_map_bounds: (me: Tilemap_Manager_Data): Rectangle => (
+		isEmpty(me.tile_maps['terrain'][0])
+		?
+		{
+			x: 0,
+			y: 0,
+			w: Vals.default_map_dimensions.x,
+			h: Vals.default_map_dimensions.y,
+		}		
+		:
+		{
+			x: 0,
+			y: 0,
+			w: me.tile_maps['terrain'][0].length,
+			h: me.tile_maps['terrain'].length,
+		}
 	),
 
 

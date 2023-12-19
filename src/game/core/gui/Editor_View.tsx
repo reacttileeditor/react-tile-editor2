@@ -464,8 +464,6 @@ export const Edit_Metadata_Modal = (props: {
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
 	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
 }) => {
-	const [map_width, set_map_width] = useState<number>(0);
-	const [map_height, set_map_height] = useState<number>(0);
 	const [origin_x, set_origin_x] = useState<number>(0);
 	const [origin_y, set_origin_y] = useState<number>(0);
 
@@ -480,8 +478,6 @@ export const Edit_Metadata_Modal = (props: {
 	}, [props.level_metadata]);
 
 	const reset_values = () => {
-		set_map_width(props.level_metadata.row_length);
-		set_map_height(props.level_metadata.col_height);
 		set_origin_x(props.level_metadata.origin.x);
 		set_origin_y(props.level_metadata.origin.y);
 		set_grow_x(0);
@@ -504,47 +500,6 @@ export const Edit_Metadata_Modal = (props: {
 		}}
 	>
 		<h3>Edit Metadata</h3>
-		<div className="label">The following were implemented to allow setting a box, subset from the actual map data, to allow the person editing the map to non-destructively trim the active area.  They will likely be removed.</div>
-		<div className="input-strip">
-			<div className="input-pair">
-				<div className="label">Map Width:</div>
-				<Input
-					value={map_width}
-					type="number"
-					disabled
-					onChange={(value: string, event) => { set_map_width(toNumber(value)) }}		
-				/>
-			</div>
-			<div className="input-pair">
-				<div className="label">Map Height:</div>
-				<Input
-					value={map_height}
-					type="number"
-					disabled
-					onChange={(value: string, event) => { set_map_height(toNumber(value)) }}		
-				/>
-			</div>
-		</div>
-		<div className="input-strip">
-			<div className="input-pair">
-				<div className="label">Origin X:</div>
-				<Input
-					value={origin_x}
-					type="number"
-					disabled
-					onChange={(value: string, event) => { set_origin_x(toNumber(value)) }}		
-				/>
-			</div>
-			<div className="input-pair">
-				<div className="label">Origin Y:</div>
-				<Input
-					value={origin_y}
-					type="number"
-					disabled
-					onChange={(value: string, event) => { set_origin_y(toNumber(value)) }}		
-				/>
-			</div>
-		</div>
 		<div className="label">This allows you to grow/shrink the map along the x/y axes.  Positive values add rows or columns, negative values remove them.</div>
 		<div className="input-grid-sizes">
 			<div className="spacer"/>
@@ -583,6 +538,27 @@ export const Edit_Metadata_Modal = (props: {
 			</div>
 			<div className="spacer"/>
 		</div>
+		<div className="label">Origin was added to potentially allow "auto-adjusting" map script locations in the future, if rows are added/removed from the top or left side of the map.  We're leaving the bindings here since we may want to use it later.</div>
+		<div className="input-strip">
+			<div className="input-pair">
+				<div className="label">Origin X:</div>
+				<Input
+					value={origin_x}
+					type="number"
+					disabled
+					onChange={(value: string, event) => { set_origin_x(toNumber(value)) }}		
+				/>
+			</div>
+			<div className="input-pair">
+				<div className="label">Origin Y:</div>
+				<Input
+					value={origin_y}
+					type="number"
+					disabled
+					onChange={(value: string, event) => { set_origin_y(toNumber(value)) }}		
+				/>
+			</div>
+		</div>
 
 		<div className="button-strip">
 			<Button
@@ -598,8 +574,6 @@ export const Edit_Metadata_Modal = (props: {
 					props.set_Tilemap_Manager({
 						...props._Tilemap_Manager(),
 						metadata: Tilemap_Manager_ƒ.set_metadata(props._Tilemap_Manager(), {
-							row_length: map_width,
-							col_height: map_height,
 							origin: {
 								x: origin_x,
 								y: origin_y,
