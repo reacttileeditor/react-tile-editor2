@@ -11,8 +11,8 @@ import { MetaData, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Ti
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { useInterval } from "../engine/Utils";
-import { Button, Input, List, Modal, Tooltip, Whisper } from "rsuite";
-import { Icon, Page, Trash } from "@rsuite/icons";
+import { Button, Divider, Drawer, IconButton, Input, List, Modal, Tooltip, Whisper } from "rsuite";
+import { Icon, Page, Trash, Global, PeoplesCostomize } from "@rsuite/icons";
 
 import "./Editor_View.scss";
 import { Standard_Input_ƒ } from "./Standard_Input_Handling";
@@ -47,6 +47,8 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [show_save_dialog, set_show_save_dialog] = useState<boolean>(false);
 	const [show_metadata_dialog, set_show_metadata_dialog] = useState<boolean>(false);
 	const [level_filename_list, set_level_filename_list] = useState<Array<string>>([]);
+
+	const [show_unit_palette_drawer, set_show_unit_palette_drawer] = useState<boolean>(false);
 
 	useEffect(() => {
 		if(render_tick > 0){
@@ -219,6 +221,9 @@ export const Editor_View = (props: Editor_View_Props) => {
 			>
 				{'Generate Map'}
 			</Button>
+			<Divider vertical />
+			<IconButton icon={<Icon as={Global} />} >Terrain</IconButton>
+			<IconButton icon={<Icon as={PeoplesCostomize} />} onClick={()=>{ set_show_unit_palette_drawer(true) }}>Units</IconButton>
 		</div>
 		<div className="editor_node">
 			<Load_File_Modal
@@ -244,6 +249,10 @@ export const Editor_View = (props: Editor_View_Props) => {
 				level_metadata={props._Tilemap_Manager().metadata}
 				_Tilemap_Manager={props._Tilemap_Manager}
 				set_Tilemap_Manager={props.set_Tilemap_Manager}
+			/>
+			<Unit_Palette_Drawer
+				show_unit_palette_drawer={show_unit_palette_drawer}
+				set_show_unit_palette_drawer={set_show_unit_palette_drawer}
 			/>
 			<Canvas_View
 				assets_loaded={props.assets_loaded}
@@ -284,6 +293,28 @@ export const Editor_View = (props: Editor_View_Props) => {
 			</div>
 		</div>
 	</div>;
+}
+
+export const Unit_Palette_Drawer = (props: {
+	show_unit_palette_drawer: boolean,
+	set_show_unit_palette_drawer: Dispatch<SetStateAction<boolean>>,
+}) => {
+return <Drawer
+	open={props.show_unit_palette_drawer}
+	onClose={() => props.set_show_unit_palette_drawer(false)}
+	backdrop={'static'}
+	size={'25rem'}
+>
+	<Drawer.Header>
+		<Drawer.Title>Units</Drawer.Title>
+		<Drawer.Actions>
+
+		</Drawer.Actions>
+		</Drawer.Header>
+		<Drawer.Body>
+			hi
+		</Drawer.Body>
+	</Drawer>
 }
 
 
