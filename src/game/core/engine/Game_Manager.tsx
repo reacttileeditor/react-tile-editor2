@@ -12,7 +12,7 @@ import { Tile_Palette_Element } from "../gui/Tile_Palette_Element";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ, TileMap } from "./Tilemap_Manager";
 import { Pathfinder_ƒ } from "./Pathfinding";
 
-import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance } from "../../objects_core/Creature";
+import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance, CreatureTypeName } from "../../objects_core/Creature";
 
 import { Point2D, Rectangle } from '../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../objects_core/Custom_Object";
@@ -107,86 +107,51 @@ export const New_Game_Manager = (p: {
 		game_state: GameStateInit,
 	}
 
+	const creature_from_setup_data = (pos: Point2D, type_name: CreatureTypeName, team: number ) => {
+		return Game_Manager_ƒ.creature_from_setup_data({
+			get_GM: p.get_GM_instance,
+			get_AM: p._Asset_Manager,
+			get_BM: p._Blit_Manager,
+			get_TM: p._Tilemap_Manager,
+			pos: pos,
+			type_name: type_name,
+			team: team,
+		})
+	}
+
 	const first_turn_state_init = {
-		creature_list: [New_Creature({
-			get_GM_instance: p.get_GM_instance,
-			tile_pos: {x: 1, y: 6},
-			_Asset_Manager: p._Asset_Manager,
-			_Blit_Manager: p._Blit_Manager,
-			_Tilemap_Manager: p._Tilemap_Manager,
-			planned_tile_pos: {x: 1, y: 6},
-			type_name: 'hermit',
-			team: 1,
-			creation_timestamp: 0,
-			should_remove: false,
-			behavior_mode: 'stand',
-			is_done_with_turn: false,
-		}), New_Creature({
-			get_GM_instance: p.get_GM_instance,
-			tile_pos: {x: 2, y: 4},
-			_Asset_Manager: p._Asset_Manager,
-			_Blit_Manager: p._Blit_Manager,
-			_Tilemap_Manager: p._Tilemap_Manager,
-			planned_tile_pos: {x: 2, y: 4},
-			type_name: 'peasant',
-			team: 1,
-			creation_timestamp: 0,
-			should_remove: false,
-			behavior_mode: 'stand',
-			is_done_with_turn: false,
-		}), New_Creature({
-			get_GM_instance: p.get_GM_instance,
-			tile_pos: {x: 3, y: 11},
-			_Asset_Manager: p._Asset_Manager,
-			_Blit_Manager: p._Blit_Manager,
-			_Tilemap_Manager: p._Tilemap_Manager,
-			planned_tile_pos: {x: 3, y: 11},
-			type_name: 'human_footman',
-			team: 1,
-			creation_timestamp: 0,
-			should_remove: false,
-			behavior_mode: 'stand',
-			is_done_with_turn: false,
-		}), New_Creature({
-			get_GM_instance: p.get_GM_instance,
-			tile_pos: {x: 4, y: 4},
-			_Asset_Manager: p._Asset_Manager,
-			_Blit_Manager: p._Blit_Manager,
-			_Tilemap_Manager: p._Tilemap_Manager,
-			planned_tile_pos: {x: 4, y: 4},
-			type_name: 'skeleton',
-			team: 2,
-			creation_timestamp: 0,
-			should_remove: false,
-			behavior_mode: 'stand',
-			is_done_with_turn: false,
-		}), New_Creature({
-			get_GM_instance: p.get_GM_instance,
-			tile_pos: {x: 5, y: 8},
-			_Asset_Manager: p._Asset_Manager,
-			_Blit_Manager: p._Blit_Manager,
-			_Tilemap_Manager: p._Tilemap_Manager,
-			planned_tile_pos: {x: 5, y: 8},
-			type_name: 'skeleton',
-			team: 2,
-			creation_timestamp: 0,
-			should_remove: false,
-			behavior_mode: 'stand',
-			is_done_with_turn: false,
-		}), New_Creature({
-			get_GM_instance: p.get_GM_instance,
-			tile_pos: {x: 7, y: 8},
-			_Asset_Manager: p._Asset_Manager,
-			_Blit_Manager: p._Blit_Manager,
-			_Tilemap_Manager: p._Tilemap_Manager,
-			planned_tile_pos: {x: 7, y: 8},
-			type_name: 'undead_javelineer',
-			team: 2,
-			creation_timestamp: 0,
-			should_remove: false,
-			behavior_mode: 'stand',
-			is_done_with_turn: false,
-		})],
+		creature_list: [
+			creature_from_setup_data(
+				{x: 1, y: 6},
+				'hermit',
+				1
+			),
+			creature_from_setup_data(
+				{x: 2, y: 4},
+				'peasant',
+				1
+			),
+			creature_from_setup_data(
+				{x: 3, y: 11},
+				'human_footman',
+				1
+			),
+			creature_from_setup_data(
+				{x: 4, y: 4},
+				'skeleton',
+				1
+			),
+			creature_from_setup_data(
+				{x: 5, y: 8},
+				'skeleton',
+				1
+			),
+			creature_from_setup_data(
+				{x: 7, y: 8},
+				'undead_javelineer',
+				1
+			),
+		],
 		custom_object_list: [],
 	};
 
@@ -215,6 +180,32 @@ export const Game_Manager_ƒ = {
 
 	set_tooltip_update_function: (me: Game_Manager_Data, func: (p: TooltipData) => void) => {
 		me.update_tooltip_state = func;
+	},
+
+	/*----------------------- initialization -----------------------*/
+	creature_from_setup_data: (p: {
+		get_GM: () => Game_Manager_Data,
+		get_AM: () => Asset_Manager_Data,
+		get_BM: () => Blit_Manager_Data,
+		get_TM: () => Tilemap_Manager_Data,
+		pos: Point2D,
+		type_name: CreatureTypeName,
+		team: number,
+	}): Creature_Data => {
+		return New_Creature({
+			get_GM_instance: p.get_GM,
+			tile_pos: p.pos,
+			_Asset_Manager: p.get_AM,
+			_Blit_Manager: p.get_BM,
+			_Tilemap_Manager: p.get_TM,
+			planned_tile_pos: p.pos,
+			type_name: p.type_name,
+			team: p.team,
+			creation_timestamp: 0,
+			should_remove: false,
+			behavior_mode: 'stand',
+			is_done_with_turn: false,
+		})
 	},
 
 	/*----------------------- ui interaction -----------------------*/
