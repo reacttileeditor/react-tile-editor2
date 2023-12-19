@@ -96,3 +96,36 @@
 		}
 	}
 }
+
+.Unit_Palette_Drawer {
+	.rs-drawer-body {
+		display: flex;
+		flex-flow: column;
+		justify-content: flex-start;
+		align-items: center;
+
+		.unit-palette {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 2rem;
+
+			.creature_instance {
+				.tile_cell {
+					canvas {
+						border: 0.4rem dashed #444;
+						border-radius: 1rem;
+						box-sizing: border-box;
+					}
+				}
+
+				&.selected {
+					.tile_cell {
+						canvas {
+							border: 0.4rem dashed #999;
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -14,7 +14,8 @@ interface Props {
 	highlight: boolean,
 	tile_name: string,
 	asset_name: string,
-	handle_click(): void, 
+	handle_click(): void,
+	canvas_size: Point2D,
 }
 
 
@@ -59,7 +60,7 @@ export const Tile_Palette_Element = (props: Props) => {
 
 	const initialize_tilemap_manager = (ctx: CanvasRenderingContext2D) => {
 		if( !_Tilemap_Manager ){
-			set_Blit_Manager(New_Blit_Manager(ctx, default_canvas_size, false));
+			set_Blit_Manager(New_Blit_Manager(ctx, props.canvas_size, false));
 		} else {
 			if(_Blit_Manager){
 				Blit_Manager_ƒ.reset_context(_Blit_Manager, ctx);
@@ -85,8 +86,8 @@ export const Tile_Palette_Element = (props: Props) => {
 					props.tile_name,
 					_Blit_Manager,
 					{
-						x: Math.floor(default_canvas_size.x/2),
-						y: Math.floor(default_canvas_size.y/2)
+						x: Math.floor(props.canvas_size.x/2),
+						y: Math.floor(props.canvas_size.y/2)
 					},
 				);
 			}
@@ -97,8 +98,8 @@ export const Tile_Palette_Element = (props: Props) => {
 					asset_name:					props.asset_name,
 					_BM:						_Blit_Manager,
 					pos:						{
-						x: Math.floor(default_canvas_size.x/2),
-						y: Math.floor(default_canvas_size.y)
+						x: Math.floor(props.canvas_size.x/2),
+						y: Math.floor(props.canvas_size.y/1.1)
 					},
 					zorder:						zorder.rocks,
 					current_milliseconds:		0,
@@ -122,11 +123,11 @@ export const Tile_Palette_Element = (props: Props) => {
 	return <div className={`tile_cell${ props.highlight ? ' active' : ''}`}>
 		<canvas
 			ref={canvasRef}
-			width={default_canvas_size.x}
-			height={default_canvas_size.y}
+			width={props.canvas_size.x}
+			height={props.canvas_size.y}
 			style={ {
-				width: default_canvas_size.x * 2,
-				height: default_canvas_size.y * 2,
+				width: props.canvas_size.x * 2,
+				height: props.canvas_size.y * 2,
 				imageRendering: 'pixelated',
 			} }
 		

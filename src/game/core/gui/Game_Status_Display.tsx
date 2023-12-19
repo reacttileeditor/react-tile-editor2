@@ -134,6 +134,7 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 							asset_name={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_creature_image()}`}
 							highlight={false}
 							handle_click={ ()=>{} }
+							canvas_size={ {x: 50, y: 50} }
 						/>
 						<Label_and_Data_Pair
 							label={'Hitpoints:'}

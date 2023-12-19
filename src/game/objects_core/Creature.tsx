@@ -22,6 +22,7 @@ export type PathNodeWithDirection = {
 export type CreatureTypeName = 'hermit' | 'peasant' | 'skeleton' | 'undead_javelineer' | 'human_footman';
 
 
+
 export type ChangeType = 
 	'add' |
 	'set';
@@ -204,6 +205,10 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		remaining_move_points: Creature_ƒ.get_delegate(me.type_name).yield_moves_per_turn()
 	})
 ),
+/*----------------------- introspection -----------------------*/
+	list_all_creature_types: (): Array<CreatureTypeName> => {
+		return ['hermit','peasant','skeleton','undead_javelineer','human_footman'];
+	},
 
 /*----------------------- run time type guards -----------------------*/
 

@@ -16,6 +16,9 @@ import { Icon, Page, Trash, Global, PeoplesCostomize } from "@rsuite/icons";
 
 import "./Editor_View.scss";
 import { Standard_Input_ƒ } from "./Standard_Input_Handling";
+import { CreatureTypeName, Creature_ƒ } from "../../objects_core/Creature";
+import { Game_Manager_ƒ } from "../engine/Game_Manager";
+import { map } from "ramda";
 
 
 interface Editor_View_Props {
@@ -49,6 +52,8 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [level_filename_list, set_level_filename_list] = useState<Array<string>>([]);
 
 	const [show_unit_palette_drawer, set_show_unit_palette_drawer] = useState<boolean>(false);
+	const [selected_creature_type, set_selected_creature_type] = useState<CreatureTypeName>('hermit');
+
 
 	useEffect(() => {
 		if(render_tick > 0){
@@ -253,6 +258,9 @@ export const Editor_View = (props: Editor_View_Props) => {
 			<Unit_Palette_Drawer
 				show_unit_palette_drawer={show_unit_palette_drawer}
 				set_show_unit_palette_drawer={set_show_unit_palette_drawer}
+				selected_creature_type={selected_creature_type}
+				set_selected_creature_type={set_selected_creature_type}
+				_Asset_Manager={props._Asset_Manager}
 			/>
 			<Canvas_View
 				assets_loaded={props.assets_loaded}
@@ -281,13 +289,14 @@ export const Editor_View = (props: Editor_View_Props) => {
 				&&
 				Asset_Manager_ƒ.yield_tile_name_list(props._Asset_Manager()).map( (value, index) => {
 					return	<Tile_Palette_Element
-								asset_manager={props._Asset_Manager()}
-								tile_name={value}
-								asset_name={''}
-								key={value}
-								highlight={ selected_tile_type == value }
-								handle_click={ () => set_selected_tile_type( value ) }
-							/>
+						asset_manager={props._Asset_Manager()}
+						tile_name={value}
+						asset_name={''}
+						key={value}
+						highlight={ selected_tile_type == value }
+						handle_click={ () => set_selected_tile_type( value ) }
+						canvas_size={ {x: 50, y: 50} }
+					/>
 				})
 			}
 			</div>
@@ -298,21 +307,51 @@ export const Editor_View = (props: Editor_View_Props) => {
 export const Unit_Palette_Drawer = (props: {
 	show_unit_palette_drawer: boolean,
 	set_show_unit_palette_drawer: Dispatch<SetStateAction<boolean>>,
+	selected_creature_type: CreatureTypeName,
+	set_selected_creature_type: Dispatch<SetStateAction<CreatureTypeName>>,
+	_Asset_Manager: () => Asset_Manager_Data,
 }) => {
-return <Drawer
-	open={props.show_unit_palette_drawer}
-	onClose={() => props.set_show_unit_palette_drawer(false)}
-	backdrop={'static'}
-	size={'25rem'}
->
-	<Drawer.Header>
-		<Drawer.Title>Units</Drawer.Title>
-		<Drawer.Actions>
 
-		</Drawer.Actions>
+
+
+
+	const creature_list: Array<CreatureTypeName> = Creature_ƒ.list_all_creature_types();
+
+	return <Drawer
+		open={props.show_unit_palette_drawer}
+		onClose={() => props.set_show_unit_palette_drawer(false)}
+		size={'25rem'}
+		className="Unit_Palette_Drawer"
+	>
+		<Drawer.Header>
+			<Drawer.Title>Units</Drawer.Title>
+			<Drawer.Actions>
+
+			</Drawer.Actions>
 		</Drawer.Header>
 		<Drawer.Body>
-			hi
+			<div className="unit-palette">
+				{
+					map( (creature_type)=>(
+						<div
+							className={`creature_instance ${creature_type == props.selected_creature_type ? 'selected' : ''}`}
+							onClick={(evt)=>{
+								props.set_selected_creature_type(creature_type)
+							}}
+						>
+							<Tile_Palette_Element
+								asset_manager={props._Asset_Manager()}
+								tile_name={''}
+								asset_name={`${Creature_ƒ.get_delegate(creature_type).yield_creature_image()}`}
+								highlight={false}
+								handle_click={ ()=>{} }
+								canvas_size={ {x: 70, y: 70} }
+							/>
+						</div>
+					),
+					creature_list)
+				}
+			</div>
 		</Drawer.Body>
 	</Drawer>
 }
