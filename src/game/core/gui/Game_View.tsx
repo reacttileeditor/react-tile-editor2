@@ -75,8 +75,8 @@ const Map_Tooltip = (props: TooltipData) => {
 	</div>
 }
 
-import Foot_Icon from '../../../assets/feet-icon.png';
-import Distance_Icon from '../../../assets/distance-icon.png';
+import Foot_Icon from '../../assets/feet-icon.png';
+import Distance_Icon from '../../assets/distance-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, Game_and_Tilemap_Manager_Data, New_Game_Manager } from "../engine/Game_Manager";
 import { Game_Status_Display } from "./Game_Status_Display";
 import { Announcement_Modal } from "./Announcement_Modal";

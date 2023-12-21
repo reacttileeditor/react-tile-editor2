@@ -1,5 +1,5 @@
 @mixin stone-border {
-	border-image: url('~/src/assets/ui-border.png') round;
+	border-image: url('~/src/game/assets/ui-border.png') round;
 	border-image-slice: 15 10 15 10 fill;
 	border-image-width: 30px 20px;
 	border-image-outset: 6px;
@@ -7,7 +7,7 @@
 }
 
 @mixin stone-bg {
-	background: url('~/src/assets/ui-bg-texture.png');
+	background: url('~/src/game/assets/ui-bg-texture.png');
 	background-size: 80px 80px;
 	color:rgb(188, 190, 186)
 }
