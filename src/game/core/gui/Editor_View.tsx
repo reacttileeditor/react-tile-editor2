@@ -35,7 +35,7 @@ interface Editor_View_Props {
 	set_is_edit_mode: Dispatch<SetStateAction<boolean>>,
 }
 
-
+type ToolTypes = 'tiles' | 'unitAdd' | 'unitDelete';
 
 
 
@@ -53,6 +53,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 	const [show_unit_palette_drawer, set_show_unit_palette_drawer] = useState<boolean>(false);
 	const [selected_creature_type, set_selected_creature_type] = useState<CreatureTypeName>('hermit');
+	const [selected_tool, set_selected_tool] = useState<ToolTypes>('tiles');
 
 
 	useEffect(() => {
@@ -227,8 +228,22 @@ export const Editor_View = (props: Editor_View_Props) => {
 				{'Generate Map'}
 			</Button>
 			<Divider vertical />
-			<IconButton icon={<Icon as={Global} />} >Terrain</IconButton>
-			<IconButton icon={<Icon as={PeoplesCostomize} />} onClick={()=>{ set_show_unit_palette_drawer(true) }}>Units</IconButton>
+			<IconButton
+				icon={<Icon as={Global} />}
+				appearance={ selected_tool == 'tiles' ? 'primary' : 'default'} 
+				onClick={()=>{
+					set_show_unit_palette_drawer(true);
+					set_selected_tool('tiles') 
+				}}
+			>Terrain</IconButton>
+			<IconButton
+				icon={<Icon as={PeoplesCostomize} />}
+				onClick={()=>{
+					set_show_unit_palette_drawer(true);
+					set_selected_tool('unitAdd') 
+				}}
+				appearance={ selected_tool == 'unitAdd' ? 'primary' : 'default'} 
+			>Units</IconButton>
 		</div>
 		<div className="editor_node">
 			<Load_File_Modal
