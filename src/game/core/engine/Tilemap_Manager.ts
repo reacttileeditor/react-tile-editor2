@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
-import _, { Dictionary, cloneDeep, isArray, isEmpty, map, range, size } from "lodash";
+import _, { Dictionary, cloneDeep, isArray, isEmpty, isEqual, map, range, size } from "lodash";
 
 import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
@@ -362,7 +362,9 @@ export const Tilemap_Manager_ƒ = {
 /*----------------------- creature modification -----------------------*/
 
 	add_creature_at_pos: (me: Tilemap_Manager_Data, creature: Creature_Map_Instance): Tilemap_Manager_Data => {
-		const new_creature_list = concat( me.creature_list, [creature]);
+		const creature_list_with_tile_cleared = filter( (val)=> ( !isEqual(val.pos, creature.pos) ), me.creature_list)
+
+		const new_creature_list = concat( creature_list_with_tile_cleared, [creature]);
 
 		return {
 			...me,
