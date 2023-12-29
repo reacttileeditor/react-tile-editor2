@@ -11,7 +11,7 @@ import { MetaData, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Ti
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { useInterval } from "../engine/Utils";
-import { Button, Divider, Drawer, IconButton, Input, List, Modal, Tooltip, Whisper } from "rsuite";
+import { Button, Divider, Drawer, Dropdown, IconButton, Input, List, Modal, Tooltip, Whisper } from "rsuite";
 import { Icon, Page, Trash, Global, PeoplesCostomize } from "@rsuite/icons";
 
 import "./Editor_View.scss";
@@ -53,6 +53,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 	const [show_unit_palette_drawer, set_show_unit_palette_drawer] = useState<boolean>(false);
 	const [selected_creature_type, set_selected_creature_type] = useState<CreatureTypeName>('hermit');
+	const [selected_creature_team, set_selected_creature_team] = useState<number>(1);
 	const [selected_tool, set_selected_tool] = useState<ToolTypes>('tiles');
 
 
@@ -159,7 +160,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 				Tilemap_Manager_ƒ.add_creature_at_pos(props._Tilemap_Manager(), {
 					type_name: selected_creature_type,
 					pos: Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
-					team: 1,
+					team: selected_creature_team,
 				})
 			);
 		} else if (selected_tool == 'unitDelete'){
@@ -299,6 +300,8 @@ export const Editor_View = (props: Editor_View_Props) => {
 				set_show_unit_palette_drawer={set_show_unit_palette_drawer}
 				selected_creature_type={selected_creature_type}
 				set_selected_creature_type={set_selected_creature_type}
+				selected_creature_team={selected_creature_team}
+				set_selected_creature_team={set_selected_creature_team}
 				_Asset_Manager={props._Asset_Manager}
 			/>
 			<Canvas_View
@@ -348,6 +351,8 @@ export const Unit_Palette_Drawer = (props: {
 	set_show_unit_palette_drawer: Dispatch<SetStateAction<boolean>>,
 	selected_creature_type: CreatureTypeName,
 	set_selected_creature_type: Dispatch<SetStateAction<CreatureTypeName>>,
+	selected_creature_team: number,
+	set_selected_creature_team: Dispatch<SetStateAction<number>>,
 	_Asset_Manager: () => Asset_Manager_Data,
 }) => {
 
@@ -369,6 +374,21 @@ export const Unit_Palette_Drawer = (props: {
 			</Drawer.Actions>
 		</Drawer.Header>
 		<Drawer.Body>
+			<div className="team-selection">
+				<Dropdown title="Team">
+					{
+						map( (team_number)=>(
+							<Dropdown.Item
+								onSelect={ (eventKey: string, evt)=>{
+									props.set_selected_creature_team(team_number)
+								} }
+								active={props.selected_creature_team == team_number}
+							>Team #{team_number}</Dropdown.Item>
+						),
+						[1,2,3])
+					}
+				</Dropdown>
+			</div>
 			<div className="unit-palette">
 				{
 					map( (creature_type)=>(
