@@ -162,7 +162,13 @@ export const Editor_View = (props: Editor_View_Props) => {
 					team: 1,
 				})
 			);
-
+		} else if (selected_tool == 'unitDelete'){
+			props.set_Tilemap_Manager(
+				Tilemap_Manager_ƒ.remove_creature_at_pos(
+					props._Tilemap_Manager(),
+					Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos)
+				)
+			);
 		}
 	}
 

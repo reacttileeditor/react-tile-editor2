@@ -372,6 +372,17 @@ export const Tilemap_Manager_ƒ = {
 		};
 	},
 
+	remove_creature_at_pos: (me: Tilemap_Manager_Data, pos: Point2D): Tilemap_Manager_Data => {
+		const creature_list_with_tile_cleared = filter( (val)=> ( !isEqual(val.pos, pos) ), me.creature_list)
+
+
+		return {
+			...me,
+			creature_list: cloneDeep(creature_list_with_tile_cleared)
+		};
+	},
+
+	
 /*----------------------- draw ops -----------------------*/
 
 	
