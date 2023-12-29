@@ -143,15 +143,27 @@ export const Editor_View = (props: Editor_View_Props) => {
 	/*----------------------- I/O routines -----------------------*/
 	const handle_canvas_click = (pos: Point2D, buttons_pressed: MouseButtonState) => {
 		console.log('canvas click editor')
-		props.set_Tilemap_Manager(
-			Tilemap_Manager_ƒ.modify_tile_status(
-				props._Tilemap_Manager(),
-				props._Asset_Manager(),
-				Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
-				selected_tile_type,
-				'terrain'
-			)
-		);
+
+		if(selected_tool == 'tiles'){
+			props.set_Tilemap_Manager(
+				Tilemap_Manager_ƒ.modify_tile_status(
+					props._Tilemap_Manager(),
+					props._Asset_Manager(),
+					Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
+					selected_tile_type,
+					'terrain'
+				)
+			);
+		} else if (selected_tool == 'unitAdd'){
+			props.set_Tilemap_Manager(
+				Tilemap_Manager_ƒ.add_creature_at_pos(props._Tilemap_Manager(), {
+					type_name: selected_creature_type,
+					pos: Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
+					team: 1,
+				})
+			);
+
+		}
 	}
 
 	const editor_handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
@@ -232,7 +244,6 @@ export const Editor_View = (props: Editor_View_Props) => {
 				icon={<Icon as={Global} />}
 				appearance={ selected_tool == 'tiles' ? 'primary' : 'default'} 
 				onClick={()=>{
-					set_show_unit_palette_drawer(true);
 					set_selected_tool('tiles') 
 				}}
 			>Terrain</IconButton>

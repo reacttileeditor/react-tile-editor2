@@ -359,6 +359,16 @@ export const Tilemap_Manager_ƒ = {
 			tile_maps: _.cloneDeep(new_tilemaps)
 		}
 	},
+/*----------------------- creature modification -----------------------*/
+
+	add_creature_at_pos: (me: Tilemap_Manager_Data, creature: Creature_Map_Instance): Tilemap_Manager_Data => {
+		const new_creature_list = concat( me.creature_list, [creature]);
+
+		return {
+			...me,
+			creature_list: cloneDeep(new_creature_list)
+		};
+	},
 
 /*----------------------- draw ops -----------------------*/
 
