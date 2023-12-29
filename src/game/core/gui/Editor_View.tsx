@@ -42,7 +42,6 @@ type ToolTypes = 'tiles' | 'unitAdd' | 'unitDelete';
 export const Editor_View = (props: Editor_View_Props) => {
 
 	const [render_loop_interval, set_render_loop_interval] = useState<number|null>(null);
-	const [selected_tile_type, set_selected_tile_type] = useState<string>('');
 	const [cursor_pos, set_cursor_pos] = useState<Point2D>({ x: 0, y: 0 });
 	const [render_tick, set_render_tick] = useState<number>(0);
 
@@ -55,6 +54,9 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [selected_creature_type, set_selected_creature_type] = useState<CreatureTypeName>('hermit');
 	const [selected_creature_team, set_selected_creature_team] = useState<number>(1);
 	const [selected_tool, set_selected_tool] = useState<ToolTypes>('tiles');
+
+	const [show_tile_palette_drawer, set_show_tile_palette_drawer] = useState<boolean>(false);
+	const [selected_tile_type, set_selected_tile_type] = useState<string>('');
 
 
 	useEffect(() => {
@@ -251,7 +253,8 @@ export const Editor_View = (props: Editor_View_Props) => {
 				icon={<Icon as={Global} />}
 				appearance={ selected_tool == 'tiles' ? 'primary' : 'default'} 
 				onClick={()=>{
-					set_selected_tool('tiles') 
+					set_show_tile_palette_drawer(true);
+					set_selected_tool('tiles') ;
 				}}
 			>Terrain</IconButton>
 			<IconButton
@@ -304,6 +307,13 @@ export const Editor_View = (props: Editor_View_Props) => {
 				set_selected_creature_team={set_selected_creature_team}
 				_Asset_Manager={props._Asset_Manager}
 			/>
+			<Tile_Palette_Drawer
+				show_tile_palette_drawer={show_tile_palette_drawer}
+				set_show_tile_palette_drawer={set_show_tile_palette_drawer}
+				selected_tile_type={selected_tile_type}
+				set_selected_tile_type={set_selected_tile_type}
+				_Asset_Manager={props._Asset_Manager}
+			/>
 			<Canvas_View
 				assets_loaded={props.assets_loaded}
 				connect_context_to_blit_manager={props.connect_context_to_blit_manager}
@@ -325,25 +335,60 @@ export const Editor_View = (props: Editor_View_Props) => {
 					render_ticktock={render_tick % 1 == 1}
 				/>
 			}
-			<div className="tile_palette">
-			{
-				props.assets_loaded
-				&&
-				Asset_Manager_ƒ.yield_tile_name_list(props._Asset_Manager()).map( (value, index) => {
-					return	<Tile_Palette_Element
-						asset_manager={props._Asset_Manager()}
-						tile_name={value}
-						asset_name={''}
-						key={value}
-						highlight={ selected_tile_type == value }
-						handle_click={ () => set_selected_tile_type( value ) }
-						canvas_size={ {x: 50, y: 50} }
-					/>
-				})
-			}
-			</div>
+
 		</div>
 	</div>;
+}
+
+export const Tile_Palette_Drawer = (props: {
+	show_tile_palette_drawer: boolean,
+	set_show_tile_palette_drawer: Dispatch<SetStateAction<boolean>>,
+	selected_tile_type: string,
+	set_selected_tile_type: Dispatch<SetStateAction<string>>,
+	_Asset_Manager: () => Asset_Manager_Data,
+}) => {
+
+
+
+	const tile_type_list: Array<string> = Asset_Manager_ƒ.yield_tile_name_list(props._Asset_Manager());
+
+	return <Drawer
+		open={props.show_tile_palette_drawer}
+		onClose={() => props.set_show_tile_palette_drawer(false)}
+		size={'25rem'}
+		className="Unit_Palette_Drawer"
+	>
+		<Drawer.Header>
+			<Drawer.Title>Tiles</Drawer.Title>
+			<Drawer.Actions>
+
+			</Drawer.Actions>
+		</Drawer.Header>
+		<Drawer.Body>
+			<div className="unit-palette">
+				{
+					map( (tile_type)=>(
+						<div
+							className={`creature_instance ${tile_type == props.selected_tile_type ? 'selected' : ''}`}
+							onClick={(evt)=>{
+								props.set_selected_tile_type(tile_type)
+							}}
+						>
+							<Tile_Palette_Element
+								asset_manager={props._Asset_Manager()}
+								tile_name={tile_type}
+								asset_name={''}
+								highlight={false}
+								handle_click={ ()=>{} }
+								canvas_size={ {x: 70, y: 70} }
+							/>
+						</div>
+					),
+					tile_type_list)
+				}
+			</div>
+		</Drawer.Body>
+	</Drawer>
 }
 
 export const Unit_Palette_Drawer = (props: {
@@ -375,7 +420,7 @@ export const Unit_Palette_Drawer = (props: {
 		</Drawer.Header>
 		<Drawer.Body>
 			<div className="team-selection">
-				<Dropdown title="Team">
+				<Dropdown title={`Team #${props.selected_creature_team}`}>
 					{
 						map( (team_number)=>(
 							<Dropdown.Item
