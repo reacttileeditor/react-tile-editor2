@@ -243,7 +243,14 @@ export const Editor_View = (props: Editor_View_Props) => {
 					set_selected_tool('unitAdd') 
 				}}
 				appearance={ selected_tool == 'unitAdd' ? 'primary' : 'default'} 
-			>Units</IconButton>
+			>Add Units</IconButton>
+			<IconButton
+				icon={<Icon as={PeoplesCostomize} />}
+				onClick={()=>{
+					set_selected_tool('unitDelete') 
+				}}
+				appearance={ selected_tool == 'unitDelete' ? 'primary' : 'default'} 
+			>Remove Units</IconButton>
 		</div>
 		<div className="editor_node">
 			<Load_File_Modal
