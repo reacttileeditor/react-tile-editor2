@@ -14,7 +14,9 @@ import localforage from "localforage";
 import { concat, filter, slice, uniq } from "ramda";
 import { Page } from '@rsuite/icons';
 import { Vals } from "../constants/Constants";
-import { Creature_Map_Instance } from "./Game_Manager";
+import { Creature_Map_Instance, Game_Manager_ƒ } from "./Game_Manager";
+import { Creature_ƒ } from "../../objects_core/Creature";
+import { zorder } from "../constants/zorder";
 
 type TileViewState = {
 	level_name: string,
@@ -439,10 +441,14 @@ export const Tilemap_Manager_ƒ = {
 	},
 
 	
-	do_one_frame_of_rendering: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, set_Blit_Manager: (newVal: Blit_Manager_Data) => void) => {
+	do_one_frame_of_rendering: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, set_Blit_Manager: (newVal: Blit_Manager_Data) => void, draw_map_data_units: boolean) => {
 		if(me.initialized){
 			Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM);
 			Tilemap_Manager_ƒ.draw_tiles(me, _AM, _BM);
+
+			if(draw_map_data_units){
+				Tilemap_Manager_ƒ.draw_units(me, _AM, _BM);
+			}
 
 			set_Blit_Manager(
 				Blit_Manager_ƒ.draw_entire_frame(_BM)
@@ -451,7 +457,25 @@ export const Tilemap_Manager_ƒ = {
 			Tilemap_Manager_ƒ.initialize_tiles(me, _AM);
 		}
 	},
-	
+
+
+	draw_units: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
+		map( me.creature_list, (val,idx) => {
+			Asset_Manager_ƒ.draw_image_for_asset_name({
+				_AM:						_AM,
+				asset_name:					Creature_ƒ.get_delegate(val.type_name).yield_creature_image(),
+				_BM:						_BM,
+				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me, _AM, val.pos),
+				zorder:						zorder.rocks,
+				current_milliseconds:		0,
+				opacity:					1.0,
+				rotate:						0,
+				brightness:					1.0,
+				horizontally_flipped:		false,
+				vertically_flipped:			false,
+			})
+		})
+	},
 	
 /*----------------------- info ops -----------------------*/
 	is_within_map_bounds: (me: Tilemap_Manager_Data, pos: Point2D ): boolean => {
