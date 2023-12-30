@@ -127,38 +127,7 @@ export const New_Game_Manager = (p: {
 	}
 
 	const first_turn_state_init = {
-		creature_list: [
-			creature_from_setup_data({
-				pos: {x: 1, y: 6},
-				type_name: 'hermit',
-				team: 1
-			}),
-			creature_from_setup_data({
-				pos: {x: 2, y: 4},
-				type_name: 'peasant',
-				team: 1
-			}),
-			creature_from_setup_data({
-				pos: {x: 3, y: 11},
-				type_name: 'human_footman',
-				team: 1
-			}),
-			creature_from_setup_data({
-				pos: {x: 4, y: 4},
-				type_name: 'skeleton',
-				team: 1
-			}),
-			creature_from_setup_data({
-				pos: {x: 5, y: 8},
-				type_name: 'skeleton',
-				team: 1
-			}),
-			creature_from_setup_data({
-				pos: {x: 7, y: 8},
-				type_name: 'undead_javelineer',
-				team: 1
-			}),
-		],
+		creature_list: map( p._Tilemap_Manager().creature_list, (val)=>( creature_from_setup_data(val) ) ),
 		custom_object_list: [],
 	};
 
