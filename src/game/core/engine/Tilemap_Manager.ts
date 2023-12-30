@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
-import _, { Dictionary, cloneDeep, isArray, isEmpty, map, range, size } from "lodash";
+import _, { Dictionary, cloneDeep, isArray, isEmpty, isEqual, map, range, size } from "lodash";
 
 import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
@@ -14,11 +14,15 @@ import localforage from "localforage";
 import { concat, filter, slice, uniq } from "ramda";
 import { Page } from '@rsuite/icons';
 import { Vals } from "../constants/Constants";
+import { Creature_Map_Instance, Game_Manager_ƒ } from "./Game_Manager";
+import { Creature_ƒ } from "../../objects_core/Creature";
+import { zorder } from "../constants/zorder";
 
 type TileViewState = {
 	level_name: string,
 	metadata: MetaData,
 	tile_maps: TileMaps,
+	creature_list: Array<Creature_Map_Instance>,
 	initialized: boolean,
 } & CacheData;
 
@@ -32,6 +36,7 @@ type CacheData = {
 type PersistData = {
 	tile_maps: TileMaps,
 	metadata: MetaData,
+	creature_list: Array<Creature_Map_Instance>,
 };
 
 export type SizeMetaData = {
@@ -86,6 +91,7 @@ export const New_Tilemap_Manager = (): Tilemap_Manager_Data => {
 		level_name: '',
 		metadata: _.cloneDeep(metadata_init),
 		tile_maps: _.cloneDeep(tile_maps_init),
+		creature_list: [],
 		cache_of_tile_comparators: _.cloneDeep(tile_maps_init),
 		cache_of_image_lists: _.cloneDeep({}),
 		initialized: false,
@@ -117,6 +123,7 @@ export const Tilemap_Manager_ƒ = {
 				terrain: fresh_terrain_tilemap,
 				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
 			},
+			creature_list: _.cloneDeep(me.creature_list),
 			cache_of_tile_comparators: _.cloneDeep(tile_maps_init),
 			cache_of_image_lists: _.cloneDeep({}),
 			initialized: true,
@@ -138,6 +145,7 @@ export const Tilemap_Manager_ƒ = {
 		let level_data: PersistData = {
 			metadata: _.cloneDeep(metadata_init),
 			tile_maps: _.cloneDeep(tile_maps_init),
+			creature_list: [],
 		};
 
 		localforage.getItem<PersistData>(level_name).then((value) => {
@@ -149,6 +157,7 @@ export const Tilemap_Manager_ƒ = {
 				level_name: level_name,
 				metadata: _.cloneDeep(level_data.metadata),
 				tile_maps: _.cloneDeep(level_data.tile_maps),
+				creature_list: _.cloneDeep(level_data.creature_list),
 				cache_of_tile_comparators: _.cloneDeep(tile_maps_init),
 				cache_of_image_lists: _.cloneDeep({}),
 				initialized: true,
@@ -172,6 +181,7 @@ export const Tilemap_Manager_ƒ = {
 			const save_data: PersistData = {
 				metadata: me.metadata,
 				tile_maps: me.tile_maps,
+				creature_list: me.creature_list,
 			}
 
 			localforage.setItem(level_name, save_data);
@@ -349,7 +359,30 @@ export const Tilemap_Manager_ƒ = {
 			tile_maps: _.cloneDeep(new_tilemaps)
 		}
 	},
+/*----------------------- creature modification -----------------------*/
 
+	add_creature_at_pos: (me: Tilemap_Manager_Data, creature: Creature_Map_Instance): Tilemap_Manager_Data => {
+		const creature_list_with_tile_cleared = filter( (val)=> ( !isEqual(val.pos, creature.pos) ), me.creature_list)
+
+		const new_creature_list = concat( creature_list_with_tile_cleared, [creature]);
+
+		return {
+			...me,
+			creature_list: cloneDeep(new_creature_list)
+		};
+	},
+
+	remove_creature_at_pos: (me: Tilemap_Manager_Data, pos: Point2D): Tilemap_Manager_Data => {
+		const creature_list_with_tile_cleared = filter( (val)=> ( !isEqual(val.pos, pos) ), me.creature_list)
+
+
+		return {
+			...me,
+			creature_list: cloneDeep(creature_list_with_tile_cleared)
+		};
+	},
+
+	
 /*----------------------- draw ops -----------------------*/
 
 	
@@ -431,10 +464,14 @@ export const Tilemap_Manager_ƒ = {
 	},
 
 	
-	do_one_frame_of_rendering: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, set_Blit_Manager: (newVal: Blit_Manager_Data) => void) => {
+	do_one_frame_of_rendering: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, set_Blit_Manager: (newVal: Blit_Manager_Data) => void, draw_map_data_units: boolean) => {
 		if(me.initialized){
 			Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM);
 			Tilemap_Manager_ƒ.draw_tiles(me, _AM, _BM);
+
+			if(draw_map_data_units){
+				Tilemap_Manager_ƒ.draw_units(me, _AM, _BM);
+			}
 
 			set_Blit_Manager(
 				Blit_Manager_ƒ.draw_entire_frame(_BM)
@@ -443,7 +480,25 @@ export const Tilemap_Manager_ƒ = {
 			Tilemap_Manager_ƒ.initialize_tiles(me, _AM);
 		}
 	},
-	
+
+
+	draw_units: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
+		map( me.creature_list, (val,idx) => {
+			Asset_Manager_ƒ.draw_image_for_asset_name({
+				_AM:						_AM,
+				asset_name:					Creature_ƒ.get_delegate(val.type_name).yield_creature_image(),
+				_BM:						_BM,
+				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me, _AM, val.pos),
+				zorder:						zorder.rocks,
+				current_milliseconds:		0,
+				opacity:					1.0,
+				rotate:						0,
+				brightness:					1.0,
+				horizontally_flipped:		false,
+				vertically_flipped:			false,
+			})
+		})
+	},
 	
 /*----------------------- info ops -----------------------*/
 	is_within_map_bounds: (me: Tilemap_Manager_Data, pos: Point2D ): boolean => {

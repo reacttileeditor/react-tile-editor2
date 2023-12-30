@@ -11,11 +11,14 @@ import { MetaData, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Ti
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { useInterval } from "../engine/Utils";
-import { Button, Input, List, Modal, Tooltip, Whisper } from "rsuite";
-import { Icon, Page, Trash } from "@rsuite/icons";
+import { Button, Divider, Drawer, Dropdown, IconButton, Input, List, Modal, Tooltip, Whisper } from "rsuite";
+import { Icon, Page, Trash, Global, PeoplesCostomize } from "@rsuite/icons";
 
 import "./Editor_View.scss";
 import { Standard_Input_ƒ } from "./Standard_Input_Handling";
+import { CreatureTypeName, Creature_ƒ } from "../../objects_core/Creature";
+import { Game_Manager_ƒ } from "../engine/Game_Manager";
+import { map } from "ramda";
 
 
 interface Editor_View_Props {
@@ -32,14 +35,13 @@ interface Editor_View_Props {
 	set_is_edit_mode: Dispatch<SetStateAction<boolean>>,
 }
 
-
+type ToolTypes = 'tiles' | 'unitAdd' | 'unitDelete';
 
 
 
 export const Editor_View = (props: Editor_View_Props) => {
 
 	const [render_loop_interval, set_render_loop_interval] = useState<number|null>(null);
-	const [selected_tile_type, set_selected_tile_type] = useState<string>('');
 	const [cursor_pos, set_cursor_pos] = useState<Point2D>({ x: 0, y: 0 });
 	const [render_tick, set_render_tick] = useState<number>(0);
 
@@ -47,6 +49,15 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [show_save_dialog, set_show_save_dialog] = useState<boolean>(false);
 	const [show_metadata_dialog, set_show_metadata_dialog] = useState<boolean>(false);
 	const [level_filename_list, set_level_filename_list] = useState<Array<string>>([]);
+
+	const [show_unit_palette_drawer, set_show_unit_palette_drawer] = useState<boolean>(false);
+	const [selected_creature_type, set_selected_creature_type] = useState<CreatureTypeName>('hermit');
+	const [selected_creature_team, set_selected_creature_team] = useState<number>(1);
+	const [selected_tool, set_selected_tool] = useState<ToolTypes>('tiles');
+
+	const [show_tile_palette_drawer, set_show_tile_palette_drawer] = useState<boolean>(false);
+	const [selected_tile_type, set_selected_tile_type] = useState<string>('');
+
 
 	useEffect(() => {
 		if(render_tick > 0){
@@ -126,7 +137,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			props._Tilemap_Manager != null
 			
 		){
-		Tilemap_Manager_ƒ.do_one_frame_of_rendering( props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), props.set_Blit_Manager );
+		Tilemap_Manager_ƒ.do_one_frame_of_rendering( props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), props.set_Blit_Manager, true );
 		draw_cursor();
 		}
 	}
@@ -135,15 +146,33 @@ export const Editor_View = (props: Editor_View_Props) => {
 	/*----------------------- I/O routines -----------------------*/
 	const handle_canvas_click = (pos: Point2D, buttons_pressed: MouseButtonState) => {
 		console.log('canvas click editor')
-		props.set_Tilemap_Manager(
-			Tilemap_Manager_ƒ.modify_tile_status(
-				props._Tilemap_Manager(),
-				props._Asset_Manager(),
-				Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
-				selected_tile_type,
-				'terrain'
-			)
-		);
+
+		if(selected_tool == 'tiles'){
+			props.set_Tilemap_Manager(
+				Tilemap_Manager_ƒ.modify_tile_status(
+					props._Tilemap_Manager(),
+					props._Asset_Manager(),
+					Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
+					selected_tile_type,
+					'terrain'
+				)
+			);
+		} else if (selected_tool == 'unitAdd'){
+			props.set_Tilemap_Manager(
+				Tilemap_Manager_ƒ.add_creature_at_pos(props._Tilemap_Manager(), {
+					type_name: selected_creature_type,
+					pos: Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
+					team: selected_creature_team,
+				})
+			);
+		} else if (selected_tool == 'unitDelete'){
+			props.set_Tilemap_Manager(
+				Tilemap_Manager_ƒ.remove_creature_at_pos(
+					props._Tilemap_Manager(),
+					Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos)
+				)
+			);
+		}
 	}
 
 	const editor_handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
@@ -219,6 +248,30 @@ export const Editor_View = (props: Editor_View_Props) => {
 			>
 				{'Generate Map'}
 			</Button>
+			<Divider vertical />
+			<IconButton
+				icon={<Icon as={Global} />}
+				appearance={ selected_tool == 'tiles' ? 'primary' : 'default'} 
+				onClick={()=>{
+					set_show_tile_palette_drawer(true);
+					set_selected_tool('tiles') ;
+				}}
+			>Terrain</IconButton>
+			<IconButton
+				icon={<Icon as={PeoplesCostomize} />}
+				onClick={()=>{
+					set_show_unit_palette_drawer(true);
+					set_selected_tool('unitAdd') 
+				}}
+				appearance={ selected_tool == 'unitAdd' ? 'primary' : 'default'} 
+			>Add Units</IconButton>
+			<IconButton
+				icon={<Icon as={PeoplesCostomize} />}
+				onClick={()=>{
+					set_selected_tool('unitDelete') 
+				}}
+				appearance={ selected_tool == 'unitDelete' ? 'primary' : 'default'} 
+			>Remove Units</IconButton>
 		</div>
 		<div className="editor_node">
 			<Load_File_Modal
@@ -245,6 +298,22 @@ export const Editor_View = (props: Editor_View_Props) => {
 				_Tilemap_Manager={props._Tilemap_Manager}
 				set_Tilemap_Manager={props.set_Tilemap_Manager}
 			/>
+			<Unit_Palette_Drawer
+				show_unit_palette_drawer={show_unit_palette_drawer}
+				set_show_unit_palette_drawer={set_show_unit_palette_drawer}
+				selected_creature_type={selected_creature_type}
+				set_selected_creature_type={set_selected_creature_type}
+				selected_creature_team={selected_creature_team}
+				set_selected_creature_team={set_selected_creature_team}
+				_Asset_Manager={props._Asset_Manager}
+			/>
+			<Tile_Palette_Drawer
+				show_tile_palette_drawer={show_tile_palette_drawer}
+				set_show_tile_palette_drawer={set_show_tile_palette_drawer}
+				selected_tile_type={selected_tile_type}
+				set_selected_tile_type={set_selected_tile_type}
+				_Asset_Manager={props._Asset_Manager}
+			/>
 			<Canvas_View
 				assets_loaded={props.assets_loaded}
 				connect_context_to_blit_manager={props.connect_context_to_blit_manager}
@@ -266,24 +335,129 @@ export const Editor_View = (props: Editor_View_Props) => {
 					render_ticktock={render_tick % 1 == 1}
 				/>
 			}
-			<div className="tile_palette">
-			{
-				props.assets_loaded
-				&&
-				Asset_Manager_ƒ.yield_tile_name_list(props._Asset_Manager()).map( (value, index) => {
-					return	<Tile_Palette_Element
-								asset_manager={props._Asset_Manager()}
-								tile_name={value}
-								asset_name={''}
-								key={value}
-								highlight={ selected_tile_type == value }
-								handle_click={ () => set_selected_tile_type( value ) }
-							/>
-				})
-			}
-			</div>
+
 		</div>
 	</div>;
+}
+
+export const Tile_Palette_Drawer = (props: {
+	show_tile_palette_drawer: boolean,
+	set_show_tile_palette_drawer: Dispatch<SetStateAction<boolean>>,
+	selected_tile_type: string,
+	set_selected_tile_type: Dispatch<SetStateAction<string>>,
+	_Asset_Manager: () => Asset_Manager_Data,
+}) => {
+
+
+
+	const tile_type_list: Array<string> = Asset_Manager_ƒ.yield_tile_name_list(props._Asset_Manager());
+
+	return <Drawer
+		open={props.show_tile_palette_drawer}
+		onClose={() => props.set_show_tile_palette_drawer(false)}
+		size={'25rem'}
+		className="Unit_Palette_Drawer"
+	>
+		<Drawer.Header>
+			<Drawer.Title>Tiles</Drawer.Title>
+			<Drawer.Actions>
+
+			</Drawer.Actions>
+		</Drawer.Header>
+		<Drawer.Body>
+			<div className="unit-palette">
+				{
+					map( (tile_type)=>(
+						<div
+							className={`creature_instance ${tile_type == props.selected_tile_type ? 'selected' : ''}`}
+							onClick={(evt)=>{
+								props.set_selected_tile_type(tile_type)
+							}}
+						>
+							<Tile_Palette_Element
+								asset_manager={props._Asset_Manager()}
+								tile_name={tile_type}
+								asset_name={''}
+								highlight={false}
+								handle_click={ ()=>{} }
+								canvas_size={ {x: 70, y: 70} }
+							/>
+						</div>
+					),
+					tile_type_list)
+				}
+			</div>
+		</Drawer.Body>
+	</Drawer>
+}
+
+export const Unit_Palette_Drawer = (props: {
+	show_unit_palette_drawer: boolean,
+	set_show_unit_palette_drawer: Dispatch<SetStateAction<boolean>>,
+	selected_creature_type: CreatureTypeName,
+	set_selected_creature_type: Dispatch<SetStateAction<CreatureTypeName>>,
+	selected_creature_team: number,
+	set_selected_creature_team: Dispatch<SetStateAction<number>>,
+	_Asset_Manager: () => Asset_Manager_Data,
+}) => {
+
+
+
+
+	const creature_list: Array<CreatureTypeName> = Creature_ƒ.list_all_creature_types();
+
+	return <Drawer
+		open={props.show_unit_palette_drawer}
+		onClose={() => props.set_show_unit_palette_drawer(false)}
+		size={'25rem'}
+		className="Unit_Palette_Drawer"
+	>
+		<Drawer.Header>
+			<Drawer.Title>Units</Drawer.Title>
+			<Drawer.Actions>
+
+			</Drawer.Actions>
+		</Drawer.Header>
+		<Drawer.Body>
+			<div className="team-selection">
+				<Dropdown title={`Team #${props.selected_creature_team}`}>
+					{
+						map( (team_number)=>(
+							<Dropdown.Item
+								onSelect={ (eventKey: string, evt)=>{
+									props.set_selected_creature_team(team_number)
+								} }
+								active={props.selected_creature_team == team_number}
+							>Team #{team_number}</Dropdown.Item>
+						),
+						[1,2,3])
+					}
+				</Dropdown>
+			</div>
+			<div className="unit-palette">
+				{
+					map( (creature_type)=>(
+						<div
+							className={`creature_instance ${creature_type == props.selected_creature_type ? 'selected' : ''}`}
+							onClick={(evt)=>{
+								props.set_selected_creature_type(creature_type)
+							}}
+						>
+							<Tile_Palette_Element
+								asset_manager={props._Asset_Manager()}
+								tile_name={''}
+								asset_name={`${Creature_ƒ.get_delegate(creature_type).yield_creature_image()}`}
+								highlight={false}
+								handle_click={ ()=>{} }
+								canvas_size={ {x: 70, y: 70} }
+							/>
+						</div>
+					),
+					creature_list)
+				}
+			</div>
+		</Drawer.Body>
+	</Drawer>
 }
 
 

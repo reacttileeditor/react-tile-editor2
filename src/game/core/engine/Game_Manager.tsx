@@ -80,6 +80,13 @@ export type Game_Manager_Data = {
 	cursor_pos: Point2D;
 }
 
+export type Creature_Map_Instance = {
+	pos: Point2D,
+	type_name: CreatureTypeName,
+	team: number,
+}
+
+
 
 export const New_Game_Manager = (p: {
 	_Asset_Manager: () => Asset_Manager_Data,
@@ -107,51 +114,20 @@ export const New_Game_Manager = (p: {
 		game_state: GameStateInit,
 	}
 
-	const creature_from_setup_data = (pos: Point2D, type_name: CreatureTypeName, team: number ) => {
+	const creature_from_setup_data = ( creature: Creature_Map_Instance ) => {
 		return Game_Manager_ƒ.creature_from_setup_data({
 			get_GM: p.get_GM_instance,
 			get_AM: p._Asset_Manager,
 			get_BM: p._Blit_Manager,
 			get_TM: p._Tilemap_Manager,
-			pos: pos,
-			type_name: type_name,
-			team: team,
+			pos: creature.pos,
+			type_name: creature.type_name,
+			team: creature.team,
 		})
 	}
 
 	const first_turn_state_init = {
-		creature_list: [
-			creature_from_setup_data(
-				{x: 1, y: 6},
-				'hermit',
-				1
-			),
-			creature_from_setup_data(
-				{x: 2, y: 4},
-				'peasant',
-				1
-			),
-			creature_from_setup_data(
-				{x: 3, y: 11},
-				'human_footman',
-				1
-			),
-			creature_from_setup_data(
-				{x: 4, y: 4},
-				'skeleton',
-				1
-			),
-			creature_from_setup_data(
-				{x: 5, y: 8},
-				'skeleton',
-				1
-			),
-			creature_from_setup_data(
-				{x: 7, y: 8},
-				'undead_javelineer',
-				1
-			),
-		],
+		creature_list: map( p._Tilemap_Manager().creature_list, (val)=>( creature_from_setup_data(val) ) ),
 		custom_object_list: [],
 	};
 
@@ -729,6 +705,7 @@ export const Game_Manager_ƒ = {
 					...cloneDeep(_TM.tile_maps),
 					ui: new_tile_map,
 				},
+				creature_list: cloneDeep(_TM.creature_list),
 				initialized: true,
 				...Tilemap_Manager_ƒ.cleared_cache(),
 			},
