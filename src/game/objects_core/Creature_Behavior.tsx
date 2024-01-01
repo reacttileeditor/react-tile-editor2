@@ -463,7 +463,7 @@ export const Creature_Behavior_ƒ = {
 						//alert('damage')
 
 						Creature_ƒ.add(change_list_, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
-						Creature_ƒ.set(change_list, target, 'last_changed_hitpoints', offset_in_ms);
+						Creature_ƒ.set(change_list_, target, 'last_changed_hitpoints', offset_in_ms);
 
 						spawnees_.push(New_Custom_Object({
 							get_GM_instance: me.get_GM_instance,
@@ -501,6 +501,9 @@ export const Creature_Behavior_ƒ = {
 				is_done_with_turn: false,
 			}));
 		} else {
+			Creature_ƒ.add(change_list, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
+			Creature_ƒ.set(change_list, target, 'last_changed_hitpoints', offset_in_ms);
+
 			spawnees.push(New_Custom_Object({
 				get_GM_instance: me.get_GM_instance,
 				_Asset_Manager: me._Asset_Manager,
