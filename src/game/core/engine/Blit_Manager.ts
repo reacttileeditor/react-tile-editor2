@@ -325,6 +325,14 @@ export const Blit_Manager_ƒ = {
 				);
 				me.osb_ctx.globalAlpha = value.opacity;
 
+				if( value.brightness != 1.0){
+					/*
+						Warning:  this is obscenely slow.  We may want some alternate solution to this, or *something*; for our initial, extremely limited use of it (flashing enemies to show hits) it should be tolerable.
+					*/
+
+					me.osb_ctx.filter = `brightness(${ Math.round(value.brightness * 100)}%)`;
+				}
+
 				me.osb_ctx.rotate(value.rotate * Math.PI / 180);
 
 				me.osb_ctx.scale(

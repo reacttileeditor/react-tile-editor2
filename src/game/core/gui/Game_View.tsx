@@ -116,7 +116,7 @@ export const Game_View = (props: Game_View_Props) => {
 		console.log('game view process')
 
 		if( props.game_manager_loaded ) {
-			Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), props.set_Blit_Manager, false);
+			Tilemap_Manager_ƒ.do_one_frame_of_rendering(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), props.set_Blit_Manager, false, props.get_Game_Manager_Data().cursor_pos);
 
 			let new_state: Game_and_Tilemap_Manager_Data = Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
 

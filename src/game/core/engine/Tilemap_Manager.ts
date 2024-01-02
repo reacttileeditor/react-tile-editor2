@@ -464,13 +464,20 @@ export const Tilemap_Manager_ƒ = {
 	},
 
 	
-	do_one_frame_of_rendering: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, set_Blit_Manager: (newVal: Blit_Manager_Data) => void, draw_map_data_units: boolean) => {
+	do_one_frame_of_rendering: (
+		me: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		set_Blit_Manager: (newVal: Blit_Manager_Data) => void,
+		draw_map_data_units: boolean,
+		cursor_pos: Point2D,
+	) => {
 		if(me.initialized){
 			Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM);
 			Tilemap_Manager_ƒ.draw_tiles(me, _AM, _BM);
 
 			if(draw_map_data_units){
-				Tilemap_Manager_ƒ.draw_units(me, _AM, _BM);
+				Tilemap_Manager_ƒ.draw_units(me, _AM, _BM, cursor_pos);
 			}
 
 			set_Blit_Manager(
@@ -482,7 +489,7 @@ export const Tilemap_Manager_ƒ = {
 	},
 
 
-	draw_units: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
+	draw_units: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, cursor_pos: Point2D) => {
 		map( me.creature_list, (val,idx) => {
 			Asset_Manager_ƒ.draw_image_for_asset_name({
 				_AM:						_AM,
@@ -493,7 +500,7 @@ export const Tilemap_Manager_ƒ = {
 				current_milliseconds:		0,
 				opacity:					1.0,
 				rotate:						0,
-				brightness:					1.0,
+				brightness:					isEqual(cursor_pos, val.pos) ? 1.0 + 0.75 * Math.sin( _BM.time_tracker.current_tick * 0.2) : 1.0,
 				horizontally_flipped:		false,
 				vertically_flipped:			false,
 			})
