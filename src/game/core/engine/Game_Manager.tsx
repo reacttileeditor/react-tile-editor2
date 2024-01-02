@@ -298,10 +298,14 @@ export const Game_Manager_ƒ = {
 /*----------------------- animation management -----------------------*/
 
 	get_time_offset: (me: Game_Manager_Data, _BM: Blit_Manager_Data) => {
+		return ticks_to_ms( Game_Manager_ƒ.get_tick_offset(me, _BM) ); 
+	},
+
+	get_tick_offset: (me: Game_Manager_Data, _BM: Blit_Manager_Data) => {
 		if(me.animation_state.is_animating_live_game){
-			return ticks_to_ms(_BM.time_tracker.current_tick - me.animation_state.time_live_game_anim_started__in_ticks)
+			return (_BM.time_tracker.current_tick - me.animation_state.time_live_game_anim_started__in_ticks)
 		} else {
-			return ticks_to_ms(_BM.time_tracker.current_tick - me.animation_state.time_paused_game_anim_started__in_ticks)
+			return (_BM.time_tracker.current_tick - me.animation_state.time_paused_game_anim_started__in_ticks)
 		}
 	},
 	
@@ -735,7 +739,7 @@ export const Game_Manager_ƒ = {
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
 				rotate:						val.rotate,
-				brightness:					isEqual(cursor_pos, val.tile_pos) ? 1.0 + 0.75 * Math.sin(Game_Manager_ƒ.get_time_offset(me, _BM)/80.0) : 1.0,
+				brightness:					isEqual(cursor_pos, val.tile_pos) ? 1.0 + 0.75 * Math.sin(Game_Manager_ƒ.get_tick_offset(me, _BM) * 0.2) : 1.0,
 				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
 				vertically_flipped:			false,
 			})
