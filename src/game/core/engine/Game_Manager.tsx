@@ -718,6 +718,13 @@ export const Game_Manager_ƒ = {
 		/*
 			This particularly means "paused at end of turn".
 		*/
+		const cursor_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(
+			_TM,
+			_AM,
+			_BM,
+			me.cursor_pos
+		);
+
 		map( Game_Manager_ƒ.get_current_turn_state(me).creature_list, (val,idx) => {
 			Asset_Manager_ƒ.draw_image_for_asset_name({
 				_AM:						_AM,
@@ -728,7 +735,7 @@ export const Game_Manager_ƒ = {
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
 				rotate:						val.rotate,
-				brightness:					1.0,
+				brightness:					isEqual(cursor_pos, val.tile_pos) ? 1.0 + 0.75 * Math.sin(Game_Manager_ƒ.get_time_offset(me, _BM)/80.0) : 1.0,
 				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
 				vertically_flipped:			false,
 			})
@@ -744,6 +751,7 @@ export const Game_Manager_ƒ = {
 
 
 			map( me.game_state.custom_object_list, (val,idx) => {
+
 				Asset_Manager_ƒ.draw_image_for_asset_name({
 					_AM:						_AM,
 					asset_name:					Custom_Object_ƒ.yield_image(val),
