@@ -12,7 +12,7 @@ import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { useInterval } from "../engine/Utils";
 import { Button, Divider, Drawer, Dropdown, IconButton, Input, List, Modal, Tooltip, Whisper } from "rsuite";
-import { Icon, Page, Trash, Global, PeoplesCostomize } from "@rsuite/icons";
+import { Icon, Page, Trash, Global, PeoplesCostomize, Copy } from "@rsuite/icons";
 
 import "./Editor_View.scss";
 import { Standard_Input_ƒ } from "./Standard_Input_Handling";
@@ -225,6 +225,14 @@ export const Editor_View = (props: Editor_View_Props) => {
 			>
 				{'Save As...'}
 			</Button>
+			<Whisper placement='top' speaker={<Tooltip>{"Copy Level to Clipboard"}</Tooltip>}>
+				<IconButton
+					icon={<Icon as={Copy} />}
+					onClick={()=>{
+						Tilemap_Manager_ƒ.export_level_to_clipboard(props._Tilemap_Manager(), props._Asset_Manager());
+					}}
+				/>
+			</Whisper>
 			<Button
 				onClick={ () => { 
 					set_show_load_dialog(true);

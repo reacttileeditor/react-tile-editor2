@@ -193,6 +193,32 @@ export const Tilemap_Manager_ƒ = {
 		}
 	},
 
+	export_level_to_clipboard: (
+		me: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+	): void => {
+		const save_data: PersistData = {
+			metadata: me.metadata,
+			tile_maps: me.tile_maps,
+			creature_list: me.creature_list,
+		}
+
+		const type = "text/plain";
+		const blob = new Blob([ JSON.stringify(save_data) ], { type });
+		const data = [new ClipboardItem({ [type]: blob })];
+		
+		navigator.clipboard.write(data).then(
+			() => {
+				/* success */
+			},
+			(err) => {
+
+				throw err;
+				alert('Unable to copy level data to clipboard.')
+			},
+		);
+	},
+
 	load_levelname_list: (
 		set_level_filename_list: Dispatch<SetStateAction<Array<string>>>,
 	): void => {
