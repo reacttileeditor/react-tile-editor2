@@ -378,6 +378,7 @@ export const Tile_Palette_Drawer = (props: {
 					map( (tile_type)=>(
 						<div
 							className={`creature_instance ${tile_type == props.selected_tile_type ? 'selected' : ''}`}
+							key={`${tile_type}`}
 							onClick={(evt)=>{
 								props.set_selected_tile_type(tile_type)
 							}}
@@ -447,6 +448,7 @@ export const Unit_Palette_Drawer = (props: {
 					map( (creature_type)=>(
 						<div
 							className={`creature_instance ${creature_type == props.selected_creature_type ? 'selected' : ''}`}
+							key={`${Creature_ƒ.get_delegate(creature_type).yield_creature_image()}`}
 							onClick={(evt)=>{
 								props.set_selected_creature_type(creature_type)
 							}}
