@@ -18,6 +18,10 @@ import { Creature_Map_Instance, Game_Manager_ƒ } from "./Game_Manager";
 import { Creature_ƒ } from "../../objects_core/Creature";
 import { zorder } from "../constants/zorder";
 
+import * as levels from "../../levels";
+
+console.log(levels);
+
 type TileViewState = {
 	level_name: string,
 	metadata: MetaData,
