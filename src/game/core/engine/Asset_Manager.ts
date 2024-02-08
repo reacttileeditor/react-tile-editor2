@@ -538,7 +538,7 @@ export const Asset_Manager_ƒ = {
 			to become
 			0	1	2	3	4	5	4	3	2	1	0
 
-			The very first thing we do is use "frame count minus 1", since we want 0->5, not 0->6
+			The very first thing we do is use "frame count minus 1", since we want 0->5, not 1->6
 		*/
 			let _count = count - 1;
 		/*
