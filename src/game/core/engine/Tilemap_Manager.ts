@@ -11,16 +11,28 @@ import { ƒ } from "./Utils";
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import localforage from "localforage";
-import { concat, filter, slice, uniq } from "ramda";
+import { concat, filter, includes, keys, slice, uniq } from "ramda";
 import { Page } from '@rsuite/icons';
 import { Vals } from "../constants/Constants";
 import { Creature_Map_Instance, Game_Manager_ƒ } from "./Game_Manager";
 import { Creature_ƒ } from "../../objects_core/Creature";
 import { zorder } from "../constants/zorder";
 
-import * as levels from "../../levels";
+import * as builtin_levels from "../../levels";
 
-console.log(levels);
+console.log(builtin_levels);
+
+const builtin_levelname_list = map(builtin_levels, (val,idx)=>{
+	return idx
+});
+
+const builtin_level_array: 	{ [index: string]: PersistData } = {};
+map(builtin_levels, (val,idx)=>{
+	console.log(val)
+	builtin_level_array[idx] = val as PersistData;
+})
+
+console.log(builtin_levelname_list);
 
 type TileViewState = {
 	level_name: string,
@@ -235,6 +247,36 @@ export const Tilemap_Manager_ƒ = {
 			throw("couldn't load level list")
 		});
 	},
+
+	load_builtin_level_name_list: (
+		set_builtin_level_filename_list: Dispatch<SetStateAction<Array<string>>>
+	): void => {
+		set_builtin_level_filename_list( builtin_levelname_list );
+	},
+
+	load_builtin_level: (
+		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
+		level_name: string,
+	): void => {
+		if(
+			!includes(level_name, builtin_levelname_list)
+		){
+			throw(`The level ${level_name} is not in the default level name list.`)
+		} else {
+			let level_data = builtin_level_array[level_name]
+
+			set_Tilemap_Manager( {
+				level_name: level_name,
+				metadata: _.cloneDeep(level_data.metadata),
+				tile_maps: _.cloneDeep(level_data.tile_maps),
+				creature_list: _.cloneDeep(level_data.creature_list),
+				cache_of_tile_comparators: _.cloneDeep(tile_maps_init),
+				cache_of_image_lists: _.cloneDeep({}),
+				initialized: true,
+			})			
+		}
+	},	
+
 
 	delete_level: (
 		me: Tilemap_Manager_Data,
