@@ -208,10 +208,24 @@ export const Editor_View = (props: Editor_View_Props) => {
 			>
 				{'Toggle to Game'}
 			</Button>
-			<Whisper placement='top' speaker={<Tooltip>{props._Tilemap_Manager().level_name == '' ? "Can't quicksave until we know which file we'd save to.  Try 'Load…' or 'Save As…' first." : `This will save to: "${props._Tilemap_Manager().level_name}"`}</Tooltip>}>
+			<Whisper placement='top' speaker={<Tooltip>{
+				(()=>{
+					if( props._Tilemap_Manager().level_name == ''){
+						return "Can't save until we know which file we'd save to.  Try 'Load…' or 'Save As…' first."
+					} else if ( includes(props._Tilemap_Manager().level_name, builtin_level_filename_list) ){
+						return "Can't save this file because we can't overwrite a built-in level.  Try using 'Save As…' and specifying a different name."
+					} else {
+						return `This will save to: "${props._Tilemap_Manager().level_name}"`
+					}
+				})()
+			}</Tooltip>}>
 				<span>
 					<Button
-						disabled={props._Tilemap_Manager().level_name == ''}
+						disabled={
+							props._Tilemap_Manager().level_name == ''
+							||
+							includes(props._Tilemap_Manager().level_name, builtin_level_filename_list)
+						}
 						onClick={ () => {  
 							Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, props._Tilemap_Manager().level_name, level_filename_list);
 						} }
@@ -509,7 +523,12 @@ export const Load_File_Modal = (props: {
 					}}
 					className={ val == selected_file ? 'selected' : ''}
 				>
-					<span><Icon as={BsFileEarmarkLock2} className="file-icon"/>{val}</span>
+					<span>
+						<Whisper placement='top' speaker={<Tooltip>{"This file is built into the source code, and can neither be deleted nor overwritten."}</Tooltip>}>
+							<Icon as={BsFileEarmarkLock2} className="file-icon"/>
+						</Whisper>
+						{val}
+						</span>
 				</List.Item>
 			))
 
@@ -604,6 +623,25 @@ export const Save_File_Modal = (props: {
 			hover
 		>
 		{
+			_.map(props.builtin_level_filename_list, (val, idx)=>(
+				<List.Item
+					key={idx}
+					onClick={()=>{
+						set_selected_file(val);
+					}}
+					className={ val == selected_file ? 'selected' : ''}
+				>
+					<span>
+						<Whisper placement='top' speaker={<Tooltip>{"This file is built into the source code, and can neither be deleted nor overwritten."}</Tooltip>}>
+							<Icon as={BsFileEarmarkLock2} className="file-icon"/>
+						</Whisper>
+						{val}
+						</span>
+				</List.Item>
+			))
+
+		}
+		{
 			_.map(props.level_filename_list, (val, idx)=>(
 				<List.Item
 					key={idx}
@@ -659,7 +697,11 @@ export const Save_File_Modal = (props: {
 				}}
 			>Cancel</Button>
 			<Button
-				disabled={selected_file == ''}
+				disabled={
+					selected_file == ''
+					||
+					includes(selected_file, props.builtin_level_filename_list)
+				}
 				onClick={ () => { 
 					Tilemap_Manager_ƒ.save_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, selected_file, props.level_filename_list)
 					props.set_show_save_dialog(false)
