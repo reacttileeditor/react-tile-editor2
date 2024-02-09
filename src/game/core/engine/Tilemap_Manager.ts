@@ -258,6 +258,10 @@ export const Tilemap_Manager_ƒ = {
 		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
 		level_name: string,
 	): void => {
+		set_Tilemap_Manager( Tilemap_Manager_ƒ.get_builtin_level(level_name));		
+	},	
+
+	get_builtin_level: (level_name: string): Tilemap_Manager_Data => {
 		if(
 			!includes(level_name, builtin_levelname_list)
 		){
@@ -265,7 +269,7 @@ export const Tilemap_Manager_ƒ = {
 		} else {
 			let level_data = builtin_level_array[level_name]
 
-			set_Tilemap_Manager( {
+			return {
 				level_name: level_name,
 				metadata: _.cloneDeep(level_data.metadata),
 				tile_maps: _.cloneDeep(level_data.tile_maps),
@@ -273,10 +277,10 @@ export const Tilemap_Manager_ƒ = {
 				cache_of_tile_comparators: _.cloneDeep(tile_maps_init),
 				cache_of_image_lists: _.cloneDeep({}),
 				initialized: true,
-			})			
+			}		
 		}
-	},	
 
+	},
 
 	delete_level: (
 		me: Tilemap_Manager_Data,
