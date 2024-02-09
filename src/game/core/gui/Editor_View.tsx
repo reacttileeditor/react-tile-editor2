@@ -18,7 +18,7 @@ import "./Editor_View.scss";
 import { Standard_Input_ƒ } from "./Standard_Input_Handling";
 import { CreatureTypeName, Creature_ƒ } from "../../objects_core/Creature";
 import { Game_Manager_ƒ } from "../engine/Game_Manager";
-import { map } from "ramda";
+import { includes, map } from "ramda";
 
 
 interface Editor_View_Props {
@@ -49,6 +49,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [show_save_dialog, set_show_save_dialog] = useState<boolean>(false);
 	const [show_metadata_dialog, set_show_metadata_dialog] = useState<boolean>(false);
 	const [level_filename_list, set_level_filename_list] = useState<Array<string>>([]);
+	const [builtin_level_filename_list, set_builtin_level_filename_list] = useState<Array<string>>([]);
 
 	const [show_unit_palette_drawer, set_show_unit_palette_drawer] = useState<boolean>(false);
 	const [selected_creature_type, set_selected_creature_type] = useState<CreatureTypeName>('hermit');
@@ -220,6 +221,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			<Button
 				onClick={ () => { 
 					set_show_save_dialog(true);
+					Tilemap_Manager_ƒ.load_builtin_level_name_list(set_builtin_level_filename_list);
 					Tilemap_Manager_ƒ.load_levelname_list(set_level_filename_list);
 				} }
 			>
@@ -236,6 +238,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			<Button
 				onClick={ () => { 
 					set_show_load_dialog(true);
+					Tilemap_Manager_ƒ.load_builtin_level_name_list(set_builtin_level_filename_list);
 					Tilemap_Manager_ƒ.load_levelname_list(set_level_filename_list);
 				} }
 			>
@@ -286,6 +289,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 				show_load_dialog={show_load_dialog}
 				set_show_load_dialog={set_show_load_dialog}
 				level_filename_list={level_filename_list}
+				builtin_level_filename_list={builtin_level_filename_list}
 				_Asset_Manager={props._Asset_Manager}
 				_Tilemap_Manager={props._Tilemap_Manager}
 				set_Tilemap_Manager={props.set_Tilemap_Manager}
@@ -294,6 +298,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 				show_save_dialog={show_save_dialog}
 				set_show_save_dialog={set_show_save_dialog}
 				level_filename_list={level_filename_list}
+				builtin_level_filename_list={builtin_level_filename_list}
 				_Asset_Manager={props._Asset_Manager}
 				_Tilemap_Manager={props._Tilemap_Manager}
 				set_Tilemap_Manager={props.set_Tilemap_Manager}
@@ -475,6 +480,7 @@ export const Load_File_Modal = (props: {
 	show_load_dialog: boolean,
 	set_show_load_dialog: Dispatch<SetStateAction<boolean>>,
 	level_filename_list: Array<string>,
+	builtin_level_filename_list: Array<string>,
 	_Asset_Manager: () => Asset_Manager_Data,
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
 	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
@@ -493,10 +499,26 @@ export const Load_File_Modal = (props: {
 			hover
 		>
 		{
+			_.map(props.builtin_level_filename_list, (val, idx)=>(
+				<List.Item
+					key={idx}
+					onClick={()=>{
+						set_selected_file(val);
+					}}
+					className={ val == selected_file ? 'selected' : ''}
+				>
+					<span><Icon as={Page} className="file-icon"/>{val}</span>
+				</List.Item>
+			))
+
+		}
+		{
 			_.map(props.level_filename_list, (val, idx)=>(
 				<List.Item
 					key={idx}
-					onClick={()=>{set_selected_file(val)}}
+					onClick={()=>{
+						set_selected_file(val)
+					}}
 					className={ val == selected_file ? 'selected' : ''}
 				>
 					<span><Icon as={Page} className="file-icon"/>{val}</span>
@@ -526,7 +548,7 @@ export const Load_File_Modal = (props: {
 						}}
 					>Cancel</Button>
 					<Button
-						onClick={ () => { 
+						onClick={ () => {
 							Tilemap_Manager_ƒ.delete_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, deletion_target, props.level_filename_list);
 							set_deletion_target('');
 							props.set_show_load_dialog(false);
@@ -545,7 +567,11 @@ export const Load_File_Modal = (props: {
 			<Button
 				disabled={selected_file == ''}
 				onClick={ () => { 
-					Tilemap_Manager_ƒ.load_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, selected_file);
+					if( includes(selected_file, props.builtin_level_filename_list) ){
+						Tilemap_Manager_ƒ.load_builtin_level(props.set_Tilemap_Manager, selected_file);
+					} else {
+						Tilemap_Manager_ƒ.load_level(props._Tilemap_Manager(), props._Asset_Manager(), props.set_Tilemap_Manager, selected_file);
+					}
 					props.set_show_load_dialog(false);
 				}}
 			>Load</Button>
@@ -557,6 +583,7 @@ export const Save_File_Modal = (props: {
 	show_save_dialog: boolean,
 	set_show_save_dialog: Dispatch<SetStateAction<boolean>>,
 	level_filename_list: Array<string>,
+	builtin_level_filename_list: Array<string>,
 	_Asset_Manager: () => Asset_Manager_Data,
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
 	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
