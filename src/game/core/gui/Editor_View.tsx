@@ -13,6 +13,8 @@ import { zorder } from "../constants/zorder";
 import { useInterval } from "../engine/Utils";
 import { Button, Divider, Drawer, Dropdown, IconButton, Input, List, Modal, Tooltip, Whisper } from "rsuite";
 import { Icon, Page, Trash, Global, PeoplesCostomize, Copy } from "@rsuite/icons";
+import { BsFileEarmarkLock2, BsFileEarmark, BsClipboard2Plus } from "react-icons/bs";
+
 
 import "./Editor_View.scss";
 import { Standard_Input_ƒ } from "./Standard_Input_Handling";
@@ -229,7 +231,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			</Button>
 			<Whisper placement='top' speaker={<Tooltip>{"Copy Level to Clipboard"}</Tooltip>}>
 				<IconButton
-					icon={<Icon as={Copy} />}
+					icon={<Icon as={BsClipboard2Plus} />}
 					onClick={()=>{
 						Tilemap_Manager_ƒ.export_level_to_clipboard(props._Tilemap_Manager(), props._Asset_Manager());
 					}}
@@ -507,7 +509,7 @@ export const Load_File_Modal = (props: {
 					}}
 					className={ val == selected_file ? 'selected' : ''}
 				>
-					<span><Icon as={Page} className="file-icon"/>{val}</span>
+					<span><Icon as={BsFileEarmarkLock2} className="file-icon"/>{val}</span>
 				</List.Item>
 			))
 
@@ -521,7 +523,7 @@ export const Load_File_Modal = (props: {
 					}}
 					className={ val == selected_file ? 'selected' : ''}
 				>
-					<span><Icon as={Page} className="file-icon"/>{val}</span>
+					<span><Icon as={BsFileEarmark} className="file-icon"/>{val}</span> 
 					<Icon
 						as={Trash} className="delete-icon"
 						onClick={(evt)=>{
@@ -608,7 +610,7 @@ export const Save_File_Modal = (props: {
 					onClick={()=>{set_selected_file(val)}}
 					className={ val == selected_file ? 'selected' : ''}
 				>
-					<span><Icon as={Page} className="file-icon"/>{val}</span>
+					<span><Icon as={BsFileEarmark} className="file-icon"/>{val}</span>
 					<Icon
 						as={Trash} className="delete-icon"
 						onClick={(evt)=>{

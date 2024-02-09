@@ -23,17 +23,30 @@
 
 		.rs-list-item {
 			display: flex;
-			padding: 0.9rem 1rem;
+			padding: 0rem 1rem;
+			min-height: 3rem;
 			flex-flow: row nowrap;
 			justify-content: space-between;
 			align-items: center;
 
 			.file-icon {
-				margin-right: 0.5rem;
+				margin-right: 0.65rem;
 				color: #bbb;
+				font-size: 1.5rem;
 			}
 			.delete-icon {
 				color: #bc5a5a;
+				font-size: 1.5rem;
+				border-radius: 0.5rem;
+				padding: 0.25rem;
+				border: 2px solid #ef353500;
+				box-sizing: content-box;
+
+				&:hover {
+					border: 2px solid #ef353577;
+					color: #ef3535;
+					transition: all 0.25s ease-in-out;
+				}
 			}
 
 			&.selected {
