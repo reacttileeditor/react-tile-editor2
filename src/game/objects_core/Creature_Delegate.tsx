@@ -232,12 +232,12 @@ export const CT_Human_Footman_ƒ: Creature_Delegate = {
 	
 	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction:Direction):string => (
 		{
-			'north_east':	'human_footman_ne_stand',
-			'north_west':	'human_footman_ne_stand',
-			'east':			'human_footman_ne_stand',
-			'south_east':	'human_footman_se_stand',
-			'west':			'human_footman_se_stand',
-			'south_west':	'human_footman_se_stand',	
+			'north_east':	'human_footman_ne_attack',
+			'north_west':	'human_footman_ne_attack',
+			'east':			'human_footman_ne_attack',
+			'south_east':	'human_footman_se_attack',
+			'west':			'human_footman_se_attack',
+			'south_west':	'human_footman_se_attack',	
 		}[direction]
 	),
 }
