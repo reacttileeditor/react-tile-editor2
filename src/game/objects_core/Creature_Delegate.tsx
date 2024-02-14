@@ -240,4 +240,6 @@ export const CT_Human_Footman_ƒ: Creature_Delegate = {
 			'south_west':	'human_footman_se_attack',	
 		}[direction]
 	),
+
+	action_delay_for_animation: (animation_name: string) => ( 600 ),
 }
