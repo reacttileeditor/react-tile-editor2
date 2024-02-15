@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import _, { cloneDeep, find, size } from "lodash";
 import { v4 as uuid } from "uuid";
 
-import { angle_between, ƒ } from "../core/engine/Utils";
+import { angle_between, degrees_to_radians, dice, ƒ } from "../core/engine/Utils";
 
 import { Direction } from "../core/engine/Tilemap_Manager";
 
@@ -255,6 +255,7 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 		spawnees: Array<Custom_Object_Data>,
 	} => {
 		const _prior_delegate_state = me.delegate_state as CO_Hit_Star_State;
+		console.log('process hit star', _prior_delegate_state.angle)
 
 		const local_tick = tick - me.creation_timestamp; 
 
@@ -273,9 +274,43 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 				is_done_with_turn: false,
 				text: ``,
 				delegate_state: {
-					angle: _prior_delegate_state.angle
+					angle: _prior_delegate_state.angle + degrees_to_radians(-20 + dice(40))
 				},
-			})
+			}),
+			New_Custom_Object({
+				get_GM_instance: me.get_GM_instance,
+				_Asset_Manager: me._Asset_Manager,
+				_Blit_Manager: me._Blit_Manager,
+				_Tilemap_Manager: me._Tilemap_Manager,
+
+				pixel_pos: {x: me.pixel_pos.x, y: me.pixel_pos.y },
+				rotate: 0,
+				type_name: 'hit_spark' as CustomObjectTypeName,
+				creation_timestamp: tick,
+				should_remove: false,
+				is_done_with_turn: false,
+				text: ``,
+				delegate_state: {
+					angle: _prior_delegate_state.angle + degrees_to_radians(-20 + dice(40))
+				},
+			}),
+			New_Custom_Object({
+				get_GM_instance: me.get_GM_instance,
+				_Asset_Manager: me._Asset_Manager,
+				_Blit_Manager: me._Blit_Manager,
+				_Tilemap_Manager: me._Tilemap_Manager,
+
+				pixel_pos: {x: me.pixel_pos.x, y: me.pixel_pos.y },
+				rotate: 0,
+				type_name: 'hit_spark' as CustomObjectTypeName,
+				creation_timestamp: tick,
+				should_remove: false,
+				is_done_with_turn: false,
+				text: ``,
+				delegate_state: {
+					angle: _prior_delegate_state.angle + degrees_to_radians(-20 + dice(40))
+				},
+			})			
 		] : []);
 
 
@@ -312,14 +347,21 @@ export const CO_Hit_Spark_ƒ: Custom_Object_Delegate = {
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>,
 	} => {
+		const _prior_delegate_state = me.delegate_state as CO_Hit_Star_State;
 
-
+		console.log('process hit spark', _prior_delegate_state.angle)
 				
-		let addend = {x: 0, y: 0};
+		const magnitude = 2.5;
+		const gravity = 1;
+		let addend = {
+			x: Math.cos(_prior_delegate_state.angle) * magnitude,
+			y: Math.sin(_prior_delegate_state.angle) * magnitude + gravity
+		};
+
 
 		return {
 			data: {
-				pixel_pos: me.pixel_pos,
+				pixel_pos: {x: me.pixel_pos.x + addend.x, y: me.pixel_pos.y + addend.y},
 				rotate: me.rotate,
 				delegate_state: me.delegate_state,
 			},
@@ -329,6 +371,6 @@ export const CO_Hit_Spark_ƒ: Custom_Object_Delegate = {
 	},
 	yield_image: () => 'red_dot',
 	yield_zorder: () => zorder.fx,
-	time_to_live: () => 150,
+	time_to_live: () => 10,
 }
 

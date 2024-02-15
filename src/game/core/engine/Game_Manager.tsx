@@ -479,7 +479,6 @@ export const Game_Manager_ƒ = {
 				map(obj_val.change_list, (val)=>{ master_change_list.push(val) });
 			} );
 
-
 			/*
 				get the list of new objects
 			*/

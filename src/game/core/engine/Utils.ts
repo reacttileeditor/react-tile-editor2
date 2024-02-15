@@ -103,3 +103,7 @@ export const useInterval = (callback: Function, delay: number) => {
 export const angle_between = (p: {source: Point2D, dest: Point2D}): number => (
 	Math.atan2( p.dest.y - p.source.y , p.dest.x - p.source.x )
 )
+
+
+export const radianss_to_degrees = (rad: number) => (rad * 180.0) / Math.PI;
+export const degrees_to_radians = (deg: number) => (deg * Math.PI) / 180.0;

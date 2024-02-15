@@ -120,8 +120,8 @@ export const Custom_Object_ƒ = {
 
 		const processed_data = processed_results.data;
 
-		const change_list: Array<ChangeInstance> = [];
-		const spawnees: Array<Custom_Object_Data> = [];
+		const change_list: Array<ChangeInstance> = processed_results.change_list;
+		const spawnees: Array<Custom_Object_Data> = processed_results.spawnees;
 
 		let scheduled_events = me.scheduled_events;
 		
