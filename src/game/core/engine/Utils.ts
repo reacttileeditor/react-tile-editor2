@@ -98,3 +98,8 @@ export const useInterval = (callback: Function, delay: number) => {
 	  }
 	}, [delay]);
   }
+
+
+export const angle_between = (p: {source: Point2D, dest: Point2D}): number => (
+	Math.atan2( p.dest.y - p.source.y , p.dest.x - p.source.x )
+)

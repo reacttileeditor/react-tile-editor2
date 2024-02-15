@@ -1,7 +1,7 @@
 
 import _, { cloneDeep, filter, find, first, isBoolean, isEqual, map, size } from "lodash";
 
-import { ƒ } from "../core/engine/Utils";
+import { angle_between, ƒ } from "../core/engine/Utils";
 
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager";
 import { Pathfinder_ƒ } from "../core/engine/Pathfinding";
@@ -494,7 +494,9 @@ export const Creature_Behavior_ƒ = {
 							should_remove: false,
 							is_done_with_turn: false,
 							text: ``,
-							delegate_state: {},
+							delegate_state: {
+								angle: angle_between({source: me.tile_pos, dest: target.tile_pos})
+							},
 						}));					
 					}
 				}],

@@ -9,7 +9,7 @@ import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../core/eng
 
 import { Point2D, Rectangle } from '../interfaces';
 import { ChangeInstance, CreatureTypeName } from "./Creature";
-import { Custom_Object_Delegate, CO_Shot_ƒ, CO_Text_Label_ƒ, Custom_Object_Delegate_States, CO_Shot_State, CO_Skull_Icon_ƒ, CO_Hit_Star_BG_ƒ } from "./Custom_Object_Delegate";
+import { Custom_Object_Delegate, CO_Shot_ƒ, CO_Text_Label_ƒ, Custom_Object_Delegate_States, CO_Shot_State, CO_Skull_Icon_ƒ, CO_Hit_Star_BG_ƒ, CO_Hit_Spark_ƒ, CO_Hit_Star_State, CO_Hit_Spark_State } from "./Custom_Object_Delegate";
 import { Base_Object_Data, New_Base_Object } from "./Base_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
@@ -17,7 +17,7 @@ import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
 import { filter, isEmpty, map, without } from "ramda";
  
 
-export type CustomObjectTypeName = 'shot' | 'text_label' | 'skull_icon';
+export type CustomObjectTypeName = 'shot' | 'text_label' | 'skull_icon' | 'hit_star_bg' | 'hit_spark' ;
 
 export type Custom_Object_Data = {
 	type_name: CustomObjectTypeName,
@@ -88,6 +88,7 @@ export const Custom_Object_ƒ = {
 			text_label: CO_Text_Label_ƒ,
 			skull_icon: CO_Skull_Icon_ƒ,
 			hit_star_bg: CO_Hit_Star_BG_ƒ,
+			hit_spark: CO_Hit_Spark_ƒ,
 		}[type_name];
 	},
 
@@ -96,7 +97,8 @@ export const Custom_Object_ƒ = {
 			shot: p as CO_Shot_State,
 			text_label: p as {},
 			skull_icon: p as {},
-			hit_star_bg: p as {},
+			hit_star_bg: p as CO_Hit_Star_State,
+			hit_spark: p as CO_Hit_Spark_State,
 		}[type_name];
 	},
 

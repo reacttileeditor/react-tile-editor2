@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _, { cloneDeep, find } from "lodash";
+import _, { cloneDeep, find, size } from "lodash";
 import { v4 as uuid } from "uuid";
 
-import { ƒ } from "../core/engine/Utils";
+import { angle_between, ƒ } from "../core/engine/Utils";
 
 import { Direction } from "../core/engine/Tilemap_Manager";
 
@@ -11,13 +11,13 @@ import { Point2D, Rectangle } from '../interfaces';
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { zorder } from "../core/constants/zorder";
 import { ChangeInstance } from "./Creature";
-import { Custom_Object_Data, Custom_Object_ƒ } from "./Custom_Object";
+import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
 import { Vals } from "../core/constants/Constants";
 
 
 export type CustomObjectTypeName = 'shot';
 
-export type Custom_Object_Delegate_States = {} | CO_Shot_State;
+export type Custom_Object_Delegate_States = {} | CO_Shot_State | CO_Hit_Star_State;
 
 
 export type Custom_Object_Update = {
@@ -125,7 +125,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 			const target_pos = target.pixel_pos;
 			const source_pos = source.pixel_pos;
 
-			const angle = Math.atan2(  target_pos.y - original_pos.y , target_pos.x - original_pos.x )
+			const angle = angle_between({source: original_pos, dest: target_pos});
 
 			const magnitude = Math.hypot( (original_pos.x - target_pos.x), (original_pos.y - target_pos.y) ) / Vals.shot_flight_duration;
 
@@ -201,7 +201,7 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 	},
 	yield_image: () => 'omit_image',
 	yield_zorder: () => zorder.text,
-	time_to_live: () => 100,
+	time_to_live: () => 70,
 
 	
 }
@@ -237,6 +237,11 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
 
 
 
+export type CO_Hit_Star_State = {
+	angle: number,
+}
+
+
 
 export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 	...Custom_Object_Delegate_Base_ƒ,
@@ -249,9 +254,67 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>,
 	} => {
+		const _prior_delegate_state = me.delegate_state as CO_Hit_Star_State;
+
+		const local_tick = tick - me.creation_timestamp; 
+
+		const spawnees = (local_tick == 0 ? [
+			New_Custom_Object({
+				get_GM_instance: me.get_GM_instance,
+				_Asset_Manager: me._Asset_Manager,
+				_Blit_Manager: me._Blit_Manager,
+				_Tilemap_Manager: me._Tilemap_Manager,
+
+				pixel_pos: {x: me.pixel_pos.x, y: me.pixel_pos.y },
+				rotate: 0,
+				type_name: 'hit_spark' as CustomObjectTypeName,
+				creation_timestamp: tick,
+				should_remove: false,
+				is_done_with_turn: false,
+				text: ``,
+				delegate_state: {
+					angle: _prior_delegate_state.angle
+				},
+			})
+		] : []);
 
 
+		let addend = {x: 0, y: 0};
 
+		return {
+			data: {
+				pixel_pos: me.pixel_pos,
+				rotate: me.rotate,
+				delegate_state: me.delegate_state,
+			},
+			change_list: [],
+			spawnees: spawnees,
+		}
+	},
+	yield_image: () => 'hit_star',
+	yield_zorder: () => zorder.fx,
+	time_to_live: () => 70,
+}
+
+
+export type CO_Hit_Spark_State = {
+	angle: number,
+}
+
+export const CO_Hit_Spark_ƒ: Custom_Object_Delegate = {
+	...Custom_Object_Delegate_Base_ƒ,
+
+	process_single_frame: (
+		me: Custom_Object_Data,
+		tick: number,
+	): {
+		data: Custom_Object_Update,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>,
+	} => {
+
+
+				
 		let addend = {x: 0, y: 0};
 
 		return {
@@ -264,7 +327,8 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 			spawnees: [],
 		}
 	},
-	yield_image: () => 'hit_star',
+	yield_image: () => 'red_dot',
 	yield_zorder: () => zorder.fx,
-	time_to_live: () => 100,
+	time_to_live: () => 150,
 }
+
