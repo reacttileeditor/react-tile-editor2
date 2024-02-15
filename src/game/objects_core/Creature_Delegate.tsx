@@ -150,7 +150,7 @@ export const CT_Skeleton_ƒ: Creature_Delegate = {
 		}[direction]
 	),
 
-	action_delay_for_animation: (animation_name: string) => ( 600 ),
+	action_delay_for_animation: (animation_name: string) => ( 36 ),
 
 }
 
@@ -196,7 +196,7 @@ export const CT_Undead_Javelineer_ƒ: Creature_Delegate = {
 		}[direction]
 	),
 
-	action_delay_for_animation: (animation_name: string) => ( 700 ),
+	action_delay_for_animation: (animation_name: string) => ( 42 ),
 }
 
 
@@ -241,5 +241,5 @@ export const CT_Human_Footman_ƒ: Creature_Delegate = {
 		}[direction]
 	),
 
-	action_delay_for_animation: (animation_name: string) => ( 600 ),
+	action_delay_for_animation: (animation_name: string) => ( 32 ),
 }

@@ -56,6 +56,10 @@ export const AI_Core_ƒ = {
 			});
 		}
 
+		// if(me.type_name == 'human_footman' && me.current_hitpoints < 100){
+		// 	debugger;
+
+		// }
 		if( size(valid_targets) && (me.remaining_action_points > 0) ){
 			/*
 				We have at least one valid target.  I think we'll probably want some priority criterion, but for now, just pick the first one.

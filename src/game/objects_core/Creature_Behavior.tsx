@@ -14,7 +14,7 @@ import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager"
 import { Anim_Schedule_Element, BehaviorMode, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection, Path_Data } from "./Creature";
 import { AI_Core_ƒ } from "./AI_Core";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../core/engine/Asset_Manager";
-import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
+import { Blit_Manager_Data, Blit_Manager_ƒ, ms_to_ticks, ticks_to_ms } from "../core/engine/Blit_Manager";
 import { Vals } from "../core/constants/Constants";
 
 
@@ -203,13 +203,13 @@ export const Creature_Behavior_ƒ = {
 
 /*----------------------- turn processing management -----------------------*/
 
-	get_time_since_mode_start: (me: Creature_Data, offset_in_ms: number ): number => {
-		return offset_in_ms - me.last_behavior_reconsideration_timestamp
+	get_time_since_mode_start: (me: Creature_Data, tick: number ): number => {
+		return tick - me.last_behavior_reconsideration_timestamp
 	},
 
 	get_intended_animation_time_offset: (me: Creature_Data, offset_in_ms: number ): number => {
 		if( me.behavior_mode == 'attack'){
-			return Creature_ƒ.get_time_since_mode_start(me, offset_in_ms);
+			return ticks_to_ms( Creature_ƒ.get_time_since_mode_start(me, ms_to_ticks(offset_in_ms)));
 		} else {
 			return offset_in_ms
 		}
@@ -309,8 +309,8 @@ export const Creature_Behavior_ƒ = {
 		};
 		
 
-		Creature_ƒ.set(change_list, me, 'last_behavior_reconsideration_timestamp', offset_in_ms);
-		Creature_ƒ.set(change_list, me, 'next_behavior_reconsideration_timestamp', offset_in_ms + 300);
+		Creature_ƒ.set(change_list, me, 'last_behavior_reconsideration_timestamp', tick);
+		Creature_ƒ.set(change_list, me, 'next_behavior_reconsideration_timestamp', tick + 18);
 
 		Creature_ƒ.set(change_list, me, 'tile_pos', new_position.position);
 		Creature_ƒ.set(change_list, me, 'facing_direction', new_position.direction);
@@ -399,9 +399,9 @@ export const Creature_Behavior_ƒ = {
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>
 	) => {
-		let timestamp = Creature_ƒ.get_time_since_mode_start(me, offset_in_ms)
+		let mode_tick = Creature_ƒ.get_time_since_mode_start(me, tick)
 
-		if( me.target && timestamp == Creature_ƒ.get_delegate(me.type_name).action_delay_for_animation('attack') ){
+		if( me.target && mode_tick == Creature_ƒ.get_delegate(me.type_name).action_delay_for_animation('attack') ){
 			Creature_ƒ.perform_attack_instance(
 				me,
 				offset_in_ms,
@@ -417,7 +417,7 @@ export const Creature_Behavior_ƒ = {
 
 
 		if(image_data != undefined){
-			const time_since_start = Creature_ƒ.get_time_since_mode_start(me, offset_in_ms);
+			const time_since_start = ticks_to_ms(Creature_ƒ.get_time_since_mode_start(me, tick));
 
 			const current_frame_cycle = Asset_Manager_ƒ.get_current_frame_cycle( image_data, time_since_start);
 
@@ -585,7 +585,7 @@ export const Creature_Behavior_ƒ = {
 		const spawnees: Array<Custom_Object_Data> = [];
 
 
-		if( offset_in_ms >= me.next_behavior_reconsideration_timestamp ) {
+		if( tick >= me.next_behavior_reconsideration_timestamp ) {
 			AI_Core_ƒ.reconsider_behavior(me, _TM, _AM, _BM, offset_in_ms, tick, change_list, spawnees);
 		}
 

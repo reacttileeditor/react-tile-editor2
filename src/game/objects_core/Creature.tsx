@@ -159,7 +159,7 @@ export const New_Creature = (
 		),
 		last_behavior_reconsideration_timestamp: ƒ.if(p.last_behavior_reconsideration_timestamp !== undefined,
 			p.last_behavior_reconsideration_timestamp,
-			-300,
+			0,
 		),
 		next_behavior_reconsideration_timestamp: ƒ.if(p.next_behavior_reconsideration_timestamp !== undefined,
 			p.next_behavior_reconsideration_timestamp,
@@ -195,6 +195,8 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 	cloneDeep({
 		...me,
 		next_behavior_reconsideration_timestamp: 0,
+		last_behavior_reconsideration_timestamp: 0,
+		last_changed_hitpoints: -300,
 		remaining_action_points: 1,
 		planned_tile_pos: me.tile_pos,
 		animation_this_turn: [],
