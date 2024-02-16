@@ -10,7 +10,7 @@ import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../core/eng
 import { Point2D, Rectangle } from '../interfaces';
 import { ChangeInstance, CreatureTypeName } from "./Creature";
 import { Custom_Object_Delegate, CO_Shot_ƒ, CO_Text_Label_ƒ, Custom_Object_Delegate_States, CO_Shot_State, CO_Skull_Icon_ƒ, CO_Hit_Star_BG_ƒ, CO_Hit_Spark_ƒ, CO_Hit_Star_State, CO_Hit_Spark_State } from "./Custom_Object_Delegate";
-import { Base_Object_Data, New_Base_Object } from "./Base_Object";
+import { Base_Object_Accessors, Base_Object_Data, New_Base_Object } from "./Base_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
 import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
@@ -34,7 +34,42 @@ export type Scheduled_Event = {
 	) => void,
 }
 
+
 export const New_Custom_Object = (
+	p: {
+		accessors: Base_Object_Accessors,
+
+		pixel_pos: Point2D,
+		rotate?: number,
+		type_name: CustomObjectTypeName,
+		creation_timestamp?: number,
+		should_remove?: boolean,
+		is_done_with_turn?: boolean,
+		text?: string,
+		scheduled_events?: Array<Scheduled_Event>,
+		delegate_state?: Custom_Object_Delegate_States,
+	}
+): Custom_Object_Data => (
+	_New_Custom_Object({
+		get_GM_instance: p.accessors.get_GM_instance,
+		_Asset_Manager: p.accessors._Asset_Manager,
+		_Blit_Manager: p.accessors._Blit_Manager,
+		_Tilemap_Manager: p.accessors._Tilemap_Manager,
+	
+		pixel_pos: p.pixel_pos,
+		rotate: p.rotate ??  0,
+		type_name: p.type_name,
+		creation_timestamp: p.creation_timestamp ?? 0,
+		should_remove: p.should_remove ?? false,
+		is_done_with_turn: p.is_done_with_turn ?? false,
+		text: p.text ?? '',
+		delegate_state: p.delegate_state ?? {},		
+		scheduled_events: p.scheduled_events,
+	})
+)
+
+
+export const _New_Custom_Object = (
 	p: {
 		get_GM_instance: () => Game_Manager_Data;
 		_Asset_Manager: () => Asset_Manager_Data,
@@ -66,10 +101,7 @@ export const New_Custom_Object = (
 			is_done_with_turn: p.is_done_with_turn,
 		}),
 		type_name: p.type_name,
-		text: ƒ.if(p.text != undefined,
-			p.text,
-			''
-		),
+		text: p.text ?? '',
 		scheduled_events: ƒ.if(p.scheduled_events != undefined,
 			p.scheduled_events,
 			[]
@@ -144,7 +176,7 @@ export const Custom_Object_ƒ = {
 		return { 
 			change_list: change_list,
 			spawnees: spawnees,
-			new_object: New_Custom_Object({
+			new_object: _New_Custom_Object({
 				get_GM_instance: me.get_GM_instance,
 				_Asset_Manager: me._Asset_Manager,
 				_Blit_Manager: me._Blit_Manager,

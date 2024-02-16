@@ -13,7 +13,7 @@ import { zorder } from "../core/constants/zorder";
 import { ChangeInstance } from "./Creature";
 import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
 import { Vals } from "../core/constants/Constants";
-
+import { Base_Object_ƒ } from "./Base_Object";
 
 export type CustomObjectTypeName = 'shot';
 
@@ -261,52 +261,28 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 
 		const spawnees = (local_tick == 0 ? [
 			New_Custom_Object({
-				get_GM_instance: me.get_GM_instance,
-				_Asset_Manager: me._Asset_Manager,
-				_Blit_Manager: me._Blit_Manager,
-				_Tilemap_Manager: me._Tilemap_Manager,
-
-				pixel_pos: {x: me.pixel_pos.x, y: me.pixel_pos.y },
-				rotate: 0,
+				accessors: Base_Object_ƒ.get_accessors(me),
+				pixel_pos: me.pixel_pos,
 				type_name: 'hit_spark' as CustomObjectTypeName,
 				creation_timestamp: tick,
-				should_remove: false,
-				is_done_with_turn: false,
-				text: ``,
 				delegate_state: {
 					angle: _prior_delegate_state.angle + degrees_to_radians(-20 + dice(40))
 				},
 			}),
 			New_Custom_Object({
-				get_GM_instance: me.get_GM_instance,
-				_Asset_Manager: me._Asset_Manager,
-				_Blit_Manager: me._Blit_Manager,
-				_Tilemap_Manager: me._Tilemap_Manager,
-
-				pixel_pos: {x: me.pixel_pos.x, y: me.pixel_pos.y },
-				rotate: 0,
+				accessors: Base_Object_ƒ.get_accessors(me),
+				pixel_pos: me.pixel_pos,
 				type_name: 'hit_spark' as CustomObjectTypeName,
 				creation_timestamp: tick,
-				should_remove: false,
-				is_done_with_turn: false,
-				text: ``,
 				delegate_state: {
 					angle: _prior_delegate_state.angle + degrees_to_radians(-20 + dice(40))
 				},
 			}),
 			New_Custom_Object({
-				get_GM_instance: me.get_GM_instance,
-				_Asset_Manager: me._Asset_Manager,
-				_Blit_Manager: me._Blit_Manager,
-				_Tilemap_Manager: me._Tilemap_Manager,
-
-				pixel_pos: {x: me.pixel_pos.x, y: me.pixel_pos.y },
-				rotate: 0,
+				accessors: Base_Object_ƒ.get_accessors(me),
+				pixel_pos: me.pixel_pos,
 				type_name: 'hit_spark' as CustomObjectTypeName,
 				creation_timestamp: tick,
-				should_remove: false,
-				is_done_with_turn: false,
-				text: ``,
 				delegate_state: {
 					angle: _prior_delegate_state.angle + degrees_to_radians(-20 + dice(40))
 				},

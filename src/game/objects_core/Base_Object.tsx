@@ -14,39 +14,39 @@ import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
 
 
 
-export type Base_Object_Data = {
-	//static values
+export type Base_Object_Data = 
+	Base_Object_Statics &
+	Base_Object_State &
+	Base_Object_Accessors;
+
+export type Base_Object_Statics = {
 	unique_id: string;
 	creation_timestamp: number,
+}
 
-	//state	
+export type Base_Object_State = {
 	pixel_pos: Point2D;
 	rotate: number,
 	should_remove: boolean,
 	is_done_with_turn: boolean,
+}
 
-	//accessors
+export type Base_Object_Accessors = {
 	get_GM_instance: () => Game_Manager_Data;
 	_Asset_Manager: () => Asset_Manager_Data,
 	_Blit_Manager: () => Blit_Manager_Data,
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
-}
+} 
 
 export const New_Base_Object = (
 	p: {
-		get_GM_instance: () => Game_Manager_Data;
-		_Asset_Manager: () => Asset_Manager_Data,
-		_Blit_Manager: () => Blit_Manager_Data,
-		_Tilemap_Manager: () => Tilemap_Manager_Data,
-	
-
 		creation_timestamp: number,
 		should_remove: boolean,
 		pixel_pos?: Point2D,
 		is_done_with_turn: boolean,
 		rotate?: number,
 		unique_id?: string,
-	}): Base_Object_Data => {
+	} & Base_Object_Accessors): Base_Object_Data => {
 
 	return {
 		//static values
@@ -80,7 +80,15 @@ export const New_Base_Object = (
 
 
 
+
+
 export const Base_Object_ƒ = {
+	get_accessors: (me: Base_Object_Data): Base_Object_Accessors => ({
+		get_GM_instance: me.get_GM_instance,
+		_Asset_Manager: me._Asset_Manager,
+		_Blit_Manager: me._Blit_Manager,
+		_Tilemap_Manager: me._Tilemap_Manager,
+	}),
 
 	get_current_mid_turn_tile_pos: (me: Base_Object_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Point2D => (
 		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)

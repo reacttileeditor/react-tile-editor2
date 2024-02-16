@@ -8,7 +8,7 @@ import { Pathfinder_ƒ } from "../core/engine/Pathfinding";
 
 import { Point2D, Rectangle } from '../interfaces';
 import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
-import { Base_Object_Data, New_Base_Object } from "./Base_Object";
+import { Base_Object_Data, Base_Object_ƒ, New_Base_Object } from "./Base_Object";
 import { Creature_Delegate, CT_Hermit_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ } from "./Creature_Delegate";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Anim_Schedule_Element, BehaviorMode, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection, Path_Data } from "./Creature";
@@ -441,17 +441,10 @@ export const Creature_Behavior_ƒ = {
 		if( Creature_ƒ.get_delegate(me.type_name).yield_weapon_range() > 1 ){
 
 			spawnees.push(New_Custom_Object({
-				get_GM_instance: me.get_GM_instance,
-				_Asset_Manager: me._Asset_Manager,
-				_Blit_Manager: me._Blit_Manager,
-				_Tilemap_Manager: me._Tilemap_Manager,
-
+				accessors: Base_Object_ƒ.get_accessors(me),
 				pixel_pos: me.pixel_pos,
-				rotate: 0,
 				type_name: 'shot' as CustomObjectTypeName,
 				creation_timestamp: tick,
-				should_remove: false,
-				text: ``,
 				delegate_state: {
 					target_obj: target.unique_id,
 					source_obj: me.unique_id,
@@ -466,34 +459,18 @@ export const Creature_Behavior_ƒ = {
 						Creature_ƒ.set(change_list_, target, 'last_changed_hitpoints', offset_in_ms);
 
 						spawnees_.push(New_Custom_Object({
-							get_GM_instance: me.get_GM_instance,
-							_Asset_Manager: me._Asset_Manager,
-							_Blit_Manager: me._Blit_Manager,
-							_Tilemap_Manager: me._Tilemap_Manager,
-				
+							accessors: Base_Object_ƒ.get_accessors(me),
 							pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
-							rotate: 0,
 							type_name: 'text_label' as CustomObjectTypeName,
 							creation_timestamp: tick,
-							should_remove: false,
 							text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
-							is_done_with_turn: false,
-							delegate_state: {},
 						}));
 				
 						spawnees_.push(New_Custom_Object({
-							get_GM_instance: me.get_GM_instance,
-							_Asset_Manager: me._Asset_Manager,
-							_Blit_Manager: me._Blit_Manager,
-							_Tilemap_Manager: me._Tilemap_Manager,
-				
+							accessors: Base_Object_ƒ.get_accessors(me),
 							pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
-							rotate: 0,
 							type_name: 'hit_star_bg' as CustomObjectTypeName,
 							creation_timestamp: tick,
-							should_remove: false,
-							is_done_with_turn: false,
-							text: ``,
 							delegate_state: {
 								angle: angle_between({source: me.tile_pos, dest: target.tile_pos})
 							},
@@ -507,34 +484,18 @@ export const Creature_Behavior_ƒ = {
 			Creature_ƒ.set(change_list, target, 'last_changed_hitpoints', offset_in_ms);
 
 			spawnees.push(New_Custom_Object({
-				get_GM_instance: me.get_GM_instance,
-				_Asset_Manager: me._Asset_Manager,
-				_Blit_Manager: me._Blit_Manager,
-				_Tilemap_Manager: me._Tilemap_Manager,
-	
+				accessors: Base_Object_ƒ.get_accessors(me),
 				pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
-				rotate: 0,
 				type_name: 'text_label' as CustomObjectTypeName,
 				creation_timestamp: tick,
-				should_remove: false,
 				text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
-				is_done_with_turn: false,
-				delegate_state: {},
 			}));
 	
 			spawnees.push(New_Custom_Object({
-				get_GM_instance: me.get_GM_instance,
-				_Asset_Manager: me._Asset_Manager,
-				_Blit_Manager: me._Blit_Manager,
-				_Tilemap_Manager: me._Tilemap_Manager,
-	
+				accessors: Base_Object_ƒ.get_accessors(me),
 				pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
-				rotate: 0,
 				type_name: 'hit_star_bg' as CustomObjectTypeName,
 				creation_timestamp: tick,
-				should_remove: false,
-				is_done_with_turn: false,
-				text: ``,
 				delegate_state: {
 					angle: angle_between({source: me.tile_pos, dest: target.tile_pos})
 				},
@@ -554,19 +515,10 @@ export const Creature_Behavior_ƒ = {
 	) => {
 		if( me.current_hitpoints <= 0 ) {
 			spawnees.push(New_Custom_Object({
-				get_GM_instance: me.get_GM_instance,
-				_Asset_Manager: me._Asset_Manager,
-				_Blit_Manager: me._Blit_Manager,
-				_Tilemap_Manager: me._Tilemap_Manager,
-	
+				accessors: Base_Object_ƒ.get_accessors(me),
 				pixel_pos: me.pixel_pos,
-				rotate: 0,
 				type_name: 'skull_icon' as CustomObjectTypeName,
 				creation_timestamp: tick,
-				should_remove: false,
-				text: ``,
-				delegate_state: {},
-				is_done_with_turn: false,
 			}));
 
 

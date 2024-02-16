@@ -107,3 +107,8 @@ export const angle_between = (p: {source: Point2D, dest: Point2D}): number => (
 
 export const radianss_to_degrees = (rad: number) => (rad * 180.0) / Math.PI;
 export const degrees_to_radians = (deg: number) => (deg * Math.PI) / 180.0;
+
+//  saving this for posterity; it doesn't work for the intended purpose, since it recieves a type of `whatever | undefined`, and we can't do just `whatever` without being verbose, which is the entire thing we're trying to avoid.
+// export const fallback_to = <T extends unknown>(param: T, default_val: T ): T => (
+// 	param !== undefined ? param as T : default_val
+// );
