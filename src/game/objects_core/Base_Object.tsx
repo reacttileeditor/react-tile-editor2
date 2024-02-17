@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import _, { find } from "lodash";
 import { v4 as uuid } from "uuid";
 
-import { ƒ } from "../core/engine/Utils";
+import { add_points, ƒ } from "../core/engine/Utils";
 
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager";
 
@@ -29,6 +29,8 @@ export type Base_Object_State = {
 	rotate: number,
 	should_remove: boolean,
 	is_done_with_turn: boolean,
+	velocity: Point2D,
+	accel: Point2D,
 }
 
 export type Base_Object_Accessors = {
@@ -45,28 +47,24 @@ export const New_Base_Object = (
 		pixel_pos?: Point2D,
 		is_done_with_turn: boolean,
 		rotate?: number,
+		velocity?: Point2D,
+		accel?: Point2D, 
 		unique_id?: string,
 	} & Base_Object_Accessors): Base_Object_Data => {
 
 	return {
 		//static values
-		unique_id: ƒ.if(p.unique_id != undefined,
-			p.unique_id,
-			uuid()
-		),
+		unique_id: p.unique_id ?? uuid(),
 		creation_timestamp: p.creation_timestamp,
-		should_remove: p.should_remove,
-		is_done_with_turn: p.is_done_with_turn,
 		
 		//state	
-		pixel_pos: ƒ.if(p.pixel_pos != undefined,
-			p.pixel_pos,
-			{x:0, y: 0}
-		),  //TODO use TM
-		rotate: ƒ.if(p.rotate != undefined,
-			p.rotate,
-			0
-		), 
+		pixel_pos: p.pixel_pos ?? {x:0, y: 0},  //TODO use TM
+		rotate: p.rotate ?? 0,
+		should_remove: p.should_remove,
+		is_done_with_turn: p.is_done_with_turn,
+		velocity: p.velocity ?? {x: 0, y: 0},
+		accel: p.accel ?? {x: 0, y: 0},
+
 
 
 		//accessors
@@ -92,7 +90,13 @@ export const Base_Object_ƒ = {
 
 	get_current_mid_turn_tile_pos: (me: Base_Object_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Point2D => (
 		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)
-	)
+	),
+
+	process_physics: (me: Base_Object_Data): Base_Object_Data => ({
+		...me,
+		pixel_pos: add_points(me.pixel_pos, me.velocity),
+		velocity: add_points(me.velocity, me.accel),
+	}),
 }
 
 

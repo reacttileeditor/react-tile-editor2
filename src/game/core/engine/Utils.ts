@@ -112,3 +112,10 @@ export const degrees_to_radians = (deg: number) => (deg * Math.PI) / 180.0;
 // export const fallback_to = <T extends unknown>(param: T, default_val: T ): T => (
 // 	param !== undefined ? param as T : default_val
 // );
+
+export const add_points = (a: Point2D, b: Point2D): Point2D => (
+	{
+		x: a.x + b.x,
+		y: a.y + b.y
+	}
+);

@@ -10,7 +10,7 @@ import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../core/eng
 import { Point2D, Rectangle } from '../interfaces';
 import { ChangeInstance, CreatureTypeName } from "./Creature";
 import { Custom_Object_Delegate, CO_Shot_ƒ, CO_Text_Label_ƒ, Custom_Object_Delegate_States, CO_Shot_State, CO_Skull_Icon_ƒ, CO_Hit_Star_BG_ƒ, CO_Hit_Spark_ƒ, CO_Hit_Star_State, CO_Hit_Spark_State } from "./Custom_Object_Delegate";
-import { Base_Object_Accessors, Base_Object_Data, New_Base_Object } from "./Base_Object";
+import { Base_Object_Accessors, Base_Object_Data, Base_Object_ƒ, New_Base_Object } from "./Base_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
 import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
@@ -41,6 +41,8 @@ export const New_Custom_Object = (
 
 		pixel_pos: Point2D,
 		rotate?: number,
+		velocity?: Point2D,
+		accel?: Point2D, 
 		type_name: CustomObjectTypeName,
 		creation_timestamp?: number,
 		should_remove?: boolean,
@@ -58,6 +60,8 @@ export const New_Custom_Object = (
 	
 		pixel_pos: p.pixel_pos,
 		rotate: p.rotate ??  0,
+		velocity: p.velocity,
+		accel: p.accel,
 		type_name: p.type_name,
 		creation_timestamp: p.creation_timestamp ?? 0,
 		should_remove: p.should_remove ?? false,
@@ -77,6 +81,8 @@ export const _New_Custom_Object = (
 		_Tilemap_Manager: () => Tilemap_Manager_Data,
 		pixel_pos: Point2D,
 		rotate: number,
+		velocity?: Point2D,
+		accel?: Point2D, 
 		type_name: CustomObjectTypeName,
 		creation_timestamp: number,
 		should_remove: boolean,
@@ -99,6 +105,8 @@ export const _New_Custom_Object = (
 			creation_timestamp: p.creation_timestamp,
 			should_remove: p.should_remove,
 			is_done_with_turn: p.is_done_with_turn,
+			velocity: p.velocity,
+			accel: p.accel,
 		}),
 		type_name: p.type_name,
 		text: p.text ?? '',
@@ -144,9 +152,13 @@ export const Custom_Object_ƒ = {
 		spawnees: Array<Custom_Object_Data>,
 		new_object: Custom_Object_Data
 	} => {
+		const me_after_physics = {
+			...me,
+			...Base_Object_ƒ.process_physics(me),
+		};
 
-		const processed_results = Custom_Object_ƒ.get_delegate(me.type_name).process_single_frame(
-			me,
+		const processed_results = Custom_Object_ƒ.get_delegate(me_after_physics.type_name).process_single_frame(
+			me_after_physics,
 			tick,
 		);
 
@@ -155,7 +167,7 @@ export const Custom_Object_ƒ = {
 		const change_list: Array<ChangeInstance> = processed_results.change_list;
 		const spawnees: Array<Custom_Object_Data> = processed_results.spawnees;
 
-		let scheduled_events = me.scheduled_events;
+		let scheduled_events = me_after_physics.scheduled_events;
 		
 		let current_events = filter( (val)=>(
 			val.tick_offset == tick

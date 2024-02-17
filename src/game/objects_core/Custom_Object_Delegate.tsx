@@ -265,6 +265,7 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 				pixel_pos: me.pixel_pos,
 				type_name: 'hit_spark' as CustomObjectTypeName,
 				creation_timestamp: tick,
+				accel: {x:0, y:21},
 				delegate_state: {
 					angle: _prior_delegate_state.angle + degrees_to_radians(-20 + dice(40))
 				},
@@ -274,6 +275,7 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 				pixel_pos: me.pixel_pos,
 				type_name: 'hit_spark' as CustomObjectTypeName,
 				creation_timestamp: tick,
+				accel: {x:0, y:21},
 				delegate_state: {
 					angle: _prior_delegate_state.angle + degrees_to_radians(-20 + dice(40))
 				},
@@ -283,6 +285,7 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 				pixel_pos: me.pixel_pos,
 				type_name: 'hit_spark' as CustomObjectTypeName,
 				creation_timestamp: tick,
+				accel: {x:0, y:21},
 				delegate_state: {
 					angle: _prior_delegate_state.angle + degrees_to_radians(-20 + dice(40))
 				},
@@ -328,7 +331,7 @@ export const CO_Hit_Spark_ƒ: Custom_Object_Delegate = {
 		console.log('process hit spark', _prior_delegate_state.angle)
 				
 		const magnitude = 2.5;
-		const gravity = 1;
+		const gravity = 0;
 		let addend = {
 			x: Math.cos(_prior_delegate_state.angle) * magnitude,
 			y: Math.sin(_prior_delegate_state.angle) * magnitude + gravity
