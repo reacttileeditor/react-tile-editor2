@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _, { cloneDeep, find, size } from "lodash";
+import _, { cloneDeep, find, map, range, size } from "lodash";
 import { v4 as uuid } from "uuid";
 
 import { angle_between, degrees_to_radians, dice, ƒ } from "../core/engine/Utils";
@@ -13,7 +13,7 @@ import { zorder } from "../core/constants/zorder";
 import { ChangeInstance } from "./Creature";
 import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
 import { Vals } from "../core/constants/Constants";
-import { Base_Object_ƒ } from "./Base_Object";
+import { Base_Object_State, Base_Object_ƒ } from "./Base_Object";
 
 export type CustomObjectTypeName = 'shot';
 
@@ -21,10 +21,8 @@ export type Custom_Object_Delegate_States = {} | CO_Shot_State | CO_Hit_Star_Sta
 
 
 export type Custom_Object_Update = {
-	pixel_pos: Point2D,
-	rotate: number,
 	delegate_state: Custom_Object_Delegate_States,
-}
+} & Base_Object_State;
 
 
 export type Custom_Object_Delegate = {
@@ -60,8 +58,7 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 
 		return {
 			data: {
-				pixel_pos: me.pixel_pos,
-				rotate: me.rotate,
+				...Base_Object_ƒ.get_base_object_state(me),
 				delegate_state: me.delegate_state,
 			},
 			change_list: [],
@@ -153,6 +150,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 
 		return {
 			data: {
+				...Base_Object_ƒ.get_base_object_state(me),
 				pixel_pos: next_pos,
 				rotate: visual_rotate_angle,
 				delegate_state: _prior_delegate_state,
@@ -191,8 +189,8 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 
 		return {
 			data: {
+				...Base_Object_ƒ.get_base_object_state(me),
 				pixel_pos: {x: me.pixel_pos.x + addend.x, y: me.pixel_pos.y + addend.y},
-				rotate: me.rotate,
 				delegate_state: me.delegate_state,
 			},
 			change_list: [],
@@ -224,8 +222,8 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
 
 		return {
 			data: {
+				...Base_Object_ƒ.get_base_object_state(me),
 				pixel_pos: {x: me.pixel_pos.x + addend.x, y: me.pixel_pos.y + addend.y},
-				rotate: me.rotate,
 				delegate_state: me.delegate_state,
 			},
 			change_list: [],
@@ -259,46 +257,27 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 
 		const local_tick = tick - me.creation_timestamp; 
 
-		const spawnees = (local_tick == 0 ? [
-			New_Custom_Object({
-				accessors: Base_Object_ƒ.get_accessors(me),
-				pixel_pos: me.pixel_pos,
-				type_name: 'hit_spark' as CustomObjectTypeName,
-				creation_timestamp: tick,
-				accel: {x:0, y:21},
-				delegate_state: {
-					angle: _prior_delegate_state.angle + degrees_to_radians(-20 + dice(40))
-				},
-			}),
-			New_Custom_Object({
-				accessors: Base_Object_ƒ.get_accessors(me),
-				pixel_pos: me.pixel_pos,
-				type_name: 'hit_spark' as CustomObjectTypeName,
-				creation_timestamp: tick,
-				accel: {x:0, y:21},
-				delegate_state: {
-					angle: _prior_delegate_state.angle + degrees_to_radians(-20 + dice(40))
-				},
-			}),
-			New_Custom_Object({
-				accessors: Base_Object_ƒ.get_accessors(me),
-				pixel_pos: me.pixel_pos,
-				type_name: 'hit_spark' as CustomObjectTypeName,
-				creation_timestamp: tick,
-				accel: {x:0, y:21},
-				delegate_state: {
-					angle: _prior_delegate_state.angle + degrees_to_radians(-20 + dice(40))
-				},
-			})			
-		] : []);
+		const spawnees = (local_tick == 0 ? map(range(3), (val) => (
+				New_Custom_Object({
+					accessors: Base_Object_ƒ.get_accessors(me),
+					pixel_pos: me.pixel_pos,
+					type_name: 'hit_spark' as CustomObjectTypeName,
+					creation_timestamp: tick,
+					velocity: {x:0, y:-7.5},
+					accel: {x:0, y:1.0},
+					delegate_state: {
+						angle: _prior_delegate_state.angle + degrees_to_radians(-30 + dice(60))
+					},
+				})
+			)
+		) : []);
 
 
 		let addend = {x: 0, y: 0};
 
 		return {
 			data: {
-				pixel_pos: me.pixel_pos,
-				rotate: me.rotate,
+				...Base_Object_ƒ.get_base_object_state(me),
 				delegate_state: me.delegate_state,
 			},
 			change_list: [],
@@ -340,8 +319,8 @@ export const CO_Hit_Spark_ƒ: Custom_Object_Delegate = {
 
 		return {
 			data: {
+				...Base_Object_ƒ.get_base_object_state(me),
 				pixel_pos: {x: me.pixel_pos.x + addend.x, y: me.pixel_pos.y + addend.y},
-				rotate: me.rotate,
 				delegate_state: me.delegate_state,
 			},
 			change_list: [],
@@ -350,6 +329,6 @@ export const CO_Hit_Spark_ƒ: Custom_Object_Delegate = {
 	},
 	yield_image: () => 'red_dot',
 	yield_zorder: () => zorder.fx,
-	time_to_live: () => 10,
+	time_to_live: () => 15,
 }
 

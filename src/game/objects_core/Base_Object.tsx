@@ -88,15 +88,30 @@ export const Base_Object_ƒ = {
 		_Tilemap_Manager: me._Tilemap_Manager,
 	}),
 
+	get_base_object_state: (me: Base_Object_Data): Base_Object_State => ({
+		pixel_pos: me.pixel_pos,
+		rotate: me.rotate,
+		should_remove: me.should_remove,
+		is_done_with_turn: me.is_done_with_turn,
+		velocity: me.velocity,
+		accel: me.accel,		
+	}),
+
+
 	get_current_mid_turn_tile_pos: (me: Base_Object_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Point2D => (
 		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)
 	),
 
-	process_physics: (me: Base_Object_Data): Base_Object_Data => ({
-		...me,
-		pixel_pos: add_points(me.pixel_pos, me.velocity),
-		velocity: add_points(me.velocity, me.accel),
-	}),
+	process_physics: (me: Base_Object_Data): Base_Object_Data => {
+		const new_velocity = add_points(me.velocity, me.accel);
+
+
+		return {
+			...me,
+			pixel_pos: add_points(me.pixel_pos, new_velocity),
+			velocity: new_velocity,
+		}
+	},
 }
 
 

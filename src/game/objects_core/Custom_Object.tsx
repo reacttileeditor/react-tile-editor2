@@ -152,10 +152,17 @@ export const Custom_Object_ƒ = {
 		spawnees: Array<Custom_Object_Data>,
 		new_object: Custom_Object_Data
 	} => {
+
+		if( me.accel.y !== 0){
+			//debugger;
+		}
 		const me_after_physics = {
 			...me,
 			...Base_Object_ƒ.process_physics(me),
 		};
+		if( me.accel.y !== 0){
+			//debugger;
+		}
 
 		const processed_results = Custom_Object_ƒ.get_delegate(me_after_physics.type_name).process_single_frame(
 			me_after_physics,
@@ -185,7 +192,7 @@ export const Custom_Object_ƒ = {
 
 
 
-		return { 
+		const final_values = { 
 			change_list: change_list,
 			spawnees: spawnees,
 			new_object: _New_Custom_Object({
@@ -195,6 +202,8 @@ export const Custom_Object_ƒ = {
 				_Tilemap_Manager: me._Tilemap_Manager,
 
 				pixel_pos: processed_data.pixel_pos,
+				velocity: processed_data.velocity,
+				accel: processed_data.accel,
 				rotate: processed_data.rotate,
 				type_name: me.type_name,
 				is_done_with_turn: false, //isEmpty(scheduled_events),
@@ -210,6 +219,8 @@ export const Custom_Object_ƒ = {
 				delegate_state: processed_data.delegate_state,
 			})
 		}
+
+		return final_values;
 	},
 
 	yield_image: (me: Custom_Object_Data) => (
