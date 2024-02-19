@@ -47,7 +47,7 @@ export const Tile_Palette_Element = (props: Props) => {
 
 			draw_canvas();
 		}
-	}, [_Blit_Manager]);
+	}, [_Blit_Manager, props.asset_name]);
 
 
 

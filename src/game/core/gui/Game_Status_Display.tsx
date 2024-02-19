@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumber, last, map, reduce, size, uniq } from "lodash";
 
@@ -43,6 +43,7 @@ interface Game_Status_Display_Props {
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
 	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
 	set_announcement_modal_hidden: Dispatch<SetStateAction<boolean>>,
+	render_ticktock: boolean,
 }
 
 
@@ -50,6 +51,9 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 
 	const _GS = props.get_Game_Manager_Data()?.game_state;
 	const _GM = props.get_Game_Manager_Data();
+	const [asset_name, set_asset_name] = useState<string>('');
+
+
 
 
 
@@ -62,7 +66,13 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 		}
 	}
 
-	const selected_creature = get_selected_creature(_GS);
+	const selected_creature: Creature_Data|undefined = get_selected_creature(_GS);
+
+	useEffect(() => {
+		if(selected_creature){
+			set_asset_name(Creature_ƒ.get_delegate(selected_creature.type_name).yield_creature_image())
+		}
+	}, [props.render_ticktock]);	
 
 	return (
 		<>{
@@ -92,14 +102,6 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 				<Label_and_Data_Pair
 					label={'Turn #:'}
 					data={`${_GS.current_turn}`}
-				/>
-				<Label_and_Data_Pair
-					label={'Objectives:'}
-					data={``}
-				/>
-				<Label_and_Data_Pair
-					label={''}
-					data={`${_GS.objective_text}`}
 				/>
 				<br />
 				<hr />
@@ -131,7 +133,7 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 						<Tile_Palette_Element
 							asset_manager={props._Asset_Manager()}
 							tile_name={''}
-							asset_name={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_creature_image()}`}
+							asset_name={asset_name}
 							highlight={false}
 							handle_click={ ()=>{} }
 							canvas_size={ {x: 50, y: 50} }
