@@ -55,8 +55,13 @@ const Map_Tooltip = (props: TooltipData) => {
 
 	const get_left_click_text = (): string => {
 		if(props.selected_unit !== undefined){
-			if( equals(props.tile_pos, props.unit_pos) ){
-				return 'Deselect'
+			if(props.hovered_unit ){
+				if( equals(props.tile_pos, props.unit_pos) ){
+					return 'Deselect'
+				} else {
+					//tile_pos implicitly is the currently selected unit, so this is a different one.
+					return 'Select Unit'
+				}
 			} else {
 				return 'Move';
 			}
