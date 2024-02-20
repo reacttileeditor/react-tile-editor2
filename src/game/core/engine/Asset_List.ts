@@ -109,6 +109,16 @@ export const asset_list: StaticValues = {
 	},{
 		url: "characters/human_footman_ne_stand.png",
 		name: "human_footman_ne_stand",
+		frames: 5,
+		frame_duration: 170,
+		ping_pong: true,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 78,
+			h: 158,
+		},
 	},{
 		url: "characters/human_footman_se_walk.png",
 		name: "human_footman_se_walk",
