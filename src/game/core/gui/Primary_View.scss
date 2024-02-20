@@ -149,10 +149,21 @@ body {
 						justify-content: flex-start;
 						align-items: center;
 						line-height: 1;
-						
+						gap: 0.25em;
+
 						img {
-							padding-left: 0.25em;
+//							padding-left: 0.25em;
 						}
+
+						&.disabled {
+							opacity: 0.6;
+						}
+					}
+
+					hr {
+						margin: unset;
+						margin-top: 0.25em;
+						margin-bottom: 0.25em;
 					}
 				}
 			}

@@ -39,6 +39,7 @@ interface Game_View_Props {
 
 export type TooltipData = {
 	pos: Point2D,
+	selected_unit: boolean,
 	tile_pos: Point2D,
 	unit_pos?: Point2D,
 	tile_name: string,
@@ -50,8 +51,36 @@ export type TooltipData = {
 const Map_Tooltip = (props: TooltipData) => {
 	let distance = !isNil(props.unit_pos) ? Tilemap_Manager_ƒ.get_tile_coord_distance_between(props.tile_pos, props.unit_pos) : 0;
 
-
-
+	const get_left_click_text = (): string => {
+		if(props.selected_unit){
+			if( equals(props.tile_pos, props.unit_pos) ){
+				return 'Deselect'
+			} else {
+				return 'Move';
+			}
+		} else {
+			if( false ){ //unit viable for selection
+				return 'Select'
+			} else {
+				return 'n/a'
+			}
+		}
+	}
+	const get_right_click_text = (): string => {
+		if(props.selected_unit){
+			if( equals(props.tile_pos, props.unit_pos) ){
+				return 'Deselect'
+			} else {
+				return 'Move';
+			}
+		} else {
+			if( false ){ //unit viable for selection
+				return 'Select'
+			} else {
+				return 'ayy'
+			}
+		}
+	}
 	return <div
 		className="map-tooltip"
 		style={{
@@ -59,6 +88,9 @@ const Map_Tooltip = (props: TooltipData) => {
 			top: `${props.pos.y * 2}px`
 		}}
 	>
+		<div className={`data-row ${get_left_click_text() == 'n/a' ? 'disabled' : '' }`}><img src={Left_Click_Icon}/> {`${get_left_click_text()}`}</div>
+		<div className={`data-row ${get_right_click_text() == 'n/a' ? 'disabled' : '' }`}><img src={Right_Click_Icon}/> Cancel</div>
+		<hr />
 		<div className="data-row">{`${props.tile_pos.x}, ${props.tile_pos.y}`}</div>
 		<div className="data-row">{`${props.tile_name}`}</div>
 		{
@@ -77,11 +109,14 @@ const Map_Tooltip = (props: TooltipData) => {
 
 import Foot_Icon from '../../assets/feet-icon.png';
 import Distance_Icon from '../../assets/distance-icon.png';
+import Left_Click_Icon from '../../assets/left-click-icon.png';
+import Right_Click_Icon from '../../assets/right-click-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, Game_and_Tilemap_Manager_Data, New_Game_Manager } from "../engine/Game_Manager";
 import { Game_Status_Display } from "./Game_Status_Display";
 import { Announcement_Modal } from "./Announcement_Modal";
 import { Button } from "rsuite";
 import { Standard_Input_ƒ } from "./Standard_Input_Handling";
+import { equals } from "ramda";
 
 
 export const Tooltip_Manager = (props: {
