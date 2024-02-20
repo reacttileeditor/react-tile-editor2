@@ -10,7 +10,7 @@ import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "../engine/Blit_
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager";
 
-import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance } from "../../objects_core/Creature";
+import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance, Path_Data } from "../../objects_core/Creature";
 
 import "./Primary_View.scss";
 import "./Game_Status_Display.scss";
@@ -39,7 +39,9 @@ interface Game_View_Props {
 
 export type TooltipData = {
 	pos: Point2D,
-	selected_unit: boolean,
+	selected_unit: Creature_Data | undefined,
+	hovered_unit: Creature_Data | undefined,
+	path_data: Path_Data | undefined, 
 	tile_pos: Point2D,
 	unit_pos?: Point2D,
 	tile_name: string,
@@ -52,32 +54,36 @@ const Map_Tooltip = (props: TooltipData) => {
 	let distance = !isNil(props.unit_pos) ? Tilemap_Manager_ƒ.get_tile_coord_distance_between(props.tile_pos, props.unit_pos) : 0;
 
 	const get_left_click_text = (): string => {
-		if(props.selected_unit){
+		if(props.selected_unit !== undefined){
 			if( equals(props.tile_pos, props.unit_pos) ){
 				return 'Deselect'
 			} else {
 				return 'Move';
 			}
 		} else {
-			if( false ){ //unit viable for selection
-				return 'Select'
+			if( props.hovered_unit !== undefined ){ //unit viable for selection
+				return 'Select Unit'
 			} else {
 				return 'n/a'
 			}
 		}
 	}
 	const get_right_click_text = (): string => {
-		if(props.selected_unit){
+		if(props.selected_unit !== undefined){
 			if( equals(props.tile_pos, props.unit_pos) ){
-				return 'Deselect'
+				return 'Deselect';
 			} else {
-				return 'Move';
+				if( size(props.path_data?.path_this_turn) ){
+					return 'Cancel Move'
+				} else {
+					return 'n/a'
+				}
 			}
 		} else {
 			if( false ){ //unit viable for selection
 				return 'Select'
 			} else {
-				return 'ayy'
+				return 'n/a'
 			}
 		}
 	}
@@ -89,7 +95,7 @@ const Map_Tooltip = (props: TooltipData) => {
 		}}
 	>
 		<div className={`data-row ${get_left_click_text() == 'n/a' ? 'disabled' : '' }`}><img src={Left_Click_Icon}/> {`${get_left_click_text()}`}</div>
-		<div className={`data-row ${get_right_click_text() == 'n/a' ? 'disabled' : '' }`}><img src={Right_Click_Icon}/> Cancel</div>
+		<div className={`data-row ${get_right_click_text() == 'n/a' ? 'disabled' : '' }`}><img src={Right_Click_Icon}/> {`${get_right_click_text()}`}</div>
 		<hr />
 		<div className="data-row">{`${props.tile_pos.x}, ${props.tile_pos.y}`}</div>
 		<div className="data-row">{`${props.tile_name}`}</div>

@@ -372,18 +372,24 @@ export const Game_Manager_ƒ = {
 		}
 	},
 
-	get_tooltip_data: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): TooltipData => ({
-		pos: me.cursor_pos,
-		selected_unit: !isNil(me.game_state.selected_object_index),
-		tile_pos: Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos ),
-		unit_pos: !isNil(me.game_state.selected_object_index) ? me.game_state.current_frame_state.creature_list[me.game_state.selected_object_index].tile_pos : undefined,
-		tile_name: Tilemap_Manager_ƒ.get_tile_name_for_pos(
-			_TM,
-			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos ),
-			'terrain',
-		),
-		tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me, _TM, _AM, _BM)}`
-	}),
+	get_tooltip_data: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): TooltipData => {
+		const tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos )
+
+		return {
+			pos: me.cursor_pos,
+			selected_unit: Game_Manager_ƒ.get_selected_creature(me),
+			hovered_unit: Game_Manager_ƒ.get_creature_at_tile(me, tile_pos),
+			path_data: !isNil(me.game_state.selected_object_index) ? me.game_state.current_frame_state.creature_list[me.game_state.selected_object_index].path_data : undefined,
+			tile_pos: tile_pos,
+			unit_pos: !isNil(me.game_state.selected_object_index) ? me.game_state.current_frame_state.creature_list[me.game_state.selected_object_index].tile_pos : undefined,
+			tile_name: Tilemap_Manager_ƒ.get_tile_name_for_pos(
+				_TM,
+				Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos ),
+				'terrain',
+			),
+			tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me, _TM, _AM, _BM)}`
+		}
+	},
 
 	do_one_frame_of_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_and_Tilemap_Manager_Data => {
 		//me.update_game_state_for_ui(me.game_state);
@@ -792,13 +798,7 @@ export const Game_Manager_ƒ = {
 	get_selected_creature: (me: Game_Manager_Data):Creature_Data|undefined => {
 		const idx = me.game_state.selected_object_index;
 		
-		
-		const returnVal = ƒ.if(!isNil(idx),
-			Game_Manager_ƒ.get_current_turn_state(me).creature_list[idx as number],
-			undefined
-		)
-		
-		return returnVal;
+		return Game_Manager_ƒ.get_creature_data_for_index(me, idx);
 	},
 
 	get_creature_by_uuid: (me: Game_Manager_Data, uuid: string): Creature_Data => {
@@ -825,6 +825,27 @@ export const Game_Manager_ƒ = {
 		return state ? state : Individual_Game_Turn_State_Init;
 	},
 	
+	get_creature_index_for_pos: (me: Game_Manager_Data, target_pos: Point2D): number|undefined => {
+		return findIndex( Game_Manager_ƒ.get_current_turn_state(me).creature_list, {
+			tile_pos: target_pos
+		} )
+	},
+
+	get_creature_data_for_index: (me: Game_Manager_Data, idx: number|undefined): Creature_Data|undefined => (
+		!isNil(idx)
+		?
+		Game_Manager_ƒ.get_current_turn_state(me).creature_list[idx as number]
+		:
+		undefined
+	),
+
+	get_creature_at_tile: (me: Game_Manager_Data, pos: Point2D): Creature_Data|undefined => (
+		Game_Manager_ƒ.get_creature_data_for_index(
+			me,
+			Game_Manager_ƒ.get_creature_index_for_pos(me, pos)
+		)
+	),
+
 	select_object_based_on_tile_click: (get_game_state: () => Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState): Game_Manager_Data => {
 		/*
 			This handles two "modes" simultaneously.  If we click on an object, then we change the current selected object to be the one we clicked on (its position is occupied, and ostensibly can't be moved into - this might need to change with our game rules being what they are, but we'll cross that bridge later).  If we click on the ground, then we're intending to move the current object to that location.
@@ -832,9 +853,7 @@ export const Game_Manager_ƒ = {
 		const new_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, pos );
 		const me = get_game_state();
 		
-		let newly_selected_creature_index: number|undefined = findIndex( Game_Manager_ƒ.get_current_turn_state(me).creature_list, {
-			tile_pos: new_pos
-		} );
+		let newly_selected_creature_index: number|undefined = Game_Manager_ƒ.get_creature_index_for_pos(me, new_pos);
 		
 
 		let new_creature: Creature_Data|undefined = undefined;
