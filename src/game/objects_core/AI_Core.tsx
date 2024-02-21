@@ -21,7 +21,34 @@ export const AI_Core_ƒ = {
 
 
 /*----------------------- movement -----------------------*/
-	
+	find_closest_target: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+	): Creature_Data|undefined => {
+		const targets = filter( Game_Manager_ƒ.get_game_state(me.get_GM_instance()).current_frame_state.creature_list, (val) => (
+			val.team !== me.team
+		));
+		
+		let valid_targets: Array<Creature_Data> = []; 
+		if( size(targets) ){
+			valid_targets = filter(targets, (target)=>{
+				const distance = Tilemap_Manager_ƒ.get_tile_coord_distance_between(
+					Creature_ƒ.get_current_tile_pos_from_pixel_pos(me, _TM, _AM, _BM),
+					Creature_ƒ.get_current_tile_pos_from_pixel_pos(target, _TM, _AM, _BM)
+				);
+
+				return ( distance <= Creature_ƒ.get_delegate(me.type_name).yield_weapon_range() );
+			});
+		}
+
+		if( size(valid_targets) ){
+			return valid_targets[0];
+		} else {
+			return undefined;
+		}
+	},
 
 	reconsider_behavior: (
 		me: Creature_Data,
@@ -40,34 +67,17 @@ export const AI_Core_ƒ = {
 			This is a work in progress, and we'll have to expand the criterion as we figure them out.   The first, obvious thing is detecting if there are valid targets.  The second thing we'll do later is figuring out if we've still got enough moves left.
 		*/
 
-		const targets = filter( Game_Manager_ƒ.get_game_state(me.get_GM_instance()).current_frame_state.creature_list, (val) => (
-			val.team !== me.team
-		));
-		
-		let valid_targets: Array<Creature_Data> = []; 
-		if( size(targets) ){
-			valid_targets = filter(targets, (target)=>{
-				const distance = Tilemap_Manager_ƒ.get_tile_coord_distance_between(
-					Creature_ƒ.get_current_tile_pos_from_pixel_pos(me, _TM, _AM, _BM),
-					Creature_ƒ.get_current_tile_pos_from_pixel_pos(target, _TM, _AM, _BM)
-				);
-	
-				return ( distance <= Creature_ƒ.get_delegate(me.type_name).yield_weapon_range() );
-			});
-		}
+		const target = AI_Core_ƒ.find_closest_target(me, _TM, _AM, _BM);
 
-		// if(me.type_name == 'human_footman' && me.current_hitpoints < 100){
-		// 	debugger;
 
-		// }
-		if( size(valid_targets) && (me.remaining_action_points > 0) ){
+		if( target && (me.remaining_action_points > 0) ){
 			/*
 				We have at least one valid target.  I think we'll probably want some priority criterion, but for now, just pick the first one.
 
 				We have to set some kind of mode indicator that we're attacking, right now.
 			*/
 
-			Creature_Behavior_ƒ.begin_attack_mode(me, offset_in_ms, tick, change_list, spawnees, valid_targets[0]);
+			Creature_Behavior_ƒ.begin_attack_mode(me, offset_in_ms, tick, change_list, spawnees, target);
 
 		} else {
 			/*
