@@ -16,11 +16,36 @@ import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
 
 
 
+/*
+	Statement of Intent:
+
+
+	'hunt_seek':  typically used for AI-controlled enemies; if they don't have a path, they deliberately make one, and it's designed to home in on an enemy unit.
+	
+	'attack_move': the typical behavior for a move command;  move, and if you get in range of an enemy, stop moving and attack.
+	
+	'move': currently inaccessible via the UI, but this will be a move command where you specifically DON'T want to engage and attack — where you're wounded and you're trying to get the hell out of there.
+
+	'stand' — just hold your ground and only attack if something is in range.
+*/
+
+type Behavior_Mode = 'hunt_seek' | 'attack_move' | 'move' | 'stand';
+
+
+
+
 
 export const AI_Core_ƒ = {
+/*----------------------- Data Accessors -----------------------*/
+	is_ai_controlled: (
+		me: Creature_Data,
+	): boolean => (
+		/*
+			The most sad hack:  for now, "team 2" is the AI-controlled enemy.  Actual indicator variables come later.
+		*/
+		me.team == 2
+	),
 
-
-/*----------------------- movement -----------------------*/
 	find_closest_target: (
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
@@ -50,6 +75,91 @@ export const AI_Core_ƒ = {
 		}
 	},
 
+
+	find_destination: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+	): Creature_Data|undefined => {
+		const targets = filter( Game_Manager_ƒ.get_game_state(me.get_GM_instance()).current_frame_state.creature_list, (val) => (
+			val.team !== me.team
+		));
+		
+
+		if( size(targets) ){
+			return targets[0];
+		} else {
+			return undefined;
+		}
+	},
+	
+
+/*----------------------- AI Control -----------------------*/
+	// assess_behavior_mode: (
+	// 	me: Creature_Data,
+	// 	target: 
+	// ): Behavior_Mode => {
+
+	// 	if( AI_Core_ƒ.is_ai_controlled(me) ){
+	// 		return 'hunt_seek'
+	// 	} else {
+	// 		me.behavior_mode
+	// 	}
+	// },
+
+
+	// consider_attack_move: (
+	// 	me: Creature_Data,
+	// 	_TM: Tilemap_Manager_Data,
+	// 	_AM: Asset_Manager_Data,
+	// 	_BM: Blit_Manager_Data,
+	// 	offset_in_ms: number,
+	// 	tick: number,
+	// 	change_list: Array<ChangeInstance>,
+	// 	spawnees: Array<Custom_Object_Data>
+	// ) => {
+
+	// },
+
+
+	make_AI_driven_choices: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		offset_in_ms: number,
+		tick: number,
+		change_list: Array<ChangeInstance>,
+		spawnees: Array<Custom_Object_Data>
+	) => {
+		/*
+			Units will not have paths upon starting a turn, so basically, at this juncture, we make one.
+
+			Only make one if we don't have one, which would be at the start of the turn.
+		*/
+		
+		//debugger;
+
+		if( size(me.path_data.path_this_turn) === 0 ){
+			const target = AI_Core_ƒ.find_destination(me, _TM, _AM, _BM);
+
+			if( target ){
+				const new_path_data = cloneDeep(Creature_ƒ.set_path(
+					me,
+					Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
+					_TM
+				));
+
+				Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
+				Creature_ƒ.set(change_list, me, 'walk_segment_start_time', offset_in_ms);
+				Creature_ƒ.set(change_list, me, 'behavior_mode', 'walk');
+			}
+		}
+	},
+
+/*----------------------- movement -----------------------*/
+
 	reconsider_behavior: (
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
@@ -60,6 +170,21 @@ export const AI_Core_ƒ = {
 		change_list: Array<ChangeInstance>,
 		spawnees: Array<Custom_Object_Data>
 	) => {
+
+
+		if( AI_Core_ƒ.is_ai_controlled(me) ){
+			AI_Core_ƒ.make_AI_driven_choices(
+				me,
+				_TM,
+				_AM,
+				_BM,
+				offset_in_ms,
+				tick,
+				change_list,
+				spawnees
+			)
+		}
+
 
 		/*
 			This is where we decide if it's appropriate to launch an attack.
@@ -92,7 +217,6 @@ export const AI_Core_ƒ = {
 			}
 		}
 	},
-
 
 	
 }
