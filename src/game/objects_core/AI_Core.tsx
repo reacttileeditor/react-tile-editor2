@@ -139,8 +139,6 @@ export const AI_Core_ƒ = {
 			Only make one if we don't have one, which would be at the start of the turn.
 		*/
 		
-		//debugger;
-
 		if( size(me.path_data.path_this_turn) === 0 ){
 			const target = AI_Core_ƒ.find_destination(me, _TM, _AM, _BM);
 
@@ -152,8 +150,9 @@ export const AI_Core_ƒ = {
 				));
 
 				Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
-				Creature_ƒ.set(change_list, me, 'walk_segment_start_time', offset_in_ms);
-				Creature_ƒ.set(change_list, me, 'behavior_mode', 'walk');
+
+
+				Creature_Behavior_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
 			}
 		}
 	},
@@ -173,16 +172,7 @@ export const AI_Core_ƒ = {
 
 
 		if( AI_Core_ƒ.is_ai_controlled(me) ){
-			AI_Core_ƒ.make_AI_driven_choices(
-				me,
-				_TM,
-				_AM,
-				_BM,
-				offset_in_ms,
-				tick,
-				change_list,
-				spawnees
-			)
+			AI_Core_ƒ.make_AI_driven_choices(me, _TM, _AM, _BM, offset_in_ms, tick, change_list, spawnees)
 		}
 
 
@@ -209,9 +199,11 @@ export const AI_Core_ƒ = {
 				We don't have any targets, so we're moving, instead.
 			*/
 
-			//TODO gate on remaining action points
 			if( (me.remaining_action_points > 0) ){
-				Creature_Behavior_ƒ.renegotiate_path(me, _TM, _AM, offset_in_ms, tick, change_list);
+				const new_path_data = Creature_Behavior_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
+
+				Creature_Behavior_ƒ.deduct_cost_from_last_move(me,_TM, _AM, change_list);
+				Creature_Behavior_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
 			} else {
 				Creature_Behavior_ƒ.terminate_movement(me, _TM, offset_in_ms, tick, change_list, spawnees);
 			}
