@@ -242,8 +242,40 @@ export const Creature_Behavior_ƒ = {
 		tick: number,
 		change_list: Array<ChangeInstance>,
 	) => {
-		//console.log(me.remaining_move_points, me.is_done_with_turn);
 
+		const new_path_data = Creature_Behavior_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
+
+		Creature_Behavior_ƒ.deduct_cost_from_last_move(me,_TM, _AM, change_list);
+
+		Creature_Behavior_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
+
+	},
+
+	reassess_current_intended_path: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		change_list: Array<ChangeInstance>,
+	): Path_Data => {
+		//TODO major thing we gotta fix for the functional refactor:
+		const new_path_data = cloneDeep(Creature_ƒ.set_path(
+			me,
+			Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
+			_TM
+		));
+		Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
+
+		return new_path_data;
+	},
+
+
+
+	deduct_cost_from_last_move: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		change_list: Array<ChangeInstance>,
+	) => {
 		/*
 			We're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
 
@@ -266,17 +298,29 @@ export const Creature_Behavior_ƒ = {
 
 		Creature_ƒ.add(change_list, me, 'remaining_move_points', -prior_tile_cost);
 
-		//TODO major thing we gotta fix for the functional refactor:
-		const new_path_data = cloneDeep(Creature_ƒ.set_path(
-				me,
-				Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
-				_TM
-			));
-		Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
-		Creature_ƒ.set(change_list, me, 'walk_segment_start_time', offset_in_ms);
-		if(me.type_name == 'undead_javelineer'){
-			//debugger;
+		if(me.remaining_move_points - prior_tile_cost < 0){
+			Creature_ƒ.set(change_list, me, 'is_done_with_turn', true);
 		}
+
+	},
+
+	walk_next_segment: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		offset_in_ms: number,
+		tick: number,
+		change_list: Array<ChangeInstance>,
+		new_path_data: Path_Data,
+	) => {
+
+
+		Creature_ƒ.set(change_list, me, 'walk_segment_start_time', offset_in_ms);
+
+		
+		/*
+			Decide if we're even walking; no path left?  No walk.
+		*/ 
 
 		let next_tile_pos = me.tile_pos;
 		if( size(new_path_data.path_reachable_this_turn_with_directions) > 1){
@@ -287,9 +331,6 @@ export const Creature_Behavior_ƒ = {
 			Creature_ƒ.set(change_list, me, 'behavior_mode', 'stand');
 		}
 
-		if(me.remaining_move_points - prior_tile_cost < 0){
-			Creature_ƒ.set(change_list, me, 'is_done_with_turn', true);
-		}
 
 
 		/*
@@ -314,7 +355,10 @@ export const Creature_Behavior_ƒ = {
 
 		Creature_ƒ.set(change_list, me, 'tile_pos', new_position.position);
 		Creature_ƒ.set(change_list, me, 'facing_direction', new_position.direction);
+
 	},
+
+
 
 
 	terminate_movement: (
