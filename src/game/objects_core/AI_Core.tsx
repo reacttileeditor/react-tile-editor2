@@ -147,7 +147,7 @@ export const AI_Core_ƒ = {
 			if( target ){
 				const new_path_data = cloneDeep(Creature_ƒ.set_path(
 					me,
-					Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
+					Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, target.tile_pos, me ).successful_path,
 					_TM
 				));
 
