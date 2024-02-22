@@ -150,6 +150,7 @@ export const AI_Core_ƒ = {
 				));
 
 				Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
+				Creature_ƒ.set(change_list, me, 'planned_tile_pos', target.tile_pos);
 
 
 				Creature_Behavior_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
