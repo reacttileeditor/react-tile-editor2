@@ -1,4 +1,4 @@
-import _, { cloneDeep, filter, find, isBoolean, map, size } from "lodash";
+import _, { cloneDeep, find, isBoolean, map, size } from "lodash";
 import { v4 as uuid } from "uuid";
 
 import { ƒ } from "../core/engine/Utils";
@@ -13,6 +13,9 @@ import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager"
 import { Creature_Behavior_ƒ } from "./Creature_Behavior";
 import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
+import { add, filter, includes, reduce } from "ramda";
+
+
 
 export type PathNodeWithDirection = {
 	position: Point2D,
@@ -225,12 +228,18 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 	
 	
 	isDirection: (value: ValueOf<Creature_Data>): value is Direction => {
-		return value as Direction in ['north_east',
-		'east',
-		'south_east',
-		'north_west',
-		'west',
-		'south_west']
+		return (
+			_.isString(value)
+			&& 
+			includes(value,
+				['north_east',
+				'east',
+				'south_east',
+				'north_west',
+				'west',
+				'south_west']
+			)
+		)
 	},
 
 	get_value_type: (value: ValueOf<Creature_Data>): 'Point2D' | 'Direction' | 'string' | 'number' | 'undefined' | 'boolean' | 'Path_Data' | 'Creature_Data' => {
@@ -368,16 +377,16 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		me: Creature_Data,
 		incoming_changes: Array<VariableSpecificChangeInstance>,
 		key: CreatureKeys
-	):Change_Value => {
+	):ValueOf<Creature_Data> => {
 		/*
 			If we have a set operation on this frame, then it overwrites any changes made by an add op.  Make sure the set operations come after any add operations. 
 		*/
-		let sorted_values: Array<VariableSpecificChangeInstance> = _.sortBy(incoming_changes, (val)=>(
-			ƒ.if(val.type == 'add',
-				1,
-				2
-			)
-		)) 
+		// let sorted_values: Array<VariableSpecificChangeInstance> = _.sortBy(incoming_changes, (val)=>(
+		// 	ƒ.if(val.type == 'add',
+		// 		1,
+		// 		2
+		// 	)
+		// )) 
 		
 
 		// this is some absolute hobgoblin shit because apparently, javascript object children which we're using for a concise switch statement (because we can't have proper Pattern Matching) are actually evaluated greedily, and I'm too lazy to back that out right now.  Fuck JS.
@@ -387,55 +396,55 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 			}
 		}
 
-		let reduced_values: VariableSpecificChangeInstance = _.reduce(
-			sorted_values,
+		let add_changes: Array<Change_Value> = map(filter((val)=>(val.type == 'add'), incoming_changes), (val)=>(val.value));
+		let set_changes: Array<Change_Value>= map(filter((val)=>(val.type == 'set'), incoming_changes), (val)=>(val.value));
+
+		let reduced_add_op = reduce(
 			(a, b) => {
-				/*
-					If we're undefined, we're probably setting some variable that's optional; i.e. it's either a real type, or undefined when empty.
-					
-					Either it's an identity op (setting undefined to undefined), or we can determine the value from one of the two parameters.  With just a ternary, we ought to be able to "pick A if not empty, else B", and if B's still empty, then we've established they both are. 
-				*/
-				let value_type = Creature_ƒ.get_value_type(a.value) != 'undefined' ? Creature_ƒ.get_value_type(a.value) : Creature_ƒ.get_value_type(b.value)
+				let value_type = Creature_ƒ.get_value_type(a) != 'undefined' ? Creature_ƒ.get_value_type(a) : Creature_ƒ.get_value_type(b as ValueOf<Creature_Data>)
 
-				// if(key == 'target'){
-				// 	debugger;
-				// }
-
-
-
-				return 	ƒ.if(b.type == 'set',
-					{
-						type: 'set', //we're passing this to satisfy the typechecker, but it's going to be ignored.
-						value: {
-							string: (b.value as unknown as string),
-							number: (b.value as unknown as number),
-							Direction: (b.value as unknown as Direction),
-							Point2D: (b.value as unknown as Point2D),
-							boolean: (b.value as unknown as boolean),
-							Path_Data: (b.value as unknown as Path_Data),
-							Creature_Data: (b.value as unknown as Creature_Data),
-							undefined: undefined,
-						}[value_type]
-					},
-					{
-						type: 'add',
-						value: {
-							string: (a.value as unknown as string) + (b.value as unknown as string),
-							number: (a.value as unknown as number) + (b.value as unknown as number),
-							Direction: (b.value as unknown as Direction), //no coherent way to add Directions, so we treat it as 'set'
-							Point2D: guard(value_type=='Point2D', ()=> Add_Point_2D( (a.value as unknown as Point2D), (b.value as unknown as Point2D) )),
-							boolean: (a.value as unknown as boolean) && (b.value as unknown as boolean),
-							Path_Data: (b.value as unknown as Path_Data), //no coherent way to add Paths, so we treat it as 'set'
-							Creature_Data: (b.value as unknown as Creature_Data),  //no coherent way to add Creatures, so we treat it as 'set'
-							undefined: undefined,
-						}[value_type]
-					}
-				);
+				return {
+					string: (a as unknown as string) + (b as unknown as string),
+					number: (a as unknown as number) + (b as unknown as number),
+					Direction: (b as unknown as Direction), //no coherent way to add Directions, so we treat it as 'set'
+					Point2D: guard(value_type=='Point2D', ()=> Add_Point_2D( (a as unknown as Point2D), (b as unknown as Point2D) )),
+					boolean: (a as unknown as boolean) && (b as unknown as boolean),
+					Path_Data: (b as unknown as Path_Data), //no coherent way to add Paths, so we treat it as 'set'
+					Creature_Data: (b as unknown as Creature_Data),  //no coherent way to add Creatures, so we treat it as 'set'
+					undefined: undefined,
+				}[value_type]
 			},
-			{type: 'set', value: me[key]} as VariableSpecificChangeInstance
-		) as VariableSpecificChangeInstance;
+			me[key] as ValueOf<Creature_Data>,
+			add_changes
+		);
 
-		return reduced_values.value;
+		let reduced_set_op = reduce(
+			(a, b) => {
+				let value_type = Creature_ƒ.get_value_type(a) != 'undefined' ? Creature_ƒ.get_value_type(a) : Creature_ƒ.get_value_type(b as ValueOf<Creature_Data>)
+
+				return {
+					string: (b as unknown as string),
+					number: (b as unknown as number),
+					Direction: (b as unknown as Direction),
+					Point2D: (b as unknown as Point2D),
+					boolean: (b as unknown as boolean),
+					Path_Data: (b as unknown as Path_Data),
+					Creature_Data: (b as unknown as Creature_Data),
+					undefined: undefined,
+				}[value_type]
+			},
+			me[key] as ValueOf<Creature_Data>,
+			set_changes
+		)
+
+		if(size(set_changes)){
+			/*
+				Any set() ops will obliterate add() ops, so just take all of them at face value, and wipe out the adds.
+			*/
+			return reduced_set_op;
+		} else {
+			return reduced_add_op;
+		}
 	},
 
 
