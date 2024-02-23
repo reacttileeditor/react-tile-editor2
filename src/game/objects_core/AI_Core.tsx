@@ -13,6 +13,7 @@ import { Anim_Schedule_Element, ChangeInstance, Creature_Data, Creature_ƒ, Path
 import { Creature_Behavior_ƒ } from "./Creature_Behavior";
 import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
+import { sort } from "ramda";
 
 
 
@@ -82,16 +83,18 @@ export const AI_Core_ƒ = {
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 	): Creature_Data|undefined => {
-		const targets = filter( Game_Manager_ƒ.get_game_state(me.get_GM_instance()).current_frame_state.creature_list, (val) => (
-			val.team !== me.team
-		));
+		// const targets = filter( Game_Manager_ƒ.get_game_state(me.get_GM_instance()).current_frame_state.creature_list, (val) => (
+		// 	val.team !== me.team
+		// ));
 		
 
-		if( size(targets) ){
-			return targets[0];
-		} else {
-			return undefined;
-		}
+		// if( size(targets) ){
+		// 	return targets[0];
+		// } else {
+		// 	return undefined;
+		// }
+
+		return AI_Core_ƒ.get_closest_enemy(me);
 	},
 	
 
@@ -155,6 +158,28 @@ export const AI_Core_ƒ = {
 
 				Creature_Behavior_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
 			}
+		}
+	},
+
+	get_closest_enemy: (me: Creature_Data): Creature_Data|undefined => {
+		const _GM = me.get_GM_instance();
+		const creatures = _GM.game_state.current_frame_state.creature_list;
+		const dist = Tilemap_Manager_ƒ.get_tile_coord_distance_between;
+
+		if( size(creatures) ){
+			const enemy_creatures = filter( creatures, (val) => (
+				val.team !== me.team
+			));
+
+			const sorted_creatures = sort(
+				(a,b) => ( dist(a.tile_pos, me.tile_pos) - dist(b.tile_pos, me.tile_pos) ),
+				enemy_creatures
+			);
+
+
+			return sorted_creatures[0];
+		} else {
+			return undefined;
 		}
 	},
 
