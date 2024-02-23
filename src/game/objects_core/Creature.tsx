@@ -90,7 +90,7 @@ export type Path_Data = {
 	path_reachable_this_turn_with_directions: Array<PathNodeWithDirection>;
 }
 
-const path_data_init = {
+export const path_data_empty = {
 	path_this_turn: [],
 	path_this_turn_with_directions: [],
 	path_reachable_this_turn: [],
@@ -171,7 +171,7 @@ export const New_Creature = (
 		//intended moves
 		planned_tile_pos: p.planned_tile_pos,
 		walk_segment_start_time: 0,
-		path_data: cloneDeep(path_data_init),
+		path_data: cloneDeep(path_data_empty),
 	}	
 }
 
@@ -197,7 +197,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		last_changed_hitpoints: -300,
 		remaining_action_points: 1,
 		planned_tile_pos: me.tile_pos,
-		path_data: cloneDeep(path_data_init),
+		path_data: cloneDeep(path_data_empty),
 		behavior_mode: 'stand',
 		target: undefined,
 		is_done_with_turn: false,
@@ -432,7 +432,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 					}
 				);
 			},
-			{type: 'set', value: me[key]}
+			{type: 'set', value: me[key]} as VariableSpecificChangeInstance
 		) as VariableSpecificChangeInstance;
 
 		return reduced_values.value;

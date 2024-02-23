@@ -9,7 +9,7 @@ import { Pathfinder_ƒ } from "../core/engine/Pathfinding";
 import { Point2D, Rectangle } from '../interfaces';
 import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
-import { Anim_Schedule_Element, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection } from "./Creature";
+import { Anim_Schedule_Element, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection, Path_Data, path_data_empty } from "./Creature";
 import { Creature_Behavior_ƒ } from "./Creature_Behavior";
 import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
@@ -161,6 +161,30 @@ export const AI_Core_ƒ = {
 		}
 	},
 
+
+	construct_path_for_AI_enemies: (
+		me: Creature_Data,
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+	): Path_Data => {
+		/*
+			AI units don't have paths assigned by the player, so they need to construct them, manually, at the start of the turn (and may also need to replace them later, if the situation changes — i.e. if their target dies, and they need a new one).
+		*/
+		const target = AI_Core_ƒ.find_destination(me, _TM, _AM, _BM);
+
+		if( target ){
+			return cloneDeep(Creature_ƒ.set_path(
+				me,
+				Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, target.tile_pos, me ).successful_path,
+				_TM
+			));
+		} else {
+			return path_data_empty;
+		}
+	},
+
+
 	get_closest_enemy: (me: Creature_Data): Creature_Data|undefined => {
 		const _GM = me.get_GM_instance();
 		const creatures = _GM.game_state.current_frame_state.creature_list;
@@ -197,9 +221,9 @@ export const AI_Core_ƒ = {
 	) => {
 
 
-		if( AI_Core_ƒ.is_ai_controlled(me) ){
-			AI_Core_ƒ.make_AI_driven_choices(me, _TM, _AM, _BM, offset_in_ms, tick, change_list, spawnees)
-		}
+		// if( AI_Core_ƒ.is_ai_controlled(me) ){
+		// 	AI_Core_ƒ.make_AI_driven_choices(me, _TM, _AM, _BM, offset_in_ms, tick, change_list, spawnees)
+		// }
 
 
 		/*
@@ -226,7 +250,15 @@ export const AI_Core_ƒ = {
 			*/
 
 			if( (me.remaining_action_points > 0) ){
-				const new_path_data = Creature_Behavior_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
+				const new_path_data = ( AI_Core_ƒ.is_ai_controlled(me) )
+					?
+					AI_Core_ƒ.construct_path_for_AI_enemies(me, _TM, _AM, _BM)
+					:
+					Creature_Behavior_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
+
+
+				Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
+
 
 				Creature_Behavior_ƒ.deduct_cost_from_last_move(me,_TM, _AM, change_list);
 				Creature_Behavior_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);

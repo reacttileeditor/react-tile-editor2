@@ -257,13 +257,11 @@ export const Creature_Behavior_ƒ = {
 		_AM: Asset_Manager_Data,
 		change_list: Array<ChangeInstance>,
 	): Path_Data => {
-		//TODO major thing we gotta fix for the functional refactor:
 		const new_path_data = cloneDeep(Creature_ƒ.set_path(
 			me,
 			Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
 			_TM
 		));
-		Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
 
 		return new_path_data;
 	},
