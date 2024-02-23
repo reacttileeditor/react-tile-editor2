@@ -249,21 +249,23 @@ export const AI_Core_ƒ = {
 				We don't have any targets, so we're moving, instead.
 			*/
 
-			if( (me.remaining_action_points > 0) ){
-				const new_path_data = ( AI_Core_ƒ.is_ai_controlled(me) )
-					?
-					AI_Core_ƒ.construct_path_for_AI_enemies(me, _TM, _AM, _BM)
-					:
-					Creature_Behavior_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
+			if( me.behavior_mode !== 'attack' ){
+				if( (me.remaining_action_points > 0) ){
+					const new_path_data = ( AI_Core_ƒ.is_ai_controlled(me) )
+						?
+						AI_Core_ƒ.construct_path_for_AI_enemies(me, _TM, _AM, _BM)
+						:
+						Creature_Behavior_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
 
 
-				Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
+					Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
 
 
-				Creature_Behavior_ƒ.deduct_cost_from_last_move(me,_TM, _AM, change_list);
-				Creature_Behavior_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
-			} else {
-				Creature_Behavior_ƒ.terminate_movement(me, _TM, offset_in_ms, tick, change_list, spawnees);
+					Creature_Behavior_ƒ.deduct_cost_from_last_move(me,_TM, _AM, change_list);
+					Creature_Behavior_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
+				} else {
+					Creature_Behavior_ƒ.terminate_movement(me, _TM, offset_in_ms, tick, change_list, spawnees);
+				}
 			}
 		}
 	},
