@@ -118,8 +118,7 @@ export const New_Tilemap_Manager = (): Tilemap_Manager_Data => {
 export const Tilemap_Manager_ƒ = {
 
 /*----------------------- initialization and asset loading -----------------------*/
-
-	initialize_tiles: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
+	initialize_tiles_random: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
 		const map_size = Tilemap_Manager_ƒ.get_map_bounds(me);
 
 
@@ -144,6 +143,42 @@ export const Tilemap_Manager_ƒ = {
 			cache_of_image_lists: _.cloneDeep({}),
 			initialized: true,
 		}
+	},
+
+
+	initialize_tiles_blob: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
+		const map_size = Tilemap_Manager_ƒ.get_map_bounds(me);
+
+
+		const fresh_terrain_tilemap: TileMap = _.range(map_size.h).map( (row_value, row_index) => {
+			return _.range(map_size.w).map( (col_value, col_index) => {
+				return Asset_Manager_ƒ.yield_tile_name_list(_AM)[
+					0 
+				];
+			});
+		});
+
+
+		return {
+			level_name: me.level_name,
+			metadata: _.cloneDeep(me.metadata),
+			tile_maps: {
+				terrain: fresh_terrain_tilemap,
+				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
+			},
+			creature_list: _.cloneDeep(me.creature_list),
+			cache_of_tile_comparators: _.cloneDeep(tile_maps_init),
+			cache_of_image_lists: _.cloneDeep({}),
+			initialized: true,
+		}
+	},
+
+
+	initialize_tiles: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
+		return Tilemap_Manager_ƒ.initialize_tiles_random(
+			me,
+			_AM,
+		);
 	},
 
 	cleared_cache: () : CacheData => ({

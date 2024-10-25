@@ -87,7 +87,6 @@ export const Primary_View = () => {
 			//might be a race condition on this one, we'll see.
 		set_Tilemap_Manager(
 			Tilemap_Manager_ƒ.get_builtin_level('default_level')
-			//Tilemap_Manager_ƒ.initialize_tiles(New_Tilemap_Manager(), _Asset_Manager)
 		);		
 
 

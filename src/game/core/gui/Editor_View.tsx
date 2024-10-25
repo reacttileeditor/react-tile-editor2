@@ -761,9 +761,15 @@ export const Generate_Map_Modal = (props: {
 			<Button
 				disabled={false}
 				onClick={ () => {
-					props.set_Tilemap_Manager(
-						Tilemap_Manager_ƒ.initialize_tiles(props._Tilemap_Manager(), props._Asset_Manager())
-					);
+					if(generation_type == 'true_random'){
+						props.set_Tilemap_Manager(
+							Tilemap_Manager_ƒ.initialize_tiles_random(props._Tilemap_Manager(), props._Asset_Manager())
+						);
+					} else {
+						props.set_Tilemap_Manager(
+							Tilemap_Manager_ƒ.initialize_tiles_blob(props._Tilemap_Manager(), props._Asset_Manager())
+						);
+					}
 					props.set_show_generate_map_dialog(false);
 				}}
 			>Generate</Button>
