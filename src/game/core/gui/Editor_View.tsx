@@ -39,6 +39,7 @@ interface Editor_View_Props {
 
 type ToolTypes = 'tiles' | 'unitAdd' | 'unitDelete';
 
+type MapGenerationTypes = 'true_random' | 'blob_regions';
 
 
 export const Editor_View = (props: Editor_View_Props) => {
@@ -49,6 +50,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 	const [show_load_dialog, set_show_load_dialog] = useState<boolean>(false);
 	const [show_save_dialog, set_show_save_dialog] = useState<boolean>(false);
+	const [show_generate_map_dialog, set_show_generate_map_dialog] = useState<boolean>(false);
 	const [show_metadata_dialog, set_show_metadata_dialog] = useState<boolean>(false);
 	const [level_filename_list, set_level_filename_list] = useState<Array<string>>([]);
 	const [builtin_level_filename_list, set_builtin_level_filename_list] = useState<Array<string>>([]);
@@ -266,14 +268,13 @@ export const Editor_View = (props: Editor_View_Props) => {
 				} }
 			>
 				{'Edit Metadata...'}
-			</Button>			<Button
-				onClick={ () => {
-					props.set_Tilemap_Manager(
-						Tilemap_Manager_ƒ.initialize_tiles(props._Tilemap_Manager(), props._Asset_Manager())
-					);
+			</Button>
+			<Button
+				onClick={ () => { 
+					set_show_generate_map_dialog(true);
 				} }
 			>
-				{'Generate Map'}
+				{'Generate Map...'}
 			</Button>
 			<Divider vertical />
 			<IconButton
@@ -315,6 +316,13 @@ export const Editor_View = (props: Editor_View_Props) => {
 				set_show_save_dialog={set_show_save_dialog}
 				level_filename_list={level_filename_list}
 				builtin_level_filename_list={builtin_level_filename_list}
+				_Asset_Manager={props._Asset_Manager}
+				_Tilemap_Manager={props._Tilemap_Manager}
+				set_Tilemap_Manager={props.set_Tilemap_Manager}
+			/>
+			<Generate_Map_Modal
+				show_generate_map_dialog={show_generate_map_dialog}
+				set_show_generate_map_dialog={set_show_generate_map_dialog}
 				_Asset_Manager={props._Asset_Manager}
 				_Tilemap_Manager={props._Tilemap_Manager}
 				set_Tilemap_Manager={props.set_Tilemap_Manager}
@@ -710,6 +718,45 @@ export const Save_File_Modal = (props: {
 		</div>
 	</Modal>
 }
+
+export const Generate_Map_Modal = (props: {
+	show_generate_map_dialog: boolean,
+	set_show_generate_map_dialog: Dispatch<SetStateAction<boolean>>,
+	_Asset_Manager: () => Asset_Manager_Data,
+	_Tilemap_Manager: () => Tilemap_Manager_Data,
+	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
+}) => {
+	const [generation_type, set_generation_type] = useState<MapGenerationTypes>('blob_regions');
+	const [deletion_target, set_deletion_target] = useState<string>('');
+
+	return <Modal
+		open={props.show_generate_map_dialog}
+		onClose={()=>props.set_show_generate_map_dialog(false)}
+		className="Generate_Map_Modal"
+	>
+		<h3>Generate Map</h3>
+		<div className="label"><p>This will replace all of the tile data for the current map with a new, randomly generated set of tiles.  The map bounds are whatever your current map is set to.</p> <p>There are multiple options for generation:</p></div>
+
+		<div className="button-strip">
+			<Button
+				appearance="subtle"
+				onClick={ () => { 
+					props.set_show_generate_map_dialog(false)
+				}}
+			>Cancel</Button>
+			<Button
+				disabled={false}
+				onClick={ () => {
+					props.set_Tilemap_Manager(
+						Tilemap_Manager_ƒ.initialize_tiles(props._Tilemap_Manager(), props._Asset_Manager())
+					);
+					props.set_show_generate_map_dialog(false);
+				}}
+			>Generate</Button>
+		</div>
+	</Modal>
+}
+
 
 export const Edit_Metadata_Modal = (props: {
 	show_metadata_dialog: boolean,
