@@ -11,9 +11,10 @@ import { MetaData, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Ti
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { useInterval } from "../engine/Utils";
-import { Button, Divider, Drawer, Dropdown, IconButton, Input, List, Modal, Tooltip, Whisper } from "rsuite";
+import { Button, Divider, Drawer, Dropdown, IconButton, Input, List, Modal, RadioTile, RadioTileGroup, Tooltip, Whisper } from "rsuite";
 import { Icon, Page, Trash, Global, PeoplesCostomize, Copy } from "@rsuite/icons";
 import { BsFileEarmarkLock2, BsFileEarmark, BsClipboard2Plus } from "react-icons/bs";
+import { GiPerspectiveDiceSixFacesOne, GiSpatter } from "react-icons/gi";
 
 
 import "./Editor_View.scss";
@@ -736,6 +737,19 @@ export const Generate_Map_Modal = (props: {
 	>
 		<h3>Generate Map</h3>
 		<div className="label"><p>This will replace all of the tile data for the current map with a new, randomly generated set of tiles.  The map bounds are whatever your current map is set to.</p> <p>There are multiple options for generation:</p></div>
+	
+		<RadioTileGroup
+			defaultValue="blob_regions"
+			onChange={(value: string|number, event)=>{set_generation_type(value as unknown as MapGenerationTypes) }}
+		>
+			<RadioTile icon={<Icon as={GiPerspectiveDiceSixFacesOne} />} label="True Random" value="true_random">
+				Generates a map by randomly filling each map tile with one of the possible known tile types.  The simplest and first thing we coded.
+			</RadioTile>
+			<RadioTile icon={<Icon as={GiSpatter} />} label="Blob Regions" value="blob_regions">
+				Generates a bunch of contiguous geographic regions composed of a single tile type.
+			</RadioTile>
+
+		</RadioTileGroup>
 
 		<div className="button-strip">
 			<Button
