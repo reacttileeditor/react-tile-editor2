@@ -130,6 +130,11 @@ export const Tilemap_Manager_ƒ = {
 			});
 		});
 
+		const thing = Tilemap_Manager_ƒ.get_adjacent_tile_in_direction( {x:2,y:3}, 'south_east');
+		console.error(
+			'THING', thing
+		)
+
 
 		return {
 			level_name: me.level_name,
@@ -784,6 +789,12 @@ export const Tilemap_Manager_ƒ = {
 		}
 	},
 
+	cubic_addition: ( a: PointCubic, b: PointCubic ): PointCubic => ({
+		q: a.q + b.q,
+		r: a.r + b.r,
+		s: a.s + b.s,
+	}),
+
 	cubic_subtraction: ( a: PointCubic, b: PointCubic ): PointCubic => ({
 		q: a.q - b.q,
 		r: a.r - b.r,
@@ -794,6 +805,17 @@ export const Tilemap_Manager_ƒ = {
 		const vector = Tilemap_Manager_ƒ.cubic_subtraction(a, b);
 
 		return Math.max( Math.abs(vector.q), Math.abs(vector.r), Math.abs(vector.s));
+	},
+
+	cubic_direction_as_normalized_vector: (direction: Direction): PointCubic => {
+		return {
+			'east':			{q: 1, r: 0, s:-1},
+			'north_east':	{q: 1, r:-1, s: 0},
+			'north_west':	{q: 0, r:-1, s: 1},
+			'south_east':	{q: 0, r: 1, s:-1},
+			'south_west':	{q:-1, r: 1, s: 0},
+			'west':			{q:-1, r: 0, s: 1},
+		}[direction] as PointCubic;
 	},
 
 	cubic_direction: ( a: PointCubic, b: PointCubic ): Direction => {
@@ -818,6 +840,15 @@ export const Tilemap_Manager_ƒ = {
 	get_tile_coord_distance_between: ( startPos: Point2D, endPos: Point2D ) => Number (
 		Tilemap_Manager_ƒ.cubic_distance( Tilemap_Manager_ƒ.cartesian_to_cubic(startPos), Tilemap_Manager_ƒ.cartesian_to_cubic(endPos) )
 	),
+
+	get_adjacent_tile_in_direction: ( startPos: Point2D, direction: Direction ): Point2D =>  {
+		return Tilemap_Manager_ƒ.cubic_to_cartesian(
+			Tilemap_Manager_ƒ.cubic_addition(
+				Tilemap_Manager_ƒ.cartesian_to_cubic(startPos),
+				Tilemap_Manager_ƒ.cubic_direction_as_normalized_vector(direction)
+			)
+		);
+	},
 
 /*----------------------- direction handling -----------------------*/
 	extract_direction_from_map_vectorCubic: (start_pos: Point2D, end_pos: Point2D):Direction => {
