@@ -165,26 +165,11 @@ export const Tilemap_Manager_ƒ = {
 
 		const seed_location: Point2D = {x: 6, y:7};
 
-		const claimed_tiles: Array<Point2D> = [seed_location];
-		const open_possibilities: Array<Point2D> = [];
-		const max_blob_size: number = 5;
-
-		const grow_blob = (): void => {
-			if( !(size(claimed_tiles) > max_blob_size) ){
-
-				const adjacent_tiles = get_all_open_tiles_adjacent_to(seed_location);
-
-				console.error( 'OPEN TILE LIST:', adjacent_tiles);
-
-				const chosen_tile = adjacent_tiles[
-					Utils.dice( _.size( adjacent_tiles ) ) -1 
-				];
-				
-				claimed_tiles.push(chosen_tile);
-			}
-		}
-
-		const get_all_open_tiles_adjacent_to = (location: Point2D): Array<Point2D> => {
+		const get_all_open_tiles_adjacent_to = (
+			location: Point2D,
+			claimed_tiles: Array<Point2D>,
+			open_possibilities: Array<Point2D>,
+		): Array<Point2D> => {
 			const adjacent_tiles: Array<Point2D> = [
 				Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'east'),
 				Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'north_east'),
@@ -201,6 +186,45 @@ export const Tilemap_Manager_ƒ = {
 
 			return open_adjacent_tiles;
 		}
+
+		let claimed_tiles: Array<Point2D> = [seed_location];
+		let open_possibilities: Array<Point2D> = get_all_open_tiles_adjacent_to(seed_location, [seed_location], []);
+		const max_blob_size: number = 5;
+
+		const grow_blob = (): void => {
+			while( !(size(claimed_tiles) > max_blob_size) ){
+
+				/*
+					Perhaps counterintuitively, we update the list of possible new tiles to grow to at the end of a pass, rather than the start, so we can rely on it being "ready" here.
+				*/
+				const chosen_tile = open_possibilities[
+					Utils.dice( _.size( open_possibilities ) ) -1 
+				];
+
+				const adjacent_tiles = get_all_open_tiles_adjacent_to(
+					chosen_tile,
+					open_possibilities,
+					claimed_tiles
+				);
+
+				claimed_tiles.push(chosen_tile);
+				/*
+					Update the list of possible tiles; we want to remove the one we just picked, and add the new adjacencies.
+
+					We don't have to worry about collisions between our new set of `adjacent_tiles` and either established `open_possibilities` or `claimed_tiles` because we explicitly filter those out in the adjacent_tiles calculation.
+				*/
+				open_possibilities = concat(
+					filter(
+						(val)=>( !isEqual(val, chosen_tile) ),
+						open_possibilities
+					),
+					adjacent_tiles
+				);
+
+			}
+		}
+
+
 
 		grow_blob();
 		console.error( 'CLAIMED TILE LIST:', claimed_tiles);
