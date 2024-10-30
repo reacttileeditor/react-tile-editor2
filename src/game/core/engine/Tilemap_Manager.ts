@@ -205,6 +205,10 @@ export const Tilemap_Manager_ƒ = {
 		grow_blob();
 		console.error( 'CLAIMED TILE LIST:', claimed_tiles);
 
+		map(claimed_tiles, (val)=>{
+			fresh_terrain_tilemap[val.y][val.x] =  Asset_Manager_ƒ.yield_tile_name_list(_AM)[2]
+		})
+
 		return {
 			level_name: me.level_name,
 			metadata: _.cloneDeep(me.metadata),
