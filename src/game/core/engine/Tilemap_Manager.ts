@@ -189,7 +189,7 @@ export const Tilemap_Manager_ƒ = {
 
 		let claimed_tiles: Array<Point2D> = [seed_location];
 		let open_possibilities: Array<Point2D> = get_all_open_tiles_adjacent_to(seed_location, [seed_location], []);
-		const max_blob_size: number = 5;
+		const max_blob_size: number = 10;
 
 		const grow_blob = (): void => {
 			while( !(size(claimed_tiles) > max_blob_size) ){
@@ -230,7 +230,7 @@ export const Tilemap_Manager_ƒ = {
 		console.error( 'CLAIMED TILE LIST:', claimed_tiles);
 
 		map(claimed_tiles, (val)=>{
-			fresh_terrain_tilemap[val.y][val.x] =  Asset_Manager_ƒ.yield_tile_name_list(_AM)[2]
+			fresh_terrain_tilemap[val.y][val.x] =  'water';
 		})
 
 		return {
