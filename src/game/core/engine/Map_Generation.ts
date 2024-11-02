@@ -14,6 +14,18 @@ import { concat, filter, includes, keys, slice, uniq } from "ramda";
 import { TileMap, Tilemap_Manager_Data, Tilemap_Manager_ƒ, tile_maps_init } from "./Tilemap_Manager";
 
 
+type TileBlob = {
+	seed_location: Point2D,
+	tile_type: string,
+	tiles: Array<Point2D>,
+}
+
+type TileBlobPlan = {
+	seed_location: Point2D,
+	tile_type: string,
+}
+
+
 
 export const Map_Generation_ƒ = {
 /*----------------------- utility functions -----------------------*/
@@ -78,7 +90,10 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 		return open_adjacent_tiles;
 	},
 
-	create_tile_blob_at_location: (seed_location: Point2D): Array<Point2D> => {
+	create_tile_blob_at_location: (
+		seed_location: Point2D,
+		reserved_tiles: Array<Point2D>,
+	): Array<Point2D> => {
 		let claimed_tiles: Array<Point2D> = [seed_location];
 		let open_possibilities: Array<Point2D> = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
 			seed_location,
@@ -135,17 +150,39 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			});
 		});
 
-		const seed_location: Point2D = {x: 6, y:7};
+
+		const tile_blobs: Array<TileBlob> = [];		
+		const tile_blob_plans: Array<TileBlobPlan> = [{
+			seed_location: {x: 6, y:7},
+			tile_type: Map_Generation_ƒ.get_random_tile_name(_AM),
+		},{
+			seed_location: {x: 10, y:7},
+			tile_type: Map_Generation_ƒ.get_random_tile_name(_AM),
+		}];
 
 
-		const claimed_tiles = Map_Generation_ƒ.create_tile_blob_at_location(seed_location);
+		let claimed_tiles: Array<Point2D> = map(tile_blob_plans, (plan)=>(plan.seed_location));
+		map(tile_blob_plans, (plan)=>{
+			const new_blob = Map_Generation_ƒ.create_tile_blob_at_location(plan.seed_location, claimed_tiles);
+
+			claimed_tiles = concat(claimed_tiles, new_blob);
+			tile_blobs.push({
+				tiles: new_blob,
+				tile_type: plan.tile_type,
+				seed_location: plan.seed_location
+			})
+		})
+
+		//const claimed_tiles = Map_Generation_ƒ.create_tile_blob_at_location(seed_location, []);
 
 
 
-		console.error( 'CLAIMED TILE LIST:', claimed_tiles);
 
-		map(claimed_tiles, (val)=>{
-			fresh_terrain_tilemap[val.y][val.x] =  'water';
+
+		map(tile_blobs, (blob)=>{
+			map(blob.tiles, (tile)=>{
+				fresh_terrain_tilemap[tile.y][tile.x] =  blob.tile_type;
+			})
 		})
 
 		return {
