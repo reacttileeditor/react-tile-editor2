@@ -51,6 +51,33 @@ export const Map_Generation_ƒ = {
 	},
 
 
+
+
+
+
+/*----------------------- blob-related code -----------------------*/
+	get_all_open_tiles_adjacent_to: (
+		location: Point2D,
+		claimed_tiles: Array<Point2D>,
+		open_possibilities: Array<Point2D>,
+	): Array<Point2D> => {
+		const adjacent_tiles: Array<Point2D> = [
+			Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'east'),
+			Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'north_east'),
+			Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'north_west'),
+			Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'south_east'),
+			Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'south_west'),
+			Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'west')
+		];
+
+		const open_adjacent_tiles = filter(
+			(val)=>( !includes(val,claimed_tiles) && !includes(val,open_possibilities)),
+			adjacent_tiles
+		);
+
+		return open_adjacent_tiles;
+	},
+
 	initialize_tiles_blob: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
 		const map_size = Tilemap_Manager_ƒ.get_map_bounds(me);
 
@@ -65,30 +92,14 @@ export const Map_Generation_ƒ = {
 
 		const seed_location: Point2D = {x: 6, y:7};
 
-		const get_all_open_tiles_adjacent_to = (
-			location: Point2D,
-			claimed_tiles: Array<Point2D>,
-			open_possibilities: Array<Point2D>,
-		): Array<Point2D> => {
-			const adjacent_tiles: Array<Point2D> = [
-				Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'east'),
-				Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'north_east'),
-				Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'north_west'),
-				Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'south_east'),
-				Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'south_west'),
-				Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'west')
-			];
 
-			const open_adjacent_tiles = filter(
-				(val)=>( !includes(val,claimed_tiles) && !includes(val,open_possibilities)),
-				adjacent_tiles
-			);
-
-			return open_adjacent_tiles;
-		}
 
 		let claimed_tiles: Array<Point2D> = [seed_location];
-		let open_possibilities: Array<Point2D> = get_all_open_tiles_adjacent_to(seed_location, [seed_location], []);
+		let open_possibilities: Array<Point2D> = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
+			seed_location,
+			[seed_location],
+			[]
+		);
 		const max_blob_size: number = 10;
 
 		const grow_blob = (): void => {
@@ -101,7 +112,7 @@ export const Map_Generation_ƒ = {
 					Utils.dice( _.size( open_possibilities ) ) -1 
 				];
 
-				const adjacent_tiles = get_all_open_tiles_adjacent_to(
+				const adjacent_tiles = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
 					chosen_tile,
 					open_possibilities,
 					claimed_tiles
