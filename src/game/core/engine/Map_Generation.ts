@@ -16,6 +16,13 @@ import { TileMap, Tilemap_Manager_Data, Tilemap_Manager_ƒ, tile_maps_init } fro
 
 
 export const Map_Generation_ƒ = {
+/*----------------------- utility functions -----------------------*/
+get_random_tile_name: (_AM: Asset_Manager_Data): string => (
+	Asset_Manager_ƒ.yield_tile_name_list(_AM)[
+		Utils.dice( _.size( Asset_Manager_ƒ.yield_tile_name_list(_AM) ) ) -1 
+	]
+),
+
 
 /*----------------------- initialization and asset loading -----------------------*/
 	initialize_tiles_random: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
@@ -24,9 +31,7 @@ export const Map_Generation_ƒ = {
 
 		const fresh_terrain_tilemap: TileMap = _.range(map_size.h).map( (row_value, row_index) => {
 			return _.range(map_size.w).map( (col_value, col_index) => {
-				return Asset_Manager_ƒ.yield_tile_name_list(_AM)[
-					Utils.dice( _.size( Asset_Manager_ƒ.yield_tile_name_list(_AM) ) ) -1 
-				];
+				return Map_Generation_ƒ.get_random_tile_name(_AM)
 			});
 		});
 
@@ -49,10 +54,6 @@ export const Map_Generation_ƒ = {
 			initialized: true,
 		}
 	},
-
-
-
-
 
 
 /*----------------------- blob-related code -----------------------*/
