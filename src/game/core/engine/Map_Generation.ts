@@ -78,22 +78,7 @@ export const Map_Generation_ƒ = {
 		return open_adjacent_tiles;
 	},
 
-	initialize_tiles_blob: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
-		const map_size = Tilemap_Manager_ƒ.get_map_bounds(me);
-
-
-		const fresh_terrain_tilemap: TileMap = _.range(map_size.h).map( (row_value, row_index) => {
-			return _.range(map_size.w).map( (col_value, col_index) => {
-				return Asset_Manager_ƒ.yield_tile_name_list(_AM)[
-					0 
-				];
-			});
-		});
-
-		const seed_location: Point2D = {x: 6, y:7};
-
-
-
+	create_tile_blob_at_location: (seed_location: Point2D): Array<Point2D> => {
 		let claimed_tiles: Array<Point2D> = [seed_location];
 		let open_possibilities: Array<Point2D> = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
 			seed_location,
@@ -135,9 +120,30 @@ export const Map_Generation_ƒ = {
 			}
 		}
 
-
-
 		grow_blob();
+
+		return claimed_tiles;
+	},
+
+	initialize_tiles_blob: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
+		const map_size = Tilemap_Manager_ƒ.get_map_bounds(me);
+
+
+		const fresh_terrain_tilemap: TileMap = _.range(map_size.h).map( (row_value, row_index) => {
+			return _.range(map_size.w).map( (col_value, col_index) => {
+				return Asset_Manager_ƒ.yield_tile_name_list(_AM)[
+					0 
+				];
+			});
+		});
+
+		const seed_location: Point2D = {x: 6, y:7};
+
+
+		const claimed_tiles = Map_Generation_ƒ.create_tile_blob_at_location(seed_location);
+
+
+
 		console.error( 'CLAIMED TILE LIST:', claimed_tiles);
 
 		map(claimed_tiles, (val)=>{
