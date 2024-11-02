@@ -59,8 +59,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 /*----------------------- blob-related code -----------------------*/
 	get_all_open_tiles_adjacent_to: (
 		location: Point2D,
-		claimed_tiles: Array<Point2D>,
-		open_possibilities: Array<Point2D>,
+		forbidden_tiles: Array<Point2D>,
 	): Array<Point2D> => {
 		const adjacent_tiles: Array<Point2D> = [
 			Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'east'),
@@ -72,7 +71,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 		];
 
 		const open_adjacent_tiles = filter(
-			(val)=>( !includes(val,claimed_tiles) && !includes(val,open_possibilities)),
+			(val)=>( !includes(val,forbidden_tiles)),
 			adjacent_tiles
 		);
 
@@ -84,7 +83,6 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 		let open_possibilities: Array<Point2D> = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
 			seed_location,
 			[seed_location],
-			[]
 		);
 		const max_blob_size: number = 10;
 
@@ -100,8 +98,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 
 				const adjacent_tiles = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
 					chosen_tile,
-					open_possibilities,
-					claimed_tiles
+					concat(open_possibilities, claimed_tiles)
 				);
 
 				claimed_tiles.push(chosen_tile);
