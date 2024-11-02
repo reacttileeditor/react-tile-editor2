@@ -22,6 +22,7 @@ import { Standard_Input_ƒ } from "./Standard_Input_Handling";
 import { CreatureTypeName, Creature_ƒ } from "../../objects_core/Creature";
 import { Game_Manager_ƒ } from "../engine/Game_Manager";
 import { includes, map } from "ramda";
+import { Map_Generation_ƒ } from "../engine/Map_Generation";
 
 
 interface Editor_View_Props {
@@ -763,11 +764,11 @@ export const Generate_Map_Modal = (props: {
 				onClick={ () => {
 					if(generation_type == 'true_random'){
 						props.set_Tilemap_Manager(
-							Tilemap_Manager_ƒ.initialize_tiles_random(props._Tilemap_Manager(), props._Asset_Manager())
+							Map_Generation_ƒ.initialize_tiles_random(props._Tilemap_Manager(), props._Asset_Manager())
 						);
 					} else {
 						props.set_Tilemap_Manager(
-							Tilemap_Manager_ƒ.initialize_tiles_blob(props._Tilemap_Manager(), props._Asset_Manager())
+							Map_Generation_ƒ.initialize_tiles_blob(props._Tilemap_Manager(), props._Asset_Manager())
 						);
 					}
 					props.set_show_generate_map_dialog(false);
