@@ -70,6 +70,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 
 /*----------------------- blob-related code -----------------------*/
 	get_all_open_tiles_adjacent_to: (
+		_TM: Tilemap_Manager_Data,
 		location: Point2D,
 		forbidden_tiles: Array<Point2D>,
 	): Array<Point2D> => {
@@ -82,20 +83,27 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'west')
 		];
 
+		const adjacent_tiles_within_map = filter(
+			(tile) => (	Tilemap_Manager_ƒ.is_within_map_bounds( _TM, tile )),
+			adjacent_tiles
+		)
+
 		const open_adjacent_tiles = filter(
 			(val)=>( !includes(val,forbidden_tiles)),
-			adjacent_tiles
+			adjacent_tiles_within_map
 		);
 
 		return open_adjacent_tiles;
 	},
 
 	create_tile_blob_at_location: (
+		_TM: Tilemap_Manager_Data,
 		seed_location: Point2D,
 		reserved_tiles: Array<Point2D>,
 	): Array<Point2D> => {
 		let claimed_tiles: Array<Point2D> = [seed_location];
 		let open_possibilities: Array<Point2D> = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
+			_TM,
 			seed_location,
 			[seed_location],
 		);
@@ -112,6 +120,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 				];
 
 				const adjacent_tiles = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
+					_TM,
 					chosen_tile,
 					concat(open_possibilities, claimed_tiles)
 				);
@@ -163,7 +172,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 
 		let claimed_tiles: Array<Point2D> = map(tile_blob_plans, (plan)=>(plan.seed_location));
 		map(tile_blob_plans, (plan)=>{
-			const new_blob = Map_Generation_ƒ.create_tile_blob_at_location(plan.seed_location, claimed_tiles);
+			const new_blob = Map_Generation_ƒ.create_tile_blob_at_location(me, plan.seed_location, claimed_tiles);
 
 			claimed_tiles = concat(claimed_tiles, new_blob);
 			tile_blobs.push({
