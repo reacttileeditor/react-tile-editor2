@@ -5,7 +5,7 @@ import _, { Dictionary, cloneDeep, isArray, isEmpty, isEqual, map, range, size }
 import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
 import * as Utils from "./Utils";
-import { ƒ } from "./Utils";
+import { modulo, ƒ } from "./Utils";
 
 
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
@@ -100,6 +100,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 		_TM: Tilemap_Manager_Data,
 		seed_location: Point2D,
 		reserved_tiles: Array<Point2D>,
+		max_blob_size: number,
 	): Array<Point2D> => {
 		let claimed_tiles: Array<Point2D> = [seed_location];
 		let open_possibilities: Array<Point2D> = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
@@ -107,7 +108,6 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			seed_location,
 			[seed_location],
 		);
-		const max_blob_size: number = 10;
 
 		const grow_blob = (): void => {
 			while( !(size(claimed_tiles) > max_blob_size) ){
@@ -159,20 +159,56 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			});
 		});
 
+		const max_blob_size: number = 10;
+		const map_bounds = Tilemap_Manager_ƒ.get_map_bounds(me);
+		const map_tile_count = map_bounds.w * map_bounds.h;
+		const map_blob_count = Math.round(map_tile_count / max_blob_size);
+		/*
+			if our blobs were squares, they'd be this wide/tall.  We'll space them by this much, and offset the first ones by half of this.  This may end up a disastrous mess, but we're winging this.
+		*/
+		const blob_spacing = Math.round(Math.sqrt(max_blob_size)); 
+
 
 		const tile_blobs: Array<TileBlob> = [];		
-		const tile_blob_plans: Array<TileBlobPlan> = [{
-			seed_location: {x: 6, y:7},
-			tile_type: Map_Generation_ƒ.get_random_tile_name(_AM),
-		},{
-			seed_location: {x: 10, y:7},
-			tile_type: Map_Generation_ƒ.get_random_tile_name(_AM),
-		}];
+
+		/*
+			Build a list of offsets.  These are basically gonna be a normalized super-grid of how many rows and columns of blobs we have; if we had one row of 3 columns, it'd be [{x:0,y:0},{x:1,y:0},{x:2,y:0}].  We'll use this to multiply the actual spaced-out blobs on the real tiles.
+		*/
+		const number_of_blobs_wide = Math.round(map_bounds.w / blob_spacing);
+
+		const tile_blob_rows_and_columns: Array<Point2D> = map(
+			range(map_blob_count),
+			(blob_number) => ({
+					x: modulo(blob_number, number_of_blobs_wide),
+					y: Math.floor(blob_number / number_of_blobs_wide)
+
+			})
+		)
+
+
+		const tile_blob_plans: Array<TileBlobPlan> = map(
+			tile_blob_rows_and_columns,
+			(blob) => ({
+				seed_location: {
+					x: Math.round(blob_spacing/2) + blob_spacing * blob.x,
+					y: Math.round(blob_spacing/2) + blob_spacing * blob.y,
+				},
+				tile_type: Map_Generation_ƒ.get_random_tile_name(_AM),
+			})
+		)
+		
+		
+
 
 
 		let claimed_tiles: Array<Point2D> = map(tile_blob_plans, (plan)=>(plan.seed_location));
 		map(tile_blob_plans, (plan)=>{
-			const new_blob = Map_Generation_ƒ.create_tile_blob_at_location(me, plan.seed_location, claimed_tiles);
+			const new_blob = Map_Generation_ƒ.create_tile_blob_at_location(
+				me,
+				plan.seed_location,
+				claimed_tiles,
+				max_blob_size
+			);
 
 			claimed_tiles = concat(claimed_tiles, new_blob);
 			tile_blobs.push({
