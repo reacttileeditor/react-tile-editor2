@@ -151,7 +151,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 	expand_tile_blob_by_one: (
 		_TM: Tilemap_Manager_Data,
 		current_tiles: Array<Point2D>,
-		reserved_tiles: Array<Point2D>,  //from other blobs
+		claimed_tile_accumulator: Array<Point2D>,  //from other blobs
 	): Array<Point2D> => {
 		/*
 			Adds one single tile to a blob.
@@ -168,7 +168,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 					Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
 						_TM,
 						tile,
-						reserved_tiles,
+						claimed_tile_accumulator,
 					)
 				))
 			),
@@ -187,6 +187,8 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			const chosen_tile = open_possibilities[
 				Utils.dice( _.size( open_possibilities ) ) -1 
 			];
+
+			claimed_tile_accumulator.push(chosen_tile);
 
 			return concat([chosen_tile], current_tiles);
 		} else {
@@ -249,7 +251,6 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 
 
 
-		let claimed_tiles: Array<Point2D> = map(tile_blob_plans, (plan)=>(plan.seed_location));
 		/*
 			Seed the data structure for the tile blobs:
 		*/
@@ -262,10 +263,13 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			}
 		));		
 
-		let iter = 0;
 
-		let filled_tile_count = size(claimed_tiles)
-		let uniq_filled_tile_count = size(claimed_tiles)
+
+		let iter = 0;
+		let claimed_tile_accumulator = map(tile_blob_plans, (plan)=>(plan.seed_location));
+		let filled_tile_count = size(claimed_tile_accumulator)
+		let uniq_filled_tile_count = size(claimed_tile_accumulator)
+
 
 		while (filled_tile_count < map_tile_count){
 			console.error(`blob expansion pass #${iter}, ${uniq_filled_tile_count} ${filled_tile_count}/${map_tile_count} tiles`);
@@ -277,9 +281,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 				tiles: Map_Generation_ƒ.expand_tile_blob_by_one(
 					me,
 					blob.tiles,
-					flatten(
-						map(tile_blobs, (val)=>(val.tiles))
-					),
+					claimed_tile_accumulator,
 				),
 				tile_type: blob.tile_type,
 				seed_location: blob.seed_location
