@@ -4,9 +4,14 @@ import { Point2D, Rectangle } from '../../interfaces';
 import { useEffect, useRef } from "react";
 
 
+
 /*----------------------- utility functions -----------------------*/
 export const dice = (sides: number) => (
 	Math.floor( Math.random() * sides ) + 1
+)
+
+export const dice_weighted = (sides: number, easing_func: (val: number)=>number ) => (
+	Math.floor( easing_func(Math.random()) * sides ) + 1
 )
 
 export const dice_anchored_on_specific_random_seed = (sides: number, seed: Prando) => (

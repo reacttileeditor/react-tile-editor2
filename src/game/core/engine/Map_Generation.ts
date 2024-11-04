@@ -1,12 +1,12 @@
 import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
-import _, { Dictionary, cloneDeep, isArray, isEmpty, isEqual, map, range, size } from "lodash";
+import _, { Dictionary, cloneDeep, countBy, isArray, isEmpty, isEqual, map, range, size } from "lodash";
 
 import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
 import * as Utils from "./Utils";
-import { modulo, ƒ } from "./Utils";
-
+import { dice_weighted, modulo, ƒ } from "./Utils";
+import { cubic } from '@juliendargelos/easings'
 
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
@@ -268,6 +268,10 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 		let iter = 0;
 		let claimed_tile_accumulator = map(tile_blob_plans, (plan)=>(plan.seed_location));
 		let filled_tile_count = size(claimed_tile_accumulator)
+
+		let myArray: Array<number> = map(range(100), ()=> dice_weighted(10, cubic.in));
+
+		console.warn('count:', countBy(myArray, (val)=>val) )
 
 
 		while (filled_tile_count < map_tile_count){
