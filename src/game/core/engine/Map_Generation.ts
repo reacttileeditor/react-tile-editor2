@@ -190,8 +190,8 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			tile_blob_rows_and_columns,
 			(blob) => ({
 				seed_location: {
-					x: Math.round(blob_spacing/2) + blob_spacing * blob.x,
-					y: Math.round(blob_spacing/2) + blob_spacing * blob.y,
+					x: Math.floor(blob_spacing/2) + blob_spacing * blob.x,
+					y: Math.floor(blob_spacing/2) + blob_spacing * blob.y,
 				},
 				tile_type: Map_Generation_ƒ.get_random_tile_name(_AM),
 			})
