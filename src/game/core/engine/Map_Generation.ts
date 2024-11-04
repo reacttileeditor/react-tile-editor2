@@ -148,7 +148,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 	},
 
 
-	expand_tile_blob: (
+	expand_tile_blob_by_one: (
 		_TM: Tilemap_Manager_Data,
 		current_tiles: Array<Point2D>,
 		reserved_tiles: Array<Point2D>,  //from other blobs
@@ -254,7 +254,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			Seed the data structure for the tile blobs:
 		*/
 		
-		const tile_blobs: Array<TileBlob> = map(tile_blob_plans, (plan)=>(
+		let tile_blobs: Array<TileBlob> = map(tile_blob_plans, (plan)=>(
 			{
 				tiles: [plan.seed_location],
 				tile_type: plan.tile_type,
@@ -262,7 +262,28 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			}
 		));		
 
+		let iter = 0;
 
+		
+
+		while (iter < 15){
+			iter += 1;
+
+
+			tile_blobs = map(tile_blobs, (blob)=>({
+				tiles: Map_Generation_ƒ.expand_tile_blob_by_one(
+					me,
+					blob.tiles,
+					flatten(
+						map(tile_blobs, (val)=>(val.tiles))
+					),
+				),
+				tile_type: blob.tile_type,
+				seed_location: blob.seed_location
+
+
+			}))
+		}
 
 
 
