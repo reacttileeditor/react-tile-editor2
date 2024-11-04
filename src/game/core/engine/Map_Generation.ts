@@ -10,7 +10,7 @@ import { modulo, ƒ } from "./Utils";
 
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
-import { concat, filter, includes, keys, slice, uniq } from "ramda";
+import { concat, filter, flatten, includes, keys, slice, uniq } from "ramda";
 import { TileMap, Tilemap_Manager_Data, Tilemap_Manager_ƒ, tile_maps_init } from "./Tilemap_Manager";
 
 
@@ -147,15 +147,64 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 		return claimed_tiles;
 	},
 
+
+	expand_tile_blob: (
+		_TM: Tilemap_Manager_Data,
+		current_tiles: Array<Point2D>,
+		reserved_tiles: Array<Point2D>,  //from other blobs
+	): Array<Point2D> => {
+		/*
+			Adds one single tile to a blob.
+
+
+			First we build a list of all potential tiles we can pick.  We do this by stepping through all members of the existing blob, and calculating all tiles that are adjacent to them.  This would include a bunch of bad tiles, so we filter that out in two steps; the first being that we forbid any tile that's already been picked by either this blob or any prior blob.
+
+			The second is that this would produce a ton of duplicates, so we run a uniq pass to get rid of all of those.
+		*/
+
+		const open_possibilities: Array<Point2D> = uniq(
+			flatten(
+				map(current_tiles, (tile)=>(
+					Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
+						_TM,
+						tile,
+						reserved_tiles,
+					)
+				))
+			),
+		);
+
+
+		/*
+			With those picked, we now move on to picking one single "new tile", at random, out of the possible new choices.
+
+			Then we append that to the previous list.
+
+
+			If it turns out that in the prior step, we found absolutely no spots to expand to, then just return the prior list unchanged.
+		*/
+		if(size(open_possibilities)){
+			const chosen_tile = open_possibilities[
+				Utils.dice( _.size( open_possibilities ) ) -1 
+			];
+
+			return concat([chosen_tile], current_tiles);
+		} else {
+			return current_tiles;
+		}
+	},
+
+
 	initialize_tiles_blob: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
 		const map_size = Tilemap_Manager_ƒ.get_map_bounds(me);
 
 
 		const fresh_terrain_tilemap: TileMap = _.range(map_size.h).map( (row_value, row_index) => {
 			return _.range(map_size.w).map( (col_value, col_index) => {
-				return Asset_Manager_ƒ.yield_tile_name_list(_AM)[
-					0 
-				];
+				return ''
+				// return Asset_Manager_ƒ.yield_tile_name_list(_AM)[
+				// 	0 
+				// ];
 			});
 		});
 
@@ -169,7 +218,6 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 		const blob_spacing = Math.round(Math.sqrt(max_blob_size)); 
 
 
-		const tile_blobs: Array<TileBlob> = [];		
 
 		/*
 			Build a list of offsets.  These are basically gonna be a normalized super-grid of how many rows and columns of blobs we have; if we had one row of 3 columns, it'd be [{x:0,y:0},{x:1,y:0},{x:2,y:0}].  We'll use this to multiply the actual spaced-out blobs on the real tiles.
@@ -202,23 +250,17 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 
 
 		let claimed_tiles: Array<Point2D> = map(tile_blob_plans, (plan)=>(plan.seed_location));
-		map(tile_blob_plans, (plan)=>{
-			const new_blob = Map_Generation_ƒ.create_tile_blob_at_location(
-				me,
-				plan.seed_location,
-				claimed_tiles,
-				max_blob_size
-			);
-
-			claimed_tiles = concat(claimed_tiles, new_blob);
-			tile_blobs.push({
-				tiles: new_blob,
+		/*
+			Seed the data structure for the tile blobs:
+		*/
+		
+		const tile_blobs: Array<TileBlob> = map(tile_blob_plans, (plan)=>(
+			{
+				tiles: [plan.seed_location],
 				tile_type: plan.tile_type,
 				seed_location: plan.seed_location
-			})
-		})
-
-		//const claimed_tiles = Map_Generation_ƒ.create_tile_blob_at_location(seed_location, []);
+			}
+		));		
 
 
 
