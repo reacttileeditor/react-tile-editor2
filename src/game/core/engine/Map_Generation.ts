@@ -268,11 +268,10 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 		let iter = 0;
 		let claimed_tile_accumulator = map(tile_blob_plans, (plan)=>(plan.seed_location));
 		let filled_tile_count = size(claimed_tile_accumulator)
-		let uniq_filled_tile_count = size(claimed_tile_accumulator)
 
 
 		while (filled_tile_count < map_tile_count){
-			console.error(`blob expansion pass #${iter}, ${uniq_filled_tile_count} ${filled_tile_count}/${map_tile_count} tiles`);
+			console.error(`blob expansion pass #${iter}, ${filled_tile_count}/${map_tile_count} tiles`);
 
 			iter += 1;
 
@@ -292,10 +291,6 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			filled_tile_count = size(flatten(
 				map(tile_blobs, (val)=>(val.tiles))
 			))
-
-			uniq_filled_tile_count = size(uniq(flatten(
-				map(tile_blobs, (val)=>(val.tiles))
-			)))
 		}
 
 
