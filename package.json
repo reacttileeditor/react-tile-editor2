@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://rkettering.github.io/wiergild",
   "dependencies": {
+    "@juliendargelos/easings": "^0.0.6",
     "@rsuite/icons": "^1.0.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
