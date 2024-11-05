@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
-import _, { Dictionary, cloneDeep, countBy, isArray, isEmpty, isEqual, map, range, size } from "lodash";
+import _, { Dictionary, cloneDeep, countBy, isArray, isEmpty, isEqual, map, range, size, sortBy } from "lodash";
 
 import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
@@ -152,6 +152,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 		_TM: Tilemap_Manager_Data,
 		current_tiles: Array<Point2D>,
 		claimed_tile_accumulator: Array<Point2D>,  //from other blobs
+		seed_tile: Point2D,
 	): Array<Point2D> => {
 		/*
 			Adds one single tile to a blob.
@@ -184,9 +185,26 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			If it turns out that in the prior step, we found absolutely no spots to expand to, then just return the prior list unchanged.
 		*/
 		if(size(open_possibilities)){
-			const chosen_tile = open_possibilities[
-				Utils.dice( _.size( open_possibilities ) ) -1 
+			/*
+				Here, we do something interesting - rather than just picking a pure random distribution, we actually can (optionally) weight the dice based on distance.   The idea is to give us a lever allowing us to decide how "snaky" a given tile blob is.
+
+				To do this, we take our set of open possibilities, and sort them, first, by distance.
+			*/
+
+			const distance_sorted_open_possibilities = sortBy(
+				open_possibilities,
+				(possible_tile)=>( Tilemap_Manager_ƒ.get_tile_coord_distance_between(seed_tile, possible_tile) )
+			);
+
+			const chosen_tile = distance_sorted_open_possibilities[
+				Utils.dice_weighted( _.size( distance_sorted_open_possibilities ), cubic.in ) -1 
 			];
+
+
+
+
+			
+
 
 			claimed_tile_accumulator.push(chosen_tile);
 
@@ -285,6 +303,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 					me,
 					blob.tiles,
 					claimed_tile_accumulator,
+					blob.seed_location,
 				),
 				tile_type: blob.tile_type,
 				seed_location: blob.seed_location
