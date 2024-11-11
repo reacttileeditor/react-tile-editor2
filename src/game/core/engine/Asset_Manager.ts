@@ -3,7 +3,7 @@ import Prando from 'prando';
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "./Blit_Manager";
 import * as Utils from "./Utils";
 import { Point2D, Rectangle } from '../../interfaces';
-import { asset_list } from "./Asset_List";
+import { asset_list } from "../data/Asset_List";
 import { ƒ } from "./Utils";
 import { Dispatch, SetStateAction } from "react";
 
