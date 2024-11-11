@@ -6,6 +6,7 @@ import { Point2D, Rectangle } from '../../interfaces';
 import { asset_list } from "../data/Asset_List";
 import { ƒ } from "./Utils";
 import { Dispatch, SetStateAction } from "react";
+import { TileName } from "../data/Tile_Types";
 
 export interface ImageData {
 	url: string,
@@ -51,7 +52,7 @@ interface AssetsMetaSingleImageData {
 }
 
 export interface TileItem {
-	name: string,
+	name: TileName,
 	omit_from_random_map_generation?: boolean,
 	variants: Array<VariantItem>,
 };

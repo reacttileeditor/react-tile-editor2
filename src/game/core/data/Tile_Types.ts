@@ -8,6 +8,22 @@ import { StaticValues, TileItem } from "../engine/Asset_Manager";
 */
 
 
+export type TileName =
+"grass" |
+"grass-and-scree" |
+"grass-and-scree" |
+"dirt" |
+"sandy-dirt" |
+"scrub-dirt" |
+"scrub-dirt-tall" |
+"sand" |
+"water" |
+"water-placid" |
+"menhir2" |
+"menhir1" |
+"red-path-unreachable-dot" |
+"arrowhead-green" |
+"arrow-green" ;
 
 
 

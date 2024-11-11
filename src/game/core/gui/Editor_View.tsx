@@ -23,6 +23,7 @@ import { CreatureTypeName, Creature_ƒ } from "../../objects_core/Creature";
 import { Game_Manager_ƒ } from "../engine/Game_Manager";
 import { includes, map } from "ramda";
 import { Map_Generation_ƒ } from "../engine/Map_Generation";
+import { TileName } from "../data/Tile_Types";
 
 
 interface Editor_View_Props {
@@ -63,7 +64,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [selected_tool, set_selected_tool] = useState<ToolTypes>('tiles');
 
 	const [show_tile_palette_drawer, set_show_tile_palette_drawer] = useState<boolean>(false);
-	const [selected_tile_type, set_selected_tile_type] = useState<string>('');
+	const [selected_tile_type, set_selected_tile_type] = useState<TileName>('grass');
 
 
 	useEffect(() => {
@@ -382,14 +383,14 @@ export const Editor_View = (props: Editor_View_Props) => {
 export const Tile_Palette_Drawer = (props: {
 	show_tile_palette_drawer: boolean,
 	set_show_tile_palette_drawer: Dispatch<SetStateAction<boolean>>,
-	selected_tile_type: string,
-	set_selected_tile_type: Dispatch<SetStateAction<string>>,
+	selected_tile_type: TileName,
+	set_selected_tile_type: Dispatch<SetStateAction<TileName>>,
 	_Asset_Manager: () => Asset_Manager_Data,
 }) => {
 
 
 
-	const tile_type_list: Array<string> = Asset_Manager_ƒ.yield_tile_name_list(props._Asset_Manager());
+	const tile_type_list: Array<TileName> = Asset_Manager_ƒ.yield_tile_name_list(props._Asset_Manager());
 
 	return <Drawer
 		open={props.show_tile_palette_drawer}
