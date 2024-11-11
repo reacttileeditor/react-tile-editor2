@@ -12,6 +12,7 @@ import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Mana
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import { concat, filter, flatten, includes, keys, slice, uniq } from "ramda";
 import { TileMap, Tilemap_Manager_Data, Tilemap_Manager_ƒ, tile_maps_init } from "./Tilemap_Manager";
+import { Mapgen_Profile_ƒ } from "../data/Mapgen_Data";
 
 
 type TileBlob = {
@@ -291,6 +292,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 
 		console.warn('count:', countBy(myArray, (val)=>val) )
 
+		console.error( 'MAPGEN PROFILE', Mapgen_Profile_ƒ.produce_array_of_tiles_for_profile('prairie'))
 
 		while (filled_tile_count < map_tile_count){
 			console.error(`blob expansion pass #${iter}, ${filled_tile_count}/${map_tile_count} tiles`);
