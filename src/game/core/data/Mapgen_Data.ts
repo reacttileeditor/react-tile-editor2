@@ -1,7 +1,8 @@
-import { keys, map, range } from "lodash";
+import { keys, map, range, size } from "lodash";
 import { zorder } from "../constants/zorder";
-import { StaticValues, TileItem } from "../engine/Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, StaticValues, TileItem } from "../engine/Asset_Manager";
 import { TileName } from "./Tile_Types";
+import * as Utils from "../engine/Utils";
 
 /*
 		special notes on this horrifying "negative match" regex:
@@ -10,11 +11,19 @@ import { TileName } from "./Tile_Types";
 */
 
 
-export type BlobProfileName = 'stone' | 'prairie' | 'water';
+export type BlobProfileName = 'stone' | 'prairie' | 'water' | 'lawn';
 
 export const Mapgen_Profile_ƒ = {
-	yield_blob_profile_name_list: () => {
-		return keys(Blob_Profile_Data);
+	yield_blob_profile_name_list: (): Array<BlobProfileName> => {
+		return keys(Blob_Profile_Data) as Array<BlobProfileName>;
+	},
+
+	get_random_profile_name: (): BlobProfileName => {
+		const profile_names: Array<BlobProfileName> = Mapgen_Profile_ƒ.yield_blob_profile_name_list();
+
+		return profile_names[
+			Utils.dice( size( profile_names ) ) -1 
+		];
 	},
 
 	produce_array_of_tiles_for_profile: (profile_name: BlobProfileName): Array<TileName> => {
@@ -35,7 +44,15 @@ export const Mapgen_Profile_ƒ = {
 		);
 
 		return tile_array;
-	}
+	},
+
+	get_random_tile_name_from_profile: (profile_name: BlobProfileName): string => {
+		const random_tile_possibilities: Array<TileName> = Mapgen_Profile_ƒ.produce_array_of_tiles_for_profile(profile_name);
+
+		return random_tile_possibilities[
+			Utils.dice( size( random_tile_possibilities ) ) -1 
+		]
+	},
 }
 
 
@@ -54,12 +71,17 @@ export const Blob_Profile_Data: BlobProfiles = {
 		'water': 5,
 		'water-placid': 3,
 	}, 
+	lawn: {
+		'grass': 11,
+		"dirt": 2,
+		"scrub-dirt": 2
+	},
 	prairie: {
-		'grass': 5,
+		'grass': 3,
 		"grass-and-scree": 3,
 		"dirt": 4,
 		"sandy-dirt": 1,
-		"scrub-dirt": 3,		
+		"scrub-dirt": 5
 	}
 };
 

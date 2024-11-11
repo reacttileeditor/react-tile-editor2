@@ -12,18 +12,19 @@ import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Mana
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import { concat, filter, flatten, includes, keys, slice, uniq } from "ramda";
 import { TileMap, Tilemap_Manager_Data, Tilemap_Manager_ƒ, tile_maps_init } from "./Tilemap_Manager";
-import { Mapgen_Profile_ƒ } from "../data/Mapgen_Data";
+import { BlobProfileName, Mapgen_Profile_ƒ } from "../data/Mapgen_Data";
+import { TileName } from "../data/Tile_Types";
 
 
 type TileBlob = {
 	seed_location: Point2D,
-	tile_type: string,
+	profile_name: BlobProfileName,
 	tiles: Array<Point2D>,
 }
 
 type TileBlobPlan = {
 	seed_location: Point2D,
-	tile_type: string,
+	profile_name: BlobProfileName,
 }
 
 
@@ -262,7 +263,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 					x: Math.floor(blob_spacing/2) + blob_spacing * blob.x,
 					y: Math.floor(blob_spacing/2) + blob_spacing * blob.y,
 				},
-				tile_type: Map_Generation_ƒ.get_random_tile_name(_AM),
+				profile_name: Mapgen_Profile_ƒ.get_random_profile_name(),
 			})
 		)
 		
@@ -277,7 +278,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 		let tile_blobs: Array<TileBlob> = map(tile_blob_plans, (plan)=>(
 			{
 				tiles: [plan.seed_location],
-				tile_type: plan.tile_type,
+				profile_name: plan.profile_name,
 				seed_location: plan.seed_location
 			}
 		));		
@@ -307,7 +308,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 					claimed_tile_accumulator,
 					blob.seed_location,
 				),
-				tile_type: blob.tile_type,
+				profile_name: blob.profile_name,
 				seed_location: blob.seed_location
 
 
@@ -322,7 +323,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 
 		map(tile_blobs, (blob)=>{
 			map(blob.tiles, (tile)=>{
-				fresh_terrain_tilemap[tile.y][tile.x] =  blob.tile_type;
+				fresh_terrain_tilemap[tile.y][tile.x] =  Mapgen_Profile_ƒ.get_random_tile_name_from_profile(blob.profile_name);
 			})
 		})
 
