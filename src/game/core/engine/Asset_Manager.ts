@@ -7,7 +7,7 @@ import { asset_list } from "../data/Asset_List";
 import { ƒ } from "./Utils";
 import { Dispatch, SetStateAction } from "react";
 
-interface ImageData {
+export interface ImageData {
 	url: string,
 	not_a_tile?: boolean, 
 	name: string,
@@ -50,7 +50,7 @@ interface AssetsMetaSingleImageData {
 	},
 }
 
-interface TileItem {
+export interface TileItem {
 	name: string,
 	omit_from_random_map_generation?: boolean,
 	variants: Array<VariantItem>,
