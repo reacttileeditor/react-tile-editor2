@@ -11,7 +11,6 @@ import { StaticValues, TileItem } from "../engine/Asset_Manager";
 export type TileName =
 "grass" |
 "grass-and-scree" |
-"grass-and-scree" |
 "dirt" |
 "sandy-dirt" |
 "scrub-dirt" |
