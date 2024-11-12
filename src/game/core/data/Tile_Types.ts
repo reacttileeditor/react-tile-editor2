@@ -49,6 +49,21 @@ export const tile_types: Array<TileItem> = [
 					id: 'grass4',
 					zorder: zorder.grass,
 				}],
+			},{
+				graphics: [{
+					id: 'grass5',
+					zorder: zorder.grass,
+				}],
+			},{
+				graphics: [{
+					id: 'grass6',
+					zorder: zorder.grass,
+				}],
+			},{
+				graphics: [{
+					id: 'grass7',
+					zorder: zorder.grass,
+				}],
 			}
 		],
 	},{
