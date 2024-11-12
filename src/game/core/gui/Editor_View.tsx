@@ -465,6 +465,7 @@ export const Unit_Palette_Drawer = (props: {
 					{
 						map( (team_number)=>(
 							<Dropdown.Item
+								key={team_number}
 								onSelect={ (eventKey: string, evt)=>{
 									props.set_selected_creature_team(team_number)
 								} }
