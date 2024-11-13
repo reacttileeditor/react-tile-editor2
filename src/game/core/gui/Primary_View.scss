@@ -199,6 +199,39 @@ body {
 
 
 			}
+
+			.left_scroll, .top_scroll, .right_scroll, .bottom_scroll {
+				height: 100%;
+				width: 30px;
+				position: absolute;
+				top: 0;
+				cursor: w-resize;
+
+				&:hover {
+					background: #fff3;
+					transition: all 0.25s ease-in-out;
+				}
+			}
+			.top_scroll {
+				width: 100%;
+				height: 30px;
+				top: 0;
+				cursor: n-resize;
+			}
+			.right_scroll {
+				height: 100%;
+				width: 30px;
+				top: 0;
+				right: 0;
+				cursor: e-resize;
+			}
+			.bottom_scroll {
+				width: 100%;
+				height: 30px;
+				bottom: 0;
+				top: unset;
+				cursor: s-resize;
+			}
 		}
 
 

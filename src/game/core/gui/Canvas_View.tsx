@@ -252,5 +252,9 @@ export const Canvas_View = (props: Props) => {
 			onMouseMove={ mousemoveListener }
 			onContextMenu={ (e) => { e.preventDefault(); return false; } }
 		/>
+		<div className="left_scroll" />
+		<div className="right_scroll" />
+		<div className="top_scroll" />
+		<div className="bottom_scroll" />
 	</div>;
 }
