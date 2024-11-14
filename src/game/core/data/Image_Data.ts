@@ -2,11 +2,6 @@ import { zorder } from "../constants/zorder";
 import { ImageData } from "../engine/Asset_Manager";
 import { tile_types } from "./Tile_Types";
 
-/*
-		special notes on this horrifying "negative match" regex:
-		https://stackoverflow.com/questions/6449131/javascript-regular-expression-to-not-match-a-word
-		https://stackoverflow.com/questions/406230/regular-expression-to-match-a-line-that-doesnt-contain-a-word
-*/
 
 export const image_data_list: Array<ImageData> = [{
 	url: "map-cursor.png",
@@ -31,6 +26,9 @@ export const image_data_list: Array<ImageData> = [{
 },{
 	url: "test2.png",
 	name: "dirt1",
+},{
+	url: "multi-tile-pattern-test1.png",
+	name: "multi-tile-pattern-test1",
 },{
 	url: "char1.png",
 	name: "hermit",
