@@ -11,7 +11,7 @@ import { ƒ } from "./Utils";
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import localforage from "localforage";
-import { concat, filter, includes, keys, reduce, slice, uniq } from "ramda";
+import { concat, equals, filter, find, includes, keys, propEq, reduce, slice, uniq } from "ramda";
 import { Page } from '@rsuite/icons';
 import { Vals } from "../constants/Constants";
 import { Creature_Map_Instance, Game_Manager_ƒ } from "./Game_Manager";
@@ -21,6 +21,7 @@ import { zorder } from "../constants/zorder";
 import * as builtin_levels from "../../levels";
 import { Map_Generation_ƒ } from "./Map_Generation";
 import { boolean } from "yargs";
+import { MTP_Anchor_Data } from "../data/Multi_Tile_Patterns";
 
 console.log(builtin_levels);
 
@@ -457,24 +458,53 @@ export const Tilemap_Manager_ƒ = {
 		
 	},
 
-	draw_tiles_for_zorder: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, zorder: number, mtp_results: Array<Point2D>) => {
-
+	draw_tiles_for_zorder: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, zorder: number, mtp_results: {
+		reserved_tiles: Array<Point2D>
+		anchor_data: Array<MTP_Anchor_Data>,
+	}) => {
 		_.map(me.tile_maps as unknown as Dictionary<TileMap>, (tile_map, tilemap_name) => {
 			tile_map.map( (row_value, row_index) => {
 				row_value.map( (tile_name, col_index) => {
 
 					let pos = {x: col_index, y: row_index};
 					
-					if( includes( pos , mtp_results) ){
-						Tilemap_Manager_ƒ.draw_tile_at_coords(
-							me,
-							_AM,
-							_BM,
-							pos,
-							'red-path-unreachable-dot',
-							zorder,
-							tilemap_name as unknown as TileMapKeys
-						);
+					if( includes( pos , mtp_results.reserved_tiles) ){
+//						const matching_anchor = find( (anchor: MTP_Anchor_Data)=>equals(anchor.location, pos) ) (mtp_results.anchor_data);
+						const matching_anchor = find( propEq(pos, 'location') ) (mtp_results.anchor_data);
+
+						if(matching_anchor){
+
+
+							Asset_Manager_ƒ.draw_image_for_asset_name({
+								_AM:						_AM,
+								//@ts-ignore
+								asset_name:					matching_anchor.graphic,
+								_BM:						_BM,
+								pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
+									me,
+									_AM,
+									pos
+								),
+								zorder:						zorder,
+								current_milliseconds:		0,
+								opacity:					1.0,
+								rotate:						0,
+								brightness:					1.0,
+								horizontally_flipped:		false,
+								vertically_flipped:			false,
+							})
+
+							// Tilemap_Manager_ƒ.draw_tile_at_coords(
+							// 	me,
+							// 	_AM,
+							// 	_BM,
+							// 	pos,
+							// 	//@ts-ignore
+							// 	matching_anchor.graphic,
+							// 	zorder,
+							// 	tilemap_name as unknown as TileMapKeys
+							// );
+						}
 					} else {
 						Tilemap_Manager_ƒ.draw_tile_at_coords(
 							me,
@@ -493,8 +523,12 @@ export const Tilemap_Manager_ƒ = {
 		});
 	},
 
-	mtp_scan: ( me: Tilemap_Manager_Data, _AM: Asset_Manager_Data ): Array<Point2D> => {
+	mtp_scan: ( me: Tilemap_Manager_Data, _AM: Asset_Manager_Data ): {
+		reserved_tiles: Array<Point2D>
+		anchor_data: Array<MTP_Anchor_Data>,
+	} => {
 		const reserved_tiles: Array<Point2D> = [];
+		const anchor_data: Array<MTP_Anchor_Data> = [];
 
 		const is_all_true = (things: Array<boolean>): boolean => (
 			reduce(
@@ -562,10 +596,13 @@ export const Tilemap_Manager_ƒ = {
 								)
 							))
 
-							// reserved_tiles.push({
-							// 	x: map_tile_col_index, 
-							// 	y: map_tile_row_index
-							// })
+							anchor_data.push({
+								location: {
+									x: map_tile_col_index + mtp_variant.graphics.anchor.x, 
+									y: map_tile_row_index + mtp_variant.graphics.anchor.y
+								},
+								graphic: mtp_variant.graphics.id,
+							})
 						}
 
 					})
@@ -573,7 +610,10 @@ export const Tilemap_Manager_ƒ = {
 			})
 		});
 		
-		return reserved_tiles;
+		return {
+			reserved_tiles: reserved_tiles,
+			anchor_data: anchor_data,
+		};
 	},
 	
 	draw_tile_at_coords: ( me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, tile_name: string, zorder: number, tilemap_name: TileMapKeys) => {

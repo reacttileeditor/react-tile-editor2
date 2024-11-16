@@ -25,6 +25,10 @@ type MTP_Graphic_Item = {
 	anchor: Point2D,
 };
 
+export type MTP_Anchor_Data = {
+	location: Point2D,
+	graphic: string,
+}
 
 /*
 	`name` needs to match the particular tile type we're replacing.
