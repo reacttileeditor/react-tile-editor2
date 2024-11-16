@@ -447,15 +447,17 @@ export const Tilemap_Manager_ƒ = {
 	draw_tiles: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
 		let zorder_list = Asset_Manager_ƒ.yield_full_zorder_list(_AM);
 
-		Tilemap_Manager_ƒ.mtp_scan(me, _AM);
+		const mtp_results = Tilemap_Manager_ƒ.mtp_scan(me, _AM);
+
+		console.error('mtp_results', mtp_results)
 
 		zorder_list.map( (value,index) => {
-			Tilemap_Manager_ƒ.draw_tiles_for_zorder(me, _AM, _BM, value);
+			Tilemap_Manager_ƒ.draw_tiles_for_zorder(me, _AM, _BM, value, mtp_results);
 		})
 		
 	},
 
-	draw_tiles_for_zorder: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, zorder: number) => {
+	draw_tiles_for_zorder: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, zorder: number, mtp_results: Array<Point2D>) => {
 
 		_.map(me.tile_maps as unknown as Dictionary<TileMap>, (tile_map, tilemap_name) => {
 			tile_map.map( (row_value, row_index) => {
@@ -463,16 +465,27 @@ export const Tilemap_Manager_ƒ = {
 
 					let pos = {x: col_index, y: row_index};
 					
-
-					Tilemap_Manager_ƒ.draw_tile_at_coords(
-						me,
-						_AM,
-						_BM,
-						pos,
-						tile_name,
-						zorder,
-						tilemap_name as unknown as TileMapKeys
-					);
+					if( includes( pos , mtp_results) ){
+						Tilemap_Manager_ƒ.draw_tile_at_coords(
+							me,
+							_AM,
+							_BM,
+							pos,
+							'red-path-unreachable-dot',
+							zorder,
+							tilemap_name as unknown as TileMapKeys
+						);
+					} else {
+						Tilemap_Manager_ƒ.draw_tile_at_coords(
+							me,
+							_AM,
+							_BM,
+							pos,
+							tile_name,
+							zorder,
+							tilemap_name as unknown as TileMapKeys
+						);
+					}
 				});
 			});
 
@@ -490,6 +503,7 @@ export const Tilemap_Manager_ƒ = {
 				things
 			)
 		);
+
 
 		map(me.tile_maps.terrain, (map_tile_row, map_tile_row_index)=>{
 			//Step over all of the map tiles; at each map tile, we run the full battery of MTP possibilities and see if any match.
@@ -509,18 +523,28 @@ export const Tilemap_Manager_ƒ = {
 
 							If every member of the MTP comes up with a true match, push the tile in question to the array of reserved tiles.
 						*/
-						const did_mtp_match = (						
+						const mtp_test = (						
 							map(mtp_variant.graphics.restrictions, (row, mtp_row_index)=>(
 
 								(
 									map(row, (mtp_col, mtp_col_index)=>(
 										mtp_col.test(
-											me.tile_maps.terrain[ map_tile_row_index + mtp_row_index][ map_tile_col_index + mtp_col_index ]
+											Tilemap_Manager_ƒ.get_tile_name_for_pos(me,
+												{
+													x: map_tile_col_index + mtp_col_index,
+													y: map_tile_row_index + mtp_row_index,
+												},
+												'terrain'
+											)
 										)
 									))
 								)
 							))
 						)
+
+						const did_mtp_match = is_all_true( map(mtp_test, (val)=>(
+							is_all_true(val)
+						)))
 
 						if( did_mtp_match ){
 							reserved_tiles.push({
@@ -534,7 +558,6 @@ export const Tilemap_Manager_ƒ = {
 			})
 		});
 		
-		console.error('mtp', reserved_tiles)
 		return reserved_tiles;
 	},
 	
