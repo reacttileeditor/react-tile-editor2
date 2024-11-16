@@ -450,7 +450,6 @@ export const Tilemap_Manager_ƒ = {
 
 		const mtp_results = Tilemap_Manager_ƒ.mtp_scan(me, _AM);
 
-		console.error('mtp_results', mtp_results)
 
 		zorder_list.map( (value,index) => {
 			Tilemap_Manager_ƒ.draw_tiles_for_zorder(me, _AM, _BM, value, mtp_results);
@@ -581,28 +580,38 @@ export const Tilemap_Manager_ƒ = {
 						)))
 
 						if( did_mtp_match ){
+							let abort_match: boolean = false;
+
 							map(mtp_variant.graphics.claims, (claims_row, claims_row_index)=>(
 
 								(
 									map(claims_row, (claims_col, claims_col_index)=>{
 										if(claims_col == true){
-											reserved_tiles.push({
+											const new_tile = {
 												x: map_tile_col_index + claims_col_index, 
 												y: map_tile_row_index + claims_row_index
-											})
+											};
+
+											if( abort_match || includes(new_tile, reserved_tiles) ){
+												abort_match = true;
+											} else {
+												reserved_tiles.push(new_tile)
+											}
 
 										}
 									})
 								)
 							))
 
-							anchor_data.push({
-								location: {
-									x: map_tile_col_index + mtp_variant.graphics.anchor.x, 
-									y: map_tile_row_index + mtp_variant.graphics.anchor.y
-								},
-								graphic: mtp_variant.graphics.id,
-							})
+							if( abort_match == false ){
+								anchor_data.push({
+									location: {
+										x: map_tile_col_index + mtp_variant.graphics.anchor.x, 
+										y: map_tile_row_index + mtp_variant.graphics.anchor.y
+									},
+									graphic: mtp_variant.graphics.id,
+								})
+							}
 						}
 
 					})
