@@ -21,6 +21,7 @@ type MTP_Graphic_Item = {
 	id: string,
 	zorder: number,
 	restrictions: MTP_Restrictions,
+	claims: Array<Array<boolean>>,
 	anchor: Point2D,
 };
 
@@ -43,6 +44,11 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 						[/.*/,	/.*/,	/.*/],
 					[/.*/,	/.*/,	/menhir2/,	/.*/],
 						[/.*/,	/menhir2/,	/.*/]
+				],
+				claims:	[
+						[false,	false,	false],
+					[false,	false,	true,	false],
+						[false,	true,	false]
 				],
 				anchor: {x: 1, y: 2},
 			},

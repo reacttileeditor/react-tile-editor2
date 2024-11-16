@@ -547,10 +547,25 @@ export const Tilemap_Manager_ƒ = {
 						)))
 
 						if( did_mtp_match ){
-							reserved_tiles.push({
-								x: map_tile_col_index, 
-								y: map_tile_row_index
-							})
+							map(mtp_variant.graphics.claims, (claims_row, claims_row_index)=>(
+
+								(
+									map(claims_row, (claims_col, claims_col_index)=>{
+										if(claims_col == true){
+											reserved_tiles.push({
+												x: map_tile_col_index + claims_col_index, 
+												y: map_tile_row_index + claims_row_index
+											})
+
+										}
+									})
+								)
+							))
+
+							// reserved_tiles.push({
+							// 	x: map_tile_col_index, 
+							// 	y: map_tile_row_index
+							// })
 						}
 
 					})
