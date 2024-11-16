@@ -7,14 +7,14 @@ import { TileName } from "./Tile_Types";
 
 type MTP_Restrictions = Array<Array<RegExp>>;
 
-type Multi_Tile_Pattern = {
+export type Multi_Tile_Pattern = {
 	name: TileName,
 
 	variants: Array<MTP_Variant_Item>,
 };
 
 interface MTP_Variant_Item {
-	graphics: Array<MTP_Graphic_Item>,
+	graphics: MTP_Graphic_Item,
 };
 
 type MTP_Graphic_Item = {
@@ -27,12 +27,16 @@ type MTP_Graphic_Item = {
 
 /*
 	`name` needs to match the particular tile type we're replacing.
+
+	`restrictions` lines are variable-length, but are all flush-left when being processed.
+
+	`anchor` represents the tile where the actual graphic will be placed.
 */
 export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 	{
 		name: "menhir2",
 		variants: [{
-			graphics: [{
+			graphics: {
 				id: 'multi-tile-pattern-test1',
 				zorder: zorder.rocks,
 				restrictions:	[
@@ -41,7 +45,7 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 						[/.*/,	/menhir2/,	/.*/]
 				],
 				anchor: {x: 1, y: 2},
-			}],
+			},
 		}],
 	}
 ];

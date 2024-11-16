@@ -7,6 +7,7 @@ import { asset_list } from "../data/Asset_List";
 import { ƒ } from "./Utils";
 import { Dispatch, SetStateAction } from "react";
 import { TileName } from "../data/Tile_Types";
+import { Multi_Tile_Pattern } from "../data/Multi_Tile_Patterns";
 
 export interface ImageData {
 	url: string,
@@ -24,6 +25,7 @@ export interface StaticValues {
 	raw_image_list: ImageDict,
 	assets_meta: AssetsMetaDict,
 	tile_types: Array<TileItem>,
+	multi_tile_types: Array<Multi_Tile_Pattern>,
 };
 
 interface ImageDict {

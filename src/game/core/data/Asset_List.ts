@@ -1,6 +1,7 @@
 import { zorder } from "../constants/zorder";
 import { StaticValues } from "../engine/Asset_Manager";
 import { image_data_list } from "./Image_Data";
+import { multi_tile_types } from "./Multi_Tile_Patterns";
 import { tile_types } from "./Tile_Types";
 
 
@@ -11,6 +12,7 @@ export const asset_list: StaticValues = {
 	raw_image_list: {},
 	assets_meta: {},
 	
-	tile_types: tile_types
+	tile_types: tile_types,
+	multi_tile_types: multi_tile_types,
 };
 	

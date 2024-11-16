@@ -11,7 +11,7 @@ import { ƒ } from "./Utils";
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import localforage from "localforage";
-import { concat, filter, includes, keys, slice, uniq } from "ramda";
+import { concat, filter, includes, keys, reduce, slice, uniq } from "ramda";
 import { Page } from '@rsuite/icons';
 import { Vals } from "../constants/Constants";
 import { Creature_Map_Instance, Game_Manager_ƒ } from "./Game_Manager";
@@ -20,6 +20,7 @@ import { zorder } from "../constants/zorder";
 
 import * as builtin_levels from "../../levels";
 import { Map_Generation_ƒ } from "./Map_Generation";
+import { boolean } from "yargs";
 
 console.log(builtin_levels);
 
@@ -446,6 +447,8 @@ export const Tilemap_Manager_ƒ = {
 	draw_tiles: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
 		let zorder_list = Asset_Manager_ƒ.yield_full_zorder_list(_AM);
 
+		Tilemap_Manager_ƒ.mtp_scan(me, _AM);
+
 		zorder_list.map( (value,index) => {
 			Tilemap_Manager_ƒ.draw_tiles_for_zorder(me, _AM, _BM, value);
 		})
@@ -477,6 +480,63 @@ export const Tilemap_Manager_ƒ = {
 		});
 	},
 
+	mtp_scan: ( me: Tilemap_Manager_Data, _AM: Asset_Manager_Data ): Array<Point2D> => {
+		const reserved_tiles: Array<Point2D> = [];
+
+		const is_all_true = (things: Array<boolean>): boolean => (
+			reduce(
+				(acc: boolean, item: boolean)=>(acc && item),
+				true,
+				things
+			)
+		);
+
+		map(me.tile_maps.terrain, (map_tile_row, map_tile_row_index)=>{
+			//Step over all of the map tiles; at each map tile, we run the full battery of MTP possibilities and see if any match.
+
+			map(map_tile_row, (map_tile, map_tile_col_index)=>{
+
+				map(_AM.static_vals.multi_tile_types, (mtp_type)=>{
+					//Step over each kind of MTP
+
+					map(mtp_type.variants, (mtp_variant)=>{
+						//then step over each alternate graphic
+
+
+						/*
+							And now, at last, we're actually down to the tiles, themselves.
+							Step over each of the members of the MTP, and run their regex against a corresponding tile in the real tileset.
+
+							If every member of the MTP comes up with a true match, push the tile in question to the array of reserved tiles.
+						*/
+						const did_mtp_match = (						
+							map(mtp_variant.graphics.restrictions, (row, mtp_row_index)=>(
+
+								(
+									map(row, (mtp_col, mtp_col_index)=>(
+										mtp_col.test(
+											me.tile_maps.terrain[ map_tile_row_index + mtp_row_index][ map_tile_col_index + mtp_col_index ]
+										)
+									))
+								)
+							))
+						)
+
+						if( did_mtp_match ){
+							reserved_tiles.push({
+								x: map_tile_col_index, 
+								y: map_tile_row_index
+							})
+						}
+
+					})
+				})
+			})
+		});
+		
+		console.error('mtp', reserved_tiles)
+		return reserved_tiles;
+	},
 	
 	draw_tile_at_coords: ( me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, tile_name: string, zorder: number, tilemap_name: TileMapKeys) => {
 		let { consts } = _AM;
