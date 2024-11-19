@@ -537,11 +537,25 @@ export const Tilemap_Manager_ƒ = {
 			)
 		);
 
+		/*
+			MTP rows are assumed to have odd rows "half a tile" further left.
+
+			Map rows are the opposite.
+		*/
+		const mtp_to_map_fudge = (input: Point2D): Point2D => (
+			Utils.is_even(input.y)
+			?
+			{x: input.x, y: input.y}
+			:
+			{x: input.x - 1, y: input.y} //map_tile_col_index == 9 && map_tile_row_index == 9
+		);
 
 		map(me.tile_maps.terrain, (map_tile_row, map_tile_row_index)=>{
 			//Step over all of the map tiles; at each map tile, we run the full battery of MTP possibilities and see if any match.
 
 			map(map_tile_row, (map_tile, map_tile_col_index)=>{
+
+				let bump = (input1: number, input2: number) => (Utils.is_odd( input1 ) && Utils.is_odd( input2 )) ? 1 : 0;
 
 				map(_AM.static_vals.multi_tile_types, (mtp_type)=>{
 					//Step over each kind of MTP
@@ -549,71 +563,83 @@ export const Tilemap_Manager_ƒ = {
 					map(mtp_type.variants, (mtp_variant)=>{
 						//then step over each alternate graphic
 
+						//if(map_tile_col_index == 8 && map_tile_row_index == 9){
 
-						/*
-							And now, at last, we're actually down to the tiles, themselves.
-							Step over each of the members of the MTP, and run their regex against a corresponding tile in the real tileset.
+							/*
+								And now, at last, we're actually down to the tiles, themselves.
+								Step over each of the members of the MTP, and run their regex against a corresponding tile in the real tileset.
 
-							If every member of the MTP comes up with a true match, push the tile in question to the array of reserved tiles.
-						*/
-						const mtp_test = (						
-							map(mtp_variant.graphics.restrictions, (row, mtp_row_index)=>(
+								If every member of the MTP comes up with a true match, push the tile in question to the array of reserved tiles.
+							*/
+							const mtp_test = (						
+								map(mtp_variant.graphics.restrictions, (row, mtp_row_index)=>(
 
-								(
-									map(row, (mtp_col, mtp_col_index)=>(
-										mtp_col.test(
-											Tilemap_Manager_ƒ.get_tile_name_for_pos(me,
+									(
+										map(row, (mtp_col, mtp_col_index)=>{
+											let tile_name = Tilemap_Manager_ƒ.get_tile_name_for_pos(me,
 												{
-													x: map_tile_col_index + mtp_col_index,
-													y: map_tile_row_index + mtp_row_index,
+													x: map_tile_col_index + mtp_col_index + bump( map_tile_row_index, mtp_row_index),
+													y: map_tile_row_index + ({x: mtp_col_index, y: mtp_row_index}).y,
 												},
 												'terrain'
-											)
-										)
-									))
-								)
-							))
-						)
+											);
 
-						const did_mtp_match = is_all_true( map(mtp_test, (val)=>(
-							is_all_true(val)
-						)))
+											let test = mtp_col.test(
+												tile_name
+											);
 
-						if( did_mtp_match ){
-							let abort_match: boolean = false;
+											console.log(`mtp @ ${mtp_col_index}, ${mtp_row_index}, map @ ${map_tile_col_index}, ${map_tile_row_index}, ${tile_name}, ${mtp_col}, ${test} bump: ${bump(map_tile_row_index, mtp_row_index)}`)
 
-							map(mtp_variant.graphics.claims, (claims_row, claims_row_index)=>(
 
-								(
-									map(claims_row, (claims_col, claims_col_index)=>{
-										if(claims_col == true){
-											const new_tile = {
-												x: map_tile_col_index + claims_col_index, 
-												y: map_tile_row_index + claims_row_index
-											};
+											return test;
+										})
+									)
+								))
+							)
 
-											if( abort_match || includes(new_tile, reserved_tiles) ){
-												abort_match = true;
-											} else {
-												reserved_tiles.push(new_tile)
+							const did_mtp_match = is_all_true( map(mtp_test, (val)=>(
+								is_all_true(val)
+							)))
+
+							console.warn(`NEW TILE:${map_tile_col_index}, ${map_tile_row_index} = ${did_mtp_match}`)
+
+							if( did_mtp_match ){
+								let abort_match: boolean = false;
+
+								map(mtp_variant.graphics.claims, (claims_row, claims_row_index)=>(
+
+									(
+										map(claims_row, (claims_col, claims_col_index)=>{
+											if(claims_col == true){
+												const new_tile = {
+													x: map_tile_col_index + ({x: claims_col_index, y: claims_row_index}).x + bump( map_tile_row_index, claims_row_index), 
+													y: map_tile_row_index + ({x: claims_col_index, y: claims_row_index}).y
+												};
+
+												if( abort_match || includes(new_tile, reserved_tiles) ){
+													abort_match = true;
+												} else {
+													reserved_tiles.push(new_tile)
+												}
+
 											}
+										})
+									)
+								))
 
-										}
+								if( abort_match == false ){
+									anchor_data.push({
+										location: {
+											x: map_tile_col_index +  ({x: mtp_variant.graphics.anchor.x, y: mtp_variant.graphics.anchor.y}).x, 
+											y: map_tile_row_index + ({x: mtp_variant.graphics.anchor.x, y: mtp_variant.graphics.anchor.y}).y
+										},
+										graphic: mtp_variant.graphics.id,
 									})
-								)
-							))
-
-							if( abort_match == false ){
-								anchor_data.push({
-									location: {
-										x: map_tile_col_index + mtp_variant.graphics.anchor.x, 
-										y: map_tile_row_index + mtp_variant.graphics.anchor.y
-									},
-									graphic: mtp_variant.graphics.id,
-								})
+								}
 							}
-						}
 
+
+						//}
 					})
 				})
 			})
