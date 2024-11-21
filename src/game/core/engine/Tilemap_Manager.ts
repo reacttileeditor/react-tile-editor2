@@ -630,7 +630,7 @@ export const Tilemap_Manager_ƒ = {
 								if( abort_match == false ){
 									anchor_data.push({
 										location: {
-											x: map_tile_col_index +  ({x: mtp_variant.graphics.anchor.x, y: mtp_variant.graphics.anchor.y}).x, 
+											x: map_tile_col_index +  ({x: mtp_variant.graphics.anchor.x, y: mtp_variant.graphics.anchor.y}).x + bump( map_tile_row_index, mtp_variant.graphics.anchor.y), 
 											y: map_tile_row_index + ({x: mtp_variant.graphics.anchor.x, y: mtp_variant.graphics.anchor.y}).y
 										},
 										graphic: mtp_variant.graphics.id,
