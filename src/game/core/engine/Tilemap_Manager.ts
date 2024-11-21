@@ -543,10 +543,25 @@ export const Tilemap_Manager_ƒ = {
 			{x: input.x - 1, y: input.y} //map_tile_col_index == 9 && map_tile_row_index == 9
 		);
 
-		map(me.tile_maps.terrain, (map_tile_row, map_tile_row_index)=>{
+
+		const metadata = _AM.static_vals.multi_tile_pattern_metadata;
+		const bounds = Tilemap_Manager_ƒ.get_map_bounds(me);
+
+
+		let map_tile_row_index = 0 - metadata.max_mtp_height;
+
+		while( map_tile_row_index < bounds.h +  metadata.max_mtp_height){
+			let map_tile_row = me.tile_maps.terrain[map_tile_row_index];
+//		map(me.tile_maps.terrain, (map_tile_row, map_tile_row_index)=>{
 			//Step over all of the map tiles; at each map tile, we run the full battery of MTP possibilities and see if any match.
 
-			map(map_tile_row, (map_tile, map_tile_col_index)=>{
+			let map_tile_col_index = 0 - metadata.max_mtp_width;
+
+			while( map_tile_col_index < bounds.w +  metadata.max_mtp_width){
+
+			//map(map_tile_row, (map_tile, map_tile_col_index)=>{
+				//let map_tile = map_tile_row[map_tile_col_index];
+
 
 				let bump = (input1: number, input2: number) => (Utils.is_odd( input1 ) && Utils.is_odd( input2 )) ? 1 : 0;
 
@@ -591,7 +606,7 @@ export const Tilemap_Manager_ƒ = {
 													tile_name
 												);
 
-												console.log(`mtp @ ${mtp_col_index}, ${mtp_row_index}, map @ ${map_tile_col_index}, ${map_tile_row_index}, ${tile_name}, ${mtp_col}, ${test} bump: ${bump(map_tile_row_index, mtp_row_index)}, in reserve: ${includes(test_pos, reserved_tiles) }`)
+												//console.log(`mtp @ ${mtp_col_index}, ${mtp_row_index}, map @ ${map_tile_col_index}, ${map_tile_row_index}, ${tile_name}, ${mtp_col}, ${test} bump: ${bump(map_tile_row_index, mtp_row_index)}, in reserve: ${includes(test_pos, reserved_tiles) }`)
 
 												let already_taken = includes(test_pos, reserved_tiles) && (mtp_variant.graphics.claims[mtp_row_index]?.[mtp_col_index]);
 
@@ -612,7 +627,7 @@ export const Tilemap_Manager_ƒ = {
 								is_all_true(val)
 							)))
 
-							console.warn(`NEW TILE:${map_tile_col_index}, ${map_tile_row_index} = ${did_mtp_match}`)
+							//console.warn(`NEW TILE:${map_tile_col_index}, ${map_tile_row_index} = ${did_mtp_match}`)
 
 							if( did_mtp_match ){
 
@@ -652,8 +667,12 @@ export const Tilemap_Manager_ƒ = {
 						//}
 					})
 				})
-			})
-		});
+
+				map_tile_col_index++;
+			};
+
+			map_tile_row_index++;
+		};
 		
 		return {
 			reserved_tiles: reserved_tiles,
