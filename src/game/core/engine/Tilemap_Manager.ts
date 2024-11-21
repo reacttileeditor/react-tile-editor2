@@ -563,7 +563,14 @@ export const Tilemap_Manager_ƒ = {
 					map(mtp_type.variants, (mtp_variant)=>{
 						//then step over each alternate graphic
 
-						//if(map_tile_col_index == 8 && map_tile_row_index == 9){
+						/*
+							Set up a 'short-circuit' variable to terminate our calculations early.  These are expensive, and there are several determinations we can make in the MTP matching process where we can be sure that this current scan is disqualified.
+
+							The first one is simply: "Was this tile already taken by an earlier MTP?"
+						*/
+						let abort_match: boolean = false;
+						
+
 
 							/*
 								And now, at last, we're actually down to the tiles, themselves.
@@ -576,22 +583,33 @@ export const Tilemap_Manager_ƒ = {
 
 									(
 										map(row, (mtp_col, mtp_col_index)=>{
-											let tile_name = Tilemap_Manager_ƒ.get_tile_name_for_pos(me,
-												{
+											if( !abort_match ){
+												let test_pos = {
 													x: map_tile_col_index + mtp_col_index + bump( map_tile_row_index, mtp_row_index),
 													y: map_tile_row_index + ({x: mtp_col_index, y: mtp_row_index}).y,
-												},
-												'terrain'
-											);
+												};
 
-											let test = mtp_col.test(
-												tile_name
-											);
+												let tile_name = Tilemap_Manager_ƒ.get_tile_name_for_pos(me,
+													test_pos,
+													'terrain'
+												);
 
-											console.log(`mtp @ ${mtp_col_index}, ${mtp_row_index}, map @ ${map_tile_col_index}, ${map_tile_row_index}, ${tile_name}, ${mtp_col}, ${test} bump: ${bump(map_tile_row_index, mtp_row_index)}`)
+												let test = mtp_col.test(
+													tile_name
+												);
 
+												console.log(`mtp @ ${mtp_col_index}, ${mtp_row_index}, map @ ${map_tile_col_index}, ${map_tile_row_index}, ${tile_name}, ${mtp_col}, ${test} bump: ${bump(map_tile_row_index, mtp_row_index)}, in reserve: ${includes(test_pos, reserved_tiles) }`)
 
-											return test;
+												let already_taken = includes(test_pos, reserved_tiles) && (mtp_variant.graphics.claims[mtp_row_index]?.[mtp_col_index]);
+
+												if(already_taken){
+													abort_match = true
+												}
+
+												return test && !already_taken;
+											} else {
+												return false;
+											}
 										})
 									)
 								))
@@ -604,7 +622,6 @@ export const Tilemap_Manager_ƒ = {
 							console.warn(`NEW TILE:${map_tile_col_index}, ${map_tile_row_index} = ${did_mtp_match}`)
 
 							if( did_mtp_match ){
-								let abort_match: boolean = false;
 
 								map(mtp_variant.graphics.claims, (claims_row, claims_row_index)=>(
 
