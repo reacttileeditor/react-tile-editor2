@@ -2,6 +2,7 @@ import _ from "lodash";
 import Prando from 'prando';
 import { Point2D, Rectangle } from '../../interfaces';
 import { useEffect, useRef } from "react";
+import { reduce } from "ramda";
 
 
 
@@ -25,6 +26,14 @@ export const is_even = (value : number) => (
 export const is_odd = (value : number) => (
 	modulo(value, 2) == 1
 )
+
+export const is_all_true = (things: Array<boolean>): boolean => (
+	reduce(
+		(acc: boolean, item: boolean)=>(acc && item),
+		true,
+		things
+	)
+);
 
 export const modulo = (numerator: number, denominator: number): number => (
 	/*

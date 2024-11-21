@@ -1,13 +1,14 @@
-import _, { isEmpty, isString, map, range } from "lodash";
+import _, { isEmpty, isString, map, range, size } from "lodash";
 import Prando from 'prando';
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "./Blit_Manager";
 import * as Utils from "./Utils";
 import { Point2D, Rectangle } from '../../interfaces';
 import { asset_list } from "../data/Asset_List";
-import { ƒ } from "./Utils";
+import { is_all_true, ƒ } from "./Utils";
 import { Dispatch, SetStateAction } from "react";
 import { TileName } from "../data/Tile_Types";
 import { Multi_Tile_Pattern } from "../data/Multi_Tile_Patterns";
+import { concat, uniq } from "ramda";
 
 export interface ImageData {
 	url: string,
@@ -258,12 +259,60 @@ export const Asset_Manager_ƒ = {
 				==
 				raw_image_list___size
 			){
+
+				Asset_Manager_ƒ.do_unit_tests(me)
+
 				do_once_app_ready();
 			}
 		}
 	},
 
+/*----------------------- multi-tile-pattern preprocessing -----------------------*/
+	do_unit_tests: (
+		me: Asset_Manager_Data,
+	)=>{
+		Asset_Manager_ƒ.mtp_unit_tests(me)
+	},
 
+	mtp_unit_tests: (
+		me: Asset_Manager_Data,
+	): boolean => {
+		const mtp_data = me.static_vals.multi_tile_types;
+
+		let max_mtp_width = 0;
+		let max_mtp_height = 0;
+
+		const is_valid = is_all_true(map(mtp_data, (tile_type)=> (
+			is_all_true(map(tile_type.variants, (variant)=>{
+
+				const restriction_row_sizes = map(variant.graphics.restrictions, (row)=>(
+					size(row)	
+				))
+
+				const claim_row_sizes = map(variant.graphics.restrictions, (row)=>(
+					size(row)	
+				))
+
+				const winnowed = uniq(concat(restriction_row_sizes, claim_row_sizes))
+
+				if( size(winnowed) > 1){
+					//row sizes should all be the same, period.
+
+					throw new Error( `MTP has mismatching row sizes.  Graphic Asset id: ${variant.graphics.id}` );
+
+
+					return false;
+				} else {
+					max_mtp_width = Math.max(max_mtp_width, size(variant.graphics.restrictions[0]));
+					max_mtp_height = Math.max(max_mtp_height, size(variant.graphics.restrictions));
+
+					return true;
+				}
+			}))
+		)))
+
+		return is_valid;
+	},
 
 /*----------------------- magic color processing -----------------------*/
 	component_to_hex: (c: number): string => {

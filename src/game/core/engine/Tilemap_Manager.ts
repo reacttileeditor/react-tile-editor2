@@ -5,7 +5,7 @@ import _, { Dictionary, cloneDeep, isArray, isEmpty, isEqual, map, range, size }
 import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
 import * as Utils from "./Utils";
-import { ƒ } from "./Utils";
+import { is_all_true, ƒ } from "./Utils";
 
 
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
@@ -529,13 +529,6 @@ export const Tilemap_Manager_ƒ = {
 		const reserved_tiles: Array<Point2D> = [];
 		const anchor_data: Array<MTP_Anchor_Data> = [];
 
-		const is_all_true = (things: Array<boolean>): boolean => (
-			reduce(
-				(acc: boolean, item: boolean)=>(acc && item),
-				true,
-				things
-			)
-		);
 
 		/*
 			MTP rows are assumed to have odd rows "half a tile" further left.

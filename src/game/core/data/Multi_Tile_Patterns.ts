@@ -66,12 +66,12 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 				zorder: zorder.rocks,
 				restrictions:	[
 					[/.*/,	/.*/,	/.*/,		/.*/],
-						[/.*/,	/menhir2/,	/.*/],
-					[/.*/, /menhir2/,	/.*/, /.*/]
+						[/.*/,	/menhir2/,	/.*/,	/.*/],
+					[/.*/, /menhir2/,	/.*/,	/.*/]
 				],
 				claims:	[
 					[false,	false,	false,	false],
-						[false,	true,	false],
+						[false,	true,	false,	false],
 					[false,	true,	false,	false],
 				],
 				anchor: {x: 1, y: 2},
