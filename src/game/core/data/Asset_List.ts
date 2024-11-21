@@ -14,5 +14,9 @@ export const asset_list: StaticValues = {
 	
 	tile_types: tile_types,
 	multi_tile_types: multi_tile_types,
+	multi_tile_pattern_metadata: {
+		max_mtp_width: 0,
+		max_mtp_height: 0,		
+	}
 };
 	

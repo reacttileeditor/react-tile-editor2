@@ -27,6 +27,10 @@ export interface StaticValues {
 	assets_meta: AssetsMetaDict,
 	tile_types: Array<TileItem>,
 	multi_tile_types: Array<Multi_Tile_Pattern>,
+	multi_tile_pattern_metadata: {
+		max_mtp_width: number,
+		max_mtp_height: number,		
+	}
 };
 
 interface ImageDict {
@@ -305,6 +309,12 @@ export const Asset_Manager_ƒ = {
 				} else {
 					max_mtp_width = Math.max(max_mtp_width, size(variant.graphics.restrictions[0]));
 					max_mtp_height = Math.max(max_mtp_height, size(variant.graphics.restrictions));
+
+					me.static_vals.multi_tile_pattern_metadata = {
+						...me.static_vals.multi_tile_pattern_metadata,
+						max_mtp_width: max_mtp_width,
+						max_mtp_height: max_mtp_height,
+					};
 
 					return true;
 				}
