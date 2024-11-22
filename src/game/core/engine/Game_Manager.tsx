@@ -660,19 +660,6 @@ export const Game_Manager_ƒ = {
 	},
 
 	adjust_tiles_to_display_unit_path: (me: Game_Manager_Data, creature: Creature_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data ): Game_and_Tilemap_Manager_Data => {
-		Asset_Manager_ƒ.draw_image_for_asset_name ({
-			_AM:						_AM,
-			asset_name:					'cursor_green',
-			_BM:						_BM,
-			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, creature.tile_pos),
-			zorder:						zorder.map_cursor,
-			current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
-			opacity:					1.0,
-			rotate:						0,
-			brightness:					1.0,
-			horizontally_flipped:		false,
-			vertically_flipped:			false,
-		})
 
 		
 
@@ -689,16 +676,18 @@ export const Game_Manager_ƒ = {
 					Here we build a brand new tilemap for the unit path, from scratch.
 				*/
 
-				return ƒ.if(  includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn ),
-
-					ƒ.if( includes({x: x_idx, y: y_idx}, creature.path_data.path_reachable_this_turn),
+				return	ƒ.if( isEqual({x: x_idx, y: y_idx}, creature.tile_pos),
+					'cursor_green',
+					ƒ.if(  includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn ),
+						ƒ.if( includes({x: x_idx, y: y_idx}, creature.path_data.path_reachable_this_turn),
 							ƒ.if( isEqual({x: x_idx, y: y_idx}, last(creature.path_data.path_reachable_this_turn)),
 								'arrowhead-green',
-								'arrow-green',
+								'arrow-green'
 							),
 							'red-path-unreachable-dot'
 						),
-					''
+						''
+					)
 				)
 			})
 		})

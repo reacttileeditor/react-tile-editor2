@@ -22,7 +22,8 @@ export type TileName =
 "menhir1" |
 "red-path-unreachable-dot" |
 "arrowhead-green" |
-"arrow-green" ;
+"arrow-green" |
+"cursor_green";
 
 
 
@@ -309,6 +310,15 @@ export const tile_types: Array<TileItem> = [
 		variants: [{
 			graphics: [{
 				id: 'red-path-unreachable-dot',
+				zorder: zorder.rocks,
+			}],
+		}],
+	},{
+		name: "cursor_green",
+		omit_from_random_map_generation: true,
+		variants: [{
+			graphics: [{
+				id: 'cursor_green',
 				zorder: zorder.rocks,
 			}],
 		}],
