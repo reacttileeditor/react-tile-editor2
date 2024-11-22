@@ -178,70 +178,6 @@ export const Tilemap_Manager_ƒ_Drawing = {
 	},
 
 	
-	draw_tiles_for_zorder: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, zorder: number, mtp_results: {
-		reserved_tiles: Array<Point2D>
-		anchor_data: Array<MTP_Anchor_Data>,
-	}) => {
-		_.map(me.tile_maps as unknown as Dictionary<TileMap>, (tile_map, tilemap_name) => {
-			tile_map.map( (row_value, row_index) => {
-				row_value.map( (tile_name, col_index) => {
-
-					let pos = {x: col_index, y: row_index};
-					
-					if( includes( pos , mtp_results.reserved_tiles) ){
-//						const matching_anchor = find( (anchor: MTP_Anchor_Data)=>equals(anchor.location, pos) ) (mtp_results.anchor_data);
-						const matching_anchor = find( propEq(pos, 'location') ) (mtp_results.anchor_data);
-
-						if(matching_anchor){
-
-
-							Asset_Manager_ƒ.draw_image_for_asset_name({
-								_AM:						_AM,
-								//@ts-ignore
-								asset_name:					matching_anchor.graphic,
-								_BM:						_BM,
-								pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
-									me,
-									_AM,
-									pos
-								),
-								zorder:						zorder,
-								current_milliseconds:		0,
-								opacity:					1.0,
-								rotate:						0,
-								brightness:					1.0,
-								horizontally_flipped:		false,
-								vertically_flipped:			false,
-							})
-
-							// Tilemap_Manager_ƒ.draw_tile_at_coords(
-							// 	me,
-							// 	_AM,
-							// 	_BM,
-							// 	pos,
-							// 	//@ts-ignore
-							// 	matching_anchor.graphic,
-							// 	zorder,
-							// 	tilemap_name as unknown as TileMapKeys
-							// );
-						}
-					} else {
-						Tilemap_Manager_ƒ.draw_tile_at_coords(
-							me,
-							_AM,
-							_BM,
-							pos,
-							tile_name,
-							zorder,
-							tilemap_name as unknown as TileMapKeys
-						);
-					}
-				});
-			});
-
-			_AM.TileRNG.reset();
-		});
-	},
 
 	mtp_scan: ( me: Tilemap_Manager_Data, _AM: Asset_Manager_Data ): {
 		reserved_tiles: Array<Point2D>
@@ -401,39 +337,6 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		};
 	},
 	
-	draw_tile_at_coords: ( me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, tile_name: string, zorder: number, tilemap_name: TileMapKeys) => {
-		let { consts } = _AM;
-
-		/*
-			This is the special bit of logic which makes the different rows (since we're hex tiles) be offset from each other by "half" a tile.
-		*/
-		let universal_hex_offset = Utils.modulo(pos.y, 2) == 1 ? Math.floor(consts.tile_width / 2) : 0;
-		let real_pos: Point2D = {
-			x: (pos.x + 0) * consts.tile_width + universal_hex_offset,
-			y: (pos.y + 0) * consts.tile_height
-		};
-
-
-
-		const image_list = Asset_Manager_ƒ.get_images_for_tile_type_at_zorder_and_pos({
-				_AM: _AM,
-				_BM: _BM,
-				zorder: zorder,
-				pos: real_pos,
-				tile_name: tile_name,
-				comparator: Tilemap_Manager_ƒ.get_tile_comparator_sample_for_pos(me, pos, tilemap_name),
-			});
-
-
-		Asset_Manager_ƒ.draw_images_at_zorder_and_pos({
-			_AM: _AM,
-			_BM: _BM,
-			zorder: zorder,
-			pos: real_pos,
-			image_list: image_list,
-			current_milliseconds: ticks_to_ms(_BM.time_tracker.current_tick)
-		})			
-	},
 
 	
 	do_one_frame_of_rendering: (
