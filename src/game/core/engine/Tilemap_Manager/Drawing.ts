@@ -35,11 +35,43 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		me: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
+		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
 	) => {
 
+		if( !isEqual( me.asset_blit_list_cache, [[[]]]) ){
+			Tilemap_Manager_ƒ.draw_all_assets(
+				me,
+				_AM,
+				_BM,
+				me.asset_blit_list_cache
+			);
+		} else {
+			const tilemap_of_assets: Asset_Blit_Tilemap = Tilemap_Manager_ƒ.calculate_tile_asset_map(me, _AM, _BM);
 
-		const tilemap_of_assets: Asset_Blit_Tilemap = Tilemap_Manager_ƒ.calculate_tile_asset_map(me, _AM, _BM);
+			Tilemap_Manager_ƒ.draw_all_assets(
+				me,
+				_AM,
+				_BM,
+				tilemap_of_assets
+			);
 
+			set_Tilemap_Manager(
+				Tilemap_Manager_ƒ.set_tile_asset_cache(
+					me,
+					_AM,
+					tilemap_of_assets,
+				)
+			)
+		}
+
+	},
+
+	draw_all_assets: (
+		me: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		tilemap_of_assets: Asset_Blit_Tilemap
+	) => {
 		tilemap_of_assets.map( (row_value, row_index) => {
 			return row_value.map( (tile_assets, col_index) => {
 
@@ -127,18 +159,6 @@ export const Tilemap_Manager_ƒ_Drawing = {
 	},
 
 	
-	draw_tiles_old: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
-		let zorder_list = Asset_Manager_ƒ.yield_full_zorder_list(_AM);
-
-		const mtp_results = Tilemap_Manager_ƒ.mtp_scan(me, _AM);
-
-
-		zorder_list.map( (value,index) => {
-			Tilemap_Manager_ƒ.draw_tiles_for_zorder(me, _AM, _BM, value, mtp_results);
-		})
-		
-	},
-
 	draw_tiles_for_zorder: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, zorder: number, mtp_results: {
 		reserved_tiles: Array<Point2D>
 		anchor_data: Array<MTP_Anchor_Data>,
@@ -402,12 +422,13 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 		set_Blit_Manager: (newVal: Blit_Manager_Data) => void,
+		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
 		draw_map_data_units: boolean,
 		cursor_pos: Point2D,
 	) => {
 		if(me.initialized){
 			Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM);
-			Tilemap_Manager_ƒ.draw_tiles(me, _AM, _BM);
+			Tilemap_Manager_ƒ.draw_tiles(me, _AM, _BM, set_Tilemap_Manager);
 
 			if(draw_map_data_units){
 				Tilemap_Manager_ƒ.draw_units(me, _AM, _BM, cursor_pos);

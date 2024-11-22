@@ -145,7 +145,15 @@ export const Editor_View = (props: Editor_View_Props) => {
 			props._Tilemap_Manager != null
 			
 		){
-		Tilemap_Manager_ƒ.do_one_frame_of_rendering( props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), props.set_Blit_Manager, true, cursor_pos);
+		Tilemap_Manager_ƒ.do_one_frame_of_rendering(
+			props._Tilemap_Manager(),
+			props._Asset_Manager(),
+			props._Blit_Manager(),
+			props.set_Blit_Manager,
+			props.set_Tilemap_Manager,
+			true,
+			cursor_pos
+		);
 		draw_cursor();
 		}
 	}

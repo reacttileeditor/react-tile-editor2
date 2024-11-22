@@ -22,7 +22,7 @@ import * as builtin_levels from "../../../levels";
 import { Map_Generation_ƒ } from "../Map_Generation";
 import { boolean } from "yargs";
 import { MTP_Anchor_Data } from "../../data/Multi_Tile_Patterns";
-import { CacheData, Direction, TileMap, Tilemap_Manager_Data, Tilemap_Manager_ƒ, TileMapKeys, TileMapPersistData, TileMaps } from "./Tilemap_Manager";
+import { Asset_Blit_Tilemap, CacheData, Direction, TileMap, Tilemap_Manager_Data, Tilemap_Manager_ƒ, TileMapKeys, TileMapPersistData, TileMaps } from "./Tilemap_Manager";
 
 
 
@@ -59,6 +59,22 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		}
 
 	},
+
+	set_tile_asset_cache: (
+		me: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		new_cache: Asset_Blit_Tilemap,
+	): Tilemap_Manager_Data => {
+		const new_tilemap_data = cloneDeep(me);
+
+		return {
+			...new_tilemap_data,
+			asset_blit_list_cache: new_cache,
+		}
+	},
+
+	
+
 
 	create_empty_tile_map: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): TileMap => {
 		const map_size = Tilemap_Manager_ƒ.get_map_bounds(me);
