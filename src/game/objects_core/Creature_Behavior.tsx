@@ -3,7 +3,7 @@ import _, { cloneDeep, filter, find, first, isBoolean, isEqual, map, size } from
 
 import { angle_between, ƒ } from "../core/engine/Utils";
 
-import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager";
+import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager/Tilemap_Manager";
 import { Pathfinder_ƒ } from "../core/engine/Pathfinding";
 
 import { Point2D, Rectangle } from '../interfaces';

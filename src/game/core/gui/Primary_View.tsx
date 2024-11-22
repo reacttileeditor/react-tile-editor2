@@ -6,7 +6,7 @@ import { Canvas_View } from "./Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ, New_Asset_Manager } from "../engine/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, New_Blit_Manager } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
-import { New_Tilemap_Manager, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager";
+import { New_Tilemap_Manager, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager/Tilemap_Manager";
 import { Game_View } from "./Game_View";
 import { Editor_View } from "./Editor_View";
 import { Point2D, Rectangle } from '../../interfaces';

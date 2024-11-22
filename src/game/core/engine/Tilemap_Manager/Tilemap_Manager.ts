@@ -2,26 +2,26 @@ import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
 import _, { Dictionary, cloneDeep, isArray, isEmpty, isEqual, map, range, size } from "lodash";
 
-import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager";
-import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
-import * as Utils from "./Utils";
-import { is_all_true, ƒ } from "./Utils";
+import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "../Asset_Manager";
+import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "../Blit_Manager";
+import * as Utils from "../Utils";
+import { is_all_true, ƒ } from "../Utils";
 
 
-import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
-import { Point2D, Rectangle, PointCubic } from '../../interfaces';
+import { TileComparatorSample, TilePositionComparatorSample } from "../Asset_Manager";
+import { Point2D, Rectangle, PointCubic } from '../../../interfaces';
 import localforage from "localforage";
 import { concat, equals, filter, find, includes, keys, propEq, reduce, slice, uniq } from "ramda";
 import { Page } from '@rsuite/icons';
-import { Vals } from "../constants/Constants";
-import { Creature_Map_Instance, Game_Manager_ƒ } from "./Game_Manager";
-import { Creature_ƒ } from "../../objects_core/Creature";
-import { zorder } from "../constants/zorder";
+import { Vals } from "../../constants/Constants";
+import { Creature_Map_Instance, Game_Manager_ƒ } from "../Game_Manager";
+import { Creature_ƒ } from "../../../objects_core/Creature";
+import { zorder } from "../../constants/zorder";
 
-import * as builtin_levels from "../../levels";
-import { Map_Generation_ƒ } from "./Map_Generation";
+import * as builtin_levels from "../../../levels";
+import { Map_Generation_ƒ } from "../Map_Generation";
 import { boolean } from "yargs";
-import { MTP_Anchor_Data } from "../data/Multi_Tile_Patterns";
+import { MTP_Anchor_Data } from "../../data/Multi_Tile_Patterns";
 
 console.log(builtin_levels);
 

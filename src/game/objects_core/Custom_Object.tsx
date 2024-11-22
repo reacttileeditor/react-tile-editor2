@@ -5,7 +5,7 @@ import { v4 as uuid } from "uuid";
 
 import { ƒ } from "../core/engine/Utils";
 
-import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager";
+import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
 import { ChangeInstance, CreatureTypeName } from "./Creature";

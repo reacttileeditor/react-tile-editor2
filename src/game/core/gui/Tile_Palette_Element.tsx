@@ -4,7 +4,7 @@ import _ from "lodash";
 
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, New_Blit_Manager } from "../engine/Blit_Manager";
-import { New_Tilemap_Manager, Tilemap_Manager_Data } from "../engine/Tilemap_Manager";
+import { New_Tilemap_Manager, Tilemap_Manager_Data } from "../engine/Tilemap_Manager/Tilemap_Manager";
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 

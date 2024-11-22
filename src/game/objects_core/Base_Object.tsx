@@ -5,7 +5,7 @@ import { v4 as uuid } from "uuid";
 
 import { add_points, ƒ } from "../core/engine/Utils";
 
-import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager";
+import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
 import { Game_Manager_Data } from "../core/engine/Game_Manager";

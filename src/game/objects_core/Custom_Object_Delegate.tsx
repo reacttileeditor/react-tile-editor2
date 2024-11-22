@@ -5,7 +5,7 @@ import { v4 as uuid } from "uuid";
 
 import { angle_between, degrees_to_radians, dice, ƒ } from "../core/engine/Utils";
 
-import { Direction } from "../core/engine/Tilemap_Manager";
+import { Direction } from "../core/engine/Tilemap_Manager/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";

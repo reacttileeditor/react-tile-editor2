@@ -11,7 +11,7 @@ import { cubic } from '@juliendargelos/easings'
 import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import { concat, filter, flatten, includes, keys, slice, uniq } from "ramda";
-import { TileMap, Tilemap_Manager_Data, Tilemap_Manager_ƒ, tile_maps_init } from "./Tilemap_Manager";
+import { TileMap, Tilemap_Manager_Data, Tilemap_Manager_ƒ, tile_maps_init } from "./Tilemap_Manager/Tilemap_Manager";
 import { BlobProfileName, Mapgen_Profile_ƒ } from "../data/Mapgen_Data";
 import { TileName } from "../data/Tile_Types";
 
