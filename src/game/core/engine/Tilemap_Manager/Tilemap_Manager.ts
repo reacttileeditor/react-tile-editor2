@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
 import _, { Dictionary, cloneDeep, isArray, isEmpty, isEqual, map, range, size } from "lodash";
 
-import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "../Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, GraphicItem, ImageListCache } from "../Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "../Blit_Manager";
 import * as Utils from "../Utils";
 import { is_all_true, ƒ } from "../Utils";
@@ -36,15 +36,14 @@ export type TileViewState = {
 } & CacheData;
 
 export type CacheData = {
-	asset_blit_list_cache: Array<Array<Asset_Blit_List>>,
+	asset_blit_list_cache: Asset_Blit_Tilemap,
 }
 
-type Asset_Blit_List = Array<Asset_Blit>;
+export type Asset_Blit_Tilemap = Array<Array<Asset_Blit_List>>;
 
-type Asset_Blit = {
-	asset_name: string,
-	z_index: number,
-};
+export type Asset_Blit_List = Array<GraphicItem>;
+
+
 
 export type TileMapPersistData = {
 	tile_maps: TileMaps,

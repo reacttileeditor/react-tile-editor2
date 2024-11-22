@@ -8,7 +8,7 @@ import { is_all_true, ƒ } from "./Utils";
 import { Dispatch, SetStateAction } from "react";
 import { TileName } from "../data/Tile_Types";
 import { Multi_Tile_Pattern } from "../data/Multi_Tile_Patterns";
-import { concat, uniq } from "ramda";
+import { concat, filter, uniq } from "ramda";
 
 export interface ImageData {
 	url: string,
@@ -68,7 +68,7 @@ interface VariantItem {
 	graphics: Array<GraphicItem|GraphicItemAutotiled>,
 };
 
-interface GraphicItem {
+export interface GraphicItem {
 	id: string,
 	zorder: number,
 };
@@ -462,6 +462,55 @@ export const Asset_Manager_ƒ = {
 		}
 	},
 
+	get_all_asset_data_for_tile_type: (
+		me: Asset_Manager_Data,
+		tile_name: string
+	):Array<GraphicItemGeneric> => {
+		
+		if( tile_name != '' ){
+			let tile_variants = Asset_Manager_ƒ.get_tile_variant_data(me, tile_name);
+
+			if( _.size(tile_variants) ){
+				let tile_data = tile_variants[Asset_Manager_ƒ._tile_dice( me, tile_variants.length ) -1].graphics
+				
+				return tile_data;
+			} else {
+				return [];
+			}
+		} else {
+			return [];
+		}
+	},
+
+	yield_asset_list_for_tile_type_with_comparator: (
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		tile_name: string,
+		comparator: TileComparatorSample,
+	): Array<GraphicItem> => {
+
+		let asset_data_array = Asset_Manager_ƒ.get_all_asset_data_for_tile_type(_AM, tile_name);
+
+		var allow_drawing = true;
+		
+		const asset_blit_items = asset_data_array.map( (value, index) => {
+		
+			if(  Asset_Manager_ƒ.isGraphicAutotiled(value) ){
+				//this is where 
+				allow_drawing = Asset_Manager_ƒ.should_we_draw_this_tile_based_on_its_autotiling_restrictions(comparator, value.restrictions);
+			} 
+
+			if( value.id && allow_drawing ){
+				return {
+					id: value.id,
+					zorder: value.zorder,
+				};
+			}
+		});
+
+		return filter((val)=>(val !== undefined), asset_blit_items) as Array<GraphicItem>;
+	},
+
 
 	yield_zorder_list_for_tile: (me: Asset_Manager_Data, tile_name: string): Array<number> => {
 		let { raw_image_list, image_data_list, assets_meta, tile_types } = me.static_vals;
@@ -499,8 +548,7 @@ export const Asset_Manager_ƒ = {
 			pos_y: number,
 			comparator: TileComparatorSample,
 			current_milliseconds: number
-		) =>
-	{
+		) => {
 		//_BM.ctx.save();
 
 		//_BM.ctx.translate( pos_x, pos_y );
@@ -533,6 +581,40 @@ export const Asset_Manager_ƒ = {
 		});
 		//_BM.ctx.restore();	
 	},
+
+	yield_asset_list_for_tile_type_at_zorder_and_pos: (
+		_AM: Asset_Manager_Data,
+		tile_name: string,
+		_BM: Blit_Manager_Data,
+		zorder: number,
+		pos_x: number,
+		pos_y: number,
+		comparator: TileComparatorSample,
+		current_milliseconds: number
+	): Array<GraphicItem> => {
+
+		let asset_data_array = Asset_Manager_ƒ.get_asset_data_for_tile_at_zorder(_AM, tile_name, zorder);
+
+		var allow_drawing = true;
+		
+		const asset_blit_items = asset_data_array.map( (value, index) => {
+		
+			if(  Asset_Manager_ƒ.isGraphicAutotiled(value) ){
+				//this is where 
+				allow_drawing = Asset_Manager_ƒ.should_we_draw_this_tile_based_on_its_autotiling_restrictions(comparator, value.restrictions);
+			} 
+
+			if( value.id && allow_drawing ){
+				return {
+					id: value.id,
+					zorder: zorder,
+				};
+			}
+		});
+
+		return filter((val)=>(val !== undefined), asset_blit_items) as Array<GraphicItem>;
+	},
+
 
 	get_images_for_tile_type_at_zorder_and_pos: (p: {
 		_AM: Asset_Manager_Data,

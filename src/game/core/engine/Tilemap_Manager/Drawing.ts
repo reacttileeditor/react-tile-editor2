@@ -22,7 +22,7 @@ import * as builtin_levels from "../../../levels";
 import { Map_Generation_ƒ } from "../Map_Generation";
 import { boolean } from "yargs";
 import { MTP_Anchor_Data } from "../../data/Multi_Tile_Patterns";
-import { TileMap, TileMapKeys, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
+import { Asset_Blit_List, Asset_Blit_Tilemap, TileMap, TileMapKeys, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
 
 
 
@@ -31,9 +31,102 @@ export const Tilemap_Manager_ƒ_Drawing = {
 
 	
 /*----------------------- draw ops -----------------------*/
+	draw_tiles: (
+		me: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+	) => {
+
+
+		const tilemap_of_assets: Asset_Blit_Tilemap = Tilemap_Manager_ƒ.calculate_tile_asset_map(me, _AM, _BM);
+
+		tilemap_of_assets.map( (row_value, row_index) => {
+			return row_value.map( (tile_assets, col_index) => {
+
+				let pos = {x: col_index, y: row_index};
+
+				map(tile_assets, (individual_asset)=>{
+					Asset_Manager_ƒ.draw_image_for_asset_name({
+						_AM:						_AM,
+						//@ts-ignore
+						asset_name:					individual_asset.id,
+						_BM:						_BM,
+						pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
+							me,
+							_AM,
+							pos
+						),
+						zorder:						individual_asset.zorder,
+						current_milliseconds:		0,
+						opacity:					1.0,
+						rotate:						0,
+						brightness:					1.0,
+						horizontally_flipped:		false,
+						vertically_flipped:			false,
+					})
+				})
+			});
+		});
+	},
+
+	calculate_tile_asset_map: (
+		me: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+
+	): Asset_Blit_Tilemap => {
+
+
+		//step over all of the various "tile maps", like 'ui' or 'terrain', and collate all the tiles.
+		let asset_maps = _.map(me.tile_maps as unknown as Dictionary<TileMap>, (tile_map, tilemap_name) => {
+
+			return tile_map.map( (row_value, row_index) => {
+				return row_value.map( (tile_name, col_index) => {
+
+					let pos = {x: col_index, y: row_index};
+
+					return Tilemap_Manager_ƒ.get_asset_list_at_coords(
+						me,
+						_AM,
+						_BM,
+						pos,
+						tile_name,
+						tilemap_name as unknown as TileMapKeys
+					);
+				});
+			});
+
+			_AM.TileRNG.reset();
+		});
+
+		//TODO -- merge the tilemaps!  don't throw one of them away.
+		return asset_maps[0];
+	},
+
+
+	get_asset_list_at_coords: (
+		me: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		pos: Point2D,
+		tile_name: string,
+		tilemap_name: TileMapKeys
+	): Asset_Blit_List => {
+
+		const asset_list: Asset_Blit_List = Asset_Manager_ƒ.yield_asset_list_for_tile_type_with_comparator(
+			_AM,
+			_BM,
+			tile_name,
+			Tilemap_Manager_ƒ.get_tile_comparator_sample_for_pos(me, pos, tilemap_name),
+		)
+
+
+		return asset_list;
+	
+	},
 
 	
-	draw_tiles: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
+	draw_tiles_old: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data) => {
 		let zorder_list = Asset_Manager_ƒ.yield_full_zorder_list(_AM);
 
 		const mtp_results = Tilemap_Manager_ƒ.mtp_scan(me, _AM);
