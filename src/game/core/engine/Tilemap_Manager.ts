@@ -46,11 +46,15 @@ type TileViewState = {
 } & CacheData;
 
 type CacheData = {
-	cache_of_tile_comparators: _TileMaps<TileComparatorMap>,
-	cache_of_image_lists: {
-		[index: string]: ImageListCache
-	}
+	asset_blit_list_cache: Array<Array<Asset_Blit_List>>,
 }
+
+type Asset_Blit_List = Array<Asset_Blit>;
+
+type Asset_Blit = {
+	asset_name: string,
+	z_index: number,
+};
 
 type PersistData = {
 	tile_maps: TileMaps,
@@ -111,8 +115,7 @@ export const New_Tilemap_Manager = (): Tilemap_Manager_Data => {
 		metadata: _.cloneDeep(metadata_init),
 		tile_maps: _.cloneDeep(tile_maps_init),
 		creature_list: [],
-		cache_of_tile_comparators: _.cloneDeep(tile_maps_init),
-		cache_of_image_lists: _.cloneDeep({}),
+		asset_blit_list_cache: [[[]]],
 		initialized: false,
 	}
 }
@@ -130,8 +133,7 @@ export const Tilemap_Manager_ƒ = {
 	},
 
 	cleared_cache: () : CacheData => ({
-		cache_of_tile_comparators: _.cloneDeep(tile_maps_init),
-		cache_of_image_lists: _.cloneDeep({}),
+		asset_blit_list_cache: [[[]]],
 	}),
 
 /*----------------------- file writing -----------------------*/
@@ -157,8 +159,7 @@ export const Tilemap_Manager_ƒ = {
 				metadata: _.cloneDeep(level_data.metadata),
 				tile_maps: _.cloneDeep(level_data.tile_maps),
 				creature_list: _.cloneDeep(level_data.creature_list),
-				cache_of_tile_comparators: _.cloneDeep(tile_maps_init),
-				cache_of_image_lists: _.cloneDeep({}),
+				asset_blit_list_cache: [[[]]],
 				initialized: true,
 			})
 		}).catch((value) => {
@@ -257,8 +258,7 @@ export const Tilemap_Manager_ƒ = {
 				metadata: _.cloneDeep(level_data.metadata),
 				tile_maps: _.cloneDeep(level_data.tile_maps),
 				creature_list: _.cloneDeep(level_data.creature_list),
-				cache_of_tile_comparators: _.cloneDeep(tile_maps_init),
-				cache_of_image_lists: _.cloneDeep({}),
+				asset_blit_list_cache: [[[]]],
 				initialized: true,
 			}		
 		}
@@ -693,24 +693,16 @@ export const Tilemap_Manager_ƒ = {
 		};
 
 
-		const cache_hash = `${pos.x}_${pos.y}_${tile_name}_${zorder}}`;
-		const cached_value = me.cache_of_image_lists[cache_hash];
 
-		const image_list: ImageListCache = ƒ.if( cached_value != undefined,
-			cached_value,
-			Asset_Manager_ƒ.get_images_for_tile_type_at_zorder_and_pos({
+		const image_list = Asset_Manager_ƒ.get_images_for_tile_type_at_zorder_and_pos({
 				_AM: _AM,
 				_BM: _BM,
 				zorder: zorder,
 				pos: real_pos,
 				tile_name: tile_name,
 				comparator: Tilemap_Manager_ƒ.get_tile_comparator_sample_for_pos(me, pos, tilemap_name),
-			})
-		);
+			});
 
-		if( !cached_value ){
-			me.cache_of_image_lists[cache_hash] = image_list;
-		}
 
 		Asset_Manager_ƒ.draw_images_at_zorder_and_pos({
 			_AM: _AM,
@@ -798,11 +790,6 @@ export const Tilemap_Manager_ƒ = {
 
 
 	get_tile_comparator_sample_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ): TileComparatorSample => {
-		const cached_value = me.cache_of_tile_comparators[tilemap_name]?.[pos.y]?.[pos.x];
-
-		if( cached_value != undefined ){
-			return cached_value;
-		} else {
 			const tpc = Tilemap_Manager_ƒ.get_tile_position_comparator_for_pos(me, pos);
 			
 			const val = _.map(tpc, (row_val, row_idx) => {
@@ -811,17 +798,8 @@ export const Tilemap_Manager_ƒ = {
 				})
 			});
 			
-			//some funny-business to cache it:
-			if( !isArray(me.cache_of_tile_comparators[tilemap_name][pos.y]) ){
-				me.cache_of_tile_comparators[tilemap_name][pos.y] = [];
-				me.cache_of_tile_comparators[tilemap_name][pos.y][pos.x] = (val as TileComparatorSample);
-			} else {
-				me.cache_of_tile_comparators[tilemap_name][pos.y][pos.x] = (val as TileComparatorSample);
-			}
-
 			return (val as TileComparatorSample); //casting this because Typescript is being extra insistent that the tuple lengths match, but we can't guarantee this without dramatically complicating our code in a particularly bad way.
 			//https://github.com/microsoft/TypeScript/issues/11312
-		}
 	},
 	
 	get_tile_position_comparator_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D ): TilePositionComparatorSample => {
