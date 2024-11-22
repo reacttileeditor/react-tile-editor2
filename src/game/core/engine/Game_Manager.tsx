@@ -211,7 +211,7 @@ export const Game_Manager_ƒ = {
 					?
 					Game_Manager_ƒ.adjust_tiles_to_display_unit_path(get_game_state(), selected_creature, _AM, _BM, _TM).tm
 					:
-					_TM,
+					Tilemap_Manager_ƒ.clear_tile_map(_TM, 'ui', _AM),
 				gm: new_game_data
 			}
 		} else {
@@ -676,9 +676,20 @@ export const Game_Manager_ƒ = {
 					Here we build a brand new tilemap for the unit path, from scratch.
 				*/
 
-				return	ƒ.if( isEqual({x: x_idx, y: y_idx}, creature.tile_pos),
-					'cursor_green',
-					ƒ.if(  includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn ),
+				// console.log(`tile choice for ${x_idx}, ${y_idx}
+				// creature: ${creature.tile_pos.x}, ${creature.tile_pos.y}
+				// on_path?: ${includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn )}`)
+
+				if(
+					isEqual({x: x_idx, y: y_idx}, creature.tile_pos)
+					&&
+					!size(creature.path_data.path_this_turn)
+				){
+					return 'cursor_green';
+				}
+
+
+				return ƒ.if(  includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn ),
 						ƒ.if( includes({x: x_idx, y: y_idx}, creature.path_data.path_reachable_this_turn),
 							ƒ.if( isEqual({x: x_idx, y: y_idx}, last(creature.path_data.path_reachable_this_turn)),
 								'arrowhead-green',
@@ -688,7 +699,7 @@ export const Game_Manager_ƒ = {
 						),
 						''
 					)
-				)
+				
 			})
 		})
 
