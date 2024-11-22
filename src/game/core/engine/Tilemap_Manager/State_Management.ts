@@ -28,19 +28,6 @@ import { CacheData, Direction, TileMap, Tilemap_Manager_Data, Tilemap_Manager_ƒ
 
 export const Tilemap_Manager_ƒ_State_Management = {
 
-/*----------------------- initialization and asset loading -----------------------*/
-
-	initialize_tiles: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Manager_Data => {
-		return Map_Generation_ƒ.initialize_tiles_random(
-			me,
-			_AM,
-		);
-	},
-
-	cleared_cache: () : CacheData => ({
-		asset_blit_list_cache: [[[]]],
-	}),
-
 
 
 /*----------------------- state mutation -----------------------*/
