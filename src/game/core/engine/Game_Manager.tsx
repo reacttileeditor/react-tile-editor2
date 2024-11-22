@@ -193,11 +193,32 @@ export const Game_Manager_ƒ = {
 	},
 
 
-	handle_click: (get_game_state: () => Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState): Game_Manager_Data => {
+	handle_click: (
+		get_game_state: () => Game_Manager_Data,
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		pos: Point2D,
+		buttons_pressed: MouseButtonState
+	): Game_and_Tilemap_Manager_Data => {
 		if( !get_game_state().animation_state.is_animating_live_game ){
-			return Game_Manager_ƒ.select_object_based_on_tile_click(get_game_state, _TM, _AM, _BM, pos, buttons_pressed)
+
+			let new_game_data = Game_Manager_ƒ.select_object_based_on_tile_click(get_game_state, _TM, _AM, _BM, pos, buttons_pressed)
+			const selected_creature = Game_Manager_ƒ.get_selected_creature(new_game_data);
+
+			return {
+				tm:	selected_creature != undefined
+					?
+					Game_Manager_ƒ.adjust_tiles_to_display_unit_path(get_game_state(), selected_creature, _AM, _BM, _TM).tm
+					:
+					_TM,
+				gm: new_game_data
+			}
 		} else {
-			return get_game_state();
+			return {
+				tm: _TM,
+				gm: get_game_state(),
+			}
 		}
 	},
 		
@@ -391,7 +412,7 @@ export const Game_Manager_ƒ = {
 		}
 	},
 
-	do_one_frame_of_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_and_Tilemap_Manager_Data => {
+	do_one_frame_of_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_Manager_Data => {
 		//me.update_game_state_for_ui(me.game_state);
 		//me.update_tooltip_state( Game_Manager_ƒ.get_tooltip_data(me));
 		
@@ -437,7 +458,7 @@ export const Game_Manager_ƒ = {
 		})
 	},
 
-	do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_and_Tilemap_Manager_Data => {
+	do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_Manager_Data => {
 		/*
 			Process all of the existing creatures.
 			
@@ -448,10 +469,8 @@ export const Game_Manager_ƒ = {
 
 		if( Game_Manager_ƒ.is_turn_finished(me) ){
 
-			return {
-				gm: Game_Manager_ƒ.advance_turn_finish(me, _BM),
-				tm: _TM,
-			};
+			return Game_Manager_ƒ.advance_turn_finish(me, _BM);
+
 
 		} else {		
 			let spawnees: Array<Custom_Object_Data> = [];
@@ -520,32 +539,23 @@ export const Game_Manager_ƒ = {
 			
 			
 			return {
-				gm: {
-					...cloneDeep(me),
-					animation_state: {
-						...cloneDeep(me.animation_state),
-						processing_tick: tick + 1,
-					},
-					game_state: {
-						...cloneDeep(me.game_state),
-						current_frame_state: {
-							creature_list: all_creatures_processed_and_culled,
-						},
-						custom_object_list: all_objects_processed_and_culled,
-					}
+				...cloneDeep(me),
+				animation_state: {
+					...cloneDeep(me.animation_state),
+					processing_tick: tick + 1,
 				},
-				tm: _TM
+				game_state: {
+					...cloneDeep(me.game_state),
+					current_frame_state: {
+						creature_list: all_creatures_processed_and_culled,
+					},
+					custom_object_list: all_objects_processed_and_culled,
+				}
 			}
-			
-			// me.game_state.current_frame_state = {
-			// 	creature_list: all_creatures_processed_and_culled,
-			// }
-
-			// me.game_state.custom_object_list = all_objects_processed_and_culled
 		}
 	},
 
-	do_paused_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_and_Tilemap_Manager_Data => {
+	do_paused_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_Manager_Data => {
 		/*
 			This is considerably simpler; we just run existing custom objects through their processing.
 		*/
@@ -570,31 +580,17 @@ export const Game_Manager_ƒ = {
 		) );
 
 	
-		let selected_creature = Game_Manager_ƒ.get_selected_creature(me);
-
-		if(selected_creature){
-			let new_data = Game_Manager_ƒ.adjust_tiles_to_display_unit_path(me, selected_creature, _AM, _BM, _TM).tm
-		}
-
 
 		return {
-			gm: {
-				...cloneDeep(me),
-				animation_state: {
-					...cloneDeep(me.animation_state),
-					processing_tick: tick + 1,
-				},
-				game_state: {
-					...cloneDeep(me.game_state),
-					custom_object_list: all_objects_processed_and_culled,
-				}
+			...cloneDeep(me),
+			animation_state: {
+				...cloneDeep(me.animation_state),
+				processing_tick: tick + 1,
 			},
-			tm: selected_creature != undefined
-				?
-				Game_Manager_ƒ.adjust_tiles_to_display_unit_path(me, selected_creature, _AM, _BM, _TM).tm
-				:
-				_TM
-			
+			game_state: {
+				...cloneDeep(me.game_state),
+				custom_object_list: all_objects_processed_and_culled,
+			}
 		}
 	},
 
