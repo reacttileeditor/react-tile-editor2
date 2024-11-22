@@ -57,7 +57,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 							pos
 						),
 						zorder:						individual_asset.zorder,
-						current_milliseconds:		0,
+						current_milliseconds:		ticks_to_ms(_BM.time_tracker.current_tick),
 						opacity:					1.0,
 						rotate:						0,
 						brightness:					1.0,
