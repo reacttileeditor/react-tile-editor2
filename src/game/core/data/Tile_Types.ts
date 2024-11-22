@@ -319,7 +319,7 @@ export const tile_types: Array<TileItem> = [
 		variants: [{
 			graphics: [{
 				id: 'cursor_green',
-				zorder: zorder.rocks,
+				zorder: zorder.map_cursor_low,
 			}],
 		}],
 	},
@@ -465,8 +465,24 @@ export const tile_types: Array<TileItem> = [
 											[/^((?!(arrow)).)*$/, /arrow/]
 								]
 			},{
+				id: 'cursor_green',
+				zorder: zorder.map_cursor_low,
+				restrictions:	[
+											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
+										[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
+											[/^((?!(arrow)).)*$/, /arrow/]
+								]
+			},{
 				id: 'arrow-ne-endcap',
 				zorder: zorder.rocks,
+				restrictions:	[
+											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
+										[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
+											[/arrow/, /^((?!(arrow)).)*$/]
+								]
+			},{
+				id: 'cursor_green',
+				zorder: zorder.map_cursor_low,
 				restrictions:	[
 											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
 										[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
@@ -481,8 +497,24 @@ export const tile_types: Array<TileItem> = [
 											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
 								]
 			},{
+				id: 'cursor_green',
+				zorder: zorder.map_cursor_low,
+				restrictions:	[
+											[/arrow/, /^((?!(arrow)).)*$/],
+										[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
+											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
+								]
+			},{
 				id: 'arrow-sw-endcap',
 				zorder: zorder.rocks,
+				restrictions:	[
+											[/^((?!(arrow)).)*$/, /arrow/],
+										[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
+											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
+								]
+			},{
+				id: 'cursor_green',
+				zorder: zorder.map_cursor_low,
 				restrictions:	[
 											[/^((?!(arrow)).)*$/, /arrow/],
 										[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
@@ -497,8 +529,24 @@ export const tile_types: Array<TileItem> = [
 											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
 								]
 			},{
+				id: 'cursor_green',
+				zorder: zorder.map_cursor_low,
+				restrictions:	[
+											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
+										[/arrow/, /arrow/, /^((?!(arrow)).)*$/],
+											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
+								]
+			},{
 				id: 'arrow-w-endcap',
 				zorder: zorder.rocks,
+				restrictions:	[
+											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
+										[/^((?!(arrow)).)*$/, /arrow/, /arrow/],
+											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
+								]
+			},{
+				id: 'cursor_green',
+				zorder: zorder.map_cursor_low,
 				restrictions:	[
 											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
 										[/^((?!(arrow)).)*$/, /arrow/, /arrow/],
