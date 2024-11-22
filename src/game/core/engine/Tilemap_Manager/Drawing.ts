@@ -108,6 +108,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 
 	): Asset_Blit_Tilemap => {
 
+		const mtp_results = Tilemap_Manager_ƒ.mtp_scan(me, _AM);
 
 		//step over all of the various "tile maps", like 'ui' or 'terrain', and collate all the tiles.
 		let asset_maps = _.map(me.tile_maps as unknown as Dictionary<TileMap>, (tile_map, tilemap_name) => {
@@ -117,14 +118,32 @@ export const Tilemap_Manager_ƒ_Drawing = {
 
 					let pos = {x: col_index, y: row_index};
 
-					return Tilemap_Manager_ƒ.get_asset_list_at_coords(
-						me,
-						_AM,
-						_BM,
-						pos,
-						tile_name,
-						tilemap_name as unknown as TileMapKeys
-					);
+					let asset_list: Asset_Blit_List = [];
+					if( !includes( pos , mtp_results.reserved_tiles) ){
+						asset_list = Tilemap_Manager_ƒ.get_asset_list_at_coords(
+							me,
+							_AM,
+							_BM,
+							pos,
+							tile_name,
+							tilemap_name as unknown as TileMapKeys
+						);
+					}
+
+					if( includes( pos , mtp_results.reserved_tiles) ){
+						const matching_anchor = find( propEq(pos, 'location') ) (mtp_results.anchor_data);
+
+						if(matching_anchor){
+
+							asset_list.push({
+								//@ts-ignore
+								id: matching_anchor.graphic,
+								zorder: 1,
+							})
+						}
+					}
+
+					return asset_list;
 				});
 			});
 
