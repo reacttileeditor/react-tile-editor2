@@ -96,8 +96,9 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				});
 			});
 
-			_AM.TileRNG.reset();
 		});
+
+		_AM.TileRNG.reset();
 
 		//TODO -- merge the tilemaps!  don't throw one of them away.
 		return asset_maps[0];
