@@ -131,14 +131,14 @@ export const Tilemap_Manager_ƒ_Drawing = {
 					}
 
 					if( includes( pos , mtp_results.reserved_tiles) ){
-						const matching_anchor = find( propEq(pos, 'location') ) (mtp_results.anchor_data);
+						//@ts-ignore
+						const matching_anchor: MTP_Anchor_Data = find( propEq(pos, 'location') ) (mtp_results.anchor_data);
 
 						if(matching_anchor){
 
 							asset_list.push({
-								//@ts-ignore
 								id: matching_anchor.graphic,
-								zorder: 1,
+								zorder: matching_anchor.zorder,
 							})
 						}
 					}
@@ -327,6 +327,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 												x: map_tile_col_index +  ({x: graphic_item.anchor.x, y: graphic_item.anchor.y}).x + bump( map_tile_row_index, graphic_item.anchor.y), 
 												y: map_tile_row_index + ({x: graphic_item.anchor.x, y: graphic_item.anchor.y}).y
 											},
+											zorder: graphic_item.zorder,
 											graphic: graphic_item.id,
 										})
 									})

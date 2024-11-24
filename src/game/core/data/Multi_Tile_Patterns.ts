@@ -28,6 +28,7 @@ type MTP_Graphic_Item = {
 export type MTP_Anchor_Data = {
 	location: Point2D,
 	graphic: string,
+	zorder: number,
 }
 
 /*
@@ -77,7 +78,7 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 			],
 			graphics: [{
 				id: 'multi-tile-pattern-test2',
-				zorder: zorder.rocks,
+				zorder: zorder.grass,
 				anchor: {x: 1, y: 3},
 			}],
 		},{
@@ -93,7 +94,7 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 			],
 			graphics: [{
 				id: 'multi-tile-pattern-test1',
-				zorder: zorder.rocks,
+				zorder: zorder.grass,
 				anchor: {x: 1, y: 2},
 			}],
 		}],
