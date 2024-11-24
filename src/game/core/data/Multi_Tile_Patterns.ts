@@ -42,6 +42,26 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 		name: "menhir2",
 		variants: [{
 			graphics: {
+				id: 'menhir2_mtp_1',
+				zorder: zorder.rocks,
+				restrictions:	[
+					[/.*/,	/.*/,	/.*/,		/.*/],
+						[/.*/, /menhir2/,	/.*/, /.*/],
+					[/.*/,	/menhir2/,	/menhir2/,	/.*/],
+						[/.*/, /menhir2/,	/.*/, /.*/],
+					[/.*/,	/.*/,	/.*/,		/.*/],
+		],
+				claims:	[
+					[false,	false,	false,	false],
+						[false, true,	false,	false],
+					[false,	true,	true,	false],
+						[false,	true,	false,	false],
+					[false,	false,	false,	false],
+				],
+				anchor: {x: 1, y: 3},
+			},
+		},{
+			graphics: {
 				id: 'multi-tile-pattern-test2',
 				zorder: zorder.rocks,
 				restrictions:	[

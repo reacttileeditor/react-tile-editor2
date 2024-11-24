@@ -39,6 +39,9 @@ export const image_data_list: Array<ImageData> = [{
 	url: "multi-tile-pattern-test4.png",
 	name: "multi-tile-pattern-test4",
 },{
+	url: "menhir2_mtp_1.png",
+	name: "menhir2_mtp_1",
+},{
 	url: "char1.png",
 	name: "hermit",
 },{
