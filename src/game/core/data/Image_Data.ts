@@ -45,6 +45,12 @@ export const image_data_list: Array<ImageData> = [{
 	url: "menhir2_mtp_1b.png",
 	name: "menhir2_mtp_1b",
 },{
+	url: "menhir2_mtp_2.png",
+	name: "menhir2_mtp_2",
+},{
+	url: "menhir2_mtp_2b.png",
+	name: "menhir2_mtp_2b",
+},{
 	url: "char1.png",
 	name: "hermit",
 },{
