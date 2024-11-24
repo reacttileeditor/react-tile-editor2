@@ -16,7 +16,7 @@ export type Multi_Tile_Pattern = {
 interface MTP_Variant_Item {
 	restrictions: MTP_Restrictions,
 	claims: Array<Array<boolean>>,
-	graphics: MTP_Graphic_Item,
+	graphics: Array<MTP_Graphic_Item>,
 };
 
 type MTP_Graphic_Item = {
@@ -55,11 +55,11 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 					[false,	true,	false,	false],
 				[false,	false,	false,	false],
 			],
-			graphics: {
+			graphics: [{
 				id: 'menhir2_mtp_1',
 				zorder: zorder.rocks,
 				anchor: {x: 1, y: 3},
-			},
+			}],
 		},{
 			restrictions:	[
 				[/.*/,	/.*/,	/.*/,		/.*/],
@@ -75,11 +75,11 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 					[false,	true,	false,	false],
 				[false,	false,	false,	false],
 			],
-			graphics: {
+			graphics: [{
 				id: 'multi-tile-pattern-test2',
 				zorder: zorder.rocks,
 				anchor: {x: 1, y: 3},
-			},
+			}],
 		},{
 			restrictions:	[
 				[/.*/,	/.*/,	/.*/,		/.*/],
@@ -91,11 +91,11 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 					[false,	true,	false,	false],
 				[false,	true,	false,	false],
 			],
-			graphics: {
+			graphics: [{
 				id: 'multi-tile-pattern-test1',
 				zorder: zorder.rocks,
 				anchor: {x: 1, y: 2},
-			},
+			}],
 		}],
 	}
 ];

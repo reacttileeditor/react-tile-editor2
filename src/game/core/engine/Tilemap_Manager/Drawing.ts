@@ -321,12 +321,14 @@ export const Tilemap_Manager_ƒ_Drawing = {
 								))
 
 								if( abort_match == false ){
-									anchor_data.push({
-										location: {
-											x: map_tile_col_index +  ({x: mtp_variant.graphics.anchor.x, y: mtp_variant.graphics.anchor.y}).x + bump( map_tile_row_index, mtp_variant.graphics.anchor.y), 
-											y: map_tile_row_index + ({x: mtp_variant.graphics.anchor.x, y: mtp_variant.graphics.anchor.y}).y
-										},
-										graphic: mtp_variant.graphics.id,
+									map(mtp_variant.graphics, (graphic_item)=>{
+										anchor_data.push({
+											location: {
+												x: map_tile_col_index +  ({x: graphic_item.anchor.x, y: graphic_item.anchor.y}).x + bump( map_tile_row_index, graphic_item.anchor.y), 
+												y: map_tile_row_index + ({x: graphic_item.anchor.x, y: graphic_item.anchor.y}).y
+											},
+											graphic: graphic_item.id,
+										})
 									})
 								}
 							}

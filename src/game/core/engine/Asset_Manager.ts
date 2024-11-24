@@ -302,7 +302,7 @@ export const Asset_Manager_ƒ = {
 				if( size(winnowed) > 1){
 					//row sizes should all be the same, period.
 
-					throw new Error( `MTP has mismatching row sizes.  Graphic Asset id: ${variant.graphics.id}` );
+					throw new Error( `MTP has mismatching row sizes.  Graphic Asset id: ${variant.graphics[0].id}` );
 
 
 					return false;
