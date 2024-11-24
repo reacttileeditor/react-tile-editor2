@@ -255,7 +255,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 								If every member of the MTP comes up with a true match, push the tile in question to the array of reserved tiles.
 							*/
 							const mtp_test = (						
-								map(mtp_variant.graphics.restrictions, (row, mtp_row_index)=>(
+								map(mtp_variant.restrictions, (row, mtp_row_index)=>(
 
 									(
 										map(row, (mtp_col, mtp_col_index)=>{
@@ -276,7 +276,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 
 												//console.log(`mtp @ ${mtp_col_index}, ${mtp_row_index}, map @ ${map_tile_col_index}, ${map_tile_row_index}, ${tile_name}, ${mtp_col}, ${test} bump: ${bump(map_tile_row_index, mtp_row_index)}, in reserve: ${includes(test_pos, reserved_tiles) }`)
 
-												let already_taken = includes(test_pos, reserved_tiles) && (mtp_variant.graphics.claims[mtp_row_index]?.[mtp_col_index]);
+												let already_taken = includes(test_pos, reserved_tiles) && (mtp_variant.claims[mtp_row_index]?.[mtp_col_index]);
 
 												if(already_taken){
 													abort_match = true
@@ -299,7 +299,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 
 							if( did_mtp_match ){
 
-								map(mtp_variant.graphics.claims, (claims_row, claims_row_index)=>(
+								map(mtp_variant.claims, (claims_row, claims_row_index)=>(
 
 									(
 										map(claims_row, (claims_col, claims_col_index)=>{

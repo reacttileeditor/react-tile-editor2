@@ -289,11 +289,11 @@ export const Asset_Manager_ƒ = {
 		const is_valid = is_all_true(map(mtp_data, (tile_type)=> (
 			is_all_true(map(tile_type.variants, (variant)=>{
 
-				const restriction_row_sizes = map(variant.graphics.restrictions, (row)=>(
+				const restriction_row_sizes = map(variant.restrictions, (row)=>(
 					size(row)	
 				))
 
-				const claim_row_sizes = map(variant.graphics.restrictions, (row)=>(
+				const claim_row_sizes = map(variant.restrictions, (row)=>(
 					size(row)	
 				))
 
@@ -307,8 +307,8 @@ export const Asset_Manager_ƒ = {
 
 					return false;
 				} else {
-					max_mtp_width = Math.max(max_mtp_width, size(variant.graphics.restrictions[0]));
-					max_mtp_height = Math.max(max_mtp_height, size(variant.graphics.restrictions));
+					max_mtp_width = Math.max(max_mtp_width, size(variant.restrictions[0]));
+					max_mtp_height = Math.max(max_mtp_height, size(variant.restrictions));
 
 					me.static_vals.multi_tile_pattern_metadata = {
 						...me.static_vals.multi_tile_pattern_metadata,

@@ -14,14 +14,14 @@ export type Multi_Tile_Pattern = {
 };
 
 interface MTP_Variant_Item {
+	restrictions: MTP_Restrictions,
+	claims: Array<Array<boolean>>,
 	graphics: MTP_Graphic_Item,
 };
 
 type MTP_Graphic_Item = {
 	id: string,
 	zorder: number,
-	restrictions: MTP_Restrictions,
-	claims: Array<Array<boolean>>,
 	anchor: Point2D,
 };
 
@@ -41,59 +41,59 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 	{
 		name: "menhir2",
 		variants: [{
+			restrictions:	[
+				[/.*/,	/.*/,	/.*/,		/.*/],
+					[/.*/, /menhir2/,	/.*/, /.*/],
+				[/.*/,	/menhir2/,	/menhir2/,	/.*/],
+					[/.*/, /menhir2/,	/.*/, /.*/],
+				[/.*/,	/.*/,	/.*/,		/.*/],
+			],
+			claims:	[
+				[false,	false,	false,	false],
+					[false, true,	false,	false],
+				[false,	true,	true,	false],
+					[false,	true,	false,	false],
+				[false,	false,	false,	false],
+			],
 			graphics: {
 				id: 'menhir2_mtp_1',
 				zorder: zorder.rocks,
-				restrictions:	[
-					[/.*/,	/.*/,	/.*/,		/.*/],
-						[/.*/, /menhir2/,	/.*/, /.*/],
-					[/.*/,	/menhir2/,	/menhir2/,	/.*/],
-						[/.*/, /menhir2/,	/.*/, /.*/],
-					[/.*/,	/.*/,	/.*/,		/.*/],
-		],
-				claims:	[
-					[false,	false,	false,	false],
-						[false, true,	false,	false],
-					[false,	true,	true,	false],
-						[false,	true,	false,	false],
-					[false,	false,	false,	false],
-				],
 				anchor: {x: 1, y: 3},
 			},
 		},{
+			restrictions:	[
+				[/.*/,	/.*/,	/.*/,		/.*/],
+					[/.*/, /menhir2/,	/.*/, /.*/],
+				[/.*/,	/.*/,	/menhir2/,	/.*/],
+					[/.*/, /menhir2/,	/.*/, /.*/],
+				[/.*/,	/.*/,	/.*/,		/.*/],
+			],
+			claims:	[
+				[false,	false,	false,	false],
+					[false, true,	false,	false],
+				[false,	false,	true,	false],
+					[false,	true,	false,	false],
+				[false,	false,	false,	false],
+			],
 			graphics: {
 				id: 'multi-tile-pattern-test2',
 				zorder: zorder.rocks,
-				restrictions:	[
-					[/.*/,	/.*/,	/.*/,		/.*/],
-						[/.*/, /menhir2/,	/.*/, /.*/],
-					[/.*/,	/.*/,	/menhir2/,	/.*/],
-						[/.*/, /menhir2/,	/.*/, /.*/],
-					[/.*/,	/.*/,	/.*/,		/.*/],
-		],
-				claims:	[
-					[false,	false,	false,	false],
-						[false, true,	false,	false],
-					[false,	false,	true,	false],
-						[false,	true,	false,	false],
-					[false,	false,	false,	false],
-				],
 				anchor: {x: 1, y: 3},
 			},
 		},{
+			restrictions:	[
+				[/.*/,	/.*/,	/.*/,		/.*/],
+					[/.*/,	/menhir2/,	/.*/,	/.*/],
+				[/.*/, /menhir2/,	/.*/,	/.*/]
+			],
+			claims:	[
+				[false,	false,	false,	false],
+					[false,	true,	false,	false],
+				[false,	true,	false,	false],
+			],
 			graphics: {
 				id: 'multi-tile-pattern-test1',
 				zorder: zorder.rocks,
-				restrictions:	[
-					[/.*/,	/.*/,	/.*/,		/.*/],
-						[/.*/,	/menhir2/,	/.*/,	/.*/],
-					[/.*/, /menhir2/,	/.*/,	/.*/]
-				],
-				claims:	[
-					[false,	false,	false,	false],
-						[false,	true,	false,	false],
-					[false,	true,	false,	false],
-				],
 				anchor: {x: 1, y: 2},
 			},
 		}],
