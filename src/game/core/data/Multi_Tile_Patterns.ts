@@ -101,7 +101,11 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 				[false,	true,	false,	false],
 			],
 			graphics: [{
-				id: 'multi-tile-pattern-test1',
+				id: 'menhir2_mtp_3',
+				zorder: zorder.rocks,
+				anchor: {x: 1, y: 2},
+			},{
+				id: 'menhir2_mtp_3b',
 				zorder: zorder.grass,
 				anchor: {x: 1, y: 2},
 			}],
