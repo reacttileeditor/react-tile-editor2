@@ -59,7 +59,11 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 			graphics: [{
 				id: 'menhir2_mtp_1',
 				zorder: zorder.rocks,
-				anchor: {x: 1, y: 3},
+				anchor: {x: 1, y: 2},
+			},{
+				id: 'menhir2_mtp_1b',
+				zorder: zorder.grass,
+				anchor: {x: 1, y: 2},
 			}],
 		},{
 			restrictions:	[
