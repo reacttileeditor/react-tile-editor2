@@ -276,6 +276,14 @@ export const tile_types: Array<TileItem> = [
 				id: 'menhir2',
 				zorder: zorder.rocks,
 			}],
+		},{
+			graphics: [{
+				id: 'dirt1',
+				zorder: zorder.grass,
+			},{
+				id: 'menhir5',
+				zorder: zorder.rocks,
+			}],
 		}],
 	},{
 		name: "menhir1",
