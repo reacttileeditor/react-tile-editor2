@@ -11,7 +11,7 @@ import * as Utils from "../engine/Utils";
 */
 
 
-export type BlobProfileName = 'stone' | 'prairie' | 'water' | 'lawn';
+export type BlobProfileName = 'stone' | 'prairie' | 'water' | 'lawn' | 'highlands' | 'crags' | 'sandpatch';
 
 export const Mapgen_Profile_ƒ = {
 	yield_blob_profile_name_list: (): Array<BlobProfileName> => {
@@ -82,6 +82,28 @@ export const Blob_Profile_Data: BlobProfiles = {
 		"dirt": 4,
 		"sandy-dirt": 1,
 		"scrub-dirt": 5
+	},
+	crags: {
+		'menhir2': 7,
+		"grass-and-scree": 3,
+		"dirt": 1,
+		"scrub-dirt": 2
+	},
+	sandpatch: {
+		'sand': 3,
+		"grass-and-scree": 3,
+		"dirt": 4,
+		"sandy-dirt": 5,
+		"scrub-dirt": 2
+	},
+	highlands: {
+		'grass': 2,
+		"grass-and-scree": 5,
+		"dirt": 4,
+		"sandy-dirt": 1,
+		"scrub-dirt": 5,
+		"scrub-dirt-tall": 3,
+		"menhir1": 2,
 	}
 };
 
