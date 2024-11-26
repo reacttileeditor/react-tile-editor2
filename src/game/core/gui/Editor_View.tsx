@@ -751,6 +751,7 @@ export const Generate_Map_Modal = (props: {
 	
 		<RadioTileGroup
 			defaultValue="blob_regions"
+			value={generation_type}
 			onChange={(value: string|number, event)=>{set_generation_type(value as unknown as MapGenerationTypes) }}
 		>
 			<RadioTile icon={<Icon as={GiPerspectiveDiceSixFacesOne} />} label="True Random" value="true_random">
