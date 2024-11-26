@@ -375,6 +375,24 @@ export const image_data_list: Array<ImageData> = [{
 	},
 },{
 	url: "hex-tile-experiment-tiles.png",
+	name: "grass-and-scree7",
+	bounds: {
+		x: 337,
+		y: 97,
+		w: 54,
+		h: 34,
+	},
+},{
+	url: "hex-tile-experiment-tiles.png",
+	name: "grass-and-scree8",
+	bounds: {
+		x: 393,
+		y: 97,
+		w: 54,
+		h: 34,
+	},
+},{
+	url: "hex-tile-experiment-tiles.png",
 	name: "bush1",
 	bounds: {
 		x: 1,

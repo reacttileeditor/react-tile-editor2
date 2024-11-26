@@ -101,6 +101,16 @@ export const tile_types: Array<TileItem> = [
 					id: 'grass-and-scree6',
 					zorder: zorder.grass,
 				}],
+			},{
+				graphics: [{
+					id: 'grass-and-scree7',
+					zorder: zorder.grass,
+				}],
+			},{
+				graphics: [{
+					id: 'grass-and-scree8',
+					zorder: zorder.grass,
+				}],
 			}
 		],
 	},{
