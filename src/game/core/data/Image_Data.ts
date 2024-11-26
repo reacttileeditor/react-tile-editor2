@@ -303,7 +303,7 @@ export const image_data_list: Array<ImageData> = [{
 	},
 },{
 	url: "hex-tile-experiment-tiles.png",
-	name: "menhir2",
+	name: "menhir-big2",
 	bounds: {
 		x: 57,
 		y: 1,
@@ -312,7 +312,16 @@ export const image_data_list: Array<ImageData> = [{
 	},
 },{
 	url: "hex-tile-experiment-tiles.png",
-	name: "menhir5",
+	name: "menhir-big4",
+	bounds: {
+		x: 168,
+		y: 0,
+		w: 56,
+		h: 60,
+	},
+},{
+	url: "hex-tile-experiment-tiles.png",
+	name: "menhir-big5",
 	bounds: {
 		x: 224,
 		y: 0,
