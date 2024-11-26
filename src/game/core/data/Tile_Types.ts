@@ -373,6 +373,38 @@ export const tile_types: Array<TileItem> = [
 				id: 'menhir-small3',
 				zorder: zorder.rocks,
 			}],
+		},{
+			graphics: [{
+				id: 'dirt1',
+				zorder: zorder.grass,
+			},{
+				id: 'menhir-small4',
+				zorder: zorder.rocks,
+			}],
+		},{
+			graphics: [{
+				id: 'dirt1',
+				zorder: zorder.grass,
+			},{
+				id: 'menhir-small5',
+				zorder: zorder.rocks,
+			}],
+		},{
+			graphics: [{
+				id: 'dirt1',
+				zorder: zorder.grass,
+			},{
+				id: 'menhir-small6',
+				zorder: zorder.rocks,
+			}],
+		},{
+			graphics: [{
+				id: 'dirt1',
+				zorder: zorder.grass,
+			},{
+				id: 'menhir-small7',
+				zorder: zorder.rocks,
+			}],
 		}],
 	},{
 		name: "red-path-unreachable-dot",

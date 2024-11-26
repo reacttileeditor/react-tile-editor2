@@ -285,6 +285,15 @@ export const image_data_list: Array<ImageData> = [{
 	},
 },{
 	url: "hex-tile-experiment-tiles.png",
+	name: "menhir-small2",
+	bounds: {
+		x: 57,
+		y: 439,
+		w: 54,
+		h: 58,
+	},
+},{
+	url: "hex-tile-experiment-tiles.png",
 	name: "menhir-small3",
 	bounds: {
 		x: 113,
@@ -294,9 +303,36 @@ export const image_data_list: Array<ImageData> = [{
 	},
 },{
 	url: "hex-tile-experiment-tiles.png",
-	name: "menhir-small2",
+	name: "menhir-small4",
 	bounds: {
-		x: 57,
+		x: 169,
+		y: 439,
+		w: 54,
+		h: 58,
+	},
+},{
+	url: "hex-tile-experiment-tiles.png",
+	name: "menhir-small5",
+	bounds: {
+		x: 224,
+		y: 439,
+		w: 54,
+		h: 58,
+	},
+},{
+	url: "hex-tile-experiment-tiles.png",
+	name: "menhir-small6",
+	bounds: {
+		x: 279,
+		y: 439,
+		w: 54,
+		h: 58,
+	},
+},{
+	url: "hex-tile-experiment-tiles.png",
+	name: "menhir-small7",
+	bounds: {
+		x: 335,
 		y: 439,
 		w: 54,
 		h: 58,
