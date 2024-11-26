@@ -15,6 +15,7 @@ export type TileName =
 "sandy-dirt" |
 "scrub-dirt" |
 "scrub-dirt-tall" |
+"bush" |
 "sand" |
 "water" |
 "water-placid" |
@@ -25,7 +26,8 @@ export type TileName =
 "arrow-green" |
 "cursor_green";
 
-
+const ground_tiles = /(dirt|grass|menhir|sand|bush)/;
+const water_tiles = /(water|water-still)/;
 
 export const tile_types: Array<TileItem> = [
 	{
@@ -134,6 +136,33 @@ export const tile_types: Array<TileItem> = [
 			}],
 		}],
 	},{
+		name: "bush",
+		variants: [{
+			graphics: [{
+				id: 'bush1',
+				zorder: zorder.rocks,
+			},{
+				id: 'grass1',
+				zorder: zorder.grass,
+			}],
+		},{
+			graphics: [{
+				id: 'bush2',
+				zorder: zorder.rocks,
+			},{
+				id: 'grass2',
+				zorder: zorder.grass,
+			}],
+		},{
+			graphics: [{
+				id: 'bush3',
+				zorder: zorder.rocks,
+			},{
+				id: 'grass3',
+				zorder: zorder.grass,
+			}],
+		}],
+	},{
 		name: "sand",
 		variants: [{
 			graphics: [{
@@ -164,16 +193,16 @@ export const tile_types: Array<TileItem> = [
 				id: 'water-edge-nw1',
 				zorder: zorder.water_edge,
 				restrictions:	[
-									[/.*/, /(dirt|grass|menhir|sand)/],
-										[/.*/, /(water|water-still)/, /.*/],
+									[/.*/, ground_tiles],
+										[/.*/, water_tiles, /.*/],
 											[/.*/, /.*/]
 								]
 			},{
 				id: 'water-edge-ne1',
 				zorder: zorder.water_edge,
 				restrictions:	[
-									[/(dirt|grass|menhir|sand)/, /.*/],
-										[/.*/, /(water|water-still)/, /.*/],
+									[ground_tiles, /.*/],
+										[/.*/, water_tiles, /.*/],
 											[/.*/, /.*/]
 								]
 			},{
@@ -181,7 +210,7 @@ export const tile_types: Array<TileItem> = [
 				zorder: zorder.water_edge,
 				restrictions:	[
 											[/.*/, /.*/],
-										[/(dirt|grass|menhir|sand)/, /(water|water-still)/, /.*/],
+										[ground_tiles, water_tiles, /.*/],
 											[/.*/, /.*/]
 								]
 			},{
@@ -189,7 +218,7 @@ export const tile_types: Array<TileItem> = [
 				zorder: zorder.water_edge,
 				restrictions:	[
 											[/.*/, /.*/],
-										[/.*/, /(water|water-still)/, /(dirt|grass|menhir|sand)/],
+										[/.*/, water_tiles, ground_tiles],
 											[/.*/, /.*/]
 								]
 			},{
@@ -197,16 +226,16 @@ export const tile_types: Array<TileItem> = [
 				zorder: zorder.water_edge,
 				restrictions:	[
 											[/.*/, /.*/],
-										[/.*/, /(water|water-still)/, /.*/],
-											[/.*/, /(dirt|grass|menhir|sand)/]
+										[/.*/, water_tiles, /.*/],
+											[/.*/, ground_tiles]
 								]
 			},{
 				id: 'water-edge-se1',
 				zorder: zorder.water_edge,
 				restrictions:	[
 											[/.*/, /.*/],
-										[/.*/, /(water|water-still)/, /.*/],
-											[ /(dirt|grass|menhir|sand)/, /.*/]
+										[/.*/, water_tiles, /.*/],
+											[ ground_tiles, /.*/]
 								]
 			}],
 		}],
@@ -220,16 +249,16 @@ export const tile_types: Array<TileItem> = [
 				id: 'water-edge-nw1',
 				zorder: zorder.water_edge,
 				restrictions:	[
-									[/.*/, /(dirt|grass|menhir|sand)/],
-										[/.*/, /(water|water-still)/, /.*/],
+									[/.*/, ground_tiles],
+										[/.*/, water_tiles, /.*/],
 											[/.*/, /.*/]
 								]
 			},{
 				id: 'water-edge-ne1',
 				zorder: zorder.water_edge,
 				restrictions:	[
-									[/(dirt|grass|menhir|sand)/, /.*/],
-										[/.*/, /(water|water-still)/, /.*/],
+									[ground_tiles, /.*/],
+										[/.*/, water_tiles, /.*/],
 											[/.*/, /.*/]
 								]
 			},{
@@ -237,7 +266,7 @@ export const tile_types: Array<TileItem> = [
 				zorder: zorder.water_edge,
 				restrictions:	[
 											[/.*/, /.*/],
-										[/(dirt|grass|menhir|sand)/, /(water|water-still)/, /.*/],
+										[ground_tiles, water_tiles, /.*/],
 											[/.*/, /.*/]
 								]
 			},{
@@ -245,7 +274,7 @@ export const tile_types: Array<TileItem> = [
 				zorder: zorder.water_edge,
 				restrictions:	[
 											[/.*/, /.*/],
-										[/.*/, /(water|water-still)/, /(dirt|grass|menhir|sand)/],
+										[/.*/, water_tiles, ground_tiles],
 											[/.*/, /.*/]
 								]
 			},{
@@ -253,16 +282,16 @@ export const tile_types: Array<TileItem> = [
 				zorder: zorder.water_edge,
 				restrictions:	[
 											[/.*/, /.*/],
-										[/.*/, /(water|water-still)/, /.*/],
-											[/.*/, /(dirt|grass|menhir|sand)/]
+										[/.*/, water_tiles, /.*/],
+											[/.*/, ground_tiles]
 								]
 			},{
 				id: 'water-edge-se1',
 				zorder: zorder.water_edge,
 				restrictions:	[
 											[/.*/, /.*/],
-										[/.*/, /(water|water-still)/, /.*/],
-											[ /(dirt|grass|menhir|sand)/, /.*/]
+										[/.*/, water_tiles, /.*/],
+											[ ground_tiles, /.*/]
 								]
 			}],
 		}],
