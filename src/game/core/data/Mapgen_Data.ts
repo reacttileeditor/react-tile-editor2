@@ -65,7 +65,7 @@ export type BlobProfiles = {
 
 export const Blob_Profile_Data: BlobProfiles = {
 	stone: {
-		'menhir2': 1,
+		'menhir-big': 1,
 	},
 	water: {
 		'water': 5,
@@ -85,7 +85,7 @@ export const Blob_Profile_Data: BlobProfiles = {
 		"bush": 1,
 	},
 	crags: {
-		'menhir2': 7,
+		'menhir-big': 7,
 		"grass-and-scree": 3,
 		"dirt": 1,
 		"scrub-dirt": 2,
@@ -106,7 +106,7 @@ export const Blob_Profile_Data: BlobProfiles = {
 		"sandy-dirt": 1,
 		"scrub-dirt": 5,
 		"scrub-dirt-tall": 3,
-		"menhir1": 2,
+		"menhir-small": 3,
 	}
 };
 

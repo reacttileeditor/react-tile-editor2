@@ -40,13 +40,13 @@ export type MTP_Anchor_Data = {
 */
 export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 	{
-		name: "menhir2",
+		name: "menhir-big",
 		variants: [{
 			restrictions:	[
 				[/.*/,	/.*/,	/.*/,		/.*/],
-					[/.*/, /menhir2/,	/.*/, /.*/],
-				[/.*/,	/menhir2/,	/menhir2/,	/.*/],
-					[/.*/, /menhir2/,	/.*/, /.*/],
+					[/.*/, /menhir-big/,	/.*/, /.*/],
+				[/.*/,	/menhir-big/,	/menhir-big/,	/.*/],
+					[/.*/, /menhir-big/,	/.*/, /.*/],
 				[/.*/,	/.*/,	/.*/,		/.*/],
 			],
 			claims:	[
@@ -68,8 +68,8 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 		},{
 			restrictions:	[
 				[/.*/,	/.*/,	/.*/,		/.*/],
-					[/.*/, /menhir2/,	/.*/, /.*/],
-				[/.*/,	/menhir2/,	/menhir2/,	/.*/],
+					[/.*/, /menhir-big/,	/.*/, /.*/],
+				[/.*/,	/menhir-big/,	/menhir-big/,	/.*/],
 					[/.*/,	/.*/,	/.*/, /.*/],
 				[/.*/,	/.*/,	/.*/,		/.*/],
 			],
@@ -92,8 +92,8 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 		},{
 			restrictions:	[
 				[/.*/,	/.*/,	/.*/,		/.*/],
-					[/.*/,	/menhir2/,	/.*/,	/.*/],
-				[/.*/, /menhir2/,	/.*/,	/.*/]
+					[/.*/,	/menhir-big/,	/.*/,	/.*/],
+				[/.*/, /menhir-big/,	/.*/,	/.*/]
 			],
 			claims:	[
 				[false,	false,	false,	false],

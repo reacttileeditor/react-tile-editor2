@@ -19,8 +19,8 @@ export type TileName =
 "sand" |
 "water" |
 "water-placid" |
-"menhir2" |
-"menhir1" |
+"menhir-big" |
+"menhir-small" |
 "red-path-unreachable-dot" |
 "arrowhead-green" |
 "arrow-green" |
@@ -321,7 +321,7 @@ export const tile_types: Array<TileItem> = [
 			}],
 		}],
 	},{
-		name: "menhir2",
+		name: "menhir-big",
 		variants: [{
 			graphics: [{
 				id: 'dirt1',
@@ -340,7 +340,7 @@ export const tile_types: Array<TileItem> = [
 			}],
 		}],
 	},{
-		name: "menhir1",
+		name: "menhir-small",
 		variants: [{
 			graphics: [{
 				id: 'dirt1',
