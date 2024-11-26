@@ -276,28 +276,28 @@ export const image_data_list: Array<ImageData> = [{
 	},
 },{
 	url: "hex-tile-experiment-tiles.png",
-	name: "menhir1",
+	name: "menhir-small1",
 	bounds: {
 		x: 1,
-		y: 1,
+		y: 439,
 		w: 54,
 		h: 58,
 	},
 },{
 	url: "hex-tile-experiment-tiles.png",
-	name: "menhir3",
+	name: "menhir-small3",
 	bounds: {
 		x: 113,
-		y: 1,
+		y: 439,
 		w: 54,
 		h: 58,
 	},
 },{
 	url: "hex-tile-experiment-tiles.png",
-	name: "menhir4",
+	name: "menhir-small2",
 	bounds: {
-		x: 169,
-		y: 1,
+		x: 57,
+		y: 439,
 		w: 54,
 		h: 58,
 	},

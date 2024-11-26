@@ -346,7 +346,7 @@ export const tile_types: Array<TileItem> = [
 				id: 'dirt1',
 				zorder: zorder.grass,
 			},{
-				id: 'menhir1',
+				id: 'menhir-small1',
 				zorder: zorder.rocks,
 			}],
 		},{
@@ -354,7 +354,7 @@ export const tile_types: Array<TileItem> = [
 				id: 'dirt1',
 				zorder: zorder.grass,
 			},{
-				id: 'menhir4',
+				id: 'menhir-small2',
 				zorder: zorder.rocks,
 			}],
 		},{
@@ -362,7 +362,7 @@ export const tile_types: Array<TileItem> = [
 				id: 'dirt1',
 				zorder: zorder.grass,
 			},{
-				id: 'menhir3',
+				id: 'menhir-small3',
 				zorder: zorder.rocks,
 			}],
 		}],
