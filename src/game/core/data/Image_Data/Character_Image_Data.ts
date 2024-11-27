@@ -1,0 +1,208 @@
+import { ImageData } from "../../engine/Asset_Manager";
+
+
+export const Character_Image_Data: Array<ImageData> = [{
+	url: "char1.png",
+	name: "hermit",
+},{
+	url: "char2-ne.png",
+	name: "peasant-ne",
+},{
+	url: "char2.png",
+	name: "peasant-se",
+},{
+	url: "char3-ne.png",
+	name: "skeleton-ne",
+},{
+	url: "characters/undead_javelineer.png",
+	name: "undead-javelineer-se",
+},{
+	url: "char3.png",
+	name: "skeleton-se",
+},{
+	url: "characters/skeleton_warrior_stand_se.png",
+	name: "skeleton_warrior_stand_se",
+	frames: 3,
+	frame_duration: 170,
+	ping_pong: true,
+	pad: 2,
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 58,
+		h: 118,
+	},
+},{
+	url: "characters/undead_javelineer_se_stand.png",
+	name: "undead_javelineer_se_stand",
+	frames: 5,
+	frame_duration: 170,
+	ping_pong: true,
+	pad: 2,
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 58,
+		h: 158,
+	},
+},{
+	url: "characters/undead_javelineer_ne_stand.png",
+	name: "undead_javelineer_ne_stand",
+},{
+	url: "characters/human_footman_stand_se.png",
+	name: "human_footman_se_stand",
+	frames: 5,
+	frame_duration: 170,
+	ping_pong: true,
+	pad: 2,
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 58,
+		h: 158,
+	},
+},{
+	url: "characters/human_footman_ne_stand.png",
+	name: "human_footman_ne_stand",
+	frames: 5,
+	frame_duration: 170,
+	ping_pong: true,
+	pad: 2,
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 78,
+		h: 158,
+	},
+},{
+	url: "characters/human_footman_se_walk.png",
+	name: "human_footman_se_walk",
+	frames: 8,
+	frame_duration: 100,
+	ping_pong: false,
+	pad: 2,
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 68,
+		h: 158,
+	},
+},{
+	url: "characters/human_footman_ne_walk.png",
+	name: "human_footman_ne_walk",
+	frames: 8,
+	frame_duration: 100,
+	ping_pong: false,
+	pad: 2,
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 68,
+		h: 158,
+	},
+},{
+	url: "characters/human_footman_ne_attack.png",
+	name: "human_footman_ne_attack",
+	frames: 10,
+	frame_duration: 100,
+	ping_pong: false,
+	pad: 2,
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 78,
+		h: 158,
+	},
+},{
+	url: "characters/human_footman_se_attack.png",
+	name: "human_footman_se_attack",
+	frames: 10,
+	frame_duration: 100,
+	ping_pong: false,
+	pad: 2,
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 78,
+		h: 158,
+	},
+},{
+	url: "characters/undead_javelineer_se_attack.png",
+	name: "undead_javelineer_se_attack",
+	frames: 12,
+	frame_duration: 100,
+	ping_pong: false,
+	pad: 2,
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 98,
+		h: 178,
+	},
+},{
+	url: "char2-se-walk.png",
+	name: "peasant-se-walk",
+	frames: 8,
+	frame_duration: 100,
+	ping_pong: false,
+	pad: 2,
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 58,
+		h: 118,
+	},
+},{
+	url: "char2-ne-walk.png",
+	name: "peasant-ne-walk",
+	frames: 8,
+	frame_duration: 100,
+	ping_pong: false,
+	pad: 2,
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 58,
+		h: 118,
+	},
+},{
+	url: "characters/skeleton_warrior_walk_ne.png",
+	name: "skeleton-ne-walk",
+	frames: 8,
+	frame_duration: 100,
+	ping_pong: false,
+	pad: 2,
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 60,
+		h: 120,
+	},
+},{
+	url: "char3-se-walk.png",
+	name: "skeleton-se-walk",
+	frames: 8,
+	frame_duration: 100,
+	ping_pong: false,
+	pad: 2,
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 60,
+		h: 120,
+	},
+},{
+	url: "char3-se-attack.png",
+	name: "skeleton-se-attack",
+	frames: 10,
+	frame_duration: 100,
+	ping_pong: false,
+	pad: 2,
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 98,
+		h: 138,
+	},
+}];
+	
