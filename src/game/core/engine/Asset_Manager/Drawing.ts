@@ -146,13 +146,15 @@ export const Drawing = {
 	*/
 
 
-	get_current_frame_number_and_image_data_for_animation_sequence: (
-		image_data_array: Array<Image_Data>,
+	get_current_frame_number_and_asset_data_for_animation_sequence: (
+		asset_data_records: Array<Asset_Data_Record>,
 		current_milliseconds: number
 	): {
-		current_frame: number,
-		image_data: Image_Data,
+		current_time_offset: number,
+		asset_data: Asset_Data_Record,
 	} => {
+		const image_data_array = map(asset_data_records, (val)=>(val.image_data))
+
 		const animation_durations: Array<number> = map(image_data_array, (image_data)=>{
 			let frame_count = image_data.frames ? image_data.frames : 1;
 			let frame_duration = image_data.frame_duration ? image_data.frame_duration : 20;
@@ -189,6 +191,7 @@ export const Drawing = {
 		/*
 			Using that, extract the image data for that animation (easy).
 		*/
+		const asset_data = asset_data_records[animation_index];
 		const image_data = image_data_array[animation_index];
 
 
@@ -202,12 +205,11 @@ export const Drawing = {
 		/*
 			Then, at last, we can fall back on our regular animation logic to find out the frame number for said sub-animation:
 		*/
-		Asset_Manager_ƒ.get_current_frame_number(image_data)
+		const final_frame_number = Asset_Manager_ƒ.get_current_frame_number(image_data, current_time_offset_in_sub_animation);
 
-		debugger;
 		return {
-			current_frame: 1,
-			image_data: image_data,
+			current_time_offset: current_time_offset_in_sub_animation,
+			asset_data: asset_data,
 		}
 
 	},
@@ -217,8 +219,8 @@ export const Drawing = {
 /*----------------------- actual draw ops -----------------------*/
 	draw_image_for_asset_name: (p: {
 		_AM: Asset_Manager_Data,
-		asset_name: string,
 		_BM: Blit_Manager_Data,
+		asset_name: string,
 		pos: Point2D,
 		zorder: number,
 		current_milliseconds: number,
@@ -235,20 +237,25 @@ export const Drawing = {
 			const asset_data_records = Asset_Manager_ƒ.get_data_for_asset_name(p._AM, p.asset_name);
 
 			if( size(asset_data_records) > 1 ){
-				Asset_Manager_ƒ.get_current_frame_number_and_image_data_for_animation_sequence(
-					map(asset_data_records, (val)=>(val.image_data)),
+				let info = Asset_Manager_ƒ.get_current_frame_number_and_asset_data_for_animation_sequence(
+					asset_data_records,
 					p.current_milliseconds
 				)
 
+				Asset_Manager_ƒ.draw_image_for_asset_name__single_image({
+					...p,
+					asset_data: info.asset_data,
+					current_milliseconds: info.current_time_offset,
+				})				
 			}
 
 
-			//if( size(asset_data_records) == 1 ){
+			if( size(asset_data_records) == 1 ){
 				Asset_Manager_ƒ.draw_image_for_asset_name__single_image({
 					asset_data: asset_data_records[0],
 					...p,
 				})
-			//}
+			}
 		}
 	},
 
