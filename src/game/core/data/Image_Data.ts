@@ -14,5 +14,5 @@ export const image_data_list: Array<Image_Data> = flatten([
 ]);
 	
 export const image_sequence_data_list: Image_Sequence_Dictionary = {
-	test_repeating_anim: ['animation_test', 'water-underlay'],
+	test_repeating_anim: ['animation_test', 'animation_test2', 'water-underlay'],
 }

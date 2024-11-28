@@ -504,5 +504,17 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 	frames: 4,
 	frame_duration: 200,
 	ping_pong: true
+},{
+	url: "animation_test2.png",
+	name: "animation_test2",
+	bounds: {
+		x: 0,
+		y: 0,
+		w: 38,
+		h: 21,
+	},
+	frames: 5,
+	frame_duration: 200,
+	ping_pong: false
 }];
 	
