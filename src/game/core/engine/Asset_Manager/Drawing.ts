@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { Asset_Manager_Data, Asset_Manager_ƒ, Autotile_Restriction_Sample, Image_Data, Tile_Comparator_Sample } from "./Asset_Manager";
+import { Asset_Data_Record, Asset_Manager_Data, Asset_Manager_ƒ, Autotile_Restriction_Sample, Image_Data, Tile_Comparator_Sample } from "./Asset_Manager";
 import { filter, isString, map, size } from "lodash";
 import { is_all_true, ƒ } from "../Utils";
 import { concat, uniq } from "ramda";
@@ -142,7 +142,7 @@ export const Drawing = {
 
 
 /*----------------------- actual draw ops -----------------------*/
-	xdraw_image_for_asset_name: (p: {
+	draw_image_for_asset_name: (p: {
 		_AM: Asset_Manager_Data,
 		asset_name: string,
 		_BM: Blit_Manager_Data,
@@ -159,18 +159,18 @@ export const Drawing = {
 			Before we get started, we have a special 'magic name' used to make various objects (such as floating hp numbers) skip drawing a sprite entirely.
 		*/
 		if( p.asset_name !== 'omit_image' ){
-			const { raw_image, metadata, image_data } = Asset_Manager_ƒ.get_data_for_asset_name(p._AM, p.asset_name);
+			const asset_data_records = Asset_Manager_ƒ.get_data_for_asset_name(p._AM, p.asset_name);
 
-			
-			if(image_data == undefined){
-				console.error(`Could not find an image in our image_data_list for the asset named ${p.asset_name}.`); 
-			} else {
-
-			}
+			//if( size(asset_data_records) == 1 ){
+				Asset_Manager_ƒ.draw_image_for_asset_name__single_image({
+					asset_data: asset_data_records[0],
+					...p,
+				})
+			//}
 		}
 	},
 
-	draw_image_for_asset_name: (p: {
+	draw_image_for_asset_name__single_image: (p: {
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 		asset_name: string,
@@ -182,81 +182,72 @@ export const Drawing = {
 		brightness: number,
 		horizontally_flipped: boolean,
 		vertically_flipped: boolean,
+		asset_data: Asset_Data_Record,
 	}) => {
+		const { raw_image, metadata, image_data } = p.asset_data;
+
+		let dim = metadata ? metadata.dim : { w: 20, h: 20 };  //safe-access
+
+		let frame_padding = image_data.pad ? image_data.pad : 0;
+
+		const current_frame_num = Asset_Manager_ƒ.get_current_frame_number(image_data, p.current_milliseconds);
+
 		/*
-			Before we get started, we have a special 'magic name' used to make various objects (such as floating hp numbers) skip drawing a sprite entirely.
+			This assumes the canvas is pre-translated so our draw position is at the final point, so we don't have to do any calculation for that, here.
+		
+			This is the place where we do all 'spritesheet' handling, and also where we do all animation handling.
 		*/
-		if( p.asset_name !== 'omit_image' ){
-			const { raw_image, metadata, image_data } = Asset_Manager_ƒ.get_data_for_asset_name(p._AM, p.asset_name);
-
-			
-			if(image_data == undefined){
-				console.error(`Could not find an image in our image_data_list for the asset named ${p.asset_name}.`); 
-			} else {
-				let dim = metadata ? metadata.dim : { w: 20, h: 20 };  //safe-access
-
-				let frame_padding = image_data.pad ? image_data.pad : 0;
-
-				const current_frame_num = Asset_Manager_ƒ.get_current_frame_number(image_data, p.current_milliseconds);
-
-				/*
-					This assumes the canvas is pre-translated so our draw position is at the final point, so we don't have to do any calculation for that, here.
-				
-					This is the place where we do all 'spritesheet' handling, and also where we do all animation handling.
-				*/
-			
-				if( !Asset_Manager_ƒ.isAssetSpritesheet(metadata) ){
-					Blit_Manager_ƒ.queue_draw_op({
-						_BM:					p._BM,
-						pos:					{ x: p.pos.x, y: p.pos.y },
-						z_index:				p.zorder,
-						opacity:				p.opacity,
-						rotate:					p.rotate,
-						brightness:				p.brightness,
-						horizontally_flipped:	p.horizontally_flipped,
-						vertically_flipped:		p.vertically_flipped,
-						drawing_data:			{
-													image_ref: raw_image,
-													src_rect: {
-														x:	0,
-														y:	0,
-														w:	metadata.dim.w,
-														h:	metadata.dim.h,
-													},
-													dest_point: {
-														x:			-Math.floor(dim.w/2),
-														y:			-Math.floor(dim.h/2),
-													}
-												}
-					});
-				} else {
-					Blit_Manager_ƒ.queue_draw_op({
-						_BM:					p._BM,
-						pos:					{ x: p.pos.x, y: p.pos.y },
-						z_index:				p.zorder,
-						opacity:				p.opacity,
-						rotate:					p.rotate,
-						brightness:				p.brightness,
-						horizontally_flipped:	p.horizontally_flipped,
-						vertically_flipped:		p.vertically_flipped,
-						drawing_data:			{
-													image_ref: raw_image,
-													src_rect: {
-														x:	metadata.bounds.x + (current_frame_num * metadata.bounds.w) + ((current_frame_num) * frame_padding),
-														y:	metadata.bounds.y,
-														w:	metadata.bounds.w,
-														h:	metadata.bounds.h,
-													},
-													dst_rect: {
-														x:	-Math.floor(metadata.bounds.w/2),
-														y:	-Math.floor(metadata.bounds.h/2),
-														w:	metadata.bounds.w,
-														h:	metadata.bounds.h,
-													},
-												}
-					});
-				}
-			}
+	
+		if( !Asset_Manager_ƒ.isAssetSpritesheet(metadata) ){
+			Blit_Manager_ƒ.queue_draw_op({
+				_BM:					p._BM,
+				pos:					{ x: p.pos.x, y: p.pos.y },
+				z_index:				p.zorder,
+				opacity:				p.opacity,
+				rotate:					p.rotate,
+				brightness:				p.brightness,
+				horizontally_flipped:	p.horizontally_flipped,
+				vertically_flipped:		p.vertically_flipped,
+				drawing_data:			{
+											image_ref: raw_image,
+											src_rect: {
+												x:	0,
+												y:	0,
+												w:	metadata.dim.w,
+												h:	metadata.dim.h,
+											},
+											dest_point: {
+												x:			-Math.floor(dim.w/2),
+												y:			-Math.floor(dim.h/2),
+											}
+										}
+			});
+		} else {
+			Blit_Manager_ƒ.queue_draw_op({
+				_BM:					p._BM,
+				pos:					{ x: p.pos.x, y: p.pos.y },
+				z_index:				p.zorder,
+				opacity:				p.opacity,
+				rotate:					p.rotate,
+				brightness:				p.brightness,
+				horizontally_flipped:	p.horizontally_flipped,
+				vertically_flipped:		p.vertically_flipped,
+				drawing_data:			{
+											image_ref: raw_image,
+											src_rect: {
+												x:	metadata.bounds.x + (current_frame_num * metadata.bounds.w) + ((current_frame_num) * frame_padding),
+												y:	metadata.bounds.y,
+												w:	metadata.bounds.w,
+												h:	metadata.bounds.h,
+											},
+											dst_rect: {
+												x:	-Math.floor(metadata.bounds.w/2),
+												y:	-Math.floor(metadata.bounds.h/2),
+												w:	metadata.bounds.w,
+												h:	metadata.bounds.h,
+											},
+										}
+			});
 		}
 	},
 

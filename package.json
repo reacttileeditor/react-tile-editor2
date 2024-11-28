@@ -2,7 +2,6 @@
   "name": "react-tile-editor",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://rkettering.github.io/wiergild",
   "dependencies": {
     "@juliendargelos/easings": "^0.0.6",
     "@rsuite/icons": "^1.0.3",

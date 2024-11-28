@@ -455,7 +455,7 @@ export const Creature_Behavior_ƒ = {
 		}
 
 
-		const image_data = Asset_Manager_ƒ.get_data_for_asset_name(_AM, Creature_ƒ.yield_attack_asset_for_direction( me, me.facing_direction )).image_data;
+		const image_data = Asset_Manager_ƒ.get_data_for_individual_asset(_AM, Creature_ƒ.yield_attack_asset_for_direction( me, me.facing_direction )).image_data;
 
 
 		if(image_data != undefined){

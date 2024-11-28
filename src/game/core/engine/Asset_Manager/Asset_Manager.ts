@@ -89,6 +89,11 @@ export interface Image_Sequence_Dictionary {
 }
 
 
+export interface Asset_Data_Record {
+	raw_image: HTMLImageElement,
+	image_data: Image_Data,
+	metadata: Assets_Metadata_Spritesheet_Item|Assets_Metadata_Single_Image_Item
+}
 
 export type Graphic_Item_Generic = Graphic_Item_Autotiled|Graphic_Item_Basic;
 

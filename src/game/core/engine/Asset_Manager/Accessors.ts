@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { Asset_Manager_Data, Asset_Manager_ƒ, Assets_Metadata_Single_Image_Item, Assets_Metadata_Spritesheet_Item, Autotile_Restriction_Sample, Graphic_Item_Basic, Graphic_Item_Autotiled, Graphic_Item_Generic, Image_Data, Tile_Comparator_Sample, Variant_Item } from "./Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, Assets_Metadata_Single_Image_Item, Assets_Metadata_Spritesheet_Item, Autotile_Restriction_Sample, Graphic_Item_Basic, Graphic_Item_Autotiled, Graphic_Item_Generic, Image_Data, Tile_Comparator_Sample, Variant_Item, Asset_Data_Record } from "./Asset_Manager";
 import { filter, find, flatten, isString, map, size, sortBy, sortedUniq } from "lodash";
 import { is_all_true, ƒ } from "../Utils";
 import { concat, uniq, filter as r_filter, keys, includes } from "ramda";
@@ -52,33 +52,41 @@ export const Accessors = {
 
 
 /*----------------------- asset data access -----------------------*/
-
-
-	get_data_for_asset_name: (
+	get_data_for_individual_asset: (
 		_AM: Asset_Manager_Data,
 		asset_name: string,
-	): {
-		raw_image: HTMLImageElement,
-		image_data: Image_Data|undefined,
-		metadata: Assets_Metadata_Spritesheet_Item|Assets_Metadata_Single_Image_Item
-	} => {
-		let { raw_image_list, image_data_list, assets_meta, image_sequence_data_list } = _AM.static_vals;
+	): Asset_Data_Record => {
+		let { raw_image_list, image_data_list, assets_meta } = _AM.static_vals;
 
-		if( includes(asset_name, keys(image_sequence_data_list)) ){
-			let real_asset_name = image_sequence_data_list[asset_name][0];
+		const image_data = find(image_data_list, {name: asset_name})
 
-			return {
-				raw_image: raw_image_list[ real_asset_name ]!,
-				image_data: find(image_data_list, {name: real_asset_name}),
-				metadata: assets_meta[ real_asset_name ]!
-			};
+		if(image_data == undefined){
+			throw new Error( `Could not find an image in our image_data_list for the asset named ${asset_name}.` )
 		}
 
 		return {
 			raw_image: raw_image_list[ asset_name ]!,
-			image_data: find(image_data_list, {name: asset_name}),
+			image_data: find(image_data_list, {name: asset_name})!,
 			metadata: assets_meta[ asset_name ]!
-		};
+		};		
+	},
+
+	get_data_for_asset_name: (
+		_AM: Asset_Manager_Data,
+		asset_name: string,
+	): Array<Asset_Data_Record> => {
+		let { raw_image_list, image_data_list, assets_meta, image_sequence_data_list } = _AM.static_vals;
+
+		if( includes(asset_name, keys(image_sequence_data_list)) ){
+			let real_asset_name = image_sequence_data_list[asset_name][0];
+			const asset_names = image_sequence_data_list[asset_name];
+
+			return map( asset_names, (individual_asset_name)=>(
+				Asset_Manager_ƒ.get_data_for_individual_asset(_AM, individual_asset_name)
+			));
+		} else {
+			return [Asset_Manager_ƒ.get_data_for_individual_asset(_AM, asset_name)];
+		}
 	},
 
 /*----------------------- object info -----------------------*/
