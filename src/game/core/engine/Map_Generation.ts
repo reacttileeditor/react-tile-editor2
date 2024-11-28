@@ -2,18 +2,18 @@ import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
 import _, { Dictionary, cloneDeep, countBy, isArray, isEmpty, isEqual, map, range, size, sortBy } from "lodash";
 
-import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager/Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, Image_List_Cache } from "./Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
 import * as Utils from "./Utils";
 import { dice_weighted, modulo, ƒ } from "./Utils";
 import { cubic } from '@juliendargelos/easings'
 
-import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager/Asset_Manager";
+import { Tile_Comparator_Sample, Tile_Position_Comparator_Sample } from "./Asset_Manager/Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import { concat, filter, flatten, includes, keys, slice, uniq } from "ramda";
-import { TileMap, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager/Tilemap_Manager";
+import { Tilemap_Single, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager/Tilemap_Manager";
 import { BlobProfileName, Mapgen_Profile_ƒ } from "../data/Mapgen_Data";
-import { TileName } from "../data/Tile_Types";
+import { Tile_Name } from "../data/Tile_Types";
 
 
 type TileBlob = {
@@ -43,7 +43,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 		const map_size = Tilemap_Manager_ƒ.get_map_bounds(me);
 
 
-		const fresh_terrain_tilemap: TileMap = _.range(map_size.h).map( (row_value, row_index) => {
+		const fresh_terrain_tilemap: Tilemap_Single = _.range(map_size.h).map( (row_value, row_index) => {
 			return _.range(map_size.w).map( (col_value, col_index) => {
 				return Map_Generation_ƒ.get_random_tile_name(_AM)
 			});
@@ -220,7 +220,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 		const map_size = Tilemap_Manager_ƒ.get_map_bounds(me);
 
 
-		const fresh_terrain_tilemap: TileMap = _.range(map_size.h).map( (row_value, row_index) => {
+		const fresh_terrain_tilemap: Tilemap_Single = _.range(map_size.h).map( (row_value, row_index) => {
 			return _.range(map_size.w).map( (col_value, col_index) => {
 				return ''
 				// return Asset_Manager_ƒ.yield_tile_name_list(_AM)[

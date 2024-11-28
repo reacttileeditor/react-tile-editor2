@@ -1,7 +1,7 @@
 import { keys, map, range, size } from "lodash";
 import { zorder } from "../constants/zorder";
-import { Asset_Manager_Data, Asset_Manager_ƒ, StaticValues, TileItem } from "../engine/Asset_Manager/Asset_Manager";
-import { TileName } from "./Tile_Types";
+import { Asset_Manager_Data, Asset_Manager_ƒ, Static_Values, Tile_Item } from "../engine/Asset_Manager/Asset_Manager";
+import { Tile_Name } from "./Tile_Types";
 import * as Utils from "../engine/Utils";
 
 /*
@@ -26,13 +26,13 @@ export const Mapgen_Profile_ƒ = {
 		];
 	},
 
-	produce_array_of_tiles_for_profile: (profile_name: BlobProfileName): Array<TileName> => {
+	produce_array_of_tiles_for_profile: (profile_name: BlobProfileName): Array<Tile_Name> => {
 		const blob_data = Blob_Profile_Data[profile_name];
-		const tile_array: Array<TileName> = [];
+		const tile_array: Array<Tile_Name> = [];
 
 		map(
 			blob_data,
-			(count: number, blob_name: TileName)=>{
+			(count: number, blob_name: Tile_Name)=>{
 				let iter = count as unknown as number;
 
 				while(iter > 0){
@@ -47,7 +47,7 @@ export const Mapgen_Profile_ƒ = {
 	},
 
 	get_random_tile_name_from_profile: (profile_name: BlobProfileName): string => {
-		const random_tile_possibilities: Array<TileName> = Mapgen_Profile_ƒ.produce_array_of_tiles_for_profile(profile_name);
+		const random_tile_possibilities: Array<Tile_Name> = Mapgen_Profile_ƒ.produce_array_of_tiles_for_profile(profile_name);
 
 		return random_tile_possibilities[
 			Utils.dice( size( random_tile_possibilities ) ) -1 
@@ -58,7 +58,7 @@ export const Mapgen_Profile_ƒ = {
 
 export type BlobProfiles = {
 	[key in BlobProfileName]: {
-		[key in TileName]?: number
+		[key in Tile_Name]?: number
 	}
 }
 

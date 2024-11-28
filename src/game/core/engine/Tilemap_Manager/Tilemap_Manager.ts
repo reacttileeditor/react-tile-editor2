@@ -2,13 +2,13 @@ import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
 import _, { Dictionary, cloneDeep, isArray, isEmpty, isEqual, map, range, size } from "lodash";
 
-import { Asset_Manager_Data, Asset_Manager_ƒ, GraphicItem, ImageListCache } from "../Asset_Manager/Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, Graphic_Item_Basic, Image_List_Cache } from "../Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "../Blit_Manager";
 import * as Utils from "../Utils";
 import { is_all_true, ƒ } from "../Utils";
 
 
-import { TileComparatorSample, TilePositionComparatorSample } from "../Asset_Manager/Asset_Manager";
+import { Tile_Comparator_Sample, Tile_Position_Comparator_Sample } from "../Asset_Manager/Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../../interfaces';
 import localforage from "localforage";
 import { concat, equals, filter, find, includes, keys, propEq, reduce, slice, uniq } from "ramda";
@@ -27,48 +27,48 @@ import { Tilemap_Manager_ƒ_State_Management } from "./State_Management";
 import { Tilemap_Manager_ƒ_Initialization, metadata_init, tile_maps_init } from "./Initialization";
 
 
-export type TileViewState = {
+export type Tile_View_State = {
 	level_name: string,
-	metadata: MetaData,
-	tile_maps: TileMaps,
+	metadata: Tilemap_Metadata,
+	tile_maps: Tilemaps,
 	creature_list: Array<Creature_Map_Instance>,
 	initialized: boolean,
-} & CacheData;
+} & Cache_Data;
 
-export type CacheData = {
+export type Cache_Data = {
 	asset_blit_list_cache: Asset_Blit_Tilemap,
 }
 
 export type Asset_Blit_Tilemap = Array<Array<Asset_Blit_List>>;
 
-export type Asset_Blit_List = Array<GraphicItem>;
+export type Asset_Blit_List = Array<Graphic_Item_Basic>;
 
 
 
-export type TileMapPersistData = {
-	tile_maps: TileMaps,
-	metadata: MetaData,
+export type Tilemap_Persist_Data = {
+	tile_maps: Tilemaps,
+	metadata: Tilemap_Metadata,
 	creature_list: Array<Creature_Map_Instance>,
 };
 
-export type SizeMetaData = {
+export type Tilemap_Size_Metadata = {
 	origin: Point2D,
 };
 
-export type MetaData = SizeMetaData;
+export type Tilemap_Metadata = Tilemap_Size_Metadata;
 
-type TileComparatorMap = Array<Array<TileComparatorSample|undefined>>;
+type TileComparatorMap = Array<Array<Tile_Comparator_Sample|undefined>>;
 
-interface _TileMaps<T> {
+interface _Tilemaps<T> {
 	terrain: T,
 	ui: T,
 }
 
-export type TileMaps =  _TileMaps<TileMap>;
+export type Tilemaps =  _Tilemaps<Tilemap_Single>;
 
-export type TileMapKeys = keyof TileMaps;
+export type Tilemap_Keys = keyof Tilemaps;
 
-export type TileMap = Array<Array<string>>;
+export type Tilemap_Single = Array<Array<string>>;
 
 export type Direction = 
 	'north_east' |
@@ -83,7 +83,7 @@ export type Direction =
 
 
 
-export type Tilemap_Manager_Data = TileViewState & CacheData;
+export type Tilemap_Manager_Data = Tile_View_State & Cache_Data;
 
 
 export const New_Tilemap_Manager = (): Tilemap_Manager_Data => {

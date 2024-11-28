@@ -6,7 +6,7 @@ import { ƒ } from "./Utils";
 import { Asset_Manager_Data } from "./Asset_Manager/Asset_Manager";
 
 
-import { TileComparatorSample } from "./Asset_Manager/Asset_Manager";
+import { Tile_Comparator_Sample } from "./Asset_Manager/Asset_Manager";
 
 import { Point2D, Rectangle } from '../../interfaces';
 

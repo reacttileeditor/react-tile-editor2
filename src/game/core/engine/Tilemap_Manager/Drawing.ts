@@ -2,13 +2,13 @@ import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
 import _, { Dictionary, cloneDeep, isArray, isEmpty, isEqual, map, range, size } from "lodash";
 
-import { Asset_Manager_Data, Asset_Manager_ƒ, GraphicItem, ImageListCache } from "../Asset_Manager/Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, Graphic_Item_Basic, Image_List_Cache } from "../Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "../Blit_Manager";
 import * as Utils from "../Utils";
 import { is_all_true, ƒ } from "../Utils";
 
 
-import { TileComparatorSample, TilePositionComparatorSample } from "../Asset_Manager/Asset_Manager";
+import { Tile_Comparator_Sample, Tile_Position_Comparator_Sample } from "../Asset_Manager/Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../../interfaces';
 import localforage from "localforage";
 import { concat, equals, filter, find, includes, keys, propEq, reduce, slice, uniq, zipWith } from "ramda";
@@ -22,7 +22,7 @@ import * as builtin_levels from "../../../levels";
 import { Map_Generation_ƒ } from "../Map_Generation";
 import { boolean } from "yargs";
 import { MTP_Anchor_Data } from "../../data/Multi_Tile_Patterns";
-import { Asset_Blit_List, Asset_Blit_Tilemap, TileMap, TileMapKeys, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
+import { Asset_Blit_List, Asset_Blit_Tilemap, Tilemap_Single, Tilemap_Keys, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
 
 
 
@@ -110,7 +110,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		const mtp_results = Tilemap_Manager_ƒ.mtp_scan(me, _AM);
 
 		//step over all of the various "tile maps", like 'ui' or 'terrain', and collate all the tiles.
-		let asset_maps = _.map(me.tile_maps as unknown as Dictionary<TileMap>, (tile_map, tilemap_name) => {
+		let asset_maps = _.map(me.tile_maps as unknown as Dictionary<Tilemap_Single>, (tile_map, tilemap_name) => {
 
 			return tile_map.map( (row_value, row_index) => {
 				return row_value.map( (tile_name, col_index) => {
@@ -125,7 +125,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 							_BM,
 							pos,
 							tile_name,
-							tilemap_name as unknown as TileMapKeys
+							tilemap_name as unknown as Tilemap_Keys
 						);
 					}
 
@@ -171,7 +171,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		_BM: Blit_Manager_Data,
 		pos: Point2D,
 		tile_name: string,
-		tilemap_name: TileMapKeys
+		tilemap_name: Tilemap_Keys
 	): Asset_Blit_List => {
 
 		const asset_list: Asset_Blit_List = Asset_Manager_ƒ.yield_asset_list_for_tile_type_with_comparator(
@@ -397,7 +397,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 	
 
 
-	get_tile_comparator_sample_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ): TileComparatorSample => {
+	get_tile_comparator_sample_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: Tilemap_Keys ): Tile_Comparator_Sample => {
 			const tpc = Tilemap_Manager_ƒ.get_tile_position_comparator_for_pos(me, pos);
 			
 			const val = _.map(tpc, (row_val, row_idx) => {
@@ -406,11 +406,11 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				})
 			});
 			
-			return (val as TileComparatorSample); //casting this because Typescript is being extra insistent that the tuple lengths match, but we can't guarantee this without dramatically complicating our code in a particularly bad way.
+			return (val as Tile_Comparator_Sample); //casting this because Typescript is being extra insistent that the tuple lengths match, but we can't guarantee this without dramatically complicating our code in a particularly bad way.
 			//https://github.com/microsoft/TypeScript/issues/11312
 	},
 	
-	get_tile_position_comparator_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D ): TilePositionComparatorSample => {
+	get_tile_position_comparator_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D ): Tile_Position_Comparator_Sample => {
 		/*
 			This would simply grab all 8 adjacent tiles (and ourselves, for a total of 9 tiles) as a square sample.  The problem here is that, although our tiles are in fact stored as "square" data in an array, we're actually a hex grid.  Because we're a hex grid, we're actually just looking for 7 tiles, so we'll need to adjust the result.  Depending on whether we're on an even or odd row, we need to lop off the first (or last) member of the first and last rows. 	
 		*/
@@ -431,7 +431,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 			return horizontal_tile_indices.map( (col_value: number, col_index: number) => {
 				return {x: col_value, y: row_value};
 			});
-		}) as TilePositionComparatorSample;
+		}) as Tile_Position_Comparator_Sample;
 	},
 
 }

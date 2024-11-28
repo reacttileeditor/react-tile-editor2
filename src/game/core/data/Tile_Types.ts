@@ -1,5 +1,5 @@
 import { zorder } from "../constants/zorder";
-import { StaticValues, TileItem } from "../engine/Asset_Manager/Asset_Manager";
+import { Static_Values, Tile_Item } from "../engine/Asset_Manager/Asset_Manager";
 
 /*
 		special notes on this horrifying "negative match" regex:
@@ -8,7 +8,7 @@ import { StaticValues, TileItem } from "../engine/Asset_Manager/Asset_Manager";
 */
 
 
-export type TileName =
+export type Tile_Name =
 "grass" |
 "grass-and-scree" |
 "dirt" |
@@ -29,7 +29,7 @@ export type TileName =
 const ground_tiles = /(dirt|grass|menhir|sand|bush)/;
 const water_tiles = /(water|water-still)/;
 
-export const tile_types: Array<TileItem> = [
+export const tile_types: Array<Tile_Item> = [
 	{
 		name: "grass",
 		variants: [{

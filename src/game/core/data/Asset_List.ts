@@ -1,11 +1,11 @@
 import { zorder } from "../constants/zorder";
-import { StaticValues } from "../engine/Asset_Manager/Asset_Manager";
+import { Static_Values } from "../engine/Asset_Manager/Asset_Manager";
 import { image_data_list } from "./Image_Data";
 import { multi_tile_types } from "./Multi_Tile_Patterns";
 import { tile_types } from "./Tile_Types";
 
 
-export const asset_list: StaticValues = {
+export const asset_list: Static_Values = {
 	image_data_list: image_data_list,
 
 

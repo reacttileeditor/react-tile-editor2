@@ -6,7 +6,7 @@ import { Point2D, Rectangle } from '../../../interfaces';
 import { asset_list } from "../../data/Asset_List";
 import { is_all_true, ƒ } from "../Utils";
 import { Dispatch, SetStateAction } from "react";
-import { TileName } from "../../data/Tile_Types";
+import { Tile_Name } from "../../data/Tile_Types";
 import { Multi_Tile_Pattern } from "../../data/Multi_Tile_Patterns";
 import { concat, filter, uniq } from "ramda";
 import { Initialization } from "./Initialization";
@@ -24,11 +24,11 @@ export interface Image_Data {
 	pad?: number,
 };
 
-export interface StaticValues {
+export interface Static_Values {
 	image_data_list: Array<Image_Data>,
-	raw_image_list: ImageDict,
-	assets_meta: AssetsMetaDict,
-	tile_types: Array<TileItem>,
+	raw_image_list: Image_Dictionary,
+	assets_meta: Assets_Metadata_Dictionary,
+	tile_types: Array<Tile_Item>,
 	multi_tile_types: Array<Multi_Tile_Pattern>,
 	multi_tile_pattern_metadata: {
 		max_mtp_width: number,
@@ -36,15 +36,15 @@ export interface StaticValues {
 	}
 };
 
-interface ImageDict {
+interface Image_Dictionary {
 	[index: string]: HTMLImageElement
 }
 
-interface AssetsMetaDict {
-	[index: string]: AssetsMetaSpritesheetItem|AssetsMetaSingleImage_Data,
+interface Assets_Metadata_Dictionary {
+	[index: string]: Assets_Metadata_Spritesheet_Item|Assets_Metadata_Single_Image_Item,
 }
 
-export interface AssetsMetaSpritesheetItem {
+export interface Assets_Metadata_Spritesheet_Item {
 	preprocessed: boolean,
 	dim: {
 		w: number,
@@ -53,7 +53,7 @@ export interface AssetsMetaSpritesheetItem {
 	bounds: Rectangle,
 }
 
-export interface AssetsMetaSingleImage_Data {
+export interface Assets_Metadata_Single_Image_Item {
 	preprocessed: boolean,
 	dim: {
 		w: number,
@@ -61,50 +61,46 @@ export interface AssetsMetaSingleImage_Data {
 	},
 }
 
-export interface TileItem {
-	name: TileName,
+export interface Tile_Item {
+	name: Tile_Name,
 	omit_from_random_map_generation?: boolean,
 	variants: Array<Variant_Item>,
 };
 
 export interface Variant_Item {
-	graphics: Array<GraphicItem|GraphicItemAutotiled>,
+	graphics: Array<Graphic_Item_Basic|Graphic_Item_Autotiled>,
 };
 
-export interface GraphicItem {
+export interface Graphic_Item_Basic {
 	id: string,
 	zorder: number,
 };
 
-export interface GraphicItemAutotiled {
+export interface Graphic_Item_Autotiled {
 	id: string,
 	zorder: number,
-	restrictions: AutoTileRestrictionSample,
+	restrictions: Autotile_Restriction_Sample,
 };
 
-export type GraphicItemGeneric = GraphicItemAutotiled|GraphicItem;
+export type Graphic_Item_Generic = Graphic_Item_Autotiled|Graphic_Item_Basic;
 
 
 
-type TileComparatorRow = [string, string];
-type TileComparatorRowCenter = [string, string, string];
-export type TileComparatorSample = [TileComparatorRow, TileComparatorRowCenter, TileComparatorRow];
+type Tile_Comparator_Row_Outer = [string, string];
+type Tile_Comparator_Row_Center = [string, string, string];
+export type Tile_Comparator_Sample = [Tile_Comparator_Row_Outer, Tile_Comparator_Row_Center, Tile_Comparator_Row_Outer];
 
 
-interface TilePositionComparatorRow extends Array<Point2D> { 0: Point2D; 1: Point2D; }
-interface TilePositionComparatorRowCenter extends Array<Point2D> { 0: Point2D; 1: Point2D; 2: Point2D; }
-export interface TilePositionComparatorSample extends Array<TilePositionComparatorRow|TilePositionComparatorRowCenter> { 0: TilePositionComparatorRow, 1: TilePositionComparatorRowCenter, 2: TilePositionComparatorRow };
+interface Tile_Position_Comparator_Row_Outer extends Array<Point2D> { 0: Point2D; 1: Point2D; }
+interface Tile_Position_Comparator_Row_Center extends Array<Point2D> { 0: Point2D; 1: Point2D; 2: Point2D; }
+export interface Tile_Position_Comparator_Sample extends Array<Tile_Position_Comparator_Row_Outer|Tile_Position_Comparator_Row_Center> { 0: Tile_Position_Comparator_Row_Outer, 1: Tile_Position_Comparator_Row_Center, 2: Tile_Position_Comparator_Row_Outer };
 
 
-interface AutoTileRestrictionRow extends Array<RegExp> { 0: RegExp; 1: RegExp; }
-interface AutoTileRestrictionRowCenter extends Array<RegExp> { 0: RegExp; 1: RegExp; 2: RegExp; }
-export interface AutoTileRestrictionSample extends Array<AutoTileRestrictionRow|AutoTileRestrictionRowCenter> { 0: AutoTileRestrictionRow, 1: AutoTileRestrictionRowCenter, 2: AutoTileRestrictionRow };
+interface Autotile_Restriction_Row_Outer extends Array<RegExp> { 0: RegExp; 1: RegExp; }
+interface Autotile_Restriction_Row_Center extends Array<RegExp> { 0: RegExp; 1: RegExp; 2: RegExp; }
+export interface Autotile_Restriction_Sample extends Array<Autotile_Restriction_Row_Outer|Autotile_Restriction_Row_Center> { 0: Autotile_Restriction_Row_Outer, 1: Autotile_Restriction_Row_Center, 2: Autotile_Restriction_Row_Outer };
 
-export type ImageListCache = Array<string|null>;
-
-
-
-
+export type Image_List_Cache = Array<string|null>;
 
 
 
@@ -115,7 +111,11 @@ export type ImageListCache = Array<string|null>;
 
 
 
-let null_tile_comparator: TileComparatorSample =	[
+
+
+
+
+let null_tile_comparator: Tile_Comparator_Sample =	[
 														['',''],
 														['','',''],
 														['','']
@@ -127,7 +127,7 @@ export type Asset_Manager_Data = {
 		tile_width: number,
 		tile_height: number,
 	};
-	static_vals: StaticValues;
+	static_vals: Static_Values;
 	TileRNG: Prando;
 }
 													
@@ -153,12 +153,12 @@ export const Asset_Manager_ƒ = {
 
 /*----------------------- Type Guards -----------------------*/
 	//https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards
-	isAssetSpritesheet: ( asset: AssetsMetaSpritesheetItem | AssetsMetaSingleImage_Data ): asset is AssetsMetaSpritesheetItem => {
-		return (<AssetsMetaSpritesheetItem>asset).bounds !== undefined;
+	isAssetSpritesheet: ( asset: Assets_Metadata_Spritesheet_Item | Assets_Metadata_Single_Image_Item ): asset is Assets_Metadata_Spritesheet_Item => {
+		return (<Assets_Metadata_Spritesheet_Item>asset).bounds !== undefined;
 	},
 
-	isGraphicAutotiled: ( graphic: GraphicItem | GraphicItemAutotiled ): graphic is GraphicItemAutotiled => {
-		return (<GraphicItemAutotiled>graphic).restrictions !== undefined;
+	isGraphicAutotiled: ( graphic: Graphic_Item_Basic | Graphic_Item_Autotiled ): graphic is Graphic_Item_Autotiled => {
+		return (<Graphic_Item_Autotiled>graphic).restrictions !== undefined;
 	},
 
 }

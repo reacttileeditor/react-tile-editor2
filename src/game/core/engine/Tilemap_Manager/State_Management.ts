@@ -2,13 +2,13 @@ import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
 import _, { Dictionary, cloneDeep, isArray, isEmpty, isEqual, map, range, size } from "lodash";
 
-import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "../Asset_Manager/Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, Image_List_Cache } from "../Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "../Blit_Manager";
 import * as Utils from "../Utils";
 import { is_all_true, ƒ } from "../Utils";
 
 
-import { TileComparatorSample, TilePositionComparatorSample } from "../Asset_Manager/Asset_Manager";
+import { Tile_Comparator_Sample, Tile_Position_Comparator_Sample } from "../Asset_Manager/Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../../interfaces';
 import localforage from "localforage";
 import { concat, equals, filter, find, includes, keys, propEq, reduce, slice, uniq } from "ramda";
@@ -22,7 +22,7 @@ import * as builtin_levels from "../../../levels";
 import { Map_Generation_ƒ } from "../Map_Generation";
 import { boolean } from "yargs";
 import { MTP_Anchor_Data } from "../../data/Multi_Tile_Patterns";
-import { Asset_Blit_Tilemap, CacheData, Direction, TileMap, Tilemap_Manager_Data, Tilemap_Manager_ƒ, TileMapKeys, TileMapPersistData, TileMaps } from "./Tilemap_Manager";
+import { Asset_Blit_Tilemap, Cache_Data, Direction, Tilemap_Single, Tilemap_Manager_Data, Tilemap_Manager_ƒ, Tilemap_Keys, Tilemap_Persist_Data, Tilemaps } from "./Tilemap_Manager";
 
 
 
@@ -36,7 +36,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		_AM: Asset_Manager_Data,
 		pos: Point2D,
 		selected_tile_type: string,
-		tilemap_name: TileMapKeys,
+		tilemap_name: Tilemap_Keys,
 	): Tilemap_Manager_Data => {
 
 		const new_tilemap_data = cloneDeep(me);
@@ -76,7 +76,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 	
 
 
-	create_empty_tile_map: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): TileMap => {
+	create_empty_tile_map: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data): Tilemap_Single => {
 		const map_size = Tilemap_Manager_ƒ.get_map_bounds(me);
 
 
@@ -87,7 +87,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		});
 	},
 
-	clear_tile_map: (me: Tilemap_Manager_Data, tilemap_name: TileMapKeys, _AM: Asset_Manager_Data ): Tilemap_Manager_Data => {
+	clear_tile_map: (me: Tilemap_Manager_Data, tilemap_name: Tilemap_Keys, _AM: Asset_Manager_Data ): Tilemap_Manager_Data => {
 		let { consts, static_vals } = _AM;
 
 		const new_tilemap_data = cloneDeep(me);
@@ -113,8 +113,8 @@ export const Tilemap_Manager_ƒ_State_Management = {
 			We're going to treat all positive grow values as expansion, to make the math simpler.  This means grow_x being, say `2` will indeed expand the map by one tile in the negative direction.
 		*/
 
-		//const new_tilemaps: TileMaps = map(me.tile_maps, (tilemap_val) =>(
-		const expand_tilemap = ( tilemap_val: TileMap ): TileMap => (
+		//const new_tilemaps: Tilemaps = map(me.tile_maps, (tilemap_val) =>(
+		const expand_tilemap = ( tilemap_val: Tilemap_Single ): Tilemap_Single => (
 				/*
 					Build a new map.  To spare a wall of if conditions, we'll always concat two arrays on each side (top and bottom, here).  If we're shrinking the map in the middle, we'll just made the additive arrays on the side, empty.  Likewise, we'll always slice the array in the middle, but if it turns out we're growing it, the slice will just be an identity operation. 
 
@@ -136,7 +136,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 				)
 		);
 		
-		const new_row = ( tilemap_val: TileMap ): Array<string> => (
+		const new_row = ( tilemap_val: Tilemap_Single ): Array<string> => (
 			map( range( bounds.grow_x + bounds.grow_x2 + size(tilemap_val[0]) ), ()=>(''))
 		)
 
@@ -158,7 +158,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		);
 
 
-		const new_tilemaps: TileMaps = {
+		const new_tilemaps: Tilemaps = {
 			terrain: expand_tilemap(me.tile_maps['terrain']),
 			ui: expand_tilemap(me.tile_maps['ui']),
 		}
@@ -225,7 +225,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 	),
 
 	
-	get_tile_name_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: TileMapKeys ) => {
+	get_tile_name_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: Tilemap_Keys ) => {
 		/*
 			This enforces "safe access", and will always return a string.  If it's outside the bounds of the tile map, we return an empty string.
 		*/

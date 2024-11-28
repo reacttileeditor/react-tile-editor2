@@ -2,13 +2,13 @@ import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
 import _, { Dictionary, cloneDeep, isArray, isEmpty, isEqual, map, range, size } from "lodash";
 
-import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "../Asset_Manager/Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, Image_List_Cache } from "../Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "../Blit_Manager";
 import * as Utils from "../Utils";
 import { is_all_true, ƒ } from "../Utils";
 
 
-import { TileComparatorSample, TilePositionComparatorSample } from "../Asset_Manager/Asset_Manager";
+import { Tile_Comparator_Sample, Tile_Position_Comparator_Sample } from "../Asset_Manager/Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../../interfaces';
 import localforage from "localforage";
 import { concat, equals, filter, find, includes, keys, propEq, reduce, slice, uniq } from "ramda";
@@ -22,7 +22,7 @@ import * as builtin_levels from "../../../levels";
 import { Map_Generation_ƒ } from "../Map_Generation";
 import { boolean } from "yargs";
 import { MTP_Anchor_Data } from "../../data/Multi_Tile_Patterns";
-import { CacheData, MetaData, TileMapPersistData, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
+import { Cache_Data, Tilemap_Metadata, Tilemap_Persist_Data, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
 
 
 
@@ -32,10 +32,10 @@ const builtin_levelname_list = map(builtin_levels, (val,idx)=>{
 	return idx
 });
 
-const builtin_level_array: 	{ [index: string]: TileMapPersistData } = {};
+const builtin_level_array: 	{ [index: string]: Tilemap_Persist_Data } = {};
 map(builtin_levels, (val,idx)=>{
 	console.log(val)
-	builtin_level_array[idx] = val as TileMapPersistData;
+	builtin_level_array[idx] = val as Tilemap_Persist_Data;
 })
 
 console.log(builtin_levelname_list);
@@ -67,7 +67,7 @@ export const Tilemap_Manager_ƒ_Initialization = {
 		);
 	},
 
-	cleared_cache: () : CacheData => ({
+	cleared_cache: () : Cache_Data => ({
 		asset_blit_list_cache: [[[]]],
 	}),
 
@@ -78,13 +78,13 @@ export const Tilemap_Manager_ƒ_Initialization = {
 		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
 		level_name: string,
 	): void => {
-		let level_data: TileMapPersistData = {
+		let level_data: Tilemap_Persist_Data = {
 			metadata: _.cloneDeep(metadata_init),
 			tile_maps: _.cloneDeep(tile_maps_init),
 			creature_list: [],
 		};
 
-		localforage.getItem<TileMapPersistData>(level_name).then((value) => {
+		localforage.getItem<Tilemap_Persist_Data>(level_name).then((value) => {
 			if(value != null){
 				level_data = value;
 			}
@@ -113,7 +113,7 @@ export const Tilemap_Manager_ƒ_Initialization = {
 		if(level_name == 'level_names'){
 			throw("if you're reading this, we should put in validation on the input field.")
 		} else {
-			const save_data: TileMapPersistData = {
+			const save_data: Tilemap_Persist_Data = {
 				metadata: me.metadata,
 				tile_maps: me.tile_maps,
 				creature_list: me.creature_list,
@@ -132,7 +132,7 @@ export const Tilemap_Manager_ƒ_Initialization = {
 		me: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 	): void => {
-		const save_data: TileMapPersistData = {
+		const save_data: Tilemap_Persist_Data = {
 			metadata: me.metadata,
 			tile_maps: me.tile_maps,
 			creature_list: me.creature_list,
@@ -215,7 +215,7 @@ export const Tilemap_Manager_ƒ_Initialization = {
 		}
 	},
 
-	set_metadata: (me: Tilemap_Manager_Data, new_metadata: MetaData): Tilemap_Manager_Data => {
+	set_metadata: (me: Tilemap_Manager_Data, new_metadata: Tilemap_Metadata): Tilemap_Manager_Data => {
 		/*
 			TODO: we really ought to be doing something sophisticated here, but I'd like to pivot to having these map operations be totally non-destructive to your tiles.  I.e. all out-of-bounds tiles are preserved, the map is stored sparsely, etc, etc.   It's a tall ask, and probably something for an alternate git branch.
 

@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { Asset_Manager_Data, Asset_Manager_ƒ, AssetsMetaSingleImage_Data, AssetsMetaSpritesheetItem, AutoTileRestrictionSample, GraphicItem, GraphicItemAutotiled, GraphicItemGeneric, Image_Data, TileComparatorSample, Variant_Item } from "./Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, Assets_Metadata_Single_Image_Item, Assets_Metadata_Spritesheet_Item, Autotile_Restriction_Sample, Graphic_Item_Basic, Graphic_Item_Autotiled, Graphic_Item_Generic, Image_Data, Tile_Comparator_Sample, Variant_Item } from "./Asset_Manager";
 import { filter, find, flatten, isString, map, size, sortBy, sortedUniq } from "lodash";
 import { is_all_true, ƒ } from "../Utils";
 import { concat, uniq, filter as r_filter } from "ramda";
@@ -74,7 +74,7 @@ export const Accessors = {
 	get_image_metadata_for_asset_name: (
 		_AM: Asset_Manager_Data,
 		asset_name: string,
-	): AssetsMetaSpritesheetItem|AssetsMetaSingleImage_Data => {
+	): Assets_Metadata_Spritesheet_Item|Assets_Metadata_Single_Image_Item => {
 		let { raw_image_list, image_data_list, assets_meta } = _AM.static_vals;
 
 		return assets_meta[ asset_name ]!;
@@ -107,7 +107,7 @@ export const Accessors = {
 	get_all_asset_data_for_tile_type: (
 		me: Asset_Manager_Data,
 		tile_name: string
-	):Array<GraphicItemGeneric> => {
+	):Array<Graphic_Item_Generic> => {
 		
 		if( tile_name != '' ){
 			let tile_variants = Asset_Manager_ƒ.get_tile_variant_data(me, tile_name);
@@ -128,8 +128,8 @@ export const Accessors = {
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 		tile_name: string,
-		comparator: TileComparatorSample,
-	): Array<GraphicItem> => {
+		comparator: Tile_Comparator_Sample,
+	): Array<Graphic_Item_Basic> => {
 
 		let asset_data_array = Asset_Manager_ƒ.get_all_asset_data_for_tile_type(_AM, tile_name);
 
@@ -150,7 +150,7 @@ export const Accessors = {
 			}
 		});
 
-		return r_filter((val)=>(val !== undefined), asset_blit_items as Array<GraphicItem>);
+		return r_filter((val)=>(val !== undefined), asset_blit_items as Array<Graphic_Item_Basic>);
 	},
 
 
@@ -158,7 +158,7 @@ export const Accessors = {
 		let { raw_image_list, image_data_list, assets_meta, tile_types } = me.static_vals;
 		
 		
-		let variant_graphic_sets: Array<Array<GraphicItem|GraphicItemAutotiled>> = map( Asset_Manager_ƒ.get_tile_variant_data(me, tile_name), (val) => (val.graphics) );
+		let variant_graphic_sets: Array<Array<Graphic_Item_Basic|Graphic_Item_Autotiled>> = map( Asset_Manager_ƒ.get_tile_variant_data(me, tile_name), (val) => (val.graphics) );
 
 		let number_arrays: Array<Array<number>> = map( variant_graphic_sets, (val) => {
 			return map(val, (val2) => (val2.zorder))

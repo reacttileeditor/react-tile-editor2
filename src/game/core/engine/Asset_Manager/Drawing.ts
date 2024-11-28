@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { Asset_Manager_Data, Asset_Manager_ƒ, AutoTileRestrictionSample, Image_Data, TileComparatorSample } from "./Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, Autotile_Restriction_Sample, Image_Data, Tile_Comparator_Sample } from "./Asset_Manager";
 import { filter, isString, map, size } from "lodash";
 import { is_all_true, ƒ } from "../Utils";
 import { concat, uniq } from "ramda";
@@ -19,7 +19,7 @@ export const Drawing = {
 	),
 
 /*----------------------- auto-tiling logic -----------------------*/
-	should_we_draw_this_tile_based_on_its_autotiling_restrictions: ( tile_data: TileComparatorSample, autotile_restrictions: AutoTileRestrictionSample ): boolean => {
+	should_we_draw_this_tile_based_on_its_autotiling_restrictions: ( tile_data: Tile_Comparator_Sample, autotile_restrictions: Autotile_Restriction_Sample ): boolean => {
 		/*
 			This goes through all the adjacent tile data, compares it to the assets that are available for the current tile, and returns a subset of these assets - the ones that are valid to draw for this particular arrangement. 
 		
@@ -122,7 +122,22 @@ export const Drawing = {
 		return current_frame_num;
 	},
 
+/*----------------------- tile animation sequence calcs -----------------------*/
+	/*
+		We have a mechanism to allow tiles to play not merely "one" animation, but rather, to play a sequence of animations.   This is facilitated by a new asset type, which acts as a "compound asset".   A compound assets basically stores an array of regular assets (in specific order), and plays them back in sequence.
 
+		It treats this larger "sequence" of animations exactly like a regular animation would be treated - the sequence is known to be a fixed length, and to loop, so we just target an exact offset inside of the sequence, to know both which frame we're on, and which animation we're in.
+
+		For example:
+
+		0ms																		50ms																100ms
+		[		anim 1					anim2					anim 3		   ][		anim 1						anim2					anim 3	   ]
+		[<-------------------------->][<----------->][<----------------------->][<-------------------------->][<----------->][<----------------------->]
+											>|<
+								current global time offset @ 25ms
+
+		In the above, hypothetical case, we'd be halfways into the second animation.  Something similar would be true at 75ms.
+	*/
 
 
 

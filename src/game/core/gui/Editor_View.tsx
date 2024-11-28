@@ -6,7 +6,7 @@ import { Canvas_View, MouseButtonState } from "./Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
-import { MetaData, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager/Tilemap_Manager";
+import { Tilemap_Metadata, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
@@ -23,7 +23,7 @@ import { CreatureTypeName, Creature_ƒ } from "../../objects_core/Creature";
 import { Game_Manager_ƒ } from "../engine/Game_Manager";
 import { includes, map } from "ramda";
 import { Map_Generation_ƒ } from "../engine/Map_Generation";
-import { TileName } from "../data/Tile_Types";
+import { Tile_Name } from "../data/Tile_Types";
 
 
 interface Editor_View_Props {
@@ -64,7 +64,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [selected_tool, set_selected_tool] = useState<ToolTypes>('tiles');
 
 	const [show_tile_palette_drawer, set_show_tile_palette_drawer] = useState<boolean>(false);
-	const [selected_tile_type, set_selected_tile_type] = useState<TileName>('grass');
+	const [selected_tile_type, set_selected_tile_type] = useState<Tile_Name>('grass');
 
 
 	useEffect(() => {
@@ -391,14 +391,14 @@ export const Editor_View = (props: Editor_View_Props) => {
 export const Tile_Palette_Drawer = (props: {
 	show_tile_palette_drawer: boolean,
 	set_show_tile_palette_drawer: Dispatch<SetStateAction<boolean>>,
-	selected_tile_type: TileName,
-	set_selected_tile_type: Dispatch<SetStateAction<TileName>>,
+	selected_tile_type: Tile_Name,
+	set_selected_tile_type: Dispatch<SetStateAction<Tile_Name>>,
 	_Asset_Manager: () => Asset_Manager_Data,
 }) => {
 
 
 
-	const tile_type_list: Array<TileName> = Asset_Manager_ƒ.yield_tile_name_list(props._Asset_Manager());
+	const tile_type_list: Array<Tile_Name> = Asset_Manager_ƒ.yield_tile_name_list(props._Asset_Manager());
 
 	return <Drawer
 		open={props.show_tile_palette_drawer}
@@ -793,7 +793,7 @@ export const Generate_Map_Modal = (props: {
 export const Edit_Metadata_Modal = (props: {
 	show_metadata_dialog: boolean,
 	set_show_metadata_dialog: Dispatch<SetStateAction<boolean>>,
-	level_metadata: MetaData,
+	level_metadata: Tilemap_Metadata,
 	_Asset_Manager: () => Asset_Manager_Data,
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
 	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,

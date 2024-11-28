@@ -1,14 +1,14 @@
 import { Point2D } from "../../interfaces";
 import { zorder } from "../constants/zorder";
-import { StaticValues, TileItem } from "../engine/Asset_Manager/Asset_Manager";
-import { TileName } from "./Tile_Types";
+import { Static_Values, Tile_Item } from "../engine/Asset_Manager/Asset_Manager";
+import { Tile_Name } from "./Tile_Types";
 
 
 
 type MTP_Restrictions = Array<Array<RegExp>>;
 
 export type Multi_Tile_Pattern = {
-	name: TileName,
+	name: Tile_Name,
 
 	variants: Array<MTP_Variant_Item>,
 };
