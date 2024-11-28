@@ -1,6 +1,6 @@
 import { Point2D } from "../../interfaces";
 import { zorder } from "../constants/zorder";
-import { StaticValues, TileItem } from "../engine/Asset_Manager";
+import { StaticValues, TileItem } from "../engine/Asset_Manager/Asset_Manager";
 import { TileName } from "./Tile_Types";
 
 

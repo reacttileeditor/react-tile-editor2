@@ -10,7 +10,7 @@ import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/eng
 import { Point2D, Rectangle } from '../interfaces';
 import { Game_Manager_Data } from "../core/engine/Game_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
-import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
+import { Asset_Manager_Data } from "../core/engine/Asset_Manager/Asset_Manager";
 
 
 

@@ -2,13 +2,13 @@ import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
 import _, { Dictionary, cloneDeep, isArray, isEmpty, isEqual, map, range, size } from "lodash";
 
-import { Asset_Manager_Data, Asset_Manager_ƒ, GraphicItem, ImageListCache } from "../Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, GraphicItem, ImageListCache } from "../Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "../Blit_Manager";
 import * as Utils from "../Utils";
 import { is_all_true, ƒ } from "../Utils";
 
 
-import { TileComparatorSample, TilePositionComparatorSample } from "../Asset_Manager";
+import { TileComparatorSample, TilePositionComparatorSample } from "../Asset_Manager/Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../../interfaces';
 import localforage from "localforage";
 import { concat, equals, filter, find, includes, keys, propEq, reduce, slice, uniq, zipWith } from "ramda";
@@ -80,7 +80,6 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				map(tile_assets, (individual_asset)=>{
 					Asset_Manager_ƒ.draw_image_for_asset_name({
 						_AM:						_AM,
-						//@ts-ignore
 						asset_name:					individual_asset.id,
 						_BM:						_BM,
 						pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(

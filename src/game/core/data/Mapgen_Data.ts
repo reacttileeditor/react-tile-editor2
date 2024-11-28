@@ -1,6 +1,6 @@
 import { keys, map, range, size } from "lodash";
 import { zorder } from "../constants/zorder";
-import { Asset_Manager_Data, Asset_Manager_ƒ, StaticValues, TileItem } from "../engine/Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, StaticValues, TileItem } from "../engine/Asset_Manager/Asset_Manager";
 import { TileName } from "./Tile_Types";
 import * as Utils from "../engine/Utils";
 

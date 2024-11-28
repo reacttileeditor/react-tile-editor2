@@ -13,7 +13,7 @@ import { Creature_Delegate, CT_Hermit_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ } from "
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Anim_Schedule_Element, BehaviorMode, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection, Path_Data } from "./Creature";
 import { AI_Core_ƒ } from "./AI_Core";
-import { Asset_Manager_Data, Asset_Manager_ƒ } from "../core/engine/Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ } from "../core/engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ms_to_ticks, ticks_to_ms } from "../core/engine/Blit_Manager";
 import { Vals } from "../core/constants/Constants";
 

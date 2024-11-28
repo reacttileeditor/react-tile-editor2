@@ -11,7 +11,7 @@ import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Anim_Schedule_Element, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection, Path_Data, path_data_empty } from "./Creature";
 import { Creature_Behavior_ƒ } from "./Creature_Behavior";
-import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
+import { Asset_Manager_Data } from "../core/engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
 import { sort } from "ramda";
 

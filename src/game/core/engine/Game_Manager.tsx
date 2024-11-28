@@ -6,7 +6,7 @@ import { includes } from "ramda"
 import { ƒ } from "./Utils";
 
 import { Canvas_View, MouseButtonState } from "../gui/Canvas_View";
-import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, ticks_to_ms } from "./Blit_Manager";
 import { Tile_Palette_Element } from "../gui/Tile_Palette_Element";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ, TileMap } from "./Tilemap_Manager/Tilemap_Manager";

@@ -2,13 +2,13 @@ import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
 import _, { Dictionary, cloneDeep, countBy, isArray, isEmpty, isEqual, map, range, size, sortBy } from "lodash";
 
-import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, ImageListCache } from "./Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
 import * as Utils from "./Utils";
 import { dice_weighted, modulo, ƒ } from "./Utils";
 import { cubic } from '@juliendargelos/easings'
 
-import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager";
+import { TileComparatorSample, TilePositionComparatorSample } from "./Asset_Manager/Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import { concat, filter, flatten, includes, keys, slice, uniq } from "ramda";
 import { TileMap, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager/Tilemap_Manager";

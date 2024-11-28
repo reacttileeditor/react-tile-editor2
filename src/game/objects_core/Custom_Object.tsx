@@ -13,7 +13,7 @@ import { Custom_Object_Delegate, CO_Shot_ƒ, CO_Text_Label_ƒ, Custom_Object_Del
 import { Base_Object_Accessors, Base_Object_Data, Base_Object_ƒ, New_Base_Object } from "./Base_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
-import { Asset_Manager_Data } from "../core/engine/Asset_Manager";
+import { Asset_Manager_Data } from "../core/engine/Asset_Manager/Asset_Manager";
 import { filter, isEmpty, map, without } from "ramda";
  
 

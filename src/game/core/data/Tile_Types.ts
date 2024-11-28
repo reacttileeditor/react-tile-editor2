@@ -1,5 +1,5 @@
 import { zorder } from "../constants/zorder";
-import { StaticValues, TileItem } from "../engine/Asset_Manager";
+import { StaticValues, TileItem } from "../engine/Asset_Manager/Asset_Manager";
 
 /*
 		special notes on this horrifying "negative match" regex:

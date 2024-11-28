@@ -1,4 +1,4 @@
-import { ImageData } from "../../engine/Asset_Manager";
+import { ImageData } from "../../engine/Asset_Manager/Asset_Manager";
 
 
 export const Tile_Image_Data: Array<ImageData> = [{

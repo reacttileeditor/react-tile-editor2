@@ -5,7 +5,7 @@ import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumbe
 import { ƒ } from "../engine/Utils";
 
 import { Canvas_View, MouseButtonState } from "./Canvas_View";
-import { Asset_Manager_Data } from "../engine/Asset_Manager";
+import { Asset_Manager_Data } from "../engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, ticks_to_ms } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager/Tilemap_Manager";
