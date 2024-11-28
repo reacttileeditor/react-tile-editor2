@@ -142,8 +142,7 @@ export const Drawing = {
 
 
 /*----------------------- actual draw ops -----------------------*/
-
-	draw_image_for_asset_name: (p: {
+	xdraw_image_for_asset_name: (p: {
 		_AM: Asset_Manager_Data,
 		asset_name: string,
 		_BM: Blit_Manager_Data,
@@ -160,9 +159,35 @@ export const Drawing = {
 			Before we get started, we have a special 'magic name' used to make various objects (such as floating hp numbers) skip drawing a sprite entirely.
 		*/
 		if( p.asset_name !== 'omit_image' ){
-			const image = Asset_Manager_ƒ.get_raw_image_for_asset_name(p._AM, p.asset_name);
-			const metadata = Asset_Manager_ƒ.get_image_metadata_for_asset_name(p._AM, p.asset_name);
-			const image_data = Asset_Manager_ƒ.get_image_data_for_asset_name(p._AM, p.asset_name);
+			const { raw_image, metadata, image_data } = Asset_Manager_ƒ.get_data_for_asset_name(p._AM, p.asset_name);
+
+			
+			if(image_data == undefined){
+				console.error(`Could not find an image in our image_data_list for the asset named ${p.asset_name}.`); 
+			} else {
+
+			}
+		}
+	},
+
+	draw_image_for_asset_name: (p: {
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		asset_name: string,
+		pos: Point2D,
+		zorder: number,
+		current_milliseconds: number,
+		opacity: number,
+		rotate: number,
+		brightness: number,
+		horizontally_flipped: boolean,
+		vertically_flipped: boolean,
+	}) => {
+		/*
+			Before we get started, we have a special 'magic name' used to make various objects (such as floating hp numbers) skip drawing a sprite entirely.
+		*/
+		if( p.asset_name !== 'omit_image' ){
+			const { raw_image, metadata, image_data } = Asset_Manager_ƒ.get_data_for_asset_name(p._AM, p.asset_name);
 
 			
 			if(image_data == undefined){
@@ -191,7 +216,7 @@ export const Drawing = {
 						horizontally_flipped:	p.horizontally_flipped,
 						vertically_flipped:		p.vertically_flipped,
 						drawing_data:			{
-													image_ref: image,
+													image_ref: raw_image,
 													src_rect: {
 														x:	0,
 														y:	0,
@@ -215,7 +240,7 @@ export const Drawing = {
 						horizontally_flipped:	p.horizontally_flipped,
 						vertically_flipped:		p.vertically_flipped,
 						drawing_data:			{
-													image_ref: image,
+													image_ref: raw_image,
 													src_rect: {
 														x:	metadata.bounds.x + (current_frame_num * metadata.bounds.w) + ((current_frame_num) * frame_padding),
 														y:	metadata.bounds.y,

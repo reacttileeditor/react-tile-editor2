@@ -26,6 +26,7 @@ export interface Image_Data {
 
 export interface Static_Values {
 	image_data_list: Array<Image_Data>,
+	image_sequence_data_list: Image_Sequence_Dictionary,
 	raw_image_list: Image_Dictionary,
 	assets_meta: Assets_Metadata_Dictionary,
 	tile_types: Array<Tile_Item>,
@@ -81,6 +82,13 @@ export interface Graphic_Item_Autotiled {
 	zorder: number,
 	restrictions: Autotile_Restriction_Sample,
 };
+
+
+export interface Image_Sequence_Dictionary {
+	[index: string]: Array<string>,
+}
+
+
 
 export type Graphic_Item_Generic = Graphic_Item_Autotiled|Graphic_Item_Basic;
 
