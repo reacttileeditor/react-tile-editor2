@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import _ from "lodash";
+import _, { map } from "lodash";
 
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, New_Blit_Manager } from "../engine/Blit_Manager";
@@ -81,15 +81,25 @@ export const Tile_Palette_Element = (props: Props) => {
 			Blit_Manager_ƒ.fill_canvas_with_solid_color(_Blit_Manager);
 
 			if(  _.size(props.tile_name) > 0 ){
-				Asset_Manager_ƒ.draw_all_assets_for_tile_type(
-					props.asset_manager,
-					props.tile_name,
-					_Blit_Manager,
-					{
-						x: Math.floor(props.canvas_size.x/2),
-						y: Math.floor(props.canvas_size.y/2)
-					},
-				);
+				let asset_data_array = Asset_Manager_ƒ.get_all_asset_data_for_tile_type(props.asset_manager, props.tile_name);
+				map(asset_data_array, (asset_item)=>{
+					Asset_Manager_ƒ.draw_image_for_asset_name({
+						_AM:						props.asset_manager,
+						asset_name:					asset_item.id,
+						_BM:						_Blit_Manager,
+						pos:						{
+							x: Math.floor(props.canvas_size.x/2),
+							y: Math.floor(props.canvas_size.y/2)
+						},
+						zorder:						asset_item.zorder,
+						current_milliseconds:		0,
+						opacity:					1.0,
+						rotate:						0,
+						brightness:					1.0,
+						horizontally_flipped:		false,
+						vertically_flipped:			false,
+					})
+				})
 			}
 
 			if( _.size(props.asset_name) > 0 ){
