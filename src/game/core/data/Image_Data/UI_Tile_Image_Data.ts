@@ -1,7 +1,7 @@
-import { ImageData } from "../../engine/Asset_Manager/Asset_Manager";
+import { Image_Data } from "../../engine/Asset_Manager/Asset_Manager";
 
 
-export const UI_Tile_Image_Data: Array<ImageData> = [{
+export const UI_Tile_Image_Data: Array<Image_Data> = [{
 	url: "arrow-tiles.png",
 	name: "arrow-horizontal-bar",
 	bounds: {

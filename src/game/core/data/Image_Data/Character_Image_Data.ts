@@ -1,7 +1,7 @@
-import { ImageData } from "../../engine/Asset_Manager/Asset_Manager";
+import { Image_Data } from "../../engine/Asset_Manager/Asset_Manager";
 
 
-export const Character_Image_Data: Array<ImageData> = [{
+export const Character_Image_Data: Array<Image_Data> = [{
 	url: "char1.png",
 	name: "hermit",
 },{

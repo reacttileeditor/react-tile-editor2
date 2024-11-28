@@ -1,7 +1,7 @@
-import { ImageData } from "../../engine/Asset_Manager/Asset_Manager";
+import { Image_Data } from "../../engine/Asset_Manager/Asset_Manager";
 
 
-export const Misc_Image_Data: Array<ImageData> = [{
+export const Misc_Image_Data: Array<Image_Data> = [{
 	url: "map-cursor.png",
 	name: "cursor",
 	not_a_tile: true,
