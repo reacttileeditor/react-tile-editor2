@@ -11,6 +11,7 @@ var PATH_PREFIX = "./assets/"
 
 export const Initialization = {
 
+/*----------------------- initialization and asset loading -----------------------*/
 	launch_app: (
 		me: Asset_Manager_Data,
 		do_once_app_ready: ()=>void,
