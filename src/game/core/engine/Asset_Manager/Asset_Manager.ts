@@ -415,17 +415,6 @@ export const Asset_Manager_ƒ = {
 
 
 /*----------------------- tile draw ops -----------------------*/
-	get_asset_name_for_tile_at_zorder: (me: Asset_Manager_Data, tile_name: string, zorder: number):string|undefined => {
-		let { raw_image_list, image_data_list, assets_meta, tile_types } = me.static_vals;
-		
-		let tile_data = Asset_Manager_ƒ.get_asset_data_for_tile_at_zorder(me, tile_name, zorder);
-
-		if(tile_data && tile_data[0]) {
-			return tile_data[0].id;
-		} else {
-			return undefined;
-		}
-	},
 
 	get_tile_variant_data: (me: Asset_Manager_Data, tile_name: string): Array<VariantItem> => {
 		let { raw_image_list, image_data_list, assets_meta, tile_types } = me.static_vals;
@@ -441,26 +430,6 @@ export const Asset_Manager_ƒ = {
 	},
 	
 
-	get_asset_data_for_tile_at_zorder: (me: Asset_Manager_Data, tile_name: string, zorder: number):Array<GraphicItemGeneric> => {
-		let { raw_image_list, image_data_list, assets_meta, tile_types } = me.static_vals;
-		
-		if( tile_name != '' ){
-			let tile_variants = Asset_Manager_ƒ.get_tile_variant_data(me, tile_name);
-
-			if( _.size(tile_variants) ){
-				let tile_data = _.filter(
-					tile_variants[Asset_Manager_ƒ._tile_dice( me, tile_variants.length ) -1].graphics,
-					(value, index) => {return value.zorder == zorder}
-				);
-				
-				return tile_data;
-			} else {
-				return [];
-			}
-		} else {
-			return [];
-		}
-	},
 
 	get_all_asset_data_for_tile_type: (
 		me: Asset_Manager_Data,
@@ -531,56 +500,8 @@ export const Asset_Manager_ƒ = {
 	},
 
 	
-	draw_all_assets_for_tile_type: (me: Asset_Manager_Data, tile_name: string, _BM: Blit_Manager_Data, pos: Point2D) => {
-		let zorders = Asset_Manager_ƒ.yield_zorder_list_for_tile(me, tile_name); 
+
 	
-		zorders.map( (value,index) => {
-			Asset_Manager_ƒ.draw_image_for_tile_type_at_zorder_and_pos(me, tile_name, _BM, value, pos.x, pos.y, null_tile_comparator, 0);
-		});
-	},
-	
-	draw_image_for_tile_type_at_zorder_and_pos: (
-			_AM: Asset_Manager_Data,
-			tile_name: string,
-			_BM: Blit_Manager_Data,
-			zorder: number,
-			pos_x: number,
-			pos_y: number,
-			comparator: TileComparatorSample,
-			current_milliseconds: number
-		) => {
-		//_BM.ctx.save();
-
-		//_BM.ctx.translate( pos_x, pos_y );
-		let asset_data_array = Asset_Manager_ƒ.get_asset_data_for_tile_at_zorder(_AM, tile_name, zorder);
-
-		var allow_drawing = true;
-		
-		asset_data_array.map( (value, index) => {
-		
-			if(  Asset_Manager_ƒ.isGraphicAutotiled(value) ){
-				//this is where 
-				allow_drawing = Asset_Manager_ƒ.should_we_draw_this_tile_based_on_its_autotiling_restrictions(comparator, value.restrictions);
-			} 
-
-			if( value.id && allow_drawing ){
-				Asset_Manager_ƒ.draw_image_for_asset_name({
-					_AM:						_AM,
-					asset_name: 				value.id,
-					_BM:						_BM,
-					pos:						{ x: pos_x, y: pos_y },
-					zorder:						zorder,
-					current_milliseconds:		current_milliseconds,
-					opacity:					1.0,
-					rotate:						0,
-					brightness:					1.0,
-					horizontally_flipped:		false,  //TODO - we may want to enable random, deterministic flipping of tiles for additional tile variety.  Only horizontal though.
-					vertically_flipped:			false,
-				});
-			}
-		});
-		//_BM.ctx.restore();	
-	},
 
 	
 
