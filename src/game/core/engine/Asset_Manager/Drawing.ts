@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Asset_Data_Record, Asset_Manager_Data, Asset_Manager_ƒ, Autotile_Restriction_Sample, Image_Data, Tile_Comparator_Sample } from "./Asset_Manager";
 import { filter, isString, map, size } from "lodash";
 import { is_all_true, ƒ } from "../Utils";
-import { concat, uniq } from "ramda";
+import { add, concat, findIndex, reduce, slice, uniq } from "ramda";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../Blit_Manager";
 import { Point2D } from "../../../interfaces";
 import * as Utils from "../Utils";
@@ -68,7 +68,7 @@ export const Drawing = {
 		return Utils.modulo(_count - Math.abs(_count-rem_current_frame), _count)
 		+
 		/*
-			which is great, except we want a 6 in the middle, which is where the following awkward chunk of math comes in:
+			which is great, except we want a 5 in the middle, which is where the following awkward chunk of math comes in:
 		*/
 		(
 			Utils.modulo(rem_current_frame, _count) == 0
@@ -79,7 +79,10 @@ export const Drawing = {
 		) ;
 	},
 
-	get_current_frame_cycle: (image_data: Image_Data, current_milliseconds: number): number => {
+	get_current_frame_cycle: (
+		image_data: Image_Data,
+		current_milliseconds: number
+	): number => {
 		/*
 			aka "at this ms timestamp, how many times would this animation have played"
 		*/
@@ -99,7 +102,10 @@ export const Drawing = {
 		return current_milliseconds / animation_duration;
 	},
 
-	get_current_frame_number: (image_data: Image_Data, current_milliseconds: number): number => {
+	get_current_frame_number: (
+		image_data: Image_Data,
+		current_milliseconds: number
+	): number => {
 		let frame_count = image_data.frames ? image_data.frames : 1;
 		let frame_duration = image_data.frame_duration ? image_data.frame_duration : 20;
 		/*
@@ -140,6 +146,73 @@ export const Drawing = {
 	*/
 
 
+	get_current_frame_number_and_image_data_for_animation_sequence: (
+		image_data_array: Array<Image_Data>,
+		current_milliseconds: number
+	): {
+		current_frame: number,
+		image_data: Image_Data,
+	} => {
+		const animation_durations: Array<number> = map(image_data_array, (image_data)=>{
+			let frame_count = image_data.frames ? image_data.frames : 1;
+			let frame_duration = image_data.frame_duration ? image_data.frame_duration : 20;
+	
+			return (
+				frame_count + (Boolean(image_data.ping_pong) ? frame_count - 1 : 0)
+			) * frame_duration;
+		})
+
+		const total_sequence_duration = reduce(add, 0, animation_durations);
+
+		/*
+			Calculate when each sub-animation ends.  I.e. if input values were [4, 3.5, 6] (durations), this function would give: [4, 7.5, 13.5].
+
+			We can use this to decide which animation we're in by calculating how far into the whole "compound asset sequence" we are.  The first one we're >= is the one we're currently on.
+		
+		*/
+		const sub_animation_end_timestamps = animation_durations.map((num, i, arr) =>
+			num + arr.slice(0, i).reduce((a, b) =>
+				a + b, 0));
+
+
+		/*
+			These sequences loop indefinitely, and they're always the same size, so we can just use modulo math to figure out where we are in the sequence.
+		*/				
+		const current_time_offset_in_sequence = Utils.modulo(current_milliseconds, total_sequence_duration);
+
+
+		/*
+			Figure out which of the animations we're in.
+		*/
+		const animation_index = findIndex( (val)=>( val >= current_time_offset_in_sequence ), sub_animation_end_timestamps )
+
+		/*
+			Using that, extract the image data for that animation (easy).
+		*/
+		const image_data = image_data_array[animation_index];
+
+
+		/*
+			Then calculate our current time offset in that animation (not so easy).
+		*/
+		const sub_animation_start_timestamps = concat([0], slice(0, -1, sub_animation_end_timestamps));
+		const current_time_offset_in_sub_animation = current_time_offset_in_sequence - sub_animation_start_timestamps[animation_index];
+
+
+		/*
+			Then, at last, we can fall back on our regular animation logic to find out the frame number for said sub-animation:
+		*/
+		Asset_Manager_ƒ.get_current_frame_number(image_data)
+
+		debugger;
+		return {
+			current_frame: 1,
+			image_data: image_data,
+		}
+
+	},
+
+
 
 /*----------------------- actual draw ops -----------------------*/
 	draw_image_for_asset_name: (p: {
@@ -160,6 +233,15 @@ export const Drawing = {
 		*/
 		if( p.asset_name !== 'omit_image' ){
 			const asset_data_records = Asset_Manager_ƒ.get_data_for_asset_name(p._AM, p.asset_name);
+
+			if( size(asset_data_records) > 1 ){
+				Asset_Manager_ƒ.get_current_frame_number_and_image_data_for_animation_sequence(
+					map(asset_data_records, (val)=>(val.image_data)),
+					p.current_milliseconds
+				)
+
+			}
+
 
 			//if( size(asset_data_records) == 1 ){
 				Asset_Manager_ƒ.draw_image_for_asset_name__single_image({
