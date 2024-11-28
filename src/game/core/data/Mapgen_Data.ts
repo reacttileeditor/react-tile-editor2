@@ -11,22 +11,22 @@ import * as Utils from "../engine/Utils";
 */
 
 
-export type BlobProfileName = 'stone' | 'prairie' | 'water' | 'lawn' | 'highlands' | 'crags' | 'sandpatch';
+export type Blob_Profile_Name = 'stone' | 'prairie' | 'water' | 'lawn' | 'highlands' | 'crags' | 'sandpatch';
 
 export const Mapgen_Profile_ƒ = {
-	yield_blob_profile_name_list: (): Array<BlobProfileName> => {
-		return keys(Blob_Profile_Data) as Array<BlobProfileName>;
+	yield_blob_profile_name_list: (): Array<Blob_Profile_Name> => {
+		return keys(Blob_Profile_Data) as Array<Blob_Profile_Name>;
 	},
 
-	get_random_profile_name: (): BlobProfileName => {
-		const profile_names: Array<BlobProfileName> = Mapgen_Profile_ƒ.yield_blob_profile_name_list();
+	get_random_profile_name: (): Blob_Profile_Name => {
+		const profile_names: Array<Blob_Profile_Name> = Mapgen_Profile_ƒ.yield_blob_profile_name_list();
 
 		return profile_names[
 			Utils.dice( size( profile_names ) ) -1 
 		];
 	},
 
-	produce_array_of_tiles_for_profile: (profile_name: BlobProfileName): Array<Tile_Name> => {
+	produce_array_of_tiles_for_profile: (profile_name: Blob_Profile_Name): Array<Tile_Name> => {
 		const blob_data = Blob_Profile_Data[profile_name];
 		const tile_array: Array<Tile_Name> = [];
 
@@ -46,7 +46,7 @@ export const Mapgen_Profile_ƒ = {
 		return tile_array;
 	},
 
-	get_random_tile_name_from_profile: (profile_name: BlobProfileName): string => {
+	get_random_tile_name_from_profile: (profile_name: Blob_Profile_Name): string => {
 		const random_tile_possibilities: Array<Tile_Name> = Mapgen_Profile_ƒ.produce_array_of_tiles_for_profile(profile_name);
 
 		return random_tile_possibilities[
@@ -56,14 +56,14 @@ export const Mapgen_Profile_ƒ = {
 }
 
 
-export type BlobProfiles = {
-	[key in BlobProfileName]: {
+export type Blob_Profiles = {
+	[key in Blob_Profile_Name]: {
 		[key in Tile_Name]?: number
 	}
 }
 
 
-export const Blob_Profile_Data: BlobProfiles = {
+export const Blob_Profile_Data: Blob_Profiles = {
 	stone: {
 		'menhir-big': 1,
 	},

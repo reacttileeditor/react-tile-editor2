@@ -10,7 +10,7 @@ import { Tile_Comparator_Sample } from "./Asset_Manager/Asset_Manager";
 
 import { Point2D, Rectangle } from '../../interfaces';
 
-interface DrawEntity {
+interface Draw_Entity {
 	pos: Point2D,
 	z_index: number,
 	opacity: number,
@@ -18,16 +18,16 @@ interface DrawEntity {
 	rotate: number, // degrees; native canvas is radians, we're using degrees everywhere besides the blitting function.
 	horizontally_flipped: boolean,
 	vertically_flipped: boolean,
-	drawing_data: DrawDataTypes,
+	drawing_data: Draw_Data_Types,
 }
 
-interface DrawData {
+interface Draw_Data_Image_With_Bounds {
 	image_ref: HTMLImageElement,
 	src_rect: Rectangle,
 	dst_rect: Rectangle,
 }
 
-interface DrawDataNoBounds {
+interface Draw_Data_Image_With_No_Bounds {
 	//images that are just direct references don't need rectangular dimensions to draw
 	//honestly we probably want to remove this, but for now we'll support it to keep the code train rolling.
 	image_ref: HTMLImageElement,
@@ -35,19 +35,19 @@ interface DrawDataNoBounds {
 	dest_point: Point2D
 }
 
-interface DrawDataText {
+interface Draw_Data_Text {
 	text: string,
 }
 
-interface DrawDataHitpoints {
+interface Draw_Data_Hitpoints {
 	portion: number, //normalized (0.0 to 1.0)
 }
 
 
-type DrawDataTypes = DrawData|DrawDataNoBounds|DrawDataText|DrawDataHitpoints;
+type Draw_Data_Types = Draw_Data_Image_With_Bounds|Draw_Data_Image_With_No_Bounds|Draw_Data_Text|Draw_Data_Hitpoints;
 
 
-interface BlitManagerState {
+interface Blit_Manager_State {
 	//we've got two values here - we do a "intended" value for the viewport, but when we change the current camera position, we actually tween towards it gradually.  The current position we're *actually* aimed at gets stored in a different variable, since it either has to be derived from some sort of tweening function, or directly stored (if we did the tweeing function, the time-offset certainly would have to, so dimensionally this at least will always require one dimension of data storage).
 	intended_viewport_offset: Point2D,
 	actual_viewport_offset: Point2D,
@@ -65,7 +65,7 @@ export const ms_to_ticks = (ms_val: number): number => (
 )
 
 
-export interface TimeTrackerData {
+export interface Time_Tracker_Data {
 	current_tick: number;
 	current_second: number,
 	current_millisecond: number,
@@ -86,9 +86,9 @@ declare var OffscreenCanvas : any;
 
 export type Blit_Manager_Data = {
 	ctx: CanvasRenderingContext2D;
-	time_tracker: TimeTrackerData;
-	state: BlitManagerState;
-	_Draw_List: Array<DrawEntity>;
+	time_tracker: Time_Tracker_Data;
+	state: Blit_Manager_State;
+	_Draw_List: Array<Draw_Entity>;
 	_OffScreenBuffer: HTMLCanvasElement;
 	osb_ctx: CanvasRenderingContext2D;
 	_dimensions: Point2D;
@@ -170,7 +170,7 @@ export const Blit_Manager_ƒ = {
 		brightness: 			number,
 		horizontally_flipped: 	boolean,
 		vertically_flipped: 	boolean,
-		drawing_data:			DrawDataTypes
+		drawing_data:			Draw_Data_Types
 	}) => {
 		p._BM._Draw_List.push({
 			pos:					p.pos,
@@ -203,7 +203,7 @@ export const Blit_Manager_ƒ = {
 
 		//then blit it
 		_.map( sortedBlits, (value,index) => {
-			if( Blit_Manager_ƒ.isDrawDataForText(value.drawing_data) ){
+			if( Blit_Manager_ƒ.isDraw_Data_Image_With_BoundsForText(value.drawing_data) ){
 				me.osb_ctx.save();
 				me.osb_ctx.imageSmoothingEnabled = false;
 				me.osb_ctx.font = '16px pixel, sans-serif';
@@ -219,7 +219,7 @@ export const Blit_Manager_ƒ = {
 				me.osb_ctx.fillText(value.drawing_data.text, 0, 0);
 				me.osb_ctx.restore();
 
-			} else if ( Blit_Manager_ƒ.isDrawDataForHitpoints(value.drawing_data)){
+			} else if ( Blit_Manager_ƒ.isDraw_Data_Image_With_BoundsForHitpoints(value.drawing_data)){
 				me.osb_ctx.save();
 
 				me.osb_ctx.translate(
@@ -274,7 +274,7 @@ export const Blit_Manager_ƒ = {
 				me.osb_ctx.fillRect( -12, -2, Math.round(24 * value.drawing_data.portion), 3);
 
 				me.osb_ctx.restore();
-			} else if( Blit_Manager_ƒ.isDrawDataWithBounds(value.drawing_data) ){
+			} else if( Blit_Manager_ƒ.isDraw_Data_Image_With_BoundsWithBounds(value.drawing_data) ){
 
 				me.osb_ctx.save();
 
@@ -386,21 +386,21 @@ export const Blit_Manager_ƒ = {
 		}
 	},
 
-	isDrawDataWithBounds( data: DrawDataTypes ): data is DrawData {
-		return (<DrawData>data).dst_rect !== undefined;
+	isDraw_Data_Image_With_BoundsWithBounds( data: Draw_Data_Types ): data is Draw_Data_Image_With_Bounds {
+		return (<Draw_Data_Image_With_Bounds>data).dst_rect !== undefined;
 	},
 
-	isDrawDataForText( data: DrawDataTypes): data is DrawDataText {
-		return (<DrawDataText>data).text !== undefined;
+	isDraw_Data_Image_With_BoundsForText( data: Draw_Data_Types): data is Draw_Data_Text {
+		return (<Draw_Data_Text>data).text !== undefined;
 	},
 
-	isDrawDataForHitpoints( data: DrawDataTypes): data is DrawDataHitpoints {
-		return (<DrawDataHitpoints>data).portion !== undefined;
+	isDraw_Data_Image_With_BoundsForHitpoints( data: Draw_Data_Types): data is Draw_Data_Hitpoints {
+		return (<Draw_Data_Hitpoints>data).portion !== undefined;
 	},
 
 
 /*----------------------- tweening -----------------------*/
-	iterate_viewport_tween: ( me: Blit_Manager_Data ): BlitManagerState => {
+	iterate_viewport_tween: ( me: Blit_Manager_Data ): Blit_Manager_State => {
 		const { viewport_tween_progress, intended_viewport_offset, actual_viewport_offset } = me.state;
 	
 		if( viewport_tween_progress < 1.0 ){

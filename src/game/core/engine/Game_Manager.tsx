@@ -12,7 +12,7 @@ import { Tile_Palette_Element } from "../gui/Tile_Palette_Element";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ, Tilemap_Single } from "./Tilemap_Manager/Tilemap_Manager";
 import { Pathfinder_ƒ } from "./Pathfinding";
 
-import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance, CreatureTypeName } from "../../objects_core/Creature";
+import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance, Creature_Type_Name } from "../../objects_core/Creature";
 
 import { Point2D, Rectangle } from '../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../objects_core/Custom_Object";
@@ -30,7 +30,7 @@ interface Game_View_Props {
 
 export interface Game_State {
 	current_turn: number,
-	objective_type: ObjectiveTypes,
+	objective_type: Objective_Types,
 	objective_text: string,
 	selected_object_index?: number,
 	turn_list: Array<Individual_Game_Turn_State>,
@@ -56,14 +56,14 @@ export const GameStateInit: Game_State = {
 	custom_object_list: [],
 };
 
-interface AnimationState {
+interface Animation_State {
 	processing_tick: number,
 	is_animating_live_game: boolean,
 	time_live_game_anim_started__in_ticks: number,
 	time_paused_game_anim_started__in_ticks: number,
 }
 
-type ObjectiveTypes = 'extermination' | 'decapitation';
+type Objective_Types = 'extermination' | 'decapitation';
 
 
 export type Game_and_Tilemap_Manager_Data = {
@@ -73,7 +73,7 @@ export type Game_and_Tilemap_Manager_Data = {
 
 
 export type Game_Manager_Data = {
-	animation_state: AnimationState;
+	animation_state: Animation_State;
 	game_state: Game_State;
 	update_game_state_for_ui: Function;
 	update_tooltip_state: (p: TooltipData) => void;
@@ -82,7 +82,7 @@ export type Game_Manager_Data = {
 
 export type Creature_Map_Instance = {
 	pos: Point2D,
-	type_name: CreatureTypeName,
+	type_name: Creature_Type_Name,
 	team: number,
 }
 
@@ -165,7 +165,7 @@ export const Game_Manager_ƒ = {
 		get_BM: () => Blit_Manager_Data,
 		get_TM: () => Tilemap_Manager_Data,
 		pos: Point2D,
-		type_name: CreatureTypeName,
+		type_name: Creature_Type_Name,
 		team: number,
 	}): Creature_Data => {
 		return New_Creature({
@@ -241,14 +241,14 @@ export const Game_Manager_ƒ = {
 		}
 	},
 
-	describe_objectives: (objective_type: ObjectiveTypes): string => (
+	describe_objectives: (objective_type: Objective_Types): string => (
 		{
 			'extermination': `Kill off all units on the enemy team.`,
 			'decapitation': `Kill the leaders of the enemy team.`,
 		}[objective_type]
 	),
 
-	write_full_objective_text: (me: Game_Manager_Data, objective_type: ObjectiveTypes, _game_state: Game_State): string => (
+	write_full_objective_text: (me: Game_Manager_Data, objective_type: Objective_Types, _game_state: Game_State): string => (
 		`The game will be won by the first team to:\n${Game_Manager_ƒ.describe_objectives(objective_type)} ${
 			ƒ.if( Game_Manager_ƒ.validate_objectives(me, _game_state).is_won,
 				`Team #${Game_Manager_ƒ.validate_objectives(me, _game_state).team_winner} has won the game!`,

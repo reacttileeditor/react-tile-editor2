@@ -19,7 +19,7 @@ import { GiPerspectiveDiceSixFacesOne, GiSpatter } from "react-icons/gi";
 
 import "./Editor_View.scss";
 import { Standard_Input_ƒ } from "./Standard_Input_Handling";
-import { CreatureTypeName, Creature_ƒ } from "../../objects_core/Creature";
+import { Creature_Type_Name, Creature_ƒ } from "../../objects_core/Creature";
 import { Game_Manager_ƒ } from "../engine/Game_Manager";
 import { includes, map } from "ramda";
 import { Map_Generation_ƒ } from "../engine/Map_Generation";
@@ -59,7 +59,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [builtin_level_filename_list, set_builtin_level_filename_list] = useState<Array<string>>([]);
 
 	const [show_unit_palette_drawer, set_show_unit_palette_drawer] = useState<boolean>(false);
-	const [selected_creature_type, set_selected_creature_type] = useState<CreatureTypeName>('hermit');
+	const [selected_creature_type, set_selected_creature_type] = useState<Creature_Type_Name>('hermit');
 	const [selected_creature_team, set_selected_creature_team] = useState<number>(1);
 	const [selected_tool, set_selected_tool] = useState<ToolTypes>('tiles');
 
@@ -443,8 +443,8 @@ export const Tile_Palette_Drawer = (props: {
 export const Unit_Palette_Drawer = (props: {
 	show_unit_palette_drawer: boolean,
 	set_show_unit_palette_drawer: Dispatch<SetStateAction<boolean>>,
-	selected_creature_type: CreatureTypeName,
-	set_selected_creature_type: Dispatch<SetStateAction<CreatureTypeName>>,
+	selected_creature_type: Creature_Type_Name,
+	set_selected_creature_type: Dispatch<SetStateAction<Creature_Type_Name>>,
 	selected_creature_team: number,
 	set_selected_creature_team: Dispatch<SetStateAction<number>>,
 	_Asset_Manager: () => Asset_Manager_Data,
@@ -453,7 +453,7 @@ export const Unit_Palette_Drawer = (props: {
 
 
 
-	const creature_list: Array<CreatureTypeName> = Creature_ƒ.list_all_creature_types();
+	const creature_list: Array<Creature_Type_Name> = Creature_ƒ.list_all_creature_types();
 
 	return <Drawer
 		open={props.show_unit_palette_drawer}

@@ -12,19 +12,19 @@ import { Tile_Comparator_Sample, Tile_Position_Comparator_Sample } from "./Asset
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import { concat, filter, flatten, includes, keys, slice, uniq } from "ramda";
 import { Tilemap_Single, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager/Tilemap_Manager";
-import { BlobProfileName, Mapgen_Profile_ƒ } from "../data/Mapgen_Data";
+import { Blob_Profile_Name, Mapgen_Profile_ƒ } from "../data/Mapgen_Data";
 import { Tile_Name } from "../data/Tile_Types";
 
 
-type TileBlob = {
+type Tile_Blob = {
 	seed_location: Point2D,
-	profile_name: BlobProfileName,
+	profile_name: Blob_Profile_Name,
 	tiles: Array<Point2D>,
 }
 
-type TileBlobPlan = {
+type Tile_Blob_Plan = {
 	seed_location: Point2D,
-	profile_name: BlobProfileName,
+	profile_name: Blob_Profile_Name,
 }
 
 
@@ -255,7 +255,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 		)
 
 
-		const tile_blob_plans: Array<TileBlobPlan> = map(
+		const tile_blob_plans: Array<Tile_Blob_Plan> = map(
 			tile_blob_rows_and_columns,
 			(blob) => ({
 				seed_location: {
@@ -274,7 +274,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			Seed the data structure for the tile blobs:
 		*/
 		
-		let tile_blobs: Array<TileBlob> = map(tile_blob_plans, (plan)=>(
+		let tile_blobs: Array<Tile_Blob> = map(tile_blob_plans, (plan)=>(
 			{
 				tiles: [plan.seed_location],
 				profile_name: plan.profile_name,

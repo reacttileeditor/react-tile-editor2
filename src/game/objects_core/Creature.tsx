@@ -22,7 +22,7 @@ export type PathNodeWithDirection = {
 	direction: Direction,
 }
 
-export type CreatureTypeName = 'hermit' | 'peasant' | 'skeleton' | 'undead_javelineer' | 'human_footman';
+export type Creature_Type_Name = 'hermit' | 'peasant' | 'skeleton' | 'undead_javelineer' | 'human_footman';
 
 
 
@@ -56,7 +56,7 @@ export type Change_Value = (number|string|Point2D|boolean|Path_Data|Creature_Dat
 
 export type Creature_Data = {
 	//static values
-	type_name: CreatureTypeName;
+	type_name: Creature_Type_Name;
 	team: number;
 
 	//state	
@@ -120,7 +120,7 @@ export const New_Creature = (
 		behavior_mode: BehaviorMode,
 		planned_tile_pos: Point2D,
 		target?: Creature_Data
-		type_name: CreatureTypeName,
+		type_name: Creature_Type_Name,
 		team: number,
 		unique_id?: string,
 		creation_timestamp: number,
@@ -208,7 +208,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 	})
 ),
 /*----------------------- introspection -----------------------*/
-	list_all_creature_types: (): Array<CreatureTypeName> => {
+	list_all_creature_types: (): Array<Creature_Type_Name> => {
 		return ['hermit','peasant','skeleton','undead_javelineer','human_footman'];
 	},
 
@@ -299,7 +299,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 /*----------------------- basetype management -----------------------*/
 
 
-	get_delegate: (type_name: CreatureTypeName): Creature_Delegate => {
+	get_delegate: (type_name: Creature_Type_Name): Creature_Delegate => {
 		return {
 			hermit: CT_Hermit_ƒ,
 			peasant: CT_Peasant_ƒ,
