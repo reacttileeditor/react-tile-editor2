@@ -10,12 +10,12 @@ import { Direction } from "../core/engine/Tilemap_Manager/Tilemap_Manager";
 import { Point2D, Rectangle } from '../interfaces';
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { zorder } from "../core/constants/zorder";
-import { ChangeInstance } from "./Creature";
+import { Change_Instance } from "./Creature";
 import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
 import { Vals } from "../core/constants/Constants";
 import { Base_Object_State, Base_Object_ƒ } from "./Base_Object";
 
-export type CustomObjectTypeName = 'shot';
+export type Custom_Object_Type_Name = 'shot';
 
 export type Custom_Object_Delegate_States = {} | CO_Shot_State | CO_Hit_Star_State;
 
@@ -31,7 +31,7 @@ export type Custom_Object_Delegate = {
 		tick: number,
 	) => {
 		data: Custom_Object_Update,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>,
 	},
 
@@ -52,7 +52,7 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 		tick: number,
 	): {
 		data: Custom_Object_Update,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>,
 	} => {
 
@@ -101,7 +101,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 		tick: number,
 	): {
 		data: Custom_Object_Update,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>,
 	} => {
 		const _prior_delegate_state = me.delegate_state as CO_Shot_State;
@@ -179,7 +179,7 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 		tick: number,
 	): {
 		data: Custom_Object_Update,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>,
 	} => {
 
@@ -212,7 +212,7 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
 		tick: number,
 	): {
 		data: Custom_Object_Update,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>,
 	} => {
 
@@ -249,7 +249,7 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 		tick: number,
 	): {
 		data: Custom_Object_Update,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>,
 	} => {
 		const _prior_delegate_state = me.delegate_state as CO_Hit_Star_State;
@@ -261,7 +261,7 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 				New_Custom_Object({
 					accessors: Base_Object_ƒ.get_accessors(me),
 					pixel_pos: me.pixel_pos,
-					type_name: 'hit_spark' as CustomObjectTypeName,
+					type_name: 'hit_spark' as Custom_Object_Type_Name,
 					creation_timestamp: tick,
 					velocity: {x:0, y:-7.5},
 					accel: {x:0, y:1.0},
@@ -302,7 +302,7 @@ export const CO_Hit_Spark_ƒ: Custom_Object_Delegate = {
 		tick: number,
 	): {
 		data: Custom_Object_Update,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>,
 	} => {
 		const _prior_delegate_state = me.delegate_state as CO_Hit_Star_State;

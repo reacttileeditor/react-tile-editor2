@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "re
 import ReactDOM from "react-dom";
 import _, { isNil, isString, toNumber } from "lodash";
 
-import { Canvas_View, MouseButtonState } from "./Canvas_View";
+import { Canvas_View, Mouse_Button_State } from "./Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
@@ -19,13 +19,13 @@ import { Vals } from "../constants/Constants";
 export const Standard_Input_ƒ = {
 	handle_canvas_mouse_move: (
 		pos: Point2D,
-		buttons_pressed: MouseButtonState,
+		buttons_pressed: Mouse_Button_State,
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 		set_cursor_pos: Dispatch<SetStateAction<Point2D>>,
 		set_Blit_Manager: (newVal: Blit_Manager_Data) => void,
-		handle_canvas_click: (pos: Point2D, buttons_pressed: MouseButtonState) => void,
+		handle_canvas_click: (pos: Point2D, buttons_pressed: Mouse_Button_State) => void,
 	) => {
 		const new_tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, pos)
 

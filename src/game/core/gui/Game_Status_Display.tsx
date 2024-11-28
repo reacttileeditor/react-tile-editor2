@@ -4,13 +4,13 @@ import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumbe
 
 import { ƒ } from "../engine/Utils";
 
-import { Canvas_View, MouseButtonState } from "./Canvas_View";
+import { Canvas_View, Mouse_Button_State } from "./Canvas_View";
 import { Asset_Manager_Data } from "../engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, ticks_to_ms } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager/Tilemap_Manager";
 
-import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance } from "../../objects_core/Creature";
+import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance } from "../../objects_core/Creature";
 
 import "./Primary_View.scss";
 import "./Game_Status_Display.scss";
@@ -26,7 +26,7 @@ import { Button } from "rsuite";
 
 
 
-export type TooltipData = {
+export type Tooltip_Data = {
 	pos: Point2D,
 	tile_name: string,
 	tile_cost: string,

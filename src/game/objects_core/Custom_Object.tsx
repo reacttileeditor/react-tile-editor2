@@ -8,7 +8,7 @@ import { ƒ } from "../core/engine/Utils";
 import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
-import { ChangeInstance, Creature_Type_Name } from "./Creature";
+import { Change_Instance, Creature_Type_Name } from "./Creature";
 import { Custom_Object_Delegate, CO_Shot_ƒ, CO_Text_Label_ƒ, Custom_Object_Delegate_States, CO_Shot_State, CO_Skull_Icon_ƒ, CO_Hit_Star_BG_ƒ, CO_Hit_Spark_ƒ, CO_Hit_Star_State, CO_Hit_Spark_State } from "./Custom_Object_Delegate";
 import { Base_Object_Accessors, Base_Object_Data, Base_Object_ƒ, New_Base_Object } from "./Base_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
@@ -17,10 +17,10 @@ import { Asset_Manager_Data } from "../core/engine/Asset_Manager/Asset_Manager";
 import { filter, isEmpty, map, without } from "ramda";
  
 
-export type CustomObjectTypeName = 'shot' | 'text_label' | 'skull_icon' | 'hit_star_bg' | 'hit_spark' ;
+export type Custom_Object_Type_Name = 'shot' | 'text_label' | 'skull_icon' | 'hit_star_bg' | 'hit_spark' ;
 
 export type Custom_Object_Data = {
-	type_name: CustomObjectTypeName,
+	type_name: Custom_Object_Type_Name,
 	text: string,
 	delegate_state: Custom_Object_Delegate_States,
 	scheduled_events: Array<Scheduled_Event>,
@@ -29,7 +29,7 @@ export type Custom_Object_Data = {
 export type Scheduled_Event = {
 	tick_offset: number,
 	command: (
-		change_list_inner: Array<ChangeInstance>,
+		change_list_inner: Array<Change_Instance>,
 		spawnees_: Array<Custom_Object_Data>,
 	) => void,
 }
@@ -43,7 +43,7 @@ export const New_Custom_Object = (
 		rotate?: number,
 		velocity?: Point2D,
 		accel?: Point2D, 
-		type_name: CustomObjectTypeName,
+		type_name: Custom_Object_Type_Name,
 		creation_timestamp?: number,
 		should_remove?: boolean,
 		is_done_with_turn?: boolean,
@@ -83,7 +83,7 @@ export const _New_Custom_Object = (
 		rotate: number,
 		velocity?: Point2D,
 		accel?: Point2D, 
-		type_name: CustomObjectTypeName,
+		type_name: Custom_Object_Type_Name,
 		creation_timestamp: number,
 		should_remove: boolean,
 		is_done_with_turn: boolean,
@@ -122,7 +122,7 @@ export const Custom_Object_ƒ = {
 /*----------------------- basetype management -----------------------*/
 
 
-	get_delegate: (type_name: CustomObjectTypeName): Custom_Object_Delegate => {
+	get_delegate: (type_name: Custom_Object_Type_Name): Custom_Object_Delegate => {
 		return {
 			shot: CO_Shot_ƒ,
 			text_label: CO_Text_Label_ƒ,
@@ -132,7 +132,7 @@ export const Custom_Object_ƒ = {
 		}[type_name];
 	},
 
-	cast_delegate_state: (type_name: CustomObjectTypeName, p: Custom_Object_Delegate_States): Custom_Object_Delegate_States => {
+	cast_delegate_state: (type_name: Custom_Object_Type_Name, p: Custom_Object_Delegate_States): Custom_Object_Delegate_States => {
 		return {
 			shot: p as CO_Shot_State,
 			text_label: p as {},
@@ -148,7 +148,7 @@ export const Custom_Object_ƒ = {
 	),
 
 	process_single_frame: (me: Custom_Object_Data, _Tilemap_Manager: Tilemap_Manager_Data, offset_in_ms: number, tick: number): {
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>,
 		new_object: Custom_Object_Data
 	} => {
@@ -171,7 +171,7 @@ export const Custom_Object_ƒ = {
 
 		const processed_data = processed_results.data;
 
-		const change_list: Array<ChangeInstance> = processed_results.change_list;
+		const change_list: Array<Change_Instance> = processed_results.change_list;
 		const spawnees: Array<Custom_Object_Data> = processed_results.spawnees;
 
 		let scheduled_events = me_after_physics.scheduled_events;

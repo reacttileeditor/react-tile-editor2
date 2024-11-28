@@ -4,13 +4,13 @@ import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumbe
 
 import { ƒ } from "../engine/Utils";
 
-import { Canvas_View, MouseButtonState } from "./Canvas_View";
+import { Canvas_View, Mouse_Button_State } from "./Canvas_View";
 import { Asset_Manager_Data } from "../engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager/Tilemap_Manager";
 
-import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance, Path_Data } from "../../objects_core/Creature";
+import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Path_Data } from "../../objects_core/Creature";
 
 import "./Primary_View.scss";
 import "./Game_Status_Display.scss";
@@ -37,7 +37,7 @@ interface Game_View_Props {
 
 
 
-export type TooltipData = {
+export type Tooltip_Data = {
 	pos: Point2D,
 	selected_unit: Creature_Data | undefined,
 	hovered_unit: Creature_Data | undefined,
@@ -50,7 +50,7 @@ export type TooltipData = {
 
 
 
-const Map_Tooltip = (props: TooltipData) => {
+const Map_Tooltip = (props: Tooltip_Data) => {
 	let distance = !isNil(props.unit_pos) ? Tilemap_Manager_ƒ.get_tile_coord_distance_between(props.tile_pos, props.unit_pos) : 0;
 
 	const get_left_click_text = (): string => {
@@ -197,13 +197,13 @@ export const Game_View = (props: Game_View_Props) => {
 
 
 	/*----------------------- IO routines -----------------------*/
-	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
+	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: Mouse_Button_State) => {
 		if( props.get_Game_Manager_Data() != null ){
 			props.set_Game_Manager_Data( Game_Manager_ƒ.set_cursor_pos(props.get_Game_Manager_Data(), pos, buttons_pressed));
 		}
 	}
 
-	const handle_canvas_mouse_click = (pos: Point2D, buttons_pressed: MouseButtonState) => {
+	const handle_canvas_mouse_click = (pos: Point2D, buttons_pressed: Mouse_Button_State) => {
 		console.log('canvas click game')
 
 		if( !announcement_modal_hidden ){

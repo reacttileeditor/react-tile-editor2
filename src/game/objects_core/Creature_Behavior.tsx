@@ -7,11 +7,11 @@ import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/eng
 import { Pathfinder_ƒ } from "../core/engine/Pathfinding";
 
 import { Point2D, Rectangle } from '../interfaces';
-import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
+import { Custom_Object_Type_Name, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
 import { Base_Object_Data, Base_Object_ƒ, New_Base_Object } from "./Base_Object";
 import { Creature_Delegate, CT_Hermit_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ } from "./Creature_Delegate";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
-import { Anim_Schedule_Element, BehaviorMode, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection, Path_Data } from "./Creature";
+import { Anim_Schedule_Element, Behavior_Mode, Change_Instance, Creature_Data, Creature_ƒ, Path_Node_With_Direction, Path_Data } from "./Creature";
 import { AI_Core_ƒ } from "./AI_Core";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../core/engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ms_to_ticks, ticks_to_ms } from "../core/engine/Blit_Manager";
@@ -71,9 +71,9 @@ export const Creature_Behavior_ƒ = {
 		return final_path;
 	},
 
-	yield_directional_path_reachable_this_turn: (me: Creature_Data, _TM: Tilemap_Manager_Data, new_path: Array<PathNodeWithDirection>):Array<PathNodeWithDirection> => {
+	yield_directional_path_reachable_this_turn: (me: Creature_Data, _TM: Tilemap_Manager_Data, new_path: Array<Path_Node_With_Direction>):Array<Path_Node_With_Direction> => {
 		let moves_remaining = cloneDeep(me.remaining_move_points);
-		let final_path: Array<PathNodeWithDirection> = [];
+		let final_path: Array<Path_Node_With_Direction> = [];
 	
 		_.map( new_path, (val) => {
 			const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
@@ -121,7 +121,7 @@ export const Creature_Behavior_ƒ = {
 		me: Creature_Data,
 		raw_path: Array<Point2D>,
 		_TM: Tilemap_Manager_Data
-	): Array<PathNodeWithDirection> => {
+	): Array<Path_Node_With_Direction> => {
 		if( size(raw_path) > 1 ){
 			return _.map( raw_path, (val, idx) => {
 				if( idx == (size(raw_path) -1) ){
@@ -219,7 +219,7 @@ export const Creature_Behavior_ƒ = {
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
 		offset_in_ms: number,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 	) => {
 		/*-------- Updating pixel position --------*/
 		const anim_type = Creature_ƒ.yield_current_animation_type( me, _TM, offset_in_ms);
@@ -240,7 +240,7 @@ export const Creature_Behavior_ƒ = {
 		_AM: Asset_Manager_Data,
 		offset_in_ms: number,
 		tick: number,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 	) => {
 
 		const new_path_data = Creature_Behavior_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
@@ -255,7 +255,7 @@ export const Creature_Behavior_ƒ = {
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 	): Path_Data => {
 		const new_path_data = cloneDeep(Creature_ƒ.set_path(
 			me,
@@ -272,7 +272,7 @@ export const Creature_Behavior_ƒ = {
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 	) => {
 		/*
 			We're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
@@ -308,7 +308,7 @@ export const Creature_Behavior_ƒ = {
 		_AM: Asset_Manager_Data,
 		offset_in_ms: number,
 		tick: number,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		new_path_data: Path_Data,
 	) => {
 
@@ -364,7 +364,7 @@ export const Creature_Behavior_ƒ = {
 		_TM: Tilemap_Manager_Data,
 		offset_in_ms: number,
 		tick: number,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>
 	) => {
 		Creature_ƒ.set(change_list, me, 'is_done_with_turn', true);
@@ -377,7 +377,7 @@ export const Creature_Behavior_ƒ = {
 		me: Creature_Data,
 		offset_in_ms: number,
 		tick: number,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>,
 		target: Creature_Data,
 	) => {
@@ -413,7 +413,7 @@ export const Creature_Behavior_ƒ = {
 		_BM: Blit_Manager_Data,
 		offset_in_ms: number,
 		tick: number,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>
 	) => {
 		/*
@@ -438,7 +438,7 @@ export const Creature_Behavior_ƒ = {
 		_BM: Blit_Manager_Data,
 		offset_in_ms: number,
 		tick: number,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>
 	) => {
 		let mode_tick = Creature_ƒ.get_time_since_mode_start(me, tick)
@@ -474,7 +474,7 @@ export const Creature_Behavior_ƒ = {
 		me: Creature_Data,
 		offset_in_ms: number,
 		tick: number,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>,
 		target: Creature_Data,
 
@@ -485,7 +485,7 @@ export const Creature_Behavior_ƒ = {
 			spawnees.push(New_Custom_Object({
 				accessors: Base_Object_ƒ.get_accessors(me),
 				pixel_pos: me.pixel_pos,
-				type_name: 'shot' as CustomObjectTypeName,
+				type_name: 'shot' as Custom_Object_Type_Name,
 				creation_timestamp: tick,
 				delegate_state: {
 					target_obj: target.unique_id,
@@ -494,7 +494,7 @@ export const Creature_Behavior_ƒ = {
 				},
 				scheduled_events: [{
 					tick_offset: tick + Vals.shot_flight_duration,
-					command: (change_list_: Array<ChangeInstance>, spawnees_: Array<Custom_Object_Data>) => {
+					command: (change_list_: Array<Change_Instance>, spawnees_: Array<Custom_Object_Data>) => {
 						//alert('damage')
 
 						Creature_ƒ.add(change_list_, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
@@ -503,7 +503,7 @@ export const Creature_Behavior_ƒ = {
 						spawnees_.push(New_Custom_Object({
 							accessors: Base_Object_ƒ.get_accessors(me),
 							pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
-							type_name: 'text_label' as CustomObjectTypeName,
+							type_name: 'text_label' as Custom_Object_Type_Name,
 							creation_timestamp: tick,
 							text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
 						}));
@@ -511,7 +511,7 @@ export const Creature_Behavior_ƒ = {
 						spawnees_.push(New_Custom_Object({
 							accessors: Base_Object_ƒ.get_accessors(me),
 							pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
-							type_name: 'hit_star_bg' as CustomObjectTypeName,
+							type_name: 'hit_star_bg' as Custom_Object_Type_Name,
 							creation_timestamp: tick,
 							delegate_state: {
 								angle: angle_between({source: me.tile_pos, dest: target.tile_pos})
@@ -528,7 +528,7 @@ export const Creature_Behavior_ƒ = {
 			spawnees.push(New_Custom_Object({
 				accessors: Base_Object_ƒ.get_accessors(me),
 				pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
-				type_name: 'text_label' as CustomObjectTypeName,
+				type_name: 'text_label' as Custom_Object_Type_Name,
 				creation_timestamp: tick,
 				text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
 			}));
@@ -536,7 +536,7 @@ export const Creature_Behavior_ƒ = {
 			spawnees.push(New_Custom_Object({
 				accessors: Base_Object_ƒ.get_accessors(me),
 				pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
-				type_name: 'hit_star_bg' as CustomObjectTypeName,
+				type_name: 'hit_star_bg' as Custom_Object_Type_Name,
 				creation_timestamp: tick,
 				delegate_state: {
 					angle: angle_between({source: me.tile_pos, dest: target.tile_pos})
@@ -552,14 +552,14 @@ export const Creature_Behavior_ƒ = {
 		_TM: Tilemap_Manager_Data,
 		offset_in_ms: number,
 		tick: number,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>
 	) => {
 		if( me.current_hitpoints <= 0 ) {
 			spawnees.push(New_Custom_Object({
 				accessors: Base_Object_ƒ.get_accessors(me),
 				pixel_pos: me.pixel_pos,
-				type_name: 'skull_icon' as CustomObjectTypeName,
+				type_name: 'skull_icon' as Custom_Object_Type_Name,
 				creation_timestamp: tick,
 			}));
 
@@ -576,10 +576,10 @@ export const Creature_Behavior_ƒ = {
 		offset_in_ms: number,
 		tick: number,
 	): {
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>
 	} => {
-		let change_list: Array<ChangeInstance> = [];
+		let change_list: Array<Change_Instance> = [];
 		const spawnees: Array<Custom_Object_Data> = [];
 
 
@@ -657,7 +657,7 @@ export const Creature_Behavior_ƒ = {
 	
 
 /*----------------------- animation — full info -----------------------*/
-	yield_current_animation_type: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number): BehaviorMode => (
+	yield_current_animation_type: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number): Behavior_Mode => (
 		me.behavior_mode
 	),
 

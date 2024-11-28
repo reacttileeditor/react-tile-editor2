@@ -12,28 +12,28 @@ import { Creature_Data, Creature_ƒ } from "../../objects_core/Creature";
 import { Point2D, Rectangle } from '../../interfaces';
 
 interface Tile_View_State {
-	tileStatus: TileGrid,
+	tileStatus: Tile_Grid,
 	initialized: boolean,
 }
 
-interface NodeGraph {
-	[index: string]: Array<WeightedNode>
+interface Node_Graph {
+	[index: string]: Array<Weighted_Node>
 }
 
-interface NodeAddrToNodeAddrDict {
+interface Node_Address_To_Node_Address_Dictionary {
 	[index: string]: string
 }
 
-interface NodeAddrToNumberDict {
+interface Node_Address_To_Number_Dictionary {
 	[index: string]: number
 }
 
-interface WeightedNode {
+interface Weighted_Node {
 	tile_addr: string,
 	move_cost: number,
 }
 
-type TileGrid = Array<Array<string>>;
+type Tile_Grid = Array<Array<string>>;
 
 export type Pathfinding_Result = {
 	successful_path: Array<Point2D>,
@@ -41,22 +41,22 @@ export type Pathfinding_Result = {
 }
 
 
-export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _Creature: Creature_Data, grid: TileGrid ): NodeGraph => {
+export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _Creature: Creature_Data, grid: Tile_Grid ): Node_Graph => {
 
 	
 /*----------------------- core functionality -----------------------*/
-	const move_cost_for_coords = ( _grid: TileGrid, _coords: Point2D ): number|null => (
+	const move_cost_for_coords = ( _grid: Tile_Grid, _coords: Point2D ): number|null => (
 		Creature_ƒ.yield_move_cost_for_tile_type( _Creature, _grid[_coords.y][_coords.x] )
 	)
 	
 	
-	const push_if_not_null = (_array: Array<WeightedNode>, _push_val: WeightedNode|null): void => {
+	const push_if_not_null = (_array: Array<Weighted_Node>, _push_val: Weighted_Node|null): void => {
 		if(_push_val != null){
 			_array.push( _push_val );
 		}
 	}
 	
-	const check_tile = ( _grid: TileGrid, _coords: Point2D ): WeightedNode|null => {
+	const check_tile = ( _grid: Tile_Grid, _coords: Point2D ): Weighted_Node|null => {
 		/*
 			If the tile we're checking is out of bounds, then it's blocked.
 			If the tile we're checking is open, it's a valid node connection, so we return it (so we can add it to the graph).
@@ -78,9 +78,9 @@ export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manage
 	};
 
 
-	const check_adjacencies = ( _grid: TileGrid, _coords: Point2D ): Array<WeightedNode> => {
+	const check_adjacencies = ( _grid: Tile_Grid, _coords: Point2D ): Array<Weighted_Node> => {
 		const tile_data: Tile_Position_Comparator_Sample = Tilemap_Manager_ƒ.get_tile_position_comparator_for_pos(_TM, _coords);
-		var adjacent_nodes: Array<WeightedNode> = [];
+		var adjacent_nodes: Array<Weighted_Node> = [];
 
 		/*
 			Check every adjacent tile in clockwise order, starting from the north.
@@ -96,7 +96,7 @@ export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manage
 		return adjacent_nodes;
 	}
 	
-	const build_node_graph_from_grid = ( _grid: TileGrid ): NodeGraph => {
+	const build_node_graph_from_grid = ( _grid: Tile_Grid ): Node_Graph => {
 		var graph_as_adjacency_list: Array<string> = [];
 		
 		_.map( _grid, (row_value: Array<string>, row_index) => {
@@ -109,7 +109,7 @@ export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manage
 			})
 		});
 		
-		return graph_as_adjacency_list as unknown as NodeGraph;
+		return graph_as_adjacency_list as unknown as Node_Graph;
 	}
 
 	return build_node_graph_from_grid(grid);
@@ -125,15 +125,15 @@ const tuple_to_addr = (the_tuple: Point2D): string => {
 			
 
 
-const a_star_search = ( _graph: NodeGraph, _start_coords: Point2D, _end_coords: Point2D, _creature: Creature_Data ): Pathfinding_Result => {
+const a_star_search = ( _graph: Node_Graph, _start_coords: Point2D, _end_coords: Point2D, _creature: Creature_Data ): Pathfinding_Result => {
 	var discarded_nodes = [];
 	let search_was_aborted_early : boolean = false;
 	let search_has_succeeded : boolean = false;
 
 
 	var frontier = new PriorityQueue<Point2D>();
-	var costs_so_far: NodeAddrToNumberDict = {};  //a map of node addresses (keys) to move cost (values)
-	var came_from: NodeAddrToNodeAddrDict = {}; //a map of node addresses (keys) to node addresses (values) 
+	var costs_so_far: Node_Address_To_Number_Dictionary = {};  //a map of node addresses (keys) to move cost (values)
+	var came_from: Node_Address_To_Node_Address_Dictionary = {}; //a map of node addresses (keys) to node addresses (values) 
 	
 	
 	const compute_node_heuristic = ( _node_coords: Point2D, _end_coords: Point2D ) => {
@@ -201,7 +201,7 @@ const a_star_search = ( _graph: NodeGraph, _start_coords: Point2D, _end_coords: 
 	}
 	
 
-	const reconstruct_path = (came_from: NodeAddrToNodeAddrDict, start_node: string, goal_node: string): Array<Point2D> => {
+	const reconstruct_path = (came_from: Node_Address_To_Node_Address_Dictionary, start_node: string, goal_node: string): Array<Point2D> => {
 		let current_node = goal_node;
 		let path: Array<string>  = [];
 		while( current_node != start_node ){

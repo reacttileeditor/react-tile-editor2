@@ -7,9 +7,9 @@ import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/eng
 import { Pathfinder_ƒ } from "../core/engine/Pathfinding";
 
 import { Point2D, Rectangle } from '../interfaces';
-import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
+import { Custom_Object_Type_Name, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
-import { Anim_Schedule_Element, ChangeInstance, Creature_Data, Creature_ƒ, PathNodeWithDirection, Path_Data, path_data_empty } from "./Creature";
+import { Anim_Schedule_Element, Change_Instance, Creature_Data, Creature_ƒ, Path_Node_With_Direction, Path_Data, path_data_empty } from "./Creature";
 import { Creature_Behavior_ƒ } from "./Creature_Behavior";
 import { Asset_Manager_Data } from "../core/engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
@@ -119,7 +119,7 @@ export const AI_Core_ƒ = {
 	// 	_BM: Blit_Manager_Data,
 	// 	offset_in_ms: number,
 	// 	tick: number,
-	// 	change_list: Array<ChangeInstance>,
+	// 	change_list: Array<Change_Instance>,
 	// 	spawnees: Array<Custom_Object_Data>
 	// ) => {
 
@@ -133,7 +133,7 @@ export const AI_Core_ƒ = {
 		_BM: Blit_Manager_Data,
 		offset_in_ms: number,
 		tick: number,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>
 	) => {
 		/*
@@ -216,7 +216,7 @@ export const AI_Core_ƒ = {
 		_BM: Blit_Manager_Data,
 		offset_in_ms: number,
 		tick: number,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data>
 	) => {
 

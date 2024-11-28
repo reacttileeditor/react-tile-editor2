@@ -12,9 +12,9 @@ interface Props {
 	_Tilemap_Manager: Tilemap_Manager_Data,
 	dimensions: Point2D,
 	
-	handle_canvas_click: (pos: Point2D, buttons_pressed: MouseButtonState) => void,
+	handle_canvas_click: (pos: Point2D, buttons_pressed: Mouse_Button_State) => void,
 	handle_canvas_keys_down: (keys: Array<string>) => void,
-	handle_canvas_mouse_move: (pos: Point2D, buttons_pressed: MouseButtonState) => void,
+	handle_canvas_mouse_move: (pos: Point2D, buttons_pressed: Mouse_Button_State) => void,
 }
 
 interface State {
@@ -23,7 +23,7 @@ interface State {
 
 import { Point2D, Rectangle } from '../../interfaces';
 
-export type MouseButtonState = {
+export type Mouse_Button_State = {
 	back: boolean,
 	forward: boolean,
 	left: boolean,
@@ -123,7 +123,7 @@ export const Canvas_View = (props: Props) => {
 		return Math.min( Math.max(min_limit, value), max_limit);
 	}
 
-	const handle_canvas_click = ( e: React.MouseEvent<HTMLCanvasElement>, buttons_pressed: MouseButtonState ) => {
+	const handle_canvas_click = ( e: React.MouseEvent<HTMLCanvasElement>, buttons_pressed: Mouse_Button_State ) => {
 		var mousePos = get_mouse_pos_for_action(e, true);
 	
 		props.handle_canvas_click( mousePos, buttons_pressed );
@@ -187,7 +187,7 @@ export const Canvas_View = (props: Props) => {
 		captureMouseEvents(e);
 	}
 
-	const extract_which_mouse_button = (e: React.MouseEvent<HTMLCanvasElement>): MouseButtonState => {
+	const extract_which_mouse_button = (e: React.MouseEvent<HTMLCanvasElement>): Mouse_Button_State => {
 		var names = [
 			'left', 'right', 'middle', 'back', 'forward'
 		];
@@ -201,7 +201,7 @@ export const Canvas_View = (props: Props) => {
 				return {[names[idx]]: Boolean(val === 1) };
 			}),
 			(a,b) => _.merge(a,b)
-		) as MouseButtonState
+		) as Mouse_Button_State
 	}
 
 	const mousemoveListener = (e: React.MouseEvent<HTMLCanvasElement>) => {

@@ -6,7 +6,7 @@ import { ƒ } from "../core/engine/Utils";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
-import { CustomObjectTypeName, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
+import { Custom_Object_Type_Name, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
 import { Base_Object_Data, New_Base_Object } from "./Base_Object";
 import { Creature_Delegate, CT_Hermit_ƒ, CT_Human_Footman_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ, CT_Undead_Javelineer_ƒ } from "./Creature_Delegate";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
@@ -17,7 +17,7 @@ import { add, filter, includes, reduce } from "ramda";
 
 
 
-export type PathNodeWithDirection = {
+export type Path_Node_With_Direction = {
 	position: Point2D,
 	direction: Direction,
 }
@@ -26,28 +26,28 @@ export type Creature_Type_Name = 'hermit' | 'peasant' | 'skeleton' | 'undead_jav
 
 
 
-export type ChangeType = 
+export type Change_Type = 
 	'add' |
 	'set';
 
 
-export type BehaviorMode = 
+export type Behavior_Mode = 
 	'stand' |
 	'walk' |
 	'attack';
 
 
-export type ChangeInstance = {
-	type: ChangeType,
+export type Change_Instance = {
+	type: Change_Type,
 	value: Change_Value,
 	target_variable: keyof Creature_Data,
 	target_obj_uuid: string, //uuid, actually
 };
 
-type CreatureKeys = (keyof Creature_Data & keyof Base_Object_Data);
+type Creature_Keys = (keyof Creature_Data & keyof Base_Object_Data);
 
-export type VariableSpecificChangeInstance = {
-	type: ChangeType,
+export type Variable_Specific_Change_Instance = {
+	type: Change_Type,
 	value: Change_Value,
 }
 
@@ -69,7 +69,7 @@ export type Creature_Data = {
 	last_behavior_reconsideration_timestamp: number,
 	next_behavior_reconsideration_timestamp: number,
 	is_done_with_turn: boolean,
-	behavior_mode: BehaviorMode,
+	behavior_mode: Behavior_Mode,
 
 	//intended moves
 	planned_tile_pos: Point2D;
@@ -88,9 +88,9 @@ export type Anim_Schedule_Element = {
 
 export type Path_Data = {
 	path_this_turn: Array<Point2D>;
-	path_this_turn_with_directions: Array<PathNodeWithDirection>;
+	path_this_turn_with_directions: Array<Path_Node_With_Direction>;
 	path_reachable_this_turn: Array<Point2D>;
-	path_reachable_this_turn_with_directions: Array<PathNodeWithDirection>;
+	path_reachable_this_turn_with_directions: Array<Path_Node_With_Direction>;
 }
 
 export const path_data_empty = {
@@ -117,7 +117,7 @@ export const New_Creature = (
 		last_behavior_reconsideration_timestamp?: number,
 		next_behavior_reconsideration_timestamp?: number,
 		is_done_with_turn: boolean,
-		behavior_mode: BehaviorMode,
+		behavior_mode: Behavior_Mode,
 		planned_tile_pos: Point2D,
 		target?: Creature_Data
 		type_name: Creature_Type_Name,
@@ -312,7 +312,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 /*----------------------- state management -----------------------*/
 	apply_changes: (
 		me: Creature_Data,
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 	): Creature_Data => {
 		//_.map( _.range( _.size(change_list) ), ()=> )
 
@@ -326,7 +326,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 			We then need to 'reduce' this using some kind of special, bespoke logic.
 		*/
 		//@ts-ignore
-		let separate_changes_by_key: { [key in CreatureKeys]?: Array<VariableSpecificChangeInstance> } = 
+		let separate_changes_by_key: { [key in Creature_Keys]?: Array<Variable_Specific_Change_Instance> } = 
 			_.mapValues(unique_keys, (target_variable) => ({
 				//@ts-ignore
 				[target_variable]: _.map(
@@ -340,19 +340,19 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 				)
 			}))
 
-			//this gives us a series of i.e:  { hitpoints:  Array<VariableSpecificChangeInstance> }, so we need to combine all of these into a single master object, with one key per variable affected.
+			//this gives us a series of i.e:  { hitpoints:  Array<Variable_Specific_Change_Instance> }, so we need to combine all of these into a single master object, with one key per variable affected.
 
 		let _collated_changes_by_key = _.reduce(separate_changes_by_key, (a,b)=>{
 			return _.assign(a,b);
 		});
 
-		let collated_changes_by_key: { [key in CreatureKeys]: Array<VariableSpecificChangeInstance> } = ƒ.if(_collated_changes_by_key != undefined,
+		let collated_changes_by_key: { [key in Creature_Keys]: Array<Variable_Specific_Change_Instance> } = ƒ.if(_collated_changes_by_key != undefined,
 			_collated_changes_by_key,
 			{}
 		)
 
 		let reduced_changes_by_key: Partial<Creature_Data> = _.mapValues( collated_changes_by_key,
-			(val: Array<VariableSpecificChangeInstance>, key: CreatureKeys) => {
+			(val: Array<Variable_Specific_Change_Instance>, key: Creature_Keys) => {
 				return Creature_ƒ.reduce_individual_change_type(me, val, key)
 			});
 
@@ -375,13 +375,13 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 		//@ts-ignore
 	reduce_individual_change_type: (
 		me: Creature_Data,
-		incoming_changes: Array<VariableSpecificChangeInstance>,
-		key: CreatureKeys
+		incoming_changes: Array<Variable_Specific_Change_Instance>,
+		key: Creature_Keys
 	):ValueOf<Creature_Data> => {
 		/*
 			If we have a set operation on this frame, then it overwrites any changes made by an add op.  Make sure the set operations come after any add operations. 
 		*/
-		// let sorted_values: Array<VariableSpecificChangeInstance> = _.sortBy(incoming_changes, (val)=>(
+		// let sorted_values: Array<Variable_Specific_Change_Instance> = _.sortBy(incoming_changes, (val)=>(
 		// 	ƒ.if(val.type == 'add',
 		// 		1,
 		// 		2
@@ -450,7 +450,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 
 
 	add: (
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		me: Creature_Data,
 		target_variable: keyof Creature_Data,
 		value: Change_Value,
@@ -465,7 +465,7 @@ copy_for_new_turn: (me: Creature_Data): Creature_Data => (
 	},
 
 	set: (
-		change_list: Array<ChangeInstance>,
+		change_list: Array<Change_Instance>,
 		me: Creature_Data,
 		target_variable: keyof Creature_Data,
 		value: Change_Value,

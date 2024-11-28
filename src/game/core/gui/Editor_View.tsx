@@ -2,7 +2,7 @@ import React, { Dispatch, KeyboardEventHandler, SetStateAction, useEffect, useRe
 import ReactDOM from "react-dom";
 import _, { isNil, isString, toNumber } from "lodash";
 
-import { Canvas_View, MouseButtonState } from "./Canvas_View";
+import { Canvas_View, Mouse_Button_State } from "./Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
@@ -40,9 +40,9 @@ interface Editor_View_Props {
 	set_is_edit_mode: Dispatch<SetStateAction<boolean>>,
 }
 
-type ToolTypes = 'tiles' | 'unitAdd' | 'unitDelete';
+type Editor_Tool_Types = 'tiles' | 'unitAdd' | 'unitDelete';
 
-type MapGenerationTypes = 'true_random' | 'blob_regions';
+type Editor_Map_Generation_Types = 'true_random' | 'blob_regions';
 
 
 export const Editor_View = (props: Editor_View_Props) => {
@@ -61,7 +61,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [show_unit_palette_drawer, set_show_unit_palette_drawer] = useState<boolean>(false);
 	const [selected_creature_type, set_selected_creature_type] = useState<Creature_Type_Name>('hermit');
 	const [selected_creature_team, set_selected_creature_team] = useState<number>(1);
-	const [selected_tool, set_selected_tool] = useState<ToolTypes>('tiles');
+	const [selected_tool, set_selected_tool] = useState<Editor_Tool_Types>('tiles');
 
 	const [show_tile_palette_drawer, set_show_tile_palette_drawer] = useState<boolean>(false);
 	const [selected_tile_type, set_selected_tile_type] = useState<Tile_Name>('grass');
@@ -160,7 +160,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 	
 	/*----------------------- I/O routines -----------------------*/
-	const handle_canvas_click = (pos: Point2D, buttons_pressed: MouseButtonState) => {
+	const handle_canvas_click = (pos: Point2D, buttons_pressed: Mouse_Button_State) => {
 		console.log('canvas click editor')
 
 		if(selected_tool == 'tiles'){
@@ -191,7 +191,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 		}
 	}
 
-	const editor_handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: MouseButtonState) => {
+	const editor_handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: Mouse_Button_State) => {
 		Standard_Input_ƒ.handle_canvas_mouse_move(
 			pos,
 			buttons_pressed,
@@ -738,7 +738,7 @@ export const Generate_Map_Modal = (props: {
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
 	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
 }) => {
-	const [generation_type, set_generation_type] = useState<MapGenerationTypes>('blob_regions');
+	const [generation_type, set_generation_type] = useState<Editor_Map_Generation_Types>('blob_regions');
 	const [deletion_target, set_deletion_target] = useState<string>('');
 
 	return <Modal
@@ -752,7 +752,7 @@ export const Generate_Map_Modal = (props: {
 		<RadioTileGroup
 			defaultValue="blob_regions"
 			value={generation_type}
-			onChange={(value: string|number, event)=>{set_generation_type(value as unknown as MapGenerationTypes) }}
+			onChange={(value: string|number, event)=>{set_generation_type(value as unknown as Editor_Map_Generation_Types) }}
 		>
 			<RadioTile icon={<Icon as={GiPerspectiveDiceSixFacesOne} />} label="True Random" value="true_random">
 				Generates a map by randomly filling each map tile with one of the possible known tile types.  The simplest and first thing we coded.
@@ -929,7 +929,7 @@ export const Edit_Metadata_Modal = (props: {
 
 
 
-export type EditorTooltipData = {
+export type EditorTooltip_Data = {
 	pos: Point2D,
 	tile_pos: Point2D,
 	tile_name: string,
@@ -944,7 +944,7 @@ export const Tooltip_Manager = (props: {
 	show_tooltip: boolean,
 }) => {
 
-	const get_tooltip_data = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): EditorTooltipData => ({
+	const get_tooltip_data = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): EditorTooltip_Data => ({
 		pos: Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, _AM, props.cursor_pos),
 		tile_pos: props.cursor_pos, //Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, props.cursor_pos ),
 		tile_name: Tilemap_Manager_ƒ.get_tile_name_for_pos(
@@ -964,7 +964,7 @@ export const Tooltip_Manager = (props: {
 	</div>
 }
 
-const Map_Tooltip = (props: EditorTooltipData) => {
+const Map_Tooltip = (props: EditorTooltip_Data) => {
 
 
 

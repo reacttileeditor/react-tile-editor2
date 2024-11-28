@@ -5,18 +5,18 @@ import { includes } from "ramda"
 
 import { ƒ } from "./Utils";
 
-import { Canvas_View, MouseButtonState } from "../gui/Canvas_View";
+import { Canvas_View, Mouse_Button_State } from "../gui/Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, ticks_to_ms } from "./Blit_Manager";
 import { Tile_Palette_Element } from "../gui/Tile_Palette_Element";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ, Tilemap_Single } from "./Tilemap_Manager/Tilemap_Manager";
 import { Pathfinder_ƒ } from "./Pathfinding";
 
-import { Creature_ƒ, New_Creature, Creature_Data, PathNodeWithDirection, ChangeInstance, Creature_Type_Name } from "../../objects_core/Creature";
+import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Creature_Type_Name } from "../../objects_core/Creature";
 
 import { Point2D, Rectangle } from '../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../objects_core/Custom_Object";
-import { TooltipData } from "../gui/Game_View";
+import { Tooltip_Data } from "../gui/Game_View";
 import { zorder } from "../constants/zorder";
 
 interface Game_View_Props {
@@ -76,7 +76,7 @@ export type Game_Manager_Data = {
 	animation_state: Animation_State;
 	game_state: Game_State;
 	update_game_state_for_ui: Function;
-	update_tooltip_state: (p: TooltipData) => void;
+	update_tooltip_state: (p: Tooltip_Data) => void;
 	cursor_pos: Point2D;
 }
 
@@ -154,7 +154,7 @@ export const Game_Manager_ƒ = {
  		me.update_game_state_for_ui = func;
 	},
 
-	set_tooltip_update_function: (me: Game_Manager_Data, func: (p: TooltipData) => void) => {
+	set_tooltip_update_function: (me: Game_Manager_Data, func: (p: Tooltip_Data) => void) => {
 		me.update_tooltip_state = func;
 	},
 
@@ -185,7 +185,7 @@ export const Game_Manager_ƒ = {
 	},
 
 	/*----------------------- ui interaction -----------------------*/
-	set_cursor_pos: (me: Game_Manager_Data, coords: Point2D, buttons_pressed: MouseButtonState): Game_Manager_Data => {
+	set_cursor_pos: (me: Game_Manager_Data, coords: Point2D, buttons_pressed: Mouse_Button_State): Game_Manager_Data => {
 		return {
 			...cloneDeep(me),
 			cursor_pos: coords,
@@ -199,7 +199,7 @@ export const Game_Manager_ƒ = {
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 		pos: Point2D,
-		buttons_pressed: MouseButtonState
+		buttons_pressed: Mouse_Button_State
 	): Game_and_Tilemap_Manager_Data => {
 		if( !get_game_state().animation_state.is_animating_live_game ){
 
@@ -393,7 +393,7 @@ export const Game_Manager_ƒ = {
 		}
 	},
 
-	get_tooltip_data: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): TooltipData => {
+	get_tooltip_data: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Tooltip_Data => {
 		const tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos )
 
 		return {
@@ -474,7 +474,7 @@ export const Game_Manager_ƒ = {
 
 		} else {		
 			let spawnees: Array<Custom_Object_Data> = [];
-			let master_change_list: Array<ChangeInstance> = [];
+			let master_change_list: Array<Change_Instance> = [];
 
 			map( me.game_state.current_frame_state.creature_list, (val,idx) => {
 				const processed_results = Creature_ƒ.process_single_frame(val, _TM, _AM, _BM, Game_Manager_ƒ.get_time_offset(me, _BM), tick);
@@ -842,7 +842,7 @@ export const Game_Manager_ƒ = {
 		)
 	),
 
-	select_object_based_on_tile_click: (get_game_state: () => Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, buttons_pressed: MouseButtonState): Game_Manager_Data => {
+	select_object_based_on_tile_click: (get_game_state: () => Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, buttons_pressed: Mouse_Button_State): Game_Manager_Data => {
 		/*
 			This handles two "modes" simultaneously.  If we click on an object, then we change the current selected object to be the one we clicked on (its position is occupied, and ostensibly can't be moved into - this might need to change with our game rules being what they are, but we'll cross that bridge later).  If we click on the ground, then we're intending to move the current object to that location.
 		*/
