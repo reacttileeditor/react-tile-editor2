@@ -5,7 +5,7 @@ import _, { Dictionary, cloneDeep, isArray, isEmpty, isEqual, map, range, size }
 import { Asset_Manager_Data, Asset_Manager_ƒ, Graphic_Item_Basic, Image_List_Cache } from "../Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "../Blit_Manager";
 import * as Utils from "../Utils";
-import { is_all_true, ƒ } from "../Utils";
+import { dice_anchored_on_specific_random_seed, is_all_true, ƒ } from "../Utils";
 
 
 import { Tile_Comparator_Sample, Tile_Position_Comparator_Sample } from "../Asset_Manager/Asset_Manager";
@@ -23,12 +23,23 @@ import { Map_Generation_ƒ } from "../Map_Generation";
 import { boolean } from "yargs";
 import { MTP_Anchor_Data } from "../../data/Multi_Tile_Patterns";
 import { Asset_Blit_List, Asset_Blit_Tilemap, Tilemap_Single, Tilemap_Keys, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
+import Prando from "prando";
 
 
 
 export const Tilemap_Manager_ƒ_Drawing = {
 
+	deterministic_random_time_offset_for_tile: (pos: Point2D): number => {
+		/*
+			Basically this should always return the same number for a particular tile.  The number should seem wildly random, but be fixed on a per-tile basis.
 
+			This seeds an RNG with the passed-in tile value, and then uses it just once to get a random value.
+		*/
+
+		const RNG = new Prando(pos.x * pos.y);
+
+		return dice_anchored_on_specific_random_seed(100000, RNG);
+	},
 	
 /*----------------------- draw ops -----------------------*/
 	draw_tiles: (
@@ -88,7 +99,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 							pos
 						),
 						zorder:						individual_asset.zorder,
-						current_milliseconds:		ticks_to_ms(_BM.time_tracker.current_tick),
+						current_milliseconds:		ticks_to_ms(_BM.time_tracker.current_tick) + Tilemap_Manager_ƒ.deterministic_random_time_offset_for_tile(pos),
 						opacity:					1.0,
 						rotate:						0,
 						brightness:					1.0,
