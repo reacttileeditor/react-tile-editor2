@@ -145,15 +145,9 @@ export const Drawing = {
 		In the above, hypothetical case, we'd be halfways into the second animation.  Something similar would be true at 75ms.
 	*/
 
-
-	get_current_frame_number_and_asset_data_for_animation_sequence: (
+	calculate_animation_durations: (
 		asset_data_records: Array<Asset_Data_Record>,
-		current_milliseconds: number
-	): {
-		current_time_offset: number,
-		asset_data: Asset_Data_Record,
-	} => {
-
+	): Array<number> => {
 		const image_data_array = map(asset_data_records, (val)=>(val.image_data))
 
 		const animation_durations: Array<number> = map(image_data_array, (image_data)=>{
@@ -165,16 +159,25 @@ export const Drawing = {
 			) * frame_duration;
 		})
 
+		return animation_durations;
+	},
+
+
+	get_current_frame_number_and_asset_data_for_animation_sequence: (
+		asset_data_records: Array<Asset_Data_Record>,
+		current_milliseconds: number
+	): {
+		current_time_offset: number,
+		asset_data: Asset_Data_Record,
+	} => {
+
+		const image_data_array = map(asset_data_records, (val)=>(val.image_data))
+
+		const animation_durations = Asset_Manager_ƒ.calculate_animation_durations(asset_data_records);
+
 		const total_sequence_duration = reduce(add, 0, animation_durations);
 
-		const shuffled_asset_data_records = Asset_Manager_ƒ.deterministically_convolute_animation_sequence(
-			asset_data_records,
-			current_milliseconds,
-			total_sequence_duration,
-		);
-
-		const shuffled_image_data_array = map(shuffled_asset_data_records, (val)=>(val.image_data))
-
+		
 		/*
 			Calculate when each sub-animation ends.  I.e. if input values were [4, 3.5, 6] (durations), this function would give: [4, 7.5, 13.5].
 
@@ -200,8 +203,8 @@ export const Drawing = {
 		/*
 			Using that, extract the image data for that animation (easy).
 		*/
-		const asset_data = shuffled_asset_data_records[animation_index];
-		const image_data = shuffled_image_data_array[animation_index];
+		const asset_data = asset_data_records[animation_index];
+		const image_data = image_data_array[animation_index];
 
 
 		/*
@@ -228,12 +231,13 @@ export const Drawing = {
 	deterministically_convolute_animation_sequence: (
 		asset_data_records: Array<Asset_Data_Record>,
 		current_milliseconds: number,
-		sequence_duration: number,
 	): Array<Asset_Data_Record> => {
 
-		const current_sequence_iteration = Math.round(current_milliseconds / sequence_duration);
+		const animation_durations = Asset_Manager_ƒ.calculate_animation_durations(asset_data_records);
+		const total_sequence_duration = reduce(add, 0, animation_durations);
+
+		const current_sequence_iteration = Math.round(current_milliseconds / total_sequence_duration);
 		
-		//const sequence_length = size(asset_data_records);
 
 		return get_nth_permutation_of_deck<Asset_Data_Record>(current_sequence_iteration,asset_data_records);
 	},
@@ -260,7 +264,7 @@ export const Drawing = {
 
 			if( size(asset_data_records) > 1 ){
 				let info = Asset_Manager_ƒ.get_current_frame_number_and_asset_data_for_animation_sequence(
-					asset_data_records,
+					Asset_Manager_ƒ.deterministically_convolute_animation_sequence(asset_data_records, p.current_milliseconds),
 					p.current_milliseconds
 				)
 
