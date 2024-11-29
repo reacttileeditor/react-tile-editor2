@@ -157,7 +157,7 @@ export const factorial = (n: number): number => {
 			n * factorial(n - 1);
 }
 
-export const get_nth_permutation_of_deck = (permutation_number: number, original_array: Array<number>): Array<number> => {
+export const get_nth_permutation_of_deck = <T>(permutation_number: number, original_array: Array<T>): Array<T> => {
 	var temporary_array = original_array.slice(); //Create a copy
 	var length = original_array.length;
 	var permuted_array = [];

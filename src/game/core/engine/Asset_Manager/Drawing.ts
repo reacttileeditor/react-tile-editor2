@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { Asset_Data_Record, Asset_Manager_Data, Asset_Manager_ƒ, Autotile_Restriction_Sample, Image_Data, Tile_Comparator_Sample } from "./Asset_Manager";
 import { filter, isString, map, size } from "lodash";
-import { is_all_true, ƒ } from "../Utils";
+import { get_nth_permutation_of_deck, is_all_true, ƒ } from "../Utils";
 import { add, concat, findIndex, reduce, slice, uniq } from "ramda";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../Blit_Manager";
 import { Point2D } from "../../../interfaces";
@@ -153,6 +153,7 @@ export const Drawing = {
 		current_time_offset: number,
 		asset_data: Asset_Data_Record,
 	} => {
+
 		const image_data_array = map(asset_data_records, (val)=>(val.image_data))
 
 		const animation_durations: Array<number> = map(image_data_array, (image_data)=>{
@@ -165,6 +166,14 @@ export const Drawing = {
 		})
 
 		const total_sequence_duration = reduce(add, 0, animation_durations);
+
+		const shuffled_asset_data_records = Asset_Manager_ƒ.deterministically_convolute_animation_sequence(
+			asset_data_records,
+			current_milliseconds,
+			total_sequence_duration,
+		);
+
+		const shuffled_image_data_array = map(shuffled_asset_data_records, (val)=>(val.image_data))
 
 		/*
 			Calculate when each sub-animation ends.  I.e. if input values were [4, 3.5, 6] (durations), this function would give: [4, 7.5, 13.5].
@@ -191,8 +200,8 @@ export const Drawing = {
 		/*
 			Using that, extract the image data for that animation (easy).
 		*/
-		const asset_data = asset_data_records[animation_index];
-		const image_data = image_data_array[animation_index];
+		const asset_data = shuffled_asset_data_records[animation_index];
+		const image_data = shuffled_image_data_array[animation_index];
 
 
 		/*
@@ -215,6 +224,19 @@ export const Drawing = {
 	},
 
 
+
+	deterministically_convolute_animation_sequence: (
+		asset_data_records: Array<Asset_Data_Record>,
+		current_milliseconds: number,
+		sequence_duration: number,
+	): Array<Asset_Data_Record> => {
+
+		const current_sequence_iteration = Math.round(current_milliseconds / sequence_duration);
+		
+		//const sequence_length = size(asset_data_records);
+
+		return get_nth_permutation_of_deck<Asset_Data_Record>(current_sequence_iteration,asset_data_records);
+	},
 
 /*----------------------- actual draw ops -----------------------*/
 	draw_image_for_asset_name: (p: {
