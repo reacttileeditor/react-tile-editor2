@@ -236,10 +236,12 @@ export const Drawing = {
 		const animation_durations = Asset_Manager_ƒ.calculate_animation_durations(asset_data_records);
 		const total_sequence_duration = reduce(add, 0, animation_durations);
 
-		const current_sequence_iteration = Math.round(current_milliseconds / total_sequence_duration);
+		const current_sequence_iteration = Math.floor(current_milliseconds / total_sequence_duration);
 		
 
-		return get_nth_permutation_of_deck<Asset_Data_Record>(current_sequence_iteration,asset_data_records);
+		const stuff = get_nth_permutation_of_deck<Asset_Data_Record>(current_sequence_iteration,asset_data_records);
+
+		return stuff;
 	},
 
 /*----------------------- actual draw ops -----------------------*/
