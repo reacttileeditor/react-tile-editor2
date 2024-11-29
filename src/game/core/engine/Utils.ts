@@ -2,7 +2,7 @@ import _ from "lodash";
 import Prando from 'prando';
 import { Point2D, Rectangle } from '../../interfaces';
 import { useEffect, useRef } from "react";
-import { reduce } from "ramda";
+import { map, reduce } from "ramda";
 
 
 
@@ -137,3 +137,42 @@ export const add_points = (a: Point2D, b: Point2D): Point2D => (
 		y: a.y + b.y
 	}
 );
+
+
+
+/*
+	For stuff like random tile animations, we want a solution that will allow us to generate a series of random number sequences which act as "shuffles" of a preformed deck of possibilities.   I.e. if there are 5 animations in a set `[1,2,3,4,5]`, then we want results like `[2,3,5,4,1]` or `[5,1,3,2,4]`.
+
+	The number of possibile permutations of a given set is just the factorial of the size of the set.  It quickly gets obscenely big, even for surprisingly small (single-digit!) integers, so we don't want to precalculate it.   However, there is fortunately a way to look up one of these permutations, deterministically, without having to precalculate all prior permutations in the set (which would be equivalent to having to precalculate all of them)
+
+	https://stackoverflow.com/questions/18681165/shuffle-an-array-as-many-as-possible/18887324#18887324
+
+*/
+
+export const factorial = (n: number): number => {
+	return	n <= 0
+			?
+			1
+			:
+			n * factorial(n - 1);
+}
+
+export const get_nth_permutation_of_deck = (permutation_number: number, original_array: Array<number>): Array<number> => {
+	var temporary_array = original_array.slice(); //Create a copy
+	var length = original_array.length;
+	var permuted_array = [];
+	var pick; 
+	
+	do {
+		pick = permutation_number % length; //mod operator
+		permuted_array.push(temporary_array.splice(pick,1)[0]); //Remove item number pick from the old array and onto the new
+		permutation_number = (permutation_number - pick)/length;
+		length--;
+	} while (length >= 1)
+
+	return permuted_array;  
+}
+
+export const reorder_array = (original_array: Array<string>, new_order: Array<number>) : Array<string> => {
+	return map((val)=>(original_array[val]), new_order)
+ }
