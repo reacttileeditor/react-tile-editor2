@@ -581,5 +581,70 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 	frame_duration: 510,
 	pad: 2,
 	ping_pong: true
+},{
+	url: "terrain-tiles2.png",
+	name: "wideleaf_scrub2__anim1",
+	bounds: {
+		x: 224,
+		y: 1,
+		w: 54,
+		h: 34,
+	},
+	frames: 3,
+	frame_duration: 210,
+	pad: 2,
+	ping_pong: true
+},{
+	url: "terrain-tiles2.png",
+	name: "wideleaf_scrub2__anim2",
+	bounds: {
+		x: 224,
+		y: 37,
+		w: 54,
+		h: 34,
+	},
+	frames: 3,
+	frame_duration: 210,
+	pad: 2,
+	ping_pong: true
+},{
+	url: "terrain-tiles2.png",
+	name: "wideleaf_scrub2__anim3",
+	bounds: {
+		x: 224,
+		y: 73,
+		w: 54,
+		h: 34,
+	},
+	frames: 2,
+	frame_duration: 410,
+	pad: 2,
+	ping_pong: true
+},{
+	url: "terrain-tiles2.png",
+	name: "wideleaf_scrub2__anim2b",
+	bounds: {
+		x: 224,
+		y: 1,
+		w: 54,
+		h: 34,
+	},
+	frames: 3,
+	frame_duration: 450,
+	pad: 2,
+	ping_pong: true
+},{
+	url: "terrain-tiles2.png",
+	name: "wideleaf_scrub2__anim3b",
+	bounds: {
+		x: 224,
+		y: 37,
+		w: 54,
+		h: 34,
+	},
+	frames: 3,
+	frame_duration: 510,
+	pad: 2,
+	ping_pong: true
 }];
 	

@@ -192,13 +192,21 @@ export const tile_types: Array<Tile_Item> = [
 		name: "wideleaf_scrub",
 		variants: [{
 			graphics: [{
-				id: 'dirt1',
+				id: 'grass3',
 				zorder: zorder.grass,
 			},{
 				id: 'wideleaf_scrub1',
 				zorder: zorder.rocks,
 			}],
-		},],
+		},{
+			graphics: [{
+				id: 'grass5',
+				zorder: zorder.grass,
+			},{
+				id: 'wideleaf_scrub2',
+				zorder: zorder.rocks,
+			}],
+		}],
 	},{
 		name: "sand",
 		variants: [{

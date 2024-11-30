@@ -16,4 +16,5 @@ export const image_data_list: Array<Image_Data> = flatten([
 export const image_sequence_data_list: Image_Sequence_Dictionary = {
 	test_repeating_anim: ['animation_test', 'animation_test2', 'water-underlay'],
 	wideleaf_scrub1: ['wideleaf_scrub1__anim1', 'wideleaf_scrub1__anim2', 'wideleaf_scrub1__anim3','wideleaf_scrub1__anim2b', 'wideleaf_scrub1__anim3b'],
+	wideleaf_scrub2: ['wideleaf_scrub2__anim1', 'wideleaf_scrub2__anim2', 'wideleaf_scrub2__anim3','wideleaf_scrub2__anim2b', 'wideleaf_scrub2__anim3b'],
 }
