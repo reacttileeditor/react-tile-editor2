@@ -91,9 +91,11 @@ export const Drawing = {
 		let frame_duration = image_data.frame_duration ? image_data.frame_duration : 20;
 
 		/*
-			warning:  There might be some fuckery here if the pingponging doesn't mirror/double the middle frame.  That'd be the -1 component in the math, if that's the culprit.
+			Don't actually ping-pong if we're just one frame long; it breaks the math.
 		*/
-		let animation_duration = !image_data.ping_pong
+		const should_ping_pong = image_data.ping_pong && (frame_count > 1);
+
+		let animation_duration = !should_ping_pong
 		?
 		(frame_count * frame_duration)
 		:
@@ -119,7 +121,9 @@ export const Drawing = {
 		/*
 			For relatively simple setups, like a straightforward 1,2,3 frame ordering, it's a piece of cake:
 		*/
-		if( !image_data.ping_pong ){
+		const should_ping_pong = image_data.ping_pong && (frame_count > 1);
+
+		if( !should_ping_pong ){
 			current_frame_num = Utils.modulo(absolute_frame_num, frame_count);
 		} else {
 			current_frame_num = Asset_Manager_ƒ.calculate_pingpong_frame_num( absolute_frame_num, frame_count );	
