@@ -386,7 +386,7 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 		h: 34,
 	},
 	frames: 4,
-	frame_duration: 200,
+	frame_duration: 130,
 	ping_pong: true,
 	pad: 2,
 },{
@@ -399,7 +399,7 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 		h: 34,
 	},
 	frames: 4,
-	frame_duration: 200,
+	frame_duration: 130,
 	ping_pong: true,
 	pad: 2,
 },{
@@ -430,7 +430,7 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 		h: 34,
 	},
 	frames: 4,
-	frame_duration: 200,
+	frame_duration: 130,
 	ping_pong: true,
 	pad: 2,
 },{
@@ -443,7 +443,7 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 		h: 34,
 	},
 	frames: 4,
-	frame_duration: 200,
+	frame_duration: 130,
 	ping_pong: true,
 	pad: 2,
 },{
