@@ -74,11 +74,13 @@ export const Blob_Profile_Data: Blob_Profiles = {
 	lawn: {
 		'grass': 11,
 		"dirt": 2,
+		'wideleaf_scrub': 1,
 		"scrub-dirt": 2,
 	},
 	prairie: {
 		'grass': 3,
 		"grass-and-scree": 3,
+		'wideleaf_scrub': 4,
 		"dirt": 4,
 		"sandy-dirt": 1,
 		"scrub-dirt": 5,
@@ -86,6 +88,7 @@ export const Blob_Profile_Data: Blob_Profiles = {
 	},
 	crags: {
 		'menhir-big': 7,
+		'wideleaf_scrub': 1,
 		"grass-and-scree": 3,
 		"dirt": 1,
 		"scrub-dirt": 2,
@@ -93,6 +96,7 @@ export const Blob_Profile_Data: Blob_Profiles = {
 	sandpatch: {
 		'sand': 3,
 		"grass-and-scree": 3,
+		'wideleaf_scrub': 2,
 		"dirt": 4,
 		"sandy-dirt": 5,
 		"scrub-dirt": 2,
@@ -100,6 +104,7 @@ export const Blob_Profile_Data: Blob_Profiles = {
 	},
 	highlands: {
 		'grass': 2,
+		'wideleaf_scrub': 2,
 		"grass-and-scree": 5,
 		"dirt": 4,
 		"bush": 2,

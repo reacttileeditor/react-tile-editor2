@@ -38,7 +38,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 
 		const RNG = new Prando(pos.x * pos.y);
 
-		return dice_anchored_on_specific_random_seed(100000, RNG);
+		return dice_anchored_on_specific_random_seed(10000000, RNG);
 	},
 	
 /*----------------------- draw ops -----------------------*/

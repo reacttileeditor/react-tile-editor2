@@ -19,6 +19,7 @@ export type Tile_Name =
 "sand" |
 "water" |
 "water-placid" |
+"wideleaf_scrub" |
 "menhir-big" |
 "menhir-small" |
 "red-path-unreachable-dot" |
@@ -26,7 +27,7 @@ export type Tile_Name =
 "arrow-green" |
 "cursor_green";
 
-const ground_tiles = /(dirt|grass|menhir|sand|bush)/;
+const ground_tiles = /(dirt|grass|menhir|sand|bush|wideleaf_scrub)/;
 const water_tiles = /(water|water-still)/;
 
 export const tile_types: Array<Tile_Item> = [
@@ -188,6 +189,17 @@ export const tile_types: Array<Tile_Item> = [
 			}],
 		}],
 	},{
+		name: "wideleaf_scrub",
+		variants: [{
+			graphics: [{
+				id: 'dirt1',
+				zorder: zorder.grass,
+			},{
+				id: 'wideleaf_scrub1',
+				zorder: zorder.rocks,
+			}],
+		},],
+	},{
 		name: "sand",
 		variants: [{
 			graphics: [{
@@ -209,7 +221,7 @@ export const tile_types: Array<Tile_Item> = [
 		name: "water",
 		variants: [{
 			graphics: [{
-				id: 'test_repeating_anim',
+				id: 'water-underlay',
 				zorder: zorder.water_underlay,
 			},{
 				id: 'water-ripples',
