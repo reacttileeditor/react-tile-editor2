@@ -85,7 +85,7 @@ export const Tile_Palette_Element = (props: Props) => {
 				map(asset_data_array, (asset_item)=>{
 					Asset_Manager_ƒ.draw_image_for_asset_name({
 						_AM:						props.asset_manager,
-						asset_name:					asset_item.id,
+						asset_name:					asset_item.asset_variants[0],
 						_BM:						_Blit_Manager,
 						pos:						{
 							x: Math.floor(props.canvas_size.x/2),

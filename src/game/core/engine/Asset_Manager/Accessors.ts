@@ -1,11 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
-import { Asset_Manager_Data, Asset_Manager_ƒ, Assets_Metadata_Single_Image_Item, Assets_Metadata_Spritesheet_Item, Autotile_Restriction_Sample, Graphic_Item_Basic, Graphic_Item_Autotiled, Graphic_Item_Generic, Image_Data, Tile_Comparator_Sample, Variant_Item, Asset_Data_Record } from "./Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, Assets_Metadata_Single_Image_Item, Assets_Metadata_Spritesheet_Item, Autotile_Restriction_Sample, Graphic_Item_Basic, Graphic_Item_Autotiled, Graphic_Item_Generic, Image_Data, Tile_Comparator_Sample, Asset_Data_Record } from "./Asset_Manager";
 import { filter, find, flatten, isString, map, size, sortBy, sortedUniq } from "lodash";
 import { is_all_true, ƒ } from "../Utils";
 import { concat, uniq, filter as r_filter, keys, includes } from "ramda";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../Blit_Manager";
 import { Point2D } from "../../../interfaces";
 import * as Utils from "../Utils";
+import { Asset_Blit_Item } from "../Tilemap_Manager/Tilemap_Manager";
 
 
 
@@ -41,11 +42,9 @@ export const Accessors = {
 				flatten(
 				flatten(
 					map( me.static_vals.tile_types, (value,index)=>{
-						return map( value.variants,  (value,index)=>{
-							return map( value.graphics, (value,index)=>{
-								return value.zorder;
-							});
-						}) 
+						return map( value.graphics, (value,index)=>{
+							return value.zorder;
+						});
 					} )
 		))));
 	},
@@ -98,7 +97,7 @@ export const Accessors = {
 
 
 /*----------------------- tile info -----------------------*/
-	get_tile_variant_data: (me: Asset_Manager_Data, tile_name: string): Array<Variant_Item> => {
+	get_tile_graphics_data: (me: Asset_Manager_Data, tile_name: string): Array<Graphic_Item_Basic|Graphic_Item_Autotiled> => {
 		let { raw_image_list, image_data_list, assets_meta, tile_types } = me.static_vals;
 
 		let markup_data_for_tile = find( tile_types, (value, index) => (value.name == tile_name))
@@ -107,7 +106,7 @@ export const Accessors = {
 			console.error(`Nothing found in asset list for tile type ${tile_name}`);
 			return [];
 		} else {
-			return markup_data_for_tile.variants;
+			return markup_data_for_tile.graphics;
 		}
 	},
 
@@ -119,15 +118,14 @@ export const Accessors = {
 	):Array<Graphic_Item_Generic> => {
 		
 		if( tile_name != '' ){
-			let tile_variants = Asset_Manager_ƒ.get_tile_variant_data(me, tile_name);
+			let tile_graphic_list = Asset_Manager_ƒ.get_tile_graphics_data(me, tile_name);
 
-			if( size(tile_variants) ){
-				let tile_data = tile_variants[Asset_Manager_ƒ._tile_dice( me, tile_variants.length ) -1].graphics
-				
-				return tile_data;
-			} else {
-				return [];
-			}
+			return map(tile_graphic_list, (graphic_layer)=>{
+				return {
+					...graphic_layer,
+					asset_variants: [graphic_layer.asset_variants[Asset_Manager_ƒ._tile_dice( me, graphic_layer.asset_variants.length ) -1]]
+				}
+			});
 		} else {
 			return [];
 		}
@@ -138,7 +136,7 @@ export const Accessors = {
 		_BM: Blit_Manager_Data,
 		tile_name: string,
 		comparator: Tile_Comparator_Sample,
-	): Array<Graphic_Item_Basic> => {
+	): Array<Asset_Blit_Item> => {
 
 		let asset_data_array = Asset_Manager_ƒ.get_all_asset_data_for_tile_type(_AM, tile_name);
 
@@ -151,34 +149,18 @@ export const Accessors = {
 				allow_drawing = Asset_Manager_ƒ.should_we_draw_this_tile_based_on_its_autotiling_restrictions(comparator, value.restrictions);
 			} 
 
-			if( value.id && allow_drawing ){
+			if( value.asset_variants && allow_drawing ){
 				return {
-					id: value.id,
+					id: value.asset_variants[0],
 					zorder: value.zorder,
 				};
 			}
 		});
 
-		return r_filter((val)=>(val !== undefined), asset_blit_items as Array<Graphic_Item_Basic>);
+		return r_filter((val)=>(val !== undefined), asset_blit_items as Asset_Blit_Item[]);
 	},
 
 
-	yield_zorder_list_for_tile: (me: Asset_Manager_Data, tile_name: string): Array<number> => {
-		let { raw_image_list, image_data_list, assets_meta, tile_types } = me.static_vals;
-		
-		
-		let variant_graphic_sets: Array<Array<Graphic_Item_Basic|Graphic_Item_Autotiled>> = map( Asset_Manager_ƒ.get_tile_variant_data(me, tile_name), (val) => (val.graphics) );
 
-		let number_arrays: Array<Array<number>> = map( variant_graphic_sets, (val) => {
-			return map(val, (val2) => (val2.zorder))
-		} );
-
-		let combined_number_arrays: Array<number> = flatten(number_arrays);
-
-		let final_array: Array<number> = uniq(combined_number_arrays);
-
-		return final_array ? final_array : [];
-		
-	},
 
 }

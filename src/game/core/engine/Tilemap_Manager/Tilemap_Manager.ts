@@ -41,9 +41,12 @@ export type Cache_Data = {
 
 export type Asset_Blit_Tilemap = Array<Array<Asset_Blit_List>>;
 
-export type Asset_Blit_List = Array<Graphic_Item_Basic>;
+export type Asset_Blit_List = Array<Asset_Blit_Item>;
 
-
+export type Asset_Blit_Item = {
+	id: string,
+	zorder: number,
+}
 
 export type Tilemap_Persist_Data = {
 	tile_maps: Tilemaps,
