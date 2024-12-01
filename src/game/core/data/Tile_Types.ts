@@ -235,6 +235,10 @@ export const tile_types: Array<Tile_Item> = [
 				id: 'water-ripples',
 				zorder: zorder.water_surface,
 			},{
+				id: 'water_sparkles',
+				zorder: zorder.water_surface,
+
+			},{
 				id: 'water-edge-nw1',
 				zorder: zorder.water_edge,
 				restrictions:	[
@@ -290,6 +294,10 @@ export const tile_types: Array<Tile_Item> = [
 			graphics: [{
 				id: 'water-underlay-placid',
 				zorder: zorder.water_underlay,
+			},{
+				id: 'water_sparkles',
+				zorder: zorder.water_surface,
+
 			},{
 				id: 'water-edge-nw1',
 				zorder: zorder.water_edge,

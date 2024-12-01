@@ -493,6 +493,78 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 	frame_duration: 180,
 	pad: 2,
 },{
+	url: "water-sparkles.png",
+	name: "water_sparkles_blank1",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 1,
+		h: 1,
+	},
+	frames: 1,
+	frame_duration: 600,
+	pad: 2,
+},{
+	url: "water-sparkles.png",
+	name: "water_sparkles_blank2",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 1,
+		h: 1,
+	},
+	frames: 1,
+	frame_duration: 900,
+	pad: 2,
+},{
+	url: "water-sparkles.png",
+	name: "water_sparkles1",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 54,
+		h: 34,
+	},
+	frames: 9,
+	frame_duration: 100,
+	pad: 2,
+},{
+	url: "water-sparkles.png",
+	name: "water_sparkles2",
+	bounds: {
+		x: 1,
+		y: 37,
+		w: 54,
+		h: 34,
+	},
+	frames: 8,
+	frame_duration: 90,
+	pad: 2,
+},{
+	url: "water-sparkles.png",
+	name: "water_sparkles3",
+	bounds: {
+		x: 1,
+		y: 73,
+		w: 54,
+		h: 34,
+	},
+	frames: 6,
+	frame_duration: 110,
+	pad: 2,
+},{
+	url: "water-sparkles.png",
+	name: "water_sparkles4",
+	bounds: {
+		x: 1,
+		y: 109,
+		w: 54,
+		h: 34,
+	},
+	frames: 6,
+	frame_duration: 120,
+	pad: 2,
+},{
 	url: "animation_test.png",
 	name: "animation_test",
 	bounds: {
