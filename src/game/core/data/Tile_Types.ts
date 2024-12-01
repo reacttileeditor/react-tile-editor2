@@ -229,7 +229,7 @@ export const tile_types: Array<Tile_Item> = [
 		name: "water",
 		variants: [{
 			graphics: [{
-				id: 'water-underlay',
+				id: 'water-underlay2',
 				zorder: zorder.water_underlay,
 			},{
 				id: 'water-ripples',
