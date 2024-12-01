@@ -153,6 +153,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'water-underlay1',
 				'water-underlay2',
+				'water-underlay3',
 			],
 		},{
 			zorder: zorder.water_surface,
