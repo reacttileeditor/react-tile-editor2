@@ -349,7 +349,7 @@ export const tile_types: Array<Tile_Item> = [
 		graphics: [{
 			zorder: zorder.map_cursor_low,
 			asset_variants: [
-				'cursor_greent',
+				'cursor_green',
 			],
 		}],
 	},

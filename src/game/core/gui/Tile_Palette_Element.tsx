@@ -81,17 +81,22 @@ export const Tile_Palette_Element = (props: Props) => {
 			Blit_Manager_ƒ.fill_canvas_with_solid_color(_Blit_Manager);
 
 			if(  _.size(props.tile_name) > 0 ){
-				let asset_data_array = Asset_Manager_ƒ.get_all_asset_data_for_tile_type(props.asset_manager, props.tile_name);
+				let asset_data_array = Asset_Manager_ƒ.get_tile_graphics_data(props.asset_manager, props.tile_name);
 				map(asset_data_array, (asset_item)=>{
+					const derandomized_asset = Asset_Manager_ƒ.convert_tile_variants_to_single_assets(
+						props.asset_manager,
+						asset_item
+					);
+
 					Asset_Manager_ƒ.draw_image_for_asset_name({
 						_AM:						props.asset_manager,
-						asset_name:					asset_item.asset_variants[0],
+						asset_name:					derandomized_asset.id,
 						_BM:						_Blit_Manager,
 						pos:						{
 							x: Math.floor(props.canvas_size.x/2),
 							y: Math.floor(props.canvas_size.y/2)
 						},
-						zorder:						asset_item.zorder,
+						zorder:						derandomized_asset.zorder,
 						current_milliseconds:		0,
 						opacity:					1.0,
 						rotate:						0,

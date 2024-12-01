@@ -7,6 +7,7 @@ import { Blit_Manager_Data, Blit_Manager_ƒ } from "../Blit_Manager";
 import { Point2D } from "../../../interfaces";
 import * as Utils from "../Utils";
 import { Asset_Blit_Item } from "../Tilemap_Manager/Tilemap_Manager";
+import { zorder } from "../../constants/zorder";
 
 
 
@@ -100,67 +101,61 @@ export const Accessors = {
 	get_tile_graphics_data: (me: Asset_Manager_Data, tile_name: string): Array<Graphic_Item_Basic|Graphic_Item_Autotiled> => {
 		let { raw_image_list, image_data_list, assets_meta, tile_types } = me.static_vals;
 
-		let markup_data_for_tile = find( tile_types, (value, index) => (value.name == tile_name))
-		
-		if(markup_data_for_tile == undefined){
-			console.error(`Nothing found in asset list for tile type ${tile_name}`);
-			return [];
-		} else {
-			return markup_data_for_tile.graphics;
-		}
-	},
-
-
-
-	get_all_asset_data_for_tile_type: (
-		me: Asset_Manager_Data,
-		tile_name: string
-	):Array<Graphic_Item_Generic> => {
-		
 		if( tile_name != '' ){
-			let tile_graphic_list = Asset_Manager_ƒ.get_tile_graphics_data(me, tile_name);
-
-			return map(tile_graphic_list, (graphic_layer)=>{
-				return {
-					...graphic_layer,
-					asset_variants: [graphic_layer.asset_variants[Asset_Manager_ƒ._tile_dice( me, graphic_layer.asset_variants.length ) -1]]
-				}
-			});
+			let markup_data_for_tile = find( tile_types, (value, index) => (value.name == tile_name))
+			
+			if(markup_data_for_tile == undefined){
+				console.error(`Nothing found in asset list for tile type ${tile_name}`);
+				return [];
+			} else {
+				return markup_data_for_tile.graphics;
+			}
 		} else {
 			return [];
 		}
 	},
+
+
+
 
 	yield_asset_list_for_tile_type_with_comparator: (
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 		tile_name: string,
 		comparator: Tile_Comparator_Sample,
-	): Array<Asset_Blit_Item> => {
+	): Array<Graphic_Item_Basic> => {
 
-		let asset_data_array = Asset_Manager_ƒ.get_all_asset_data_for_tile_type(_AM, tile_name);
+		let asset_data_array = Asset_Manager_ƒ.get_tile_graphics_data(_AM, tile_name);
 
-		var allow_drawing = true;
-		
-		const asset_blit_items = asset_data_array.map( (value, index) => {
-		
-			if(  Asset_Manager_ƒ.isGraphicAutotiled(value) ){
-				//this is where 
-				allow_drawing = Asset_Manager_ƒ.should_we_draw_this_tile_based_on_its_autotiling_restrictions(comparator, value.restrictions);
-			} 
 
-			if( value.asset_variants && allow_drawing ){
-				return {
-					id: value.asset_variants[0],
-					zorder: value.zorder,
-				};
-			}
-		});
+		const only_valid_assets = r_filter((potential_asset)=>{
+			return (
+				!Asset_Manager_ƒ.isGraphicAutotiled(potential_asset)
+				||
+				(
+					Asset_Manager_ƒ.isGraphicAutotiled(potential_asset)
+					&&
+					Asset_Manager_ƒ.should_we_draw_this_tile_based_on_its_autotiling_restrictions(comparator, potential_asset.restrictions)
+				)
+			)
+		}, asset_data_array)
 
-		return r_filter((val)=>(val !== undefined), asset_blit_items as Asset_Blit_Item[]);
+		return map(only_valid_assets, (item)=>({
+			asset_variants: item.asset_variants,
+			zorder: item.zorder,
+		}));
 	},
 
+	convert_tile_variants_to_single_assets: (
+		me: Asset_Manager_Data,
+		graphic_item: Graphic_Item_Generic
+	): Asset_Blit_Item => {
 
+		return {
+			id: graphic_item.asset_variants[Asset_Manager_ƒ._tile_dice( me, graphic_item.asset_variants.length ) -1],
+			zorder: graphic_item.zorder,
+		}
+	} 
 
 
 }

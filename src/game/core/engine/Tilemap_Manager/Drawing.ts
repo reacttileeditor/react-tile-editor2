@@ -185,16 +185,17 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		tilemap_name: Tilemap_Keys
 	): Asset_Blit_List => {
 
-		const asset_list: Asset_Blit_List = Asset_Manager_ƒ.yield_asset_list_for_tile_type_with_comparator(
+		const asset_list = Asset_Manager_ƒ.yield_asset_list_for_tile_type_with_comparator(
 			_AM,
 			_BM,
 			tile_name,
 			Tilemap_Manager_ƒ.get_tile_comparator_sample_for_pos(me, pos, tilemap_name),
 		)
 
+		return map(asset_list, (val)=>(
+			Asset_Manager_ƒ.convert_tile_variants_to_single_assets(_AM, val)
+		))
 
-		return asset_list;
-	
 	},
 
 	
