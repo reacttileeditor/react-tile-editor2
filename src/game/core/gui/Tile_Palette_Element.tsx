@@ -7,6 +7,7 @@ import { Blit_Manager_Data, Blit_Manager_ƒ, New_Blit_Manager } from "../engine/
 import { New_Tilemap_Manager, Tilemap_Manager_Data } from "../engine/Tilemap_Manager/Tilemap_Manager";
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
+import { useInterval, ƒ } from "../engine/Utils";
 
 
 interface Props {
@@ -24,6 +25,9 @@ export const Tile_Palette_Element = (props: Props) => {
 	const [_Blit_Manager, set_Blit_Manager] = useState<Blit_Manager_Data|null>(null);
 	const [_Tilemap_Manager, set_Tilemap_Manager] = useState<Tilemap_Manager_Data|null>(null);
 
+	const [render_tick, set_render_tick] = useState<number>(0);
+	const [initialized, set_initialized] = useState<boolean>(false);
+	const [render_loop_interval, set_render_loop_interval] = useState<number|null>(null);
 
 /*----------------------- canvas element access -----------------------*/
 	const canvasRef = React.useRef<HTMLCanvasElement>(null);
@@ -44,11 +48,31 @@ export const Tile_Palette_Element = (props: Props) => {
 		const ctx = getContext();
 		if(ctx != null){
 			initialize_tilemap_manager(ctx);
+			set_initialized(true);
 
-			draw_canvas();
+			//draw_canvas();
 		}
 	}, [_Blit_Manager, props.asset_name]);
 
+
+	useEffect(() => {
+		if(render_tick > 0 && _Blit_Manager != null){
+			draw_canvas(_Blit_Manager);
+		}
+	}, [render_tick]);
+
+	useInterval(() => {
+		if(
+			initialized
+			&&
+			render_loop_interval == null
+			
+		){
+			set_render_tick(render_tick + 1);
+		}
+
+		// Your custom logic here
+	}, 16.666 );	
 
 
 
@@ -74,11 +98,11 @@ export const Tile_Palette_Element = (props: Props) => {
 /*----------------------- draw ops -----------------------*/
 
 	
-	const draw_canvas = () => {
-		if(_Blit_Manager != null){
+	const draw_canvas = (_BM: Blit_Manager_Data) => {
+		if(_BM != null){
 			let { consts } = props.asset_manager;
 
-			Blit_Manager_ƒ.fill_canvas_with_solid_color(_Blit_Manager);
+			Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM);
 
 			if(  _.size(props.tile_name) > 0 ){
 				let asset_data_array = Asset_Manager_ƒ.get_tile_graphics_data(props.asset_manager, props.tile_name);
@@ -91,13 +115,13 @@ export const Tile_Palette_Element = (props: Props) => {
 					Asset_Manager_ƒ.draw_image_for_asset_name({
 						_AM:						props.asset_manager,
 						asset_name:					derandomized_asset.id,
-						_BM:						_Blit_Manager,
+						_BM:						_BM,
 						pos:						{
 							x: Math.floor(props.canvas_size.x/2),
 							y: Math.floor(props.canvas_size.y/2)
 						},
 						zorder:						derandomized_asset.zorder,
-						current_milliseconds:		0,
+						current_milliseconds:		_BM.time_tracker.current_millisecond,
 						opacity:					1.0,
 						rotate:						0,
 						brightness:					1.0,
@@ -111,7 +135,7 @@ export const Tile_Palette_Element = (props: Props) => {
 				Asset_Manager_ƒ.draw_image_for_asset_name({
 					_AM:						props.asset_manager,
 					asset_name:					props.asset_name,
-					_BM:						_Blit_Manager,
+					_BM:						_BM,
 					pos:						{
 						x: Math.floor(props.canvas_size.x/2),
 						y: Math.floor(props.canvas_size.y/1.1)
@@ -126,7 +150,12 @@ export const Tile_Palette_Element = (props: Props) => {
 				})
 			}
 
-			Blit_Manager_ƒ.draw_entire_frame(_Blit_Manager);
+
+
+			set_Blit_Manager(
+				Blit_Manager_ƒ.draw_entire_frame(_BM)
+			);
+
 		}
 	}
 	

@@ -362,8 +362,10 @@ export const Blit_Manager_ƒ = {
 
 
 		//follow up with a few bits of utility-drawing:
+		Blit_Manager_ƒ.update_time_data(me);
+		
 		if(me.show_info){
-			Blit_Manager_ƒ.draw_fps(me);
+			Blit_Manager_ƒ.draw_fps_text(me);
 		}
 
 		//var bitmap = me._OffScreenBuffer.transferToImageBitmap();
@@ -431,7 +433,9 @@ export const Blit_Manager_ƒ = {
 		me.osb_ctx.restore();
 	},
 
-	draw_fps: ( me: Blit_Manager_Data ) => {
+	
+
+	update_time_data: ( me: Blit_Manager_Data ) => {
 		var date = new Date();
 		
 		me.time_tracker.current_frame_count += 1;
@@ -445,11 +449,9 @@ export const Blit_Manager_ƒ = {
 		}
 		
 		me.time_tracker.current_millisecond = date.getTime();
-		
-		Blit_Manager_ƒ.draw_fps_text(me, me.time_tracker.prior_frame_count);
 	},
 
-	draw_fps_text: ( me: Blit_Manager_Data, value: number) => {
+	draw_fps_text: ( me: Blit_Manager_Data) => {
 		me.osb_ctx.save();
 		me.osb_ctx.imageSmoothingEnabled = false;
 		me.osb_ctx.font = '16px pixel, sans-serif';
@@ -461,7 +463,7 @@ export const Blit_Manager_ƒ = {
 	    //me.osb_ctx.shadowBlur = 3;
 	    me.osb_ctx.fillStyle = "#ffffff";
 		me.osb_ctx.textBaseline = 'middle';
-		me.osb_ctx.fillText(`FPS: ${value.toString()}`, (me.osb_ctx.canvas.width - 40), 10);
+		me.osb_ctx.fillText(`FPS: ${me.time_tracker.prior_frame_count.toString()}`, (me.osb_ctx.canvas.width - 40), 10);
 		me.osb_ctx.restore();
 	},
 
