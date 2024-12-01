@@ -65,20 +65,17 @@ export interface Assets_Metadata_Single_Image_Item {
 export interface Tile_Item {
 	name: Tile_Name,
 	omit_from_random_map_generation?: boolean,
-	variants: Array<Variant_Item>,
-};
-
-export interface Variant_Item {
 	graphics: Array<Graphic_Item_Basic|Graphic_Item_Autotiled>,
 };
 
+
 export interface Graphic_Item_Basic {
-	id: string,
+	asset_variants: Array<string>,
 	zorder: number,
 };
 
 export interface Graphic_Item_Autotiled {
-	id: string,
+	asset_variants: Array<string>,
 	zorder: number,
 	restrictions: Autotile_Restriction_Sample,
 };

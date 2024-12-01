@@ -33,656 +33,606 @@ const water_tiles = /(water|water-still)/;
 export const tile_types: Array<Tile_Item> = [
 	{
 		name: "grass",
-		variants: [{
-				graphics: [{
-					id: 'grass1',
-					zorder: zorder.grass,
-				}],
-			},{
-				graphics: [{
-					id: 'grass2',
-					zorder: zorder.grass,
-				}],
-			},{
-				graphics: [{
-					id: 'grass3',
-					zorder: zorder.grass,
-				}],
-			},{
-				graphics: [{
-					id: 'grass4',
-					zorder: zorder.grass,
-				}],
-			},{
-				graphics: [{
-					id: 'grass5',
-					zorder: zorder.grass,
-				}],
-			},{
-				graphics: [{
-					id: 'grass6',
-					zorder: zorder.grass,
-				}],
-			},{
-				graphics: [{
-					id: 'grass7',
-					zorder: zorder.grass,
-				}],
-			}
-		],
+		graphics: [{
+			zorder: zorder.grass,
+			asset_variants: [
+				'grass1',
+				'grass2',
+				'grass3',
+				'grass4',
+				'grass5',
+				'grass6',
+				'grass7',
+			],		
+		}],
 	},{
 		name: "grass-and-scree",
-		variants: [{
-				graphics: [{
-					id: 'grass-and-scree1',
-					zorder: zorder.grass,
-				}],
-			},{
-				graphics: [{
-					id: 'grass-and-scree2',
-					zorder: zorder.grass,
-				}],
-			},{
-				graphics: [{
-					id: 'grass-and-scree3',
-					zorder: zorder.grass,
-				}],
-			},{
-				graphics: [{
-					id: 'grass-and-scree4',
-					zorder: zorder.grass,
-				}],
-			},{
-				graphics: [{
-					id: 'grass-and-scree5',
-					zorder: zorder.grass,
-				}],
-			},{
-				graphics: [{
-					id: 'grass-and-scree6',
-					zorder: zorder.grass,
-				}],
-			},{
-				graphics: [{
-					id: 'grass-and-scree7',
-					zorder: zorder.grass,
-				}],
-			},{
-				graphics: [{
-					id: 'grass-and-scree8',
-					zorder: zorder.grass,
-				}],
-			}
-		],
+		graphics: [{
+			zorder: zorder.grass,
+			asset_variants: [
+				'grass-and-scree1',
+				'grass-and-scree2',
+				'grass-and-scree3',
+				'grass-and-scree4',
+				'grass-and-scree5',
+				'grass-and-scree6',
+				'grass-and-scree7',
+				'grass-and-scree8',
+			],		
+		}],
 	},{
 		name: "dirt",
-		variants: [{
-			graphics: [{
-				id: 'dirt1',
-				zorder: zorder.grass,
-			}],
-		},{
-			graphics: [{
-				id: 'dirt2',
-				zorder: zorder.grass,
-			}],
+		graphics: [{
+			zorder: zorder.grass,
+			asset_variants: [
+				'dirt1',
+				'dirt2',
+			],		
 		}],
 	},{
 		name: "sandy-dirt",
-		variants: [{
-			graphics: [{
-				id: 'sandy-dirt1',
-				zorder: zorder.grass,
-			}],
+		graphics: [{
+			zorder: zorder.grass,
+			asset_variants: [
+				'sandy-dirt1',
+			],		
 		}],
 	},{
 		name: "scrub-dirt",
-		variants: [{
-			graphics: [{
-				id: 'scrub-dirt1',
-				zorder: zorder.grass,
-			}],
-		},{
-			graphics: [{
-				id: 'scrub-dirt2',
-				zorder: zorder.grass,
-			}],
+		graphics: [{
+			zorder: zorder.grass,
+			asset_variants: [
+				'scrub-dirt1',
+				'scrub-dirt2',
+			],
 		}],
 	},{
 		name: "scrub-dirt-tall",
-		variants: [{
-			graphics: [{
-				id: 'scrub-dirt-tall1',
-				zorder: zorder.grass,
-			}],
-		},{
-			graphics: [{
-				id: 'scrub-dirt-tall2',
-				zorder: zorder.grass,
-			}],
+		graphics: [{
+			zorder: zorder.grass,
+			asset_variants: [
+				'scrub-dirt-tall1',
+				'scrub-dirt-tall2',
+			],
 		}],
 	},{
 		name: "bush",
-		variants: [{
-			graphics: [{
-				id: 'bush1',
-				zorder: zorder.rocks,
-			},{
-				id: 'grass1',
-				zorder: zorder.grass,
-			}],
+		graphics: [{
+			zorder: zorder.rocks,
+			asset_variants: [
+				'bush1',
+				'bush2',
+				'bush3',
+			],
 		},{
-			graphics: [{
-				id: 'bush2',
-				zorder: zorder.rocks,
-			},{
-				id: 'grass2',
-				zorder: zorder.grass,
-			}],
-		},{
-			graphics: [{
-				id: 'bush3',
-				zorder: zorder.rocks,
-			},{
-				id: 'grass3',
-				zorder: zorder.grass,
-			}],
+			zorder: zorder.grass,
+			asset_variants: [
+				'grass1',
+				'grass2',
+				'grass3',
+				'grass4',
+				'grass5',
+				'grass6',
+				'grass7',
+			],		
 		}],
 	},{
 		name: "wideleaf_scrub",
-		variants: [{
-			graphics: [{
-				id: 'grass3',
-				zorder: zorder.grass,
-			},{
-				id: 'wideleaf_scrub1',
-				zorder: zorder.rocks,
-			}],
+		graphics: [{
+			zorder: zorder.rocks,
+			asset_variants: [
+				'wideleaf_scrub1',
+				'wideleaf_scrub2',
+			],
 		},{
-			graphics: [{
-				id: 'grass5',
-				zorder: zorder.grass,
-			},{
-				id: 'wideleaf_scrub2',
-				zorder: zorder.rocks,
-			}],
+			zorder: zorder.grass,
+			asset_variants: [
+				'grass1',
+				'grass2',
+				'grass3',
+				'grass4',
+				'grass5',
+				'grass6',
+				'grass7',
+			],		
 		}],
 	},{
 		name: "sand",
-		variants: [{
-			graphics: [{
-				id: 'sand1',
-				zorder: zorder.grass,
-			}],
-		},{
-			graphics: [{
-				id: 'sand2',
-				zorder: zorder.grass,
-			}],
-		},{
-			graphics: [{
-				id: 'sand3',
-				zorder: zorder.grass,
-			}],
+		graphics: [{
+			zorder: zorder.grass,
+			asset_variants: [
+				'sand1',
+				'sand2',
+				'sand3',
+			],
 		}],
 	},{
 		name: "water",
-		variants: [{
-			graphics: [{
-				id: 'water-underlay2',
-				zorder: zorder.water_underlay,
-			},{
-				id: 'water-ripples',
-				zorder: zorder.water_surface,
-			},{
-				id: 'water_sparkles',
-				zorder: zorder.water_surface,
-
-			},{
-				id: 'water-edge-nw1',
-				zorder: zorder.water_edge,
-				restrictions:	[
-									[/.*/, ground_tiles],
-										[/.*/, water_tiles, /.*/],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'water-edge-ne1',
-				zorder: zorder.water_edge,
-				restrictions:	[
-									[ground_tiles, /.*/],
-										[/.*/, water_tiles, /.*/],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'water-edge-e1',
-				zorder: zorder.water_edge,
-				restrictions:	[
-											[/.*/, /.*/],
-										[ground_tiles, water_tiles, /.*/],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'water-edge-w1',
-				zorder: zorder.water_edge,
-				restrictions:	[
-											[/.*/, /.*/],
-										[/.*/, water_tiles, ground_tiles],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'water-edge-sw1',
-				zorder: zorder.water_edge,
-				restrictions:	[
-											[/.*/, /.*/],
-										[/.*/, water_tiles, /.*/],
-											[/.*/, ground_tiles]
-								]
-			},{
-				id: 'water-edge-se1',
-				zorder: zorder.water_edge,
-				restrictions:	[
-											[/.*/, /.*/],
-										[/.*/, water_tiles, /.*/],
-											[ ground_tiles, /.*/]
-								]
-			}],
+		graphics: [{
+			zorder: zorder.water_underlay,
+			asset_variants: [
+				'water-underlay1',
+				'water-underlay2',
+			],
+		},{
+			zorder: zorder.water_surface,
+			asset_variants: [
+				'water-ripples',
+			],
+		},{
+			zorder: zorder.grass,
+			asset_variants: [
+				'water_sparkles',
+			],
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-edge-nw1',
+			],
+			restrictions:	[
+								[/.*/, ground_tiles],
+									[/.*/, water_tiles, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-edge-ne1',
+			],
+			restrictions:	[
+								[ground_tiles, /.*/],
+									[/.*/, water_tiles, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-edge-e1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[ground_tiles, water_tiles, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-edge-w1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, water_tiles, ground_tiles],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-edge-sw1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, water_tiles, /.*/],
+										[/.*/, ground_tiles]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-edge-se1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, water_tiles, /.*/],
+										[ ground_tiles, /.*/]
+							]
 		}],
 	},{
 		name: "water-placid",
-		variants: [{
-			graphics: [{
-				id: 'water-underlay-placid',
-				zorder: zorder.water_underlay,
-			},{
-				id: 'water_sparkles',
-				zorder: zorder.water_surface,
+		graphics: [{
+			zorder: zorder.water_underlay,
+			asset_variants: [
+				'water-underlay-placid',
+			],
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-edge-nw1',
+			],
+			restrictions:	[
+								[/.*/, ground_tiles],
+									[/.*/, water_tiles, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-edge-ne1',
+			],
+			restrictions:	[
+								[ground_tiles, /.*/],
+									[/.*/, water_tiles, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-edge-e1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[ground_tiles, water_tiles, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-edge-w1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, water_tiles, ground_tiles],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-edge-sw1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, water_tiles, /.*/],
+										[/.*/, ground_tiles]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-edge-se1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, water_tiles, /.*/],
+										[ ground_tiles, /.*/]
+							]
+		}],
+	},
 
-			},{
-				id: 'water-edge-nw1',
-				zorder: zorder.water_edge,
-				restrictions:	[
-									[/.*/, ground_tiles],
-										[/.*/, water_tiles, /.*/],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'water-edge-ne1',
-				zorder: zorder.water_edge,
-				restrictions:	[
-									[ground_tiles, /.*/],
-										[/.*/, water_tiles, /.*/],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'water-edge-e1',
-				zorder: zorder.water_edge,
-				restrictions:	[
-											[/.*/, /.*/],
-										[ground_tiles, water_tiles, /.*/],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'water-edge-w1',
-				zorder: zorder.water_edge,
-				restrictions:	[
-											[/.*/, /.*/],
-										[/.*/, water_tiles, ground_tiles],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'water-edge-sw1',
-				zorder: zorder.water_edge,
-				restrictions:	[
-											[/.*/, /.*/],
-										[/.*/, water_tiles, /.*/],
-											[/.*/, ground_tiles]
-								]
-			},{
-				id: 'water-edge-se1',
-				zorder: zorder.water_edge,
-				restrictions:	[
-											[/.*/, /.*/],
-										[/.*/, water_tiles, /.*/],
-											[ ground_tiles, /.*/]
-								]
-			}],
-		}],
-	},{
+
+	{
 		name: "menhir-big",
-		variants: [{
-			graphics: [{
-				id: 'dirt1',
-				zorder: zorder.grass,
-			},{
-				id: 'menhir-big2',
-				zorder: zorder.rocks,
-			}],
+		graphics: [{
+			zorder: zorder.rocks,
+			asset_variants: [
+				'menhir-big2',
+				'menhir-big4',
+				'menhir-big5',
+			],
 		},{
-			graphics: [{
-				id: 'dirt1',
-				zorder: zorder.grass,
-			},{
-				id: 'menhir-big4',
-				zorder: zorder.rocks,
-			}],
-		},{
-			graphics: [{
-				id: 'dirt1',
-				zorder: zorder.grass,
-			},{
-				id: 'menhir-big5',
-				zorder: zorder.rocks,
-			}],
+			zorder: zorder.grass,
+			asset_variants: [
+				'dirt1',
+				'dirt2',
+			],		
 		}],
+
 	},{
 		name: "menhir-small",
-		variants: [{
-			graphics: [{
-				id: 'dirt1',
-				zorder: zorder.grass,
-			},{
-				id: 'menhir-small1',
-				zorder: zorder.rocks,
-			}],
+		graphics: [{
+			zorder: zorder.rocks,
+			asset_variants: [
+				'menhir-small1',
+				'menhir-small2',
+				'menhir-small3',
+				'menhir-small4',
+				'menhir-small5',
+				'menhir-small6',
+				'menhir-small7',
+			],
 		},{
-			graphics: [{
-				id: 'dirt1',
-				zorder: zorder.grass,
-			},{
-				id: 'menhir-small2',
-				zorder: zorder.rocks,
-			}],
-		},{
-			graphics: [{
-				id: 'dirt1',
-				zorder: zorder.grass,
-			},{
-				id: 'menhir-small3',
-				zorder: zorder.rocks,
-			}],
-		},{
-			graphics: [{
-				id: 'dirt1',
-				zorder: zorder.grass,
-			},{
-				id: 'menhir-small4',
-				zorder: zorder.rocks,
-			}],
-		},{
-			graphics: [{
-				id: 'dirt1',
-				zorder: zorder.grass,
-			},{
-				id: 'menhir-small5',
-				zorder: zorder.rocks,
-			}],
-		},{
-			graphics: [{
-				id: 'dirt1',
-				zorder: zorder.grass,
-			},{
-				id: 'menhir-small6',
-				zorder: zorder.rocks,
-			}],
-		},{
-			graphics: [{
-				id: 'dirt1',
-				zorder: zorder.grass,
-			},{
-				id: 'menhir-small7',
-				zorder: zorder.rocks,
-			}],
+			zorder: zorder.grass,
+			asset_variants: [
+				'dirt1',
+				'dirt2',
+			],		
 		}],
+
 	},{
 		name: "red-path-unreachable-dot",
 		omit_from_random_map_generation: true,
-		variants: [{
-			graphics: [{
-				id: 'red-path-unreachable-dot',
-				zorder: zorder.rocks,
-			}],
+		graphics: [{
+			zorder: zorder.rocks,
+			asset_variants: [
+				'red-path-unreachable-dot',
+			],
 		}],
 	},{
 		name: "cursor_green",
 		omit_from_random_map_generation: true,
-		variants: [{
-			graphics: [{
-				id: 'cursor_green',
-				zorder: zorder.map_cursor_low,
-			}],
+		graphics: [{
+			zorder: zorder.map_cursor_low,
+			asset_variants: [
+				'cursor_greent',
+			],
 		}],
 	},
 
 	{
 		name: "arrowhead-green",
 		omit_from_random_map_generation: true,
-		variants: [{
-			graphics: [{
-				id: 'arrowhead-e',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/.*/, /.*/],
-										[/arrow/, /arrowhead/, /.*/],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'arrowhead-w',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/.*/, /.*/],
-										[/.*/, /arrowhead/, /arrow/],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'arrowhead-sw',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/.*/, /arrow/],
-										[/.*/, /arrowhead/, /.*/],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'arrowhead-se',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/arrow/, /.*/],
-										[/.*/, /arrowhead/, /.*/],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'arrowhead-nw',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/.*/, /.*/],
-										[/.*/, /arrowhead/, /.*/],
-											[/.*/, /arrow/]
-								]
-			},{
-				id: 'arrowhead-ne',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/.*/, /.*/],
-										[/.*/, /arrowhead/, /.*/],
-											[/arrow/, /.*/]
-								]
-			}]
+		graphics: [{
+			asset_variants: [
+				'arrowhead-e',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /.*/],
+									[/arrow/, /arrowhead/, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			asset_variants: [
+				'arrowhead-w',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, /arrowhead/, /arrow/],
+										[/.*/, /.*/]
+							]
+		},{
+			asset_variants: [
+				'arrowhead-sw',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /arrow/],
+									[/.*/, /arrowhead/, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			asset_variants: [
+				'arrowhead-se',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/arrow/, /.*/],
+									[/.*/, /arrowhead/, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			asset_variants: [
+				'arrowhead-nw',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, /arrowhead/, /.*/],
+										[/.*/, /arrow/]
+							]
+		},{
+			asset_variants: [
+				'arrowhead-ne',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, /arrowhead/, /.*/],
+										[/arrow/, /.*/]
+							]
 		}]
 	},
 
 	{
 		name: "arrow-green",
 		omit_from_random_map_generation: true,
-		variants: [{
-			graphics: [{
-				id: 'arrow-horizontal-bar',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/.*/, /.*/],
-										[/arrow/, /arrow/, /arrow/],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'arrow-se-bar',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/arrow/, /.*/],
-										[/.*/, /arrow/, /.*/],
-											[/.*/, /arrow/]
-								]
-			},{
-				id: 'arrow-ne-bar',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/.*/, /arrow/],
-										[/.*/, /arrow/, /.*/],
-											[/arrow/, /.*/]
-								]
-			},{
-				id: 'arrow-w-to-se-bar',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/.*/, /.*/],
-										[/arrow/, /arrow/, /.*/],
-											[/.*/, /arrow/]
-								]
-			},{
-				id: 'arrow-nw-to-e-bar',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/arrow/, /.*/],
-										[/.*/, /arrow/, /arrow/],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'arrow-sw-to-e-bar',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/.*/, /.*/],
-										[/.*/, /arrow/, /arrow/],
-											[/arrow/, /.*/]
-								]
-			},{
-				id: 'arrow-w-to-ne-bar',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/.*/, /arrow/],
-										[/arrow/, /arrow/, /.*/],
-											[/.*/, /.*/]
-								]
-			},{
-				id: 'arrow-sw-to-nw-bar',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/arrow/, /.*/],
-										[/.*/, /arrow/, /.*/],
-											[/arrow/, /.*/]
-								]
-			},{
-				id: 'arrow-se-to-ne-bar',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/.*/, /arrow/],
-										[/.*/, /arrow/, /.*/],
-											[/.*/, /arrow/]
-								]
-			},{
-				id: 'arrow-nw-endcap',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
-										[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
-											[/^((?!(arrow)).)*$/, /arrow/]
-								]
-			},{
-				id: 'cursor_green',
-				zorder: zorder.map_cursor_low,
-				restrictions:	[
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
-										[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
-											[/^((?!(arrow)).)*$/, /arrow/]
-								]
-			},{
-				id: 'arrow-ne-endcap',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
-										[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
-											[/arrow/, /^((?!(arrow)).)*$/]
-								]
-			},{
-				id: 'cursor_green',
-				zorder: zorder.map_cursor_low,
-				restrictions:	[
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
-										[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
-											[/arrow/, /^((?!(arrow)).)*$/]
-								]
-			},{
-				id: 'arrow-se-endcap',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/arrow/, /^((?!(arrow)).)*$/],
-										[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
-								]
-			},{
-				id: 'cursor_green',
-				zorder: zorder.map_cursor_low,
-				restrictions:	[
-											[/arrow/, /^((?!(arrow)).)*$/],
-										[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
-								]
-			},{
-				id: 'arrow-sw-endcap',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/^((?!(arrow)).)*$/, /arrow/],
-										[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
-								]
-			},{
-				id: 'cursor_green',
-				zorder: zorder.map_cursor_low,
-				restrictions:	[
-											[/^((?!(arrow)).)*$/, /arrow/],
-										[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
-								]
-			},{
-				id: 'arrow-e-endcap',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
-										[/arrow/, /arrow/, /^((?!(arrow)).)*$/],
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
-								]
-			},{
-				id: 'cursor_green',
-				zorder: zorder.map_cursor_low,
-				restrictions:	[
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
-										[/arrow/, /arrow/, /^((?!(arrow)).)*$/],
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
-								]
-			},{
-				id: 'arrow-w-endcap',
-				zorder: zorder.rocks,
-				restrictions:	[
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
-										[/^((?!(arrow)).)*$/, /arrow/, /arrow/],
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
-								]
-			},{
-				id: 'cursor_green',
-				zorder: zorder.map_cursor_low,
-				restrictions:	[
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
-										[/^((?!(arrow)).)*$/, /arrow/, /arrow/],
-											[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
-								]
-			}],
+		graphics: [{
+			asset_variants: [
+				'arrow-horizontal-bar',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /.*/],
+									[/arrow/, /arrow/, /arrow/],
+										[/.*/, /.*/]
+							]
+		},{
+			asset_variants: [
+				'arrow-se-bar',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/arrow/, /.*/],
+									[/.*/, /arrow/, /.*/],
+										[/.*/, /arrow/]
+							]
+		},{
+			asset_variants: [
+				'arrow-ne-bar',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /arrow/],
+									[/.*/, /arrow/, /.*/],
+										[/arrow/, /.*/]
+							]
+		},{
+			asset_variants: [
+				'arrow-w-to-se-bar',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /.*/],
+									[/arrow/, /arrow/, /.*/],
+										[/.*/, /arrow/]
+							]
+		},{
+			asset_variants: [
+				'arrow-nw-to-e-bar',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/arrow/, /.*/],
+									[/.*/, /arrow/, /arrow/],
+										[/.*/, /.*/]
+							]
+		},{
+			asset_variants: [
+				'arrow-sw-to-e-bar',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, /arrow/, /arrow/],
+										[/arrow/, /.*/]
+							]
+		},{
+			asset_variants: [
+				'arrow-w-to-ne-bar',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /arrow/],
+									[/arrow/, /arrow/, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			asset_variants: [
+				'arrow-sw-to-nw-bar',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/arrow/, /.*/],
+									[/.*/, /arrow/, /.*/],
+										[/arrow/, /.*/]
+							]
+		},{
+			asset_variants: [
+				'arrow-se-to-ne-bar',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /arrow/],
+									[/.*/, /arrow/, /.*/],
+										[/.*/, /arrow/]
+							]
+		},{
+			asset_variants: [
+				'arrow-nw-endcap',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
+									[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
+										[/^((?!(arrow)).)*$/, /arrow/]
+							]
+		},{
+			asset_variants: [
+				'cursor_green',
+			],
+			zorder: zorder.map_cursor_low,
+			restrictions:	[
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
+									[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
+										[/^((?!(arrow)).)*$/, /arrow/]
+							]
+		},{
+			asset_variants: [
+				'arrow-ne-endcap',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
+									[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
+										[/arrow/, /^((?!(arrow)).)*$/]
+							]
+		},{
+			asset_variants: [
+				'cursor_green',
+			],
+			zorder: zorder.map_cursor_low,
+			restrictions:	[
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
+									[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
+										[/arrow/, /^((?!(arrow)).)*$/]
+							]
+		},{
+			asset_variants: [
+				'arrow-se-endcap',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/arrow/, /^((?!(arrow)).)*$/],
+									[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
+							]
+		},{
+			asset_variants: [
+				'cursor_green',
+			],
+			zorder: zorder.map_cursor_low,
+			restrictions:	[
+										[/arrow/, /^((?!(arrow)).)*$/],
+									[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
+							]
+		},{
+			asset_variants: [
+				'arrow-sw-endcap',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/^((?!(arrow)).)*$/, /arrow/],
+									[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
+							]
+		},{
+			asset_variants: [
+				'cursor_green',
+			],
+			zorder: zorder.map_cursor_low,
+			restrictions:	[
+										[/^((?!(arrow)).)*$/, /arrow/],
+									[/^((?!(arrow)).)*$/, /arrow/, /^((?!(arrow)).)*$/],
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
+							]
+		},{
+			asset_variants: [
+				'arrow-e-endcap',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
+									[/arrow/, /arrow/, /^((?!(arrow)).)*$/],
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
+							]
+		},{
+			asset_variants: [
+				'cursor_green',
+			],
+			zorder: zorder.map_cursor_low,
+			restrictions:	[
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
+									[/arrow/, /arrow/, /^((?!(arrow)).)*$/],
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
+							]
+		},{
+			asset_variants: [
+				'arrow-w-endcap',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
+									[/^((?!(arrow)).)*$/, /arrow/, /arrow/],
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
+							]
+		},{
+			asset_variants: [
+				'cursor_green',
+			],
+			zorder: zorder.map_cursor_low,
+			restrictions:	[
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/],
+									[/^((?!(arrow)).)*$/, /arrow/, /arrow/],
+										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
+							]
 		}],
 	},				
 
