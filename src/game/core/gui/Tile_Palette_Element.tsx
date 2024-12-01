@@ -156,6 +156,7 @@ export const Tile_Palette_Element = (props: Props) => {
 				Blit_Manager_ƒ.draw_entire_frame(_BM)
 			);
 
+			props.asset_manager.TileRNG.reset();			
 		}
 	}
 	
