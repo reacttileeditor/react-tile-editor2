@@ -519,6 +519,32 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 	ping_pong: true,
 	pad: 2,
 },{
+	url: "water-underlay-sparse1.png",
+	name: "water-underlay-sparse1",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 54,
+		h: 34,
+	},
+	frames: 4,
+	frame_duration: 192,
+	ping_pong: true,
+	pad: 2,
+},{
+	url: "water-underlay-sparse2.png",
+	name: "water-underlay-sparse2",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 54,
+		h: 34,
+	},
+	frames: 4,
+	frame_duration: 184,
+	ping_pong: true,
+	pad: 2,
+},{
 	url: "water-sparkles.png",
 	name: "water_sparkles_blank1",
 	bounds: {

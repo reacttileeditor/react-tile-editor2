@@ -232,6 +232,13 @@ export const tile_types: Array<Tile_Item> = [
 			zorder: zorder.water_underlay,
 			asset_variants: [
 				'water-underlay-placid',
+				'water-underlay-sparse1',
+				'water-underlay-sparse2',
+			],
+		},{
+			zorder: zorder.water_surface,
+			asset_variants: [
+				'water-ripples',
 			],
 		},{
 			zorder: zorder.water_edge,
