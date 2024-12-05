@@ -850,7 +850,7 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 		h: 76,
 	},
 },{
-	url: "shore-walls-right4.png",
+	url: "shore_walls_right4.png",
 	name: "shore-walls-right4",
 	bounds: {
 		x: 0,
@@ -858,6 +858,9 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 		w: 126,
 		h: 76,
 	},
+	frames: 4,
+	frame_duration: 210,
+	ping_pong: true
 },{
 	url: "shore-walls-left1.png",
 	name: "shore-walls-left1",
@@ -886,7 +889,7 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 		h: 76,
 	},
 },{
-	url: "shore-walls-left4.png",
+	url: "shore_walls_left4.png",
 	name: "shore-walls-left4",
 	bounds: {
 		x: 0,
@@ -894,5 +897,8 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 		w: 126,
 		h: 76,
 	},
+	frames: 4,
+	frame_duration: 210,
+	ping_pong: true
 }];
 	
