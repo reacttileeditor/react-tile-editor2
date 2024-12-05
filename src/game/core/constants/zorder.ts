@@ -1,6 +1,7 @@
 
 export const zorder = {
-	water_underlay: -1,
+	water_underlay: -3,
+	water_shore_walls: -2,
 	water_surface: 0,
 	water_edge: 1,
 	grass: 3,

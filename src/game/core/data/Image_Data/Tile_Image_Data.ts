@@ -545,6 +545,58 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 	ping_pong: true,
 	pad: 2,
 },{
+	url: "water-underlay-sparse3.png",
+	name: "water-underlay-sparse3",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 54,
+		h: 34,
+	},
+	frames: 4,
+	frame_duration: 188,
+	ping_pong: true,
+	pad: 2,
+},{
+	url: "water-underlay-sparse4.png",
+	name: "water-underlay-sparse4",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 54,
+		h: 34,
+	},
+	frames: 4,
+	frame_duration: 174,
+	ping_pong: true,
+	pad: 2,
+},{
+	url: "water-underlay-sparse5.png",
+	name: "water-underlay-sparse5",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 54,
+		h: 34,
+	},
+	frames: 4,
+	frame_duration: 164,
+	ping_pong: true,
+	pad: 2,
+},{
+	url: "water-underlay-sparse6.png",
+	name: "water-underlay-sparse6",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 54,
+		h: 34,
+	},
+	frames: 4,
+	frame_duration: 196,
+	ping_pong: true,
+	pad: 2,
+},{
 	url: "water-sparkles.png",
 	name: "water_sparkles_blank1",
 	bounds: {
@@ -770,5 +822,77 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 	frame_duration: 510,
 	pad: 2,
 	ping_pong: true
+},{
+	url: "shore-walls-right1.png",
+	name: "shore-walls-right1",
+	bounds: {
+		x: 0,
+		y: 0,
+		w: 126,
+		h: 76,
+	},
+},{
+	url: "shore-walls-right2.png",
+	name: "shore-walls-right2",
+	bounds: {
+		x: 0,
+		y: 0,
+		w: 126,
+		h: 76,
+	},
+},{
+	url: "shore-walls-right3.png",
+	name: "shore-walls-right3",
+	bounds: {
+		x: 0,
+		y: 0,
+		w: 126,
+		h: 76,
+	},
+},{
+	url: "shore-walls-right4.png",
+	name: "shore-walls-right4",
+	bounds: {
+		x: 0,
+		y: 0,
+		w: 126,
+		h: 76,
+	},
+},{
+	url: "shore-walls-left1.png",
+	name: "shore-walls-left1",
+	bounds: {
+		x: 0,
+		y: 0,
+		w: 126,
+		h: 76,
+	},
+},{
+	url: "shore-walls-left2.png",
+	name: "shore-walls-left2",
+	bounds: {
+		x: 0,
+		y: 0,
+		w: 126,
+		h: 76,
+	},
+},{
+	url: "shore-walls-left3.png",
+	name: "shore-walls-left3",
+	bounds: {
+		x: 0,
+		y: 0,
+		w: 126,
+		h: 76,
+	},
+},{
+	url: "shore-walls-left4.png",
+	name: "shore-walls-left4",
+	bounds: {
+		x: 0,
+		y: 0,
+		w: 126,
+		h: 76,
+	},
 }];
 	

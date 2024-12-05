@@ -161,6 +161,32 @@ export const tile_types: Array<Tile_Item> = [
 				'water-ripples',
 			],
 		},{
+			zorder: zorder.water_shore_walls,
+			asset_variants: [
+				'shore-walls-right1',
+				'shore-walls-right2',
+				'shore-walls-right3',
+				'shore-walls-right4',
+			],	
+			restrictions:	[
+						[/.*/, ground_tiles],
+					[/.*/, water_tiles, /.*/],
+						[/.*/, /.*/]
+			]
+		},{
+			zorder: zorder.water_shore_walls,
+			asset_variants: [
+				'shore-walls-left1',
+				'shore-walls-left2',
+				'shore-walls-left3',
+				'shore-walls-left4',
+			],	
+			restrictions:	[
+						[ground_tiles, /.*/],
+					[/.*/, water_tiles, /.*/],
+						[/.*/, /.*/]
+			]
+		},{
 			zorder: zorder.grass,
 			asset_variants: [
 				'water_sparkles',
@@ -231,9 +257,12 @@ export const tile_types: Array<Tile_Item> = [
 		graphics: [{
 			zorder: zorder.water_underlay,
 			asset_variants: [
-				'water-underlay-placid',
 				'water-underlay-sparse1',
 				'water-underlay-sparse2',
+				'water-underlay-sparse3',
+				'water-underlay-sparse4',
+				'water-underlay-sparse5',
+				'water-underlay-sparse6',
 			],
 		},{
 			zorder: zorder.water_surface,
@@ -241,12 +270,38 @@ export const tile_types: Array<Tile_Item> = [
 				'water-ripples',
 			],
 		},{
+			zorder: zorder.water_shore_walls,
+			asset_variants: [
+				'shore-walls-right1',
+				'shore-walls-right2',
+				'shore-walls-right3',
+				'shore-walls-right4',
+			],	
+			restrictions:	[
+						[/.*/, ground_tiles],
+					[/.*/, water_tiles, /.*/],
+						[/.*/, /.*/]
+			]
+		},{
+			zorder: zorder.water_shore_walls,
+			asset_variants: [
+				'shore-walls-left1',
+				'shore-walls-left2',
+				'shore-walls-left3',
+				'shore-walls-left4',
+			],	
+			restrictions:	[
+						[ground_tiles, /.*/],
+					[/.*/, water_tiles, /.*/],
+						[/.*/, /.*/]
+			]
+		},{
 			zorder: zorder.water_edge,
 			asset_variants: [
 				'water-edge-nw1',
 			],
 			restrictions:	[
-								[/.*/, ground_tiles],
+										[/.*/, ground_tiles],
 									[/.*/, water_tiles, /.*/],
 										[/.*/, /.*/]
 							]
@@ -256,7 +311,7 @@ export const tile_types: Array<Tile_Item> = [
 				'water-edge-ne1',
 			],
 			restrictions:	[
-								[ground_tiles, /.*/],
+										[ground_tiles, /.*/],
 									[/.*/, water_tiles, /.*/],
 										[/.*/, /.*/]
 							]

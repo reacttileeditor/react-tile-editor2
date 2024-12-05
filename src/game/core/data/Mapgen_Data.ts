@@ -68,8 +68,8 @@ export const Blob_Profile_Data: Blob_Profiles = {
 		'menhir-big': 1,
 	},
 	water: {
-		'water': 5,
-		'water-placid': 3,
+		'water': 2,
+		'water-placid': 5,
 	}, 
 	lawn: {
 		'grass': 11,
