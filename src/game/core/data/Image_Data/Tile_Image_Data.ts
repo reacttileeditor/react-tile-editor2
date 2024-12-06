@@ -840,6 +840,9 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 		w: 126,
 		h: 76,
 	},
+	frames: 4,
+	frame_duration: 180,
+	ping_pong: true
 },{
 	url: "shore-walls-right3.png",
 	name: "shore-walls-right3",
@@ -882,6 +885,9 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 		w: 126,
 		h: 76,
 	},
+	frames: 4,
+	frame_duration: 180,
+	ping_pong: true
 },{
 	url: "shore-walls-left3.png",
 	name: "shore-walls-left3",
