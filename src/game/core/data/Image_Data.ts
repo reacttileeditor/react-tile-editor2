@@ -18,5 +18,5 @@ export const image_sequence_data_list: Image_Sequence_Dictionary = {
 	wideleaf_scrub1: ['wideleaf_scrub1__anim1', 'wideleaf_scrub1__anim2', 'wideleaf_scrub1__anim3','wideleaf_scrub1__anim2b', 'wideleaf_scrub1__anim3b'],
 	wideleaf_scrub2: ['wideleaf_scrub2__anim1', 'wideleaf_scrub2__anim2', 'wideleaf_scrub2__anim3','wideleaf_scrub2__anim2b', 'wideleaf_scrub2__anim3b'],
 	water_sparkles: ['water_sparkles1', 'water_sparkles2', 'water_sparkles3', 'water_sparkles4', 'water_sparkles_blank1', 'water_sparkles_blank2'],
-	water_ripples: ['water_ripples_1','water_ripples_2'],
+	water_ripples_2: ['water_ripples_2a','water_ripples_2b'],
 }
