@@ -158,7 +158,8 @@ export const tile_types: Array<Tile_Item> = [
 		},{
 			zorder: zorder.water_surface,
 			asset_variants: [
-				'water-ripples',
+				'water_ripples_1',
+				'water_ripples_2',
 			],
 		},{
 			zorder: zorder.water_shore_walls,
@@ -186,11 +187,6 @@ export const tile_types: Array<Tile_Item> = [
 					[/.*/, water_tiles, /.*/],
 						[/.*/, /.*/]
 			]
-		},{
-			zorder: zorder.grass,
-			asset_variants: [
-				'water_sparkles',
-			],
 		},{
 			zorder: zorder.water_edge,
 			asset_variants: [
@@ -267,7 +263,8 @@ export const tile_types: Array<Tile_Item> = [
 		},{
 			zorder: zorder.water_surface,
 			asset_variants: [
-				'water-ripples',
+				'water_ripples_1',
+				'water_ripples_2',
 			],
 		},{
 			zorder: zorder.water_shore_walls,

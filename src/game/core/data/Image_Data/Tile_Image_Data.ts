@@ -447,8 +447,8 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 	ping_pong: true,
 	pad: 2,
 },{
-	url: "water-tile-sheet.png",
-	name: "water-ripples",
+	url: "water_ripple_1.png",
+	name: "water_ripples_1",
 	bounds: {
 		x: 1,
 		y: 1,
@@ -456,7 +456,19 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 		h: 34,
 	},
 	frames: 8,
-	frame_duration: 200,
+	frame_duration: 150,
+	pad: 2,
+},{
+	url: "water_ripple_2.png",
+	name: "water_ripples_2",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 54,
+		h: 34,
+	},
+	frames: 8,
+	frame_duration: 160,
 	pad: 2,
 },{
 	url: "water-underlay.png",
