@@ -966,5 +966,14 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 	frames: 4,
 	frame_duration: 210,
 	ping_pong: true
+},{
+	url: "water_reeds.png",
+	name: "water_reeds1",
+	bounds: {
+		x: 0,
+		y: 0,
+		w: 55,
+		h: 35,
+	},
 }];
 	

@@ -19,6 +19,7 @@ export type Tile_Name =
 "sand" |
 "water" |
 "water-placid" |
+"water_reeds" |
 "wideleaf_scrub" |
 "menhir-big" |
 "menhir-small" |
@@ -694,8 +695,22 @@ export const tile_types: Array<Tile_Item> = [
 										[/^((?!(arrow)).)*$/, /^((?!(arrow)).)*$/]
 							]
 		}],
-	},				
-
+	},{
+		name: "water_reeds",
+		graphics: [{
+			zorder: zorder.water_surface,
+			asset_variants: [
+				'water_reeds1',
+			],
+		},{
+			zorder: zorder.water_underlay,
+			asset_variants: [
+				'water-underlay1',
+				'water-underlay2',
+				'water-underlay3',
+			],
+		}],
+	},
 	/*,{
 		name: "anim_test",
 		variants: [{
