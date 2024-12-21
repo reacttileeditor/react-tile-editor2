@@ -29,7 +29,9 @@ export type Tile_Name =
 "cursor_green";
 
 const ground_tiles = /(dirt|grass|menhir|sand|bush|wideleaf_scrub)/;
-const water_tiles = /(water|water-still)/;
+const ground_level_tiles = /(dirt|grass|menhir|sand|bush|wideleaf_scrub|water_reeds)/;
+const shallow_water_tiles = /(water_reeds)/;
+const water_tiles = /(^water$|water-placid)/;
 
 export const tile_types: Array<Tile_Item> = [
 	{
@@ -171,7 +173,7 @@ export const tile_types: Array<Tile_Item> = [
 				'shore-walls-right4',
 			],	
 			restrictions:	[
-						[/.*/, ground_tiles],
+						[/.*/, ground_level_tiles],
 					[/.*/, water_tiles, /.*/],
 						[/.*/, /.*/]
 			]
@@ -184,7 +186,7 @@ export const tile_types: Array<Tile_Item> = [
 				'shore-walls-left4',
 			],	
 			restrictions:	[
-						[ground_tiles, /.*/],
+						[ground_level_tiles, /.*/],
 					[/.*/, water_tiles, /.*/],
 						[/.*/, /.*/]
 			]
@@ -276,7 +278,7 @@ export const tile_types: Array<Tile_Item> = [
 				'shore-walls-right4',
 			],	
 			restrictions:	[
-						[/.*/, ground_tiles],
+						[/.*/, ground_level_tiles],
 					[/.*/, water_tiles, /.*/],
 						[/.*/, /.*/]
 			]
@@ -289,7 +291,7 @@ export const tile_types: Array<Tile_Item> = [
 				'shore-walls-left4',
 			],	
 			restrictions:	[
-						[ground_tiles, /.*/],
+						[ground_level_tiles, /.*/],
 					[/.*/, water_tiles, /.*/],
 						[/.*/, /.*/]
 			]
@@ -703,12 +705,70 @@ export const tile_types: Array<Tile_Item> = [
 				'water_reeds1',
 			],
 		},{
-			zorder: zorder.water_underlay,
+			zorder: zorder.water_underlay_high,
 			asset_variants: [
-				'water-underlay1',
-				'water-underlay2',
-				'water-underlay3',
+				'water-underlay-dark1',
 			],
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-underlay-edge-sw1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, shallow_water_tiles, /.*/],
+										[water_tiles, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-underlay-edge-w1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[water_tiles, shallow_water_tiles, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-underlay-edge-e1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, shallow_water_tiles, water_tiles],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-underlay-edge-se1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, shallow_water_tiles, /.*/],
+										[/.*/, water_tiles]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-underlay-edge-ne1',
+			],
+			restrictions:	[
+										[/.*/, water_tiles],
+									[/.*/, shallow_water_tiles, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'water-underlay-edge-nw1',
+			],
+			restrictions:	[
+										[water_tiles, /.*/],
+									[/.*/, shallow_water_tiles, /.*/],
+										[/.*/, /.*/]
+							]
 		}],
 	},
 	/*,{
