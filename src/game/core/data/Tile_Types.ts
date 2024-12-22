@@ -20,6 +20,7 @@ export type Tile_Name =
 "water" |
 "water-placid" |
 "water_reeds" |
+"water_shallow" |
 "wideleaf_scrub" |
 "menhir-big" |
 "menhir-small" |
@@ -29,8 +30,8 @@ export type Tile_Name =
 "cursor_green";
 
 const ground_tiles = /(dirt|grass|menhir|sand|bush|wideleaf_scrub)/;
-const ground_level_tiles = /(dirt|grass|menhir|sand|bush|wideleaf_scrub|water_reeds)/;
-const shallow_water_tiles = /(water_reeds)/;
+const ground_level_tiles = /(dirt|grass|menhir|sand|bush|wideleaf_scrub|water_reeds|water_shallow)/;
+const shallow_water_tiles = /(water_reeds|water_shallow)/;
 const water_tiles = /(^water$|water-placid)/;
 
 export const tile_types: Array<Tile_Item> = [
@@ -700,7 +701,7 @@ export const tile_types: Array<Tile_Item> = [
 	},{
 		name: "water_reeds",
 		graphics: [{
-			zorder: zorder.water_underlay_high,
+			zorder: zorder.water_underlay,
 			asset_variants: [
 				'water-underlay-sparse1',
 				'water-underlay-sparse2',
@@ -726,7 +727,31 @@ export const tile_types: Array<Tile_Item> = [
 				'water-underlay-dark1',
 			],
 		}],
-	},
+	},{
+		name: "water_shallow",
+		graphics: [{
+			zorder: zorder.water_underlay,
+			asset_variants: [
+				'water-underlay-sparse1',
+				'water-underlay-sparse2',
+				'water-underlay-sparse3',
+				'water-underlay-sparse4',
+				'water-underlay-sparse5',
+				'water-underlay-sparse6',
+			],
+		},{
+			zorder: zorder.water_surface,
+			asset_variants: [
+				'water_ripples_1',
+				'water_ripples_2',
+			],
+		},{
+			zorder: zorder.water_shore_wall_top,
+			asset_variants: [
+				'water-underlay-dark1',
+			],
+		}],
+	}
 	/*,{
 		name: "anim_test",
 		variants: [{
