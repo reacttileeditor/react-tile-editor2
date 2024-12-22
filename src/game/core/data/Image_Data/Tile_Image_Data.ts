@@ -535,9 +535,9 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 		x: 1,
 		y: 1,
 		w: 54,
-		h: 34,
+		h: 54,
 	},
-	frames: 8,
+	frames: 1,
 	frame_duration: 180,
 	pad: 2,
 },{
