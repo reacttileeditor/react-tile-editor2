@@ -700,17 +700,33 @@ export const tile_types: Array<Tile_Item> = [
 	},{
 		name: "water_reeds",
 		graphics: [{
-			zorder: zorder.water_surface,
+			zorder: zorder.water_underlay_high,
+			asset_variants: [
+				'water-underlay-sparse1',
+				'water-underlay-sparse2',
+				'water-underlay-sparse3',
+				'water-underlay-sparse4',
+				'water-underlay-sparse5',
+				'water-underlay-sparse6',
+			],
+		},{
+			zorder: zorder.water_surface_protrusions,
 			asset_variants: [
 				'water_reeds1',
 			],
 		},{
-			zorder: zorder.water_underlay_high,
+			zorder: zorder.water_surface,
+			asset_variants: [
+				'water_ripples_1',
+				'water_ripples_2',
+			],
+		},{
+			zorder: zorder.water_shore_wall_top,
 			asset_variants: [
 				'water-underlay-dark1',
 			],
 		},{
-			zorder: zorder.water_edge,
+			zorder: zorder.water_shore_wall_top_edge,
 			asset_variants: [
 				'water-underlay-edge-sw1',
 			],
@@ -720,7 +736,7 @@ export const tile_types: Array<Tile_Item> = [
 										[water_tiles, /.*/]
 							]
 		},{
-			zorder: zorder.water_edge,
+			zorder: zorder.water_shore_wall_top_edge,
 			asset_variants: [
 				'water-underlay-edge-w1',
 			],
@@ -730,7 +746,7 @@ export const tile_types: Array<Tile_Item> = [
 										[/.*/, /.*/]
 							]
 		},{
-			zorder: zorder.water_edge,
+			zorder: zorder.water_shore_wall_top_edge,
 			asset_variants: [
 				'water-underlay-edge-e1',
 			],
@@ -740,7 +756,7 @@ export const tile_types: Array<Tile_Item> = [
 										[/.*/, /.*/]
 							]
 		},{
-			zorder: zorder.water_edge,
+			zorder: zorder.water_shore_wall_top_edge,
 			asset_variants: [
 				'water-underlay-edge-se1',
 			],
@@ -750,7 +766,7 @@ export const tile_types: Array<Tile_Item> = [
 										[/.*/, water_tiles]
 							]
 		},{
-			zorder: zorder.water_edge,
+			zorder: zorder.water_shore_wall_top_edge,
 			asset_variants: [
 				'water-underlay-edge-ne1',
 			],
@@ -760,7 +776,7 @@ export const tile_types: Array<Tile_Item> = [
 										[/.*/, /.*/]
 							]
 		},{
-			zorder: zorder.water_edge,
+			zorder: zorder.water_shore_wall_top_edge,
 			asset_variants: [
 				'water-underlay-edge-nw1',
 			],

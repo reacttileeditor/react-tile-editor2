@@ -982,10 +982,10 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 	url: "water_reeds.png",
 	name: "water_reeds1",
 	bounds: {
-		x: 0,
-		y: 0,
-		w: 55,
-		h: 35,
+		x: 1,
+		y: 1,
+		w: 54,
+		h: 34,
 	},
 },{
 	url: "water-underlay-transitions.png",
