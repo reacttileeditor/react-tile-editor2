@@ -537,8 +537,9 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 		w: 54,
 		h: 54,
 	},
-	frames: 1,
-	frame_duration: 180,
+	frames: 3,
+	frame_duration: 270,
+	ping_pong: true,
 	pad: 2,
 },{
 	url: "water-underlay-dark2.png",
@@ -549,8 +550,9 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 		w: 54,
 		h: 54,
 	},
-	frames: 1,
-	frame_duration: 180,
+	frames: 3,
+	frame_duration: 280,
+	ping_pong: true,
 	pad: 2,
 },{
 	url: "water-underlay-tile-sheet.png",
