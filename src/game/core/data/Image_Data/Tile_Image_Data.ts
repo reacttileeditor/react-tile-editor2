@@ -529,6 +529,32 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 
 	pad: 2,
 },{
+	url: "water-underlay-dark1.png",
+	name: "water-underlay-dark1",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 54,
+		h: 54,
+	},
+	frames: 3,
+	frame_duration: 270,
+	ping_pong: true,
+	pad: 2,
+},{
+	url: "water-underlay-dark2.png",
+	name: "water-underlay-dark2",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 54,
+		h: 54,
+	},
+	frames: 3,
+	frame_duration: 280,
+	ping_pong: true,
+	pad: 2,
+},{
 	url: "water-underlay-tile-sheet.png",
 	name: "water-underlay1",
 	bounds: {
@@ -966,5 +992,92 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 	frames: 4,
 	frame_duration: 210,
 	ping_pong: true
+},{
+	url: "water_reeds.png",
+	name: "water_reeds1",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 54,
+		h: 34,
+	},
+},{
+	url: "water-underlay-transitions.png",
+	name: "water-underlay-edge-sw1",
+	bounds: {
+		x: 1,
+		y: 169,
+		w: 54,
+		h: 34,
+	},
+	frames: 1,
+	frame_duration: 130,
+	ping_pong: true,
+	pad: 2,
+},{
+	url: "water-underlay-transitions.png",
+	name: "water-underlay-edge-se1",
+	bounds: {
+		x: 1,
+		y: 61,
+		w: 54,
+		h: 34,
+	},
+	frames: 1,
+	frame_duration: 130,
+	ping_pong: true,
+	pad: 2,
+},{
+	url: "water-underlay-transitions.png",
+	name: "water-underlay-edge-w1",
+	bounds: {
+		x: 1,
+		y: 205,
+		w: 54,
+		h: 34,
+	},
+	frames: 1,
+	frame_duration: 130,
+	ping_pong: true,
+	pad: 2,
+},{
+	url: "water-underlay-transitions.png",
+	name: "water-underlay-edge-e1",
+	bounds: {
+		x: 1,
+		y: 97,
+		w: 54,
+		h: 34,
+	},
+	frames: 1,
+	frame_duration: 130,
+	ping_pong: true,
+	pad: 2,
+},{
+	url: "water-underlay-transitions.png",
+	name: "water-underlay-edge-nw1",
+	bounds: {
+		x: 1,
+		y: 241,
+		w: 54,
+		h: 34,
+	},
+	frames: 1,
+	frame_duration: 130,
+	ping_pong: true,
+	pad: 2,
+},{
+	url: "water-underlay-transitions.png",
+	name: "water-underlay-edge-ne1",
+	bounds: {
+		x: 1,
+		y: 133,
+		w: 54,
+		h: 34,
+	},
+	frames: 1,
+	frame_duration: 130,
+	ping_pong: true,
+	pad: 2,
 }];
 	
