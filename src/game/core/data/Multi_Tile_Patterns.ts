@@ -65,10 +65,43 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 				anchor: {x: 1, y: 2},
 			},{
 				asset_variants: [
-					'menhir2_mtp_1b',
+					'grass-and-scree1',
+					'grass-and-scree2',
+					'grass-and-scree3',
+					'grass-and-scree4',
+					'grass-and-scree5',
+					'grass-and-scree6',
+					'grass-and-scree7',
+					'grass-and-scree8',
 				],
 				zorder: zorder.grass,
 				anchor: {x: 1, y: 2},
+			},{
+				asset_variants: [
+					'grass-and-scree1',
+					'grass-and-scree2',
+					'grass-and-scree3',
+					'grass-and-scree4',
+					'grass-and-scree5',
+					'grass-and-scree6',
+					'grass-and-scree7',
+					'grass-and-scree8',
+				],
+				zorder: zorder.grass,
+				anchor: {x: 1, y: 3},
+			},{
+				asset_variants: [
+					'grass-and-scree1',
+					'grass-and-scree2',
+					'grass-and-scree3',
+					'grass-and-scree4',
+					'grass-and-scree5',
+					'grass-and-scree6',
+					'grass-and-scree7',
+					'grass-and-scree8',
+				],
+				zorder: zorder.grass,
+				anchor: {x: 2, y: 2},
 			}],
 		},{
 			restrictions:	[
