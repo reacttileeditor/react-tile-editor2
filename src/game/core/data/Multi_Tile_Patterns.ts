@@ -58,7 +58,7 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 			],
 			graphics: [{
 				asset_variants: [
-					'menhir2_mtp_1',
+					'menhir_big_mtp_1',
 					'menhir_big_mtp_4',
 				],
 				zorder: zorder.rocks,
@@ -120,13 +120,13 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 			],
 			graphics: [{
 				asset_variants: [
-					'menhir2_mtp_2',
+					'menhir_big_mtp_2',
 				],
 				zorder: zorder.rocks,
 				anchor: {x: 1, y: 2},
 			},{
 				asset_variants: [
-					'menhir2_mtp_2b',
+					'menhir_big_mtp_2b',
 				],
 				zorder: zorder.grass,
 				anchor: {x: 1, y: 2},
@@ -144,13 +144,13 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 			],
 			graphics: [{
 				asset_variants: [
-					'menhir2_mtp_3',
+					'menhir_big_mtp_3',
 				],
 				zorder: zorder.rocks,
 				anchor: {x: 1, y: 2},
 			},{
 				asset_variants: [
-					'menhir2_mtp_3b',
+					'menhir_big_mtp_3b',
 				],
 				zorder: zorder.grass,
 				anchor: {x: 1, y: 2},

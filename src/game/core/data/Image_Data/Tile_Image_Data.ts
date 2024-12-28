@@ -17,26 +17,26 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 	url: "multi-tile-pattern-test4.png",
 	name: "multi-tile-pattern-test4",
 },{
-	url: "menhir2_mtp_1.png",
-	name: "menhir2_mtp_1",
+	url: "menhir_big_mtp_1.png",
+	name: "menhir_big_mtp_1",
 },{
-	url: "menhir2_mtp_1b.png",
-	name: "menhir2_mtp_1b",
+	url: "menhir_big_mtp_1b.png",
+	name: "menhir_big_mtp_1b",
 },{
-	url: "menhir2_mtp_2.png",
-	name: "menhir2_mtp_2",
+	url: "menhir_big_mtp_2.png",
+	name: "menhir_big_mtp_2",
 },{
 	url: "menhir_big_mtp_4.png",
 	name: "menhir_big_mtp_4",
 },{
-	url: "menhir2_mtp_2b.png",
-	name: "menhir2_mtp_2b",
+	url: "menhir_big_mtp_2b.png",
+	name: "menhir_big_mtp_2b",
 },{
-	url: "menhir2_mtp_3.png",
-	name: "menhir2_mtp_3",
+	url: "menhir_big_mtp_3.png",
+	name: "menhir_big_mtp_3",
 },{
-	url: "menhir2_mtp_3b.png",
-	name: "menhir2_mtp_3b",
+	url: "menhir_big_mtp_3b.png",
+	name: "menhir_big_mtp_3b",
 },{
 	url: "hex-tile-experiment-tiles.png",
 	name: "menhir-small1",
