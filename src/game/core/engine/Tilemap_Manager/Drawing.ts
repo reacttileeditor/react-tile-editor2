@@ -246,7 +246,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				map(_AM.static_vals.multi_tile_types, (mtp_type)=>{
 					//Step over each kind of MTP
 
-					map(mtp_type.variants, (mtp_variant)=>{
+					map(mtp_type.patterns, (mtp_variant)=>{
 						//then step over each alternate graphic
 
 						/*
@@ -338,7 +338,8 @@ export const Tilemap_Manager_ƒ_Drawing = {
 												y: map_tile_row_index + ({x: graphic_item.anchor.x, y: graphic_item.anchor.y}).y
 											},
 											zorder: graphic_item.zorder,
-											graphic: graphic_item.id,
+											graphic: Asset_Manager_ƒ.convert_MTP_variants_to_single_assets(_AM, graphic_item).id
+
 										})
 									})
 								}

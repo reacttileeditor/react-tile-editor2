@@ -8,6 +8,7 @@ import { Point2D } from "../../../interfaces";
 import * as Utils from "../Utils";
 import { Asset_Blit_Item } from "../Tilemap_Manager/Tilemap_Manager";
 import { zorder } from "../../constants/zorder";
+import { MTP_Graphic_Item } from "../../data/Multi_Tile_Patterns";
 
 
 
@@ -155,7 +156,18 @@ export const Accessors = {
 			id: graphic_item.asset_variants[Asset_Manager_ƒ._tile_dice( me, graphic_item.asset_variants.length ) -1],
 			zorder: graphic_item.zorder,
 		}
-	} 
+	},
+
+	convert_MTP_variants_to_single_assets: (
+		me: Asset_Manager_Data,
+		graphic_item: MTP_Graphic_Item
+	): Asset_Blit_Item => {
+
+		return {
+			id: graphic_item.asset_variants[Asset_Manager_ƒ._tile_dice( me, graphic_item.asset_variants.length ) -1],
+			zorder: graphic_item.zorder,
+		}
+	},
 
 
 }

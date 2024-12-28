@@ -10,7 +10,7 @@ type MTP_Restrictions = Array<Array<RegExp>>;
 export type Multi_Tile_Pattern = {
 	name: Tile_Name,
 
-	variants: Array<MTP_Variant_Item>,
+	patterns: Array<MTP_Variant_Item>,
 };
 
 interface MTP_Variant_Item {
@@ -19,8 +19,8 @@ interface MTP_Variant_Item {
 	graphics: Array<MTP_Graphic_Item>,
 };
 
-type MTP_Graphic_Item = {
-	id: string,
+export type MTP_Graphic_Item = {
+	asset_variants: Array<string>,
 	zorder: number,
 	anchor: Point2D,
 };
@@ -41,7 +41,7 @@ export type MTP_Anchor_Data = {
 export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 	{
 		name: "menhir-big",
-		variants: [{
+		patterns: [{
 			restrictions:	[
 				[/.*/,	/.*/,	/.*/,		/.*/],
 					[/.*/, /menhir-big/,	/.*/, /.*/],
@@ -57,11 +57,16 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 				[false,	false,	false,	false],
 			],
 			graphics: [{
-				id: 'menhir2_mtp_1',
+				asset_variants: [
+					'menhir2_mtp_1',
+					'menhir_big_mtp_4',
+				],
 				zorder: zorder.rocks,
 				anchor: {x: 1, y: 2},
 			},{
-				id: 'menhir2_mtp_1b',
+				asset_variants: [
+					'menhir2_mtp_1b',
+				],
 				zorder: zorder.grass,
 				anchor: {x: 1, y: 2},
 			}],
@@ -81,11 +86,15 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 				[false,	false,	false,	false],
 			],
 			graphics: [{
-				id: 'menhir2_mtp_2',
+				asset_variants: [
+					'menhir2_mtp_2',
+				],
 				zorder: zorder.rocks,
 				anchor: {x: 1, y: 2},
 			},{
-				id: 'menhir2_mtp_2b',
+				asset_variants: [
+					'menhir2_mtp_2b',
+				],
 				zorder: zorder.grass,
 				anchor: {x: 1, y: 2},
 			}],
@@ -101,11 +110,15 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 				[false,	true,	false,	false],
 			],
 			graphics: [{
-				id: 'menhir2_mtp_3',
+				asset_variants: [
+					'menhir2_mtp_3',
+				],
 				zorder: zorder.rocks,
 				anchor: {x: 1, y: 2},
 			},{
-				id: 'menhir2_mtp_3b',
+				asset_variants: [
+					'menhir2_mtp_3b',
+				],
 				zorder: zorder.grass,
 				anchor: {x: 1, y: 2},
 			}],

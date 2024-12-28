@@ -26,6 +26,9 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 	url: "menhir2_mtp_2.png",
 	name: "menhir2_mtp_2",
 },{
+	url: "menhir_big_mtp_4.png",
+	name: "menhir_big_mtp_4",
+},{
 	url: "menhir2_mtp_2b.png",
 	name: "menhir2_mtp_2b",
 },{

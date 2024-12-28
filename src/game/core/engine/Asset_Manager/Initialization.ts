@@ -103,7 +103,7 @@ export const Initialization = {
 		let max_mtp_height = 0;
 
 		const is_valid = is_all_true(map(mtp_data, (tile_type)=> (
-			is_all_true(map(tile_type.variants, (variant)=>{
+			is_all_true(map(tile_type.patterns, (variant)=>{
 
 				const restriction_row_sizes = map(variant.restrictions, (row)=>(
 					size(row)	
@@ -118,7 +118,7 @@ export const Initialization = {
 				if( size(winnowed) > 1){
 					//row sizes should all be the same, period.
 
-					throw new Error( `MTP has mismatching row sizes.  Graphic Asset id: ${variant.graphics[0].id}` );
+					throw new Error( `MTP has mismatching row sizes.  First graphic asset id: ${variant.graphics[0].asset_variants[0]}` );
 
 
 					return false;
