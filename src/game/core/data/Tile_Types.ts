@@ -711,7 +711,7 @@ export const tile_types: Array<Tile_Item> = [
 				'water-underlay-sparse6',
 			],
 		},{
-			zorder: zorder.water_surface_protrusions,
+			zorder: zorder.rocks,
 			asset_variants: [
 				'water_reeds1',
 			],
