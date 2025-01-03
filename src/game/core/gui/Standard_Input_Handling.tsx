@@ -57,7 +57,7 @@ export const Standard_Input_ƒ = {
 		const move_trigger_buffer_size = 40;
 
 		const scale_movement_depth = (val: number):number  => (
-			Math.round( ƒ.dump((val / move_trigger_buffer_size) * 4.0)) 
+			Math.round( ƒ.dump((val / move_trigger_buffer_size) * 2.0)) 
 		);
 	
 
