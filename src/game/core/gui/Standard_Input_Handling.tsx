@@ -42,7 +42,7 @@ export const Standard_Input_ƒ = {
 			handle_canvas_click(pos, buttons_pressed);
 		}
 		
-		Standard_Input_ƒ.move_viewport_based_on_mouse_position(pos, _BM, set_Blit_Manager);
+		//Standard_Input_ƒ.move_viewport_based_on_mouse_position(pos, _BM, set_Blit_Manager);
 	},
 
 	move_viewport_based_on_mouse_position: (

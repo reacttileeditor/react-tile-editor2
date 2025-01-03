@@ -140,8 +140,11 @@ export const Blit_Manager_ƒ = {
 		return {
 			...cloneDeep(me),
 			state: {
-				viewport_tween_progress: ƒ.if(me.state.viewport_tween_progress == 1.0,
-					0.0,
+				viewport_tween_progress: (
+					me.state.viewport_tween_progress == 1.0 
+					?
+					0.0
+					:
 					me.state.viewport_tween_progress * 0.3
 				),
 				intended_viewport_offset: {
@@ -412,13 +415,20 @@ export const Blit_Manager_ƒ = {
 	iterate_viewport_tween: ( me: Blit_Manager_Data ): Blit_Manager_State => {
 		const { viewport_tween_progress, intended_viewport_offset, actual_viewport_offset } = me.state;
 	
+
+		/*
+			Little bit of craziness; we want to round to avoid some pixel-uglies, but we also have a problem where our tweening can cause this to round to zero, causing the camera to not pan at all.
+		*/
+		const x_rounding_func = ( intended_viewport_offset.x - actual_viewport_offset.x ) > 0 ? Math.ceil : Math.floor;
+		const y_rounding_func = ( intended_viewport_offset.y - actual_viewport_offset.y ) > 0 ? Math.ceil : Math.floor;
+
 		if( viewport_tween_progress < 1.0 ){
 			return {
 				intended_viewport_offset: cloneDeep(intended_viewport_offset),
 				viewport_tween_progress: viewport_tween_progress + 0.02,
 				actual_viewport_offset: {
-					x: Math.floor(actual_viewport_offset.x + viewport_tween_progress * ( intended_viewport_offset.x - actual_viewport_offset.x )),
-					y: Math.floor(actual_viewport_offset.y + viewport_tween_progress * ( intended_viewport_offset.y - actual_viewport_offset.y )),
+					x: x_rounding_func(actual_viewport_offset.x + viewport_tween_progress * ( intended_viewport_offset.x - actual_viewport_offset.x )),
+					y: y_rounding_func(actual_viewport_offset.y + viewport_tween_progress * ( intended_viewport_offset.y - actual_viewport_offset.y )),
 				},
 			}
 		} else {
