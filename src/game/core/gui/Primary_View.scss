@@ -137,13 +137,16 @@ body {
 					font-size: 1.5rem;
 					transform: translateX(-50%);
 					padding: 0.5rem 1.0rem;
-					margin-top: 0.5rem;
+					margin-top: 4rem;
 					background: rgba(0, 0, 0, 0.75);
 					color: white;
 					border-radius: 0.5rem;
 					position: relative;
 					display: inline-block;
 
+					transition: top 0.075s ease-in-out;
+					transition: left 0.075s ease-in-out;
+	
 					.data-row {
 						display: flex;
 						justify-content: flex-start;
@@ -166,6 +169,29 @@ body {
 						margin-bottom: 0.25em;
 					}
 				}
+
+				.up-arrow {
+					display: inline-block;
+					position: relative;
+					border: 1px solid #777777;
+					text-decoration: none;
+					border-radius: 2px;
+					padding: 20px;
+					margin-top: 50px;
+				}
+
+				
+				.map-tooltip:after {
+					content: '';
+					display: block;  
+					position: absolute;
+					left: calc(50% - 14px);
+					bottom: 100%;
+					width: 0;
+					height: 0;
+					border: 14px solid transparent;
+					border-bottom-color: rgba(0, 0, 0, 0.75);
+				}				
 			}
 		}
 
