@@ -713,7 +713,7 @@ export const tile_types: Array<Tile_Item> = [
 		},{
 			zorder: zorder.rocks,
 			asset_variants: [
-				'water_reeds1',
+				'water_reeds_1',
 			],
 		},{
 			zorder: zorder.water_surface,

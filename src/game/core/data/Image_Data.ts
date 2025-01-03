@@ -20,4 +20,5 @@ export const image_sequence_data_list: Image_Sequence_Dictionary = {
 	water_sparkles: ['water_sparkles1', 'water_sparkles2', 'water_sparkles3', 'water_sparkles4', 'water_sparkles_blank1', 'water_sparkles_blank2'],
 	water_ripples_1: ['water_ripples_1a','water_ripples_1b'],
 	water_ripples_2: ['water_ripples_2a','water_ripples_2b','water_ripples_2c'],
+	water_reeds_1: ['water_reeds_1a','water_reeds_1b','water_reeds_1c'],
 }

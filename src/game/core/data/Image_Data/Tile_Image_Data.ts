@@ -996,8 +996,8 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 	frame_duration: 210,
 	ping_pong: true
 },{
-	url: "water_reeds1.png",
-	name: "water_reeds1",
+	url: "water_reeds_1a.png",
+	name: "water_reeds_1a",
 	bounds: {
 		x: 1,
 		y: 1,
@@ -1006,6 +1006,32 @@ export const Tile_Image_Data: Array<Image_Data> = [{
 	},
 	frames: 5,
 	frame_duration: 100,
+	ping_pong: true,
+	pad: 2,
+},{
+	url: "water_reeds_1b.png",
+	name: "water_reeds_1b",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 54,
+		h: 34,
+	},
+	frames: 5,
+	frame_duration: 100,
+	ping_pong: true,
+	pad: 2,
+},{
+	url: "water_reeds_1c.png",
+	name: "water_reeds_1c",
+	bounds: {
+		x: 1,
+		y: 1,
+		w: 54,
+		h: 34,
+	},
+	frames: 2,
+	frame_duration: 175,
 	ping_pong: true,
 	pad: 2,
 },{
