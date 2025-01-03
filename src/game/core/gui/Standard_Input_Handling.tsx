@@ -12,6 +12,7 @@ import { Point2D, Rectangle } from '../../interfaces';
 
 import { equals } from "ramda";
 import { Vals } from "../constants/Constants";
+import { ƒ } from "../engine/Utils";
 
 
 
@@ -45,28 +46,36 @@ export const Standard_Input_ƒ = {
 		//Standard_Input_ƒ.move_viewport_based_on_mouse_position(pos, _BM, set_Blit_Manager);
 	},
 
+
 	move_viewport_based_on_mouse_position: (
 		pos: Point2D,
 		_BM: Blit_Manager_Data,
 		set_Blit_Manager: (newVal: Blit_Manager_Data) => void,
 	) => {
 		let move = { x: 0, y: 0};
-		const move_trigger_buffer_size = 20;
+		let depth = 0;
+		const move_trigger_buffer_size = 40;
+
+		const scale_movement_depth = (val: number):number  => (
+			Math.round( ƒ.dump((val / move_trigger_buffer_size) * 4.0)) 
+		);
+	
 
 		if( pos.y >= Vals.default_canvas_size.y - move_trigger_buffer_size ){
-			move.y -= 1;
+			move.y -= scale_movement_depth(Math.max( 0, pos.y - (Vals.default_canvas_size.y - move_trigger_buffer_size) ));
 		}
 
 		if( pos.y <=  move_trigger_buffer_size ){
-			move.y += 1;
+			move.y += scale_movement_depth(Math.max( 0, move_trigger_buffer_size - pos.y));
 		}
 
 		if( pos.x >= Vals.default_canvas_size.x - move_trigger_buffer_size ){
-			move.x -= 1;
+			move.x -= scale_movement_depth(Math.max( 0, pos.x - (Vals.default_canvas_size.x - move_trigger_buffer_size) ));
 		}
 
 		if( pos.x <=  move_trigger_buffer_size ){
-			move.x += 1;
+
+			move.x += scale_movement_depth(Math.max( 0, move_trigger_buffer_size - pos.x));
 		}
 
 
