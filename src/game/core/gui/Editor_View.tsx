@@ -48,7 +48,8 @@ type Editor_Map_Generation_Types = 'true_random' | 'blob_regions';
 export const Editor_View = (props: Editor_View_Props) => {
 
 	const [render_loop_interval, set_render_loop_interval] = useState<number|null>(null);
-	const [cursor_pos, set_cursor_pos] = useState<Point2D>({ x: 0, y: 0 });
+	const [screen_pixel_cursor_pos, set_screen_pixel_cursor_pos] = useState<Point2D>({ x: 50, y: 50 });
+	const [tile_cursor_pos, set_tile_cursor_pos] = useState<Point2D>({ x: 0, y: 0 });
 	const [render_tick, set_render_tick] = useState<number>(0);
 
 	const [show_load_dialog, set_show_load_dialog] = useState<boolean>(false);
@@ -84,6 +85,13 @@ export const Editor_View = (props: Editor_View_Props) => {
 		){
 			console.log('EDITOR RENDER TICK')
 			const bm = props._Blit_Manager();
+			Standard_Input_ƒ.move_viewport_based_on_mouse_position(
+				screen_pixel_cursor_pos,
+				bm,
+				props.set_Blit_Manager
+			);
+
+
 			set_render_tick(render_tick + 1);
 		}
 
@@ -115,7 +123,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			_AM:						props._Asset_Manager(),
 			asset_name:					'cursor',
 			_BM:						props._Blit_Manager(),
-			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( props._Tilemap_Manager(), props._Asset_Manager(), cursor_pos ),
+			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( props._Tilemap_Manager(), props._Asset_Manager(), tile_cursor_pos ),
 			zorder:						zorder.rocks,
 			current_milliseconds:		0,
 			opacity:					1.0,
@@ -152,7 +160,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			props.set_Blit_Manager,
 			props.set_Tilemap_Manager,
 			true,
-			cursor_pos
+			tile_cursor_pos
 		);
 		draw_cursor();
 		}
@@ -198,7 +206,8 @@ export const Editor_View = (props: Editor_View_Props) => {
 			props._Tilemap_Manager(),
 			props._Asset_Manager(),
 			props._Blit_Manager(),
-			set_cursor_pos,
+			set_screen_pixel_cursor_pos,
+			set_tile_cursor_pos,
 			props.set_Blit_Manager,
 			handle_canvas_click
 		)
@@ -375,7 +384,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 				render_tick > 0
 				&&
 				<Tooltip_Manager
-					cursor_pos={cursor_pos}
+					cursor_pos={tile_cursor_pos}
 					show_tooltip={true}
 					_Asset_Manager={props._Asset_Manager}
 					_Blit_Manager={props._Blit_Manager}
