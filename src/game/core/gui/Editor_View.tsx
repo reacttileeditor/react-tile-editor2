@@ -945,7 +945,10 @@ export const Tooltip_Manager = (props: {
 }) => {
 
 	const get_tooltip_data = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): EditorTooltip_Data => ({
-		pos: Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, _AM, props.cursor_pos),
+		pos: Blit_Manager_ƒ.yield_absolute_coords_for_world_coords(
+			_BM,
+			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, _AM, props.cursor_pos)
+		),
 		tile_pos: props.cursor_pos, //Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, props.cursor_pos ),
 		tile_name: Tilemap_Manager_ƒ.get_tile_name_for_pos(
 			_TM,

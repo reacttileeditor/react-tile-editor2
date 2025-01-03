@@ -160,6 +160,13 @@ export const Blit_Manager_ƒ = {
 		}
 	},
 
+	yield_absolute_coords_for_world_coords: ( me: Blit_Manager_Data, pos: Point2D) => {
+		return {
+			x: me.state.intended_viewport_offset.x + pos.x,
+			y: me.state.intended_viewport_offset.y + pos.y
+		}
+	},
+
 /*----------------------- draw ops -----------------------*/
 	queue_draw_op: (p: {
 		_BM:					Blit_Manager_Data,
