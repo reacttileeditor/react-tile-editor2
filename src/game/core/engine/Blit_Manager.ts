@@ -197,8 +197,14 @@ export const Blit_Manager_ƒ = {
 	
 	draw_entire_frame: ( me: Blit_Manager_Data ): Blit_Manager_Data => {
 		Blit_Manager_ƒ.iterate_viewport_tween(me);
-// 		console.log(me.state.actual_viewport_offset);
-	
+
+		//round this here, rather than storing a rounded-value, so we're able to do pixel-fraction movement, but won't ever have display jaggies from the viewport "used by actual rendering" sitting at some mid-pixel position.
+		const viewport_pos: Point2D = {
+			x: Math.round(me.state.actual_viewport_offset.x),
+			y: Math.round(me.state.actual_viewport_offset.y)
+		};
+
+
 		//sort it all by painter's algorithm
 		const sortedBlits =	_.sortBy(
 							_.sortBy(
@@ -220,8 +226,8 @@ export const Blit_Manager_ƒ = {
 				me.osb_ctx.textAlign = 'center';
 		
 				me.osb_ctx.translate(
-					value.pos.x + me.state.actual_viewport_offset.x,
-					value.pos.y + me.state.actual_viewport_offset.y
+					value.pos.x + viewport_pos.x,
+					value.pos.y + viewport_pos.y
 				);
 
 				me.osb_ctx.fillStyle = "#ffffff";
@@ -233,8 +239,8 @@ export const Blit_Manager_ƒ = {
 				me.osb_ctx.save();
 
 				me.osb_ctx.translate(
-					value.pos.x + me.state.actual_viewport_offset.x,
-					value.pos.y + me.state.actual_viewport_offset.y - 50
+					value.pos.x + viewport_pos.x,
+					value.pos.y + viewport_pos.y - 50
 				);
 				me.osb_ctx.globalAlpha = value.opacity;
 
@@ -289,8 +295,8 @@ export const Blit_Manager_ƒ = {
 				me.osb_ctx.save();
 
 				me.osb_ctx.translate(
-					value.pos.x + me.state.actual_viewport_offset.x,
-					value.pos.y + me.state.actual_viewport_offset.y
+					value.pos.x + viewport_pos.x,
+					value.pos.y + viewport_pos.y
 				);
 				me.osb_ctx.globalAlpha = value.opacity;
 
@@ -330,8 +336,8 @@ export const Blit_Manager_ƒ = {
 				me.osb_ctx.save();
 
 				me.osb_ctx.translate(
-					value.pos.x + me.state.actual_viewport_offset.x + value.drawing_data.dest_point.x,
-					value.pos.y + me.state.actual_viewport_offset.y + value.drawing_data.dest_point.y
+					value.pos.x + viewport_pos.x + value.drawing_data.dest_point.x,
+					value.pos.y + viewport_pos.y + value.drawing_data.dest_point.y
 				);
 				me.osb_ctx.globalAlpha = value.opacity;
 
@@ -415,20 +421,13 @@ export const Blit_Manager_ƒ = {
 	iterate_viewport_tween: ( me: Blit_Manager_Data ): Blit_Manager_State => {
 		const { viewport_tween_progress, intended_viewport_offset, actual_viewport_offset } = me.state;
 	
-
-		/*
-			Little bit of craziness; we want to round to avoid some pixel-uglies, but we also have a problem where our tweening can cause this to round to zero, causing the camera to not pan at all.
-		*/
-		const x_rounding_func = ( intended_viewport_offset.x - actual_viewport_offset.x ) > 0 ? Math.ceil : Math.floor;
-		const y_rounding_func = ( intended_viewport_offset.y - actual_viewport_offset.y ) > 0 ? Math.ceil : Math.floor;
-
 		if( viewport_tween_progress < 1.0 ){
 			return {
 				intended_viewport_offset: cloneDeep(intended_viewport_offset),
 				viewport_tween_progress: viewport_tween_progress + 0.02,
 				actual_viewport_offset: {
-					x: x_rounding_func(actual_viewport_offset.x + viewport_tween_progress * ( intended_viewport_offset.x - actual_viewport_offset.x )),
-					y: y_rounding_func(actual_viewport_offset.y + viewport_tween_progress * ( intended_viewport_offset.y - actual_viewport_offset.y )),
+					x: (actual_viewport_offset.x + viewport_tween_progress * ( intended_viewport_offset.x - actual_viewport_offset.x )),
+					y: (actual_viewport_offset.y + viewport_tween_progress * ( intended_viewport_offset.y - actual_viewport_offset.y )),
 				},
 			}
 		} else {
