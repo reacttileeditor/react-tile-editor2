@@ -51,6 +51,7 @@ interface Blit_Manager_State {
 	//we've got two values here - we do a "intended" value for the viewport, but when we change the current camera position, we actually tween towards it gradually.  The current position we're *actually* aimed at gets stored in a different variable, since it either has to be derived from some sort of tweening function, or directly stored (if we did the tweeing function, the time-offset certainly would have to, so dimensionally this at least will always require one dimension of data storage).
 	intended_viewport_offset: Point2D,
 	actual_viewport_offset: Point2D,
+	viewport_velocity: Point2D,
 	viewport_tween_progress: number, //normalized 0.0 -> 1.0
 }
 
@@ -123,6 +124,7 @@ export const New_Blit_Manager = ( ctx: CanvasRenderingContext2D, dimensions: Poi
 			viewport_tween_progress: 0,
 			intended_viewport_offset: {x: 0, y: 0},
 			actual_viewport_offset: {x: 0, y: 0},
+			viewport_velocity: {x: 0, y: 0},
 		}
 	}
 }
@@ -152,6 +154,20 @@ export const Blit_Manager_ƒ = {
 					y: me.state.intended_viewport_offset.y + y
 				},
 				actual_viewport_offset: me.state.actual_viewport_offset,
+				viewport_velocity: me.state.viewport_velocity,
+			}
+		}
+	},
+
+	add_viewport_velocity: ( me: Blit_Manager_Data, x: number, y: number): Blit_Manager_Data => {
+		return {
+			...cloneDeep(me),
+			state: {
+				...me.state,
+				viewport_velocity: {
+					x: me.state.viewport_velocity.x + x,
+					y: me.state.viewport_velocity.y + y
+				}				
 			}
 		}
 	},
@@ -419,24 +435,44 @@ export const Blit_Manager_ƒ = {
 
 /*----------------------- tweening -----------------------*/
 	iterate_viewport_tween: ( me: Blit_Manager_Data ): Blit_Manager_State => {
-		const { viewport_tween_progress, intended_viewport_offset, actual_viewport_offset } = me.state;
-	
-		if( viewport_tween_progress < 1.0 ){
-			return {
-				intended_viewport_offset: cloneDeep(intended_viewport_offset),
-				viewport_tween_progress: viewport_tween_progress + 0.02,
-				actual_viewport_offset: {
-					x: (actual_viewport_offset.x + viewport_tween_progress * ( intended_viewport_offset.x - actual_viewport_offset.x )),
-					y: (actual_viewport_offset.y + viewport_tween_progress * ( intended_viewport_offset.y - actual_viewport_offset.y )),
-				},
-			}
-		} else {
+		const { viewport_tween_progress, intended_viewport_offset, actual_viewport_offset, viewport_velocity } = me.state;
+		const viewport_friction = 0.8;
+
+
+		// if( viewport_tween_progress < 1.0 ){
+		// 	return {
+		// 		intended_viewport_offset: {
+		// 			x: intended_viewport_offset.x + viewport_velocity.x,
+		// 			y: intended_viewport_offset.x + viewport_velocity.y,
+		// 		},
+		// 		viewport_tween_progress: viewport_tween_progress + 0.02,
+		// 		actual_viewport_offset: cloneDeep(intended_viewport_offset),
+		// 		// actual_viewport_offset: {
+		// 		// 	x: (actual_viewport_offset.x + viewport_tween_progress * ( intended_viewport_offset.x - actual_viewport_offset.x )),
+		// 		// 	y: (actual_viewport_offset.y + viewport_tween_progress * ( intended_viewport_offset.y - actual_viewport_offset.y )),
+		// 		// },
+		// 		viewport_velocity: {
+		// 			x: viewport_velocity.x * viewport_friction,
+		// 			y: viewport_velocity.y * viewport_friction,
+		// 		},
+		// 	}
+		// } else {
 			return {
 				viewport_tween_progress: 1.0,
-				intended_viewport_offset: cloneDeep(intended_viewport_offset),
-				actual_viewport_offset: cloneDeep(intended_viewport_offset),
+				intended_viewport_offset: {
+					x: intended_viewport_offset.x + viewport_velocity.x,
+					y: intended_viewport_offset.y + viewport_velocity.y,
+				},
+				actual_viewport_offset: {
+					x: intended_viewport_offset.x + viewport_velocity.x,
+					y: intended_viewport_offset.y + viewport_velocity.y,
+				},
+				viewport_velocity: {
+					x: viewport_velocity.x * viewport_friction,
+					y: viewport_velocity.y * viewport_friction,
+				},
 			};
-		}
+		// }
 	},
 
 

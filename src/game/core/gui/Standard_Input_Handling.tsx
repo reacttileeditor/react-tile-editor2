@@ -54,10 +54,10 @@ export const Standard_Input_ƒ = {
 	) => {
 		let move = { x: 0, y: 0};
 		let depth = 0;
-		const move_trigger_buffer_size = 40;
+		const move_trigger_buffer_size = 50;
 
 		const scale_movement_depth = (val: number):number  => (
-			Math.round( ƒ.dump((val / move_trigger_buffer_size) * 2.0)) 
+			Math.round( (val / move_trigger_buffer_size) * 2.0) 
 		);
 	
 
@@ -81,7 +81,7 @@ export const Standard_Input_ƒ = {
 
 		if( !equals(move, {x: 0, y: 0}) ){
 			set_Blit_Manager(
-				Blit_Manager_ƒ.adjust_viewport_pos(_BM, move.x, move.y)
+				Blit_Manager_ƒ.add_viewport_velocity(_BM, move.x, move.y)
 			)
 		}
 	},
@@ -94,24 +94,26 @@ export const Standard_Input_ƒ = {
 	) => {
 		let move = { x: 0, y: 0};
 
+		const magnitude = 8;
+
 		if( _.includes(keys, 'ArrowDown') ){
-			move.y -= 40;
+			move.y -= 1 * magnitude;
 		}
 
 		if( _.includes(keys, 'ArrowUp') ){
-			move.y += 40;
+			move.y +=  1 * magnitude;
 		}
 
 		if( _.includes(keys, 'ArrowLeft') ){
-			move.x += 40;
+			move.x +=  1 * magnitude;
 		}
 
 		if( _.includes(keys, 'ArrowRight') ){
-			move.x -= 40;
+			move.x -=  1 * magnitude;
 		}
 
 		set_Blit_Manager(
-			Blit_Manager_ƒ.adjust_viewport_pos(_BM, move.x, move.y)
+			Blit_Manager_ƒ.add_viewport_velocity(_BM, move.x, move.y)
 		)
 	}
 }
