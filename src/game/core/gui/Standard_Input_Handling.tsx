@@ -12,7 +12,7 @@ import { Point2D, Rectangle } from '../../interfaces';
 
 import { equals } from "ramda";
 import { Vals } from "../constants/Constants";
-import { ƒ } from "../engine/Utils";
+import { is_within_rectangle, ƒ } from "../engine/Utils";
 
 
 
@@ -60,24 +60,24 @@ export const Standard_Input_ƒ = {
 			Math.round( (val / move_trigger_buffer_size) * 2.0) 
 		);
 	
+		if( is_within_rectangle(pos, {x: 0, y: 0, w: Vals.default_canvas_size.x, h: Vals.default_canvas_size.y}) ) {
+			if( pos.y >= Vals.default_canvas_size.y - move_trigger_buffer_size ){
+				move.y -= scale_movement_depth(Math.max( 0, pos.y - (Vals.default_canvas_size.y - move_trigger_buffer_size) ));
+			}
 
-		if( pos.y >= Vals.default_canvas_size.y - move_trigger_buffer_size ){
-			move.y -= scale_movement_depth(Math.max( 0, pos.y - (Vals.default_canvas_size.y - move_trigger_buffer_size) ));
+			if( pos.y <=  move_trigger_buffer_size ){
+				move.y += scale_movement_depth(Math.max( 0, move_trigger_buffer_size - pos.y));
+			}
+
+			if( pos.x >= Vals.default_canvas_size.x - move_trigger_buffer_size ){
+				move.x -= scale_movement_depth(Math.max( 0, pos.x - (Vals.default_canvas_size.x - move_trigger_buffer_size) ));
+			}
+
+			if( pos.x <=  move_trigger_buffer_size ){
+
+				move.x += scale_movement_depth(Math.max( 0, move_trigger_buffer_size - pos.x));
+			}
 		}
-
-		if( pos.y <=  move_trigger_buffer_size ){
-			move.y += scale_movement_depth(Math.max( 0, move_trigger_buffer_size - pos.y));
-		}
-
-		if( pos.x >= Vals.default_canvas_size.x - move_trigger_buffer_size ){
-			move.x -= scale_movement_depth(Math.max( 0, pos.x - (Vals.default_canvas_size.x - move_trigger_buffer_size) ));
-		}
-
-		if( pos.x <=  move_trigger_buffer_size ){
-
-			move.x += scale_movement_depth(Math.max( 0, move_trigger_buffer_size - pos.x));
-		}
-
 
 		if( !equals(move, {x: 0, y: 0}) ){
 			set_Blit_Manager(

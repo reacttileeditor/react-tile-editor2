@@ -123,6 +123,13 @@ export const angle_between = (p: {source: Point2D, dest: Point2D}): number => (
 )
 
 
+export const is_within_rectangle = (point: Point2D, rect: Rectangle): boolean => (
+	point.x > rect.x &&
+	point.x < rect.x + rect.w &&
+	point.y > rect.y &&
+	point.y < rect.y + rect.h
+);
+
 export const radianss_to_degrees = (rad: number) => (rad * 180.0) / Math.PI;
 export const degrees_to_radians = (deg: number) => (deg * Math.PI) / 180.0;
 
