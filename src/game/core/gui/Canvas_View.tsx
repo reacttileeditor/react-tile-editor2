@@ -63,6 +63,16 @@ export const Canvas_View = (props: Props) => {
 		document.addEventListener('keydown', handle_canvas_keydown as unknown as EventListener );
 		document.addEventListener('keyup', handle_canvas_keyup as unknown as EventListener );
 
+		window.addEventListener('mousemove', (e: MouseEvent) => {
+			console.log(`debug mouseP: ${e.pageX}, ${e.pageY}`);
+
+			var absolute_pos = { x: e.pageX, y: e.pageY};
+			var mousePos = get_mouse_pos_relative_to_canvas(absolute_pos, false)
+			let buttons_pressed = extract_which_mouse_button(e as unknown as React.MouseEvent<HTMLElement>)
+			props.handle_canvas_mouse_move( mousePos, buttons_pressed );
+
+		}, /*useCapture=*/true);
+
 		return () => {
 			console.log('CANVAS EVENT CLEANUP')
 
@@ -72,6 +82,8 @@ export const Canvas_View = (props: Props) => {
 			document.removeEventListener ('keyup', handle_canvas_keyup as unknown as EventListener);
 		};
 	}, []);
+
+
 
 	const getCanvas =  (): HTMLCanvasElement | null => (canvasRef.current);
 	const getContext = (): CanvasRenderingContext2D | null => {
@@ -108,9 +120,10 @@ export const Canvas_View = (props: Props) => {
 
 
 
-	const track_canvas_move = ( e: React.MouseEvent<HTMLCanvasElement> ) => {
+	const track_canvas_move = ( e: React.MouseEvent<HTMLElement> ) => {
 		var mousePosUnconstrained = get_mouse_pos_for_action(e, false);
-		var mousePos = get_mouse_pos_for_action(e, true);
+		var mousePos = get_mouse_pos_for_action(e, false);
+		console.log('mouse move!')
 
 		let buttons_pressed = extract_which_mouse_button(e)
 		//this is where we had the giant switch statement of actions to perform.
@@ -124,16 +137,62 @@ export const Canvas_View = (props: Props) => {
 	}
 
 	const handle_canvas_click = ( e: React.MouseEvent<HTMLCanvasElement>, buttons_pressed: Mouse_Button_State ) => {
-		var mousePos = get_mouse_pos_for_action(e, true);
+		var mousePos = get_mouse_pos_for_action(e, false);
 	
 		props.handle_canvas_click( mousePos, buttons_pressed );
 	}
 
-	const get_mouse_pos_for_action = ( e: React.MouseEvent<HTMLCanvasElement>, should_constrain: boolean ) => {
+	const get_mouse_pos_relative_to_canvas = ( absolute_pos: Point2D, should_constrain: boolean ) => {
 		const canvas = getCanvas();
 
 		if( canvas ){
-			const bgRectSrc = (canvas as HTMLCanvasElement).getBoundingClientRect();
+			const bgRectSrc = (canvas as HTMLElement).getBoundingClientRect();
+			const bgRect = { x: bgRectSrc.left, y: bgRectSrc.top, w: bgRectSrc.right - bgRectSrc.left, h: bgRectSrc.bottom - bgRectSrc.top };
+
+
+				/*
+					This exists to enable having a canvas that's got different bounds than its native pixel size (generally something like 2x, but this should be general enough to handle wacky alternatives, including situations where it's being vertically stretched or w/e.
+				*/
+			const scaleCoeff = {
+				x: bgRect.w / props.dimensions.x,
+				y: bgRect.h / props.dimensions.y
+			}
+
+			const mousePosRaw = (() => {
+				return	{
+							x: absolute_pos.x - bgRect.x,
+							y: absolute_pos.y - bgRect.y
+						};
+			})();
+
+			const mousePos =	{
+									x: Math.round(mousePosRaw.x / scaleCoeff.x),
+									y: Math.round(mousePosRaw.y / scaleCoeff.y)
+								};
+
+
+			if( should_constrain ){
+				return {
+					x: constrain(0, mousePos.x, bgRect.w),
+					y: constrain(0, mousePos.y, bgRect.h)
+				};
+			} else {
+				return {
+					x: mousePos.x,
+					y: mousePos.y,
+				};
+			}
+		} else {
+			return {x: 0, y: 0};
+		}
+	}
+
+
+	const get_mouse_pos_for_action = ( e: React.MouseEvent<HTMLElement>, should_constrain: boolean ) => {
+		const canvas = getCanvas();
+
+		if( canvas ){
+			const bgRectSrc = (canvas as HTMLElement).getBoundingClientRect();
 			const bgRect = { x: bgRectSrc.left, y: bgRectSrc.top, w: bgRectSrc.right - bgRectSrc.left, h: bgRectSrc.bottom - bgRectSrc.top };
 
 
@@ -187,7 +246,7 @@ export const Canvas_View = (props: Props) => {
 		captureMouseEvents(e);
 	}
 
-	const extract_which_mouse_button = (e: React.MouseEvent<HTMLCanvasElement>): Mouse_Button_State => {
+	const extract_which_mouse_button = (e: React.MouseEvent<HTMLElement>): Mouse_Button_State => {
 		var names = [
 			'left', 'right', 'middle', 'back', 'forward'
 		];
@@ -249,7 +308,7 @@ export const Canvas_View = (props: Props) => {
 			height={props.dimensions.y}
 		
 			onMouseDown={ mousedownListener }
-			onMouseMove={ mousemoveListener }
+//			onMouseMove={ mousemoveListener }
 			onContextMenu={ (e) => { e.preventDefault(); return false; } }
 		/>
 		<div className="left_scroll" />
