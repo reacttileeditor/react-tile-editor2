@@ -64,21 +64,13 @@ export const Canvas_View = (props: Props) => {
 		document.addEventListener('keydown', handle_canvas_keydown as unknown as EventListener );
 		document.addEventListener('keyup', handle_canvas_keyup as unknown as EventListener );
 
-		window.addEventListener('mousemove', (e: MouseEvent) => {
-			console.log(`debug mouseP: ${e.pageX}, ${e.pageY}`);
-
-			var absolute_pos = { x: e.pageX, y: e.pageY};
-			var mousePos = get_mouse_pos_relative_to_canvas(absolute_pos, false)
-			let buttons_pressed = extract_which_mouse_button(e as unknown as React.MouseEvent<HTMLElement>)
-			props.handle_canvas_mouse_move( mousePos, buttons_pressed );
-
-		}, /*useCapture=*/true);
+		window.addEventListener('mousemove', _mousemoveListener, /*useCapture=*/true);
 
 		return () => {
 			console.log('CANVAS EVENT CLEANUP')
 
 			document.removeEventListener ('mouseup',   mouseupListener as unknown as EventListener,   {capture: true});
-			document.removeEventListener ('mousemove', mousemoveListener as unknown as EventListener, {capture: true});
+			window.removeEventListener ('mousemove', _mousemoveListener as unknown as EventListener, {capture: true});
 			document.removeEventListener ('keydown', handle_canvas_keydown as unknown as EventListener);
 			document.removeEventListener ('keyup', handle_canvas_keyup as unknown as EventListener);
 		};
@@ -97,7 +89,15 @@ export const Canvas_View = (props: Props) => {
 	};
 
 
+	const _mousemoveListener = (e: MouseEvent) => {
+		//console.log(`debug mouseP: ${e.pageX}, ${e.pageY}`);
 
+		var absolute_pos = { x: e.pageX, y: e.pageY};
+		var mousePos = get_mouse_pos_relative_to_canvas(absolute_pos, false)
+		let buttons_pressed = extract_which_mouse_button(e as unknown as React.MouseEvent<HTMLElement>)
+		props.handle_canvas_mouse_move( mousePos, buttons_pressed );
+
+	};
 
 /*----------------------- event handling -----------------------*/
 	/*
@@ -121,22 +121,26 @@ export const Canvas_View = (props: Props) => {
 
 
 
-	const track_canvas_move = ( e: React.MouseEvent<HTMLElement> ) => {
-		var mousePosUnconstrained = get_mouse_pos_for_action(e, false);
-		var mousePos = get_mouse_pos_for_action(e, false);
-		console.log('mouse move!')
 
-		let buttons_pressed = extract_which_mouse_button(e)
-		//this is where we had the giant switch statement of actions to perform.
-		//console.log("MousePos:", mousePos);
-		//this.props._Tilemap_Manager.handle_mouse_move( mousePos.x, mousePos.y );
-		props.handle_canvas_mouse_move( mousePos, buttons_pressed );
-	}
 
 
 	const handle_canvas_click = ( e: React.MouseEvent<HTMLCanvasElement>, buttons_pressed: Mouse_Button_State ) => {
-		var mousePos = get_mouse_pos_for_action(e, false);
 	
+
+		const mousePosRaw = (() => { if(e.nativeEvent !== undefined) {
+			return	{
+						x: e.nativeEvent.clientX,
+						y: e.nativeEvent.clientY
+					};
+		} else {
+			return	{
+						x: e.clientX,
+						y: e.clientY
+					};
+		}})();
+
+		var mousePos = get_mouse_pos_relative_to_canvas(mousePosRaw, false);
+
 		props.handle_canvas_click( mousePos, buttons_pressed );
 	}
 
@@ -156,85 +160,22 @@ export const Canvas_View = (props: Props) => {
 				y: bgRect.h / props.dimensions.y
 			}
 
-			const mousePosRaw = (() => {
-				return	{
-							x: absolute_pos.x - bgRect.x,
-							y: absolute_pos.y - bgRect.y
-						};
-			})();
+			const relative_pos = {
+				x: absolute_pos.x - bgRect.x,
+				y: absolute_pos.y - bgRect.y
+			};
 
-			const mousePos =	{
-									x: Math.round(mousePosRaw.x / scaleCoeff.x),
-									y: Math.round(mousePosRaw.y / scaleCoeff.y)
-								};
+			return {
+				x: Math.round(relative_pos.x / scaleCoeff.x),
+				y: Math.round(relative_pos.y / scaleCoeff.y)
+			};
 
-
-			if( should_constrain ){
-				return {
-					x: constrain(0, mousePos.x, bgRect.w),
-					y: constrain(0, mousePos.y, bgRect.h)
-				};
-			} else {
-				return {
-					x: mousePos.x,
-					y: mousePos.y,
-				};
-			}
 		} else {
 			return {x: 0, y: 0};
 		}
 	}
 
 
-	const get_mouse_pos_for_action = ( e: React.MouseEvent<HTMLElement>, should_constrain: boolean ) => {
-		const canvas = getCanvas();
-
-		if( canvas ){
-			const bgRectSrc = (canvas as HTMLElement).getBoundingClientRect();
-			const bgRect = { x: bgRectSrc.left, y: bgRectSrc.top, w: bgRectSrc.right - bgRectSrc.left, h: bgRectSrc.bottom - bgRectSrc.top };
-
-
-				/*
-					This exists to enable having a canvas that's got different bounds than its native pixel size (generally something like 2x, but this should be general enough to handle wacky alternatives, including situations where it's being vertically stretched or w/e.
-				*/
-			const scaleCoeff = {
-				x: bgRect.w / props.dimensions.x,
-				y: bgRect.h / props.dimensions.y
-			}
-
-			const mousePosRaw = (() => { if(e.nativeEvent !== undefined) {
-				return	{
-							x: e.nativeEvent.clientX - bgRect.x,
-							y: e.nativeEvent.clientY - bgRect.y
-						};
-			} else {
-				return	{
-							x: e.clientX - bgRect.x,
-							y: e.clientY - bgRect.y
-						};
-			}})();
-
-			const mousePos =	{
-									x: Math.round(mousePosRaw.x / scaleCoeff.x),
-									y: Math.round(mousePosRaw.y / scaleCoeff.y)
-								};
-
-
-			if( should_constrain ){
-				return {
-					x: constrain(0, mousePos.x, bgRect.w),
-					y: constrain(0, mousePos.y, bgRect.h)
-				};
-			} else {
-				return {
-					x: mousePos.x,
-					y: mousePos.y,
-				};
-			}
-		} else {
-			return {x: 0, y: 0};
-		}
-	}
 
 
 
@@ -261,10 +202,6 @@ export const Canvas_View = (props: Props) => {
 		) as Mouse_Button_State
 	}
 
-	const mousemoveListener = (e: React.MouseEvent<HTMLCanvasElement>) => {
-		track_canvas_move(e);
-		e.stopPropagation();
-	}
 
 	const mouseupListener = (e: React.MouseEvent<HTMLCanvasElement>) => {
 		var restoreGlobalMouseEvents = () => {
@@ -273,7 +210,6 @@ export const Canvas_View = (props: Props) => {
 
 		restoreGlobalMouseEvents ();
 		document.removeEventListener ('mouseup',   mouseupListener as unknown as EventListener,   {capture: true});
-		document.removeEventListener ('mousemove', mousemoveListener as unknown as EventListener, {capture: true});
 		e.stopPropagation ();
 
 		//annul any in-progress operations here
@@ -289,7 +225,6 @@ export const Canvas_View = (props: Props) => {
 
 		preventGlobalMouseEvents ();
 		document.addEventListener ('mouseup',   mouseupListener as unknown as EventListener,   {capture: true});
-		document.addEventListener ('mousemove', mousemoveListener as unknown as EventListener, {capture: true});
 		e.preventDefault ();
 		e.stopPropagation ();
 	}
@@ -306,7 +241,6 @@ export const Canvas_View = (props: Props) => {
 			height={props.dimensions.y}
 		
 			onMouseDown={ mousedownListener }
-//			onMouseMove={ mousemoveListener }
 			onContextMenu={ (e) => { e.preventDefault(); return false; } }
 		/>
 		<div className="left_scroll" />

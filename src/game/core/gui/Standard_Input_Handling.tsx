@@ -56,7 +56,7 @@ export const Standard_Input_ƒ = {
 		let depth = 0;
 		const move_trigger_buffer_size = 50;
 
-		console.log(`mouse pos: ${pos.x}, ${pos.y}`)
+		//console.log(`mouse pos: ${pos.x}, ${pos.y}`)
 		const scale_movement_depth = (val: number):number  => (
 			Math.round( (val / move_trigger_buffer_size) * 2.0) 
 		);
