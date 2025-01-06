@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { cloneDeep, concat, filter, find, findIndex, isEmpty, isEqual, isNil, isNumber, last, map, reduce, size, toArray, uniq } from "lodash";
 import { includes } from "ramda"
 
-import { ƒ } from "./Utils";
+import { constrain_point_within_rect, ƒ } from "./Utils";
 
 import { Canvas_View, Mouse_Button_State } from "../gui/Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager/Asset_Manager";
@@ -18,6 +18,7 @@ import { Point2D, Rectangle } from '../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../objects_core/Custom_Object";
 import { Tooltip_Data } from "../gui/Game_View";
 import { zorder } from "../constants/zorder";
+import { Vals } from "../constants/Constants";
 
 interface Game_View_Props {
 	_Asset_Manager: () => Asset_Manager_Data,
@@ -394,10 +395,12 @@ export const Game_Manager_ƒ = {
 	},
 
 	get_tooltip_data: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Tooltip_Data => {
-		const tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos )
+		const constrained_pos = constrain_point_within_rect(me.cursor_pos, Vals.default_canvas_rect);
+
+		const tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, constrained_pos )
 
 		return {
-			pos: me.cursor_pos,
+			pos: constrained_pos,
 			selected_unit: Game_Manager_ƒ.get_selected_creature(me),
 			hovered_unit: Game_Manager_ƒ.get_creature_at_tile(me, tile_pos),
 			path_data: !isNil(me.game_state.selected_object_index) ? me.game_state.current_frame_state.creature_list[me.game_state.selected_object_index].path_data : undefined,
