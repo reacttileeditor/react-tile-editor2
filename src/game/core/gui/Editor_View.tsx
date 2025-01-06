@@ -207,11 +207,22 @@ export const Editor_View = (props: Editor_View_Props) => {
 			props._Tilemap_Manager(),
 			props._Asset_Manager(),
 			props._Blit_Manager(),
-			set_screen_pixel_cursor_pos,
-			set_tile_cursor_pos,
+			update_mouse_pos,
 			props.set_Blit_Manager,
 			handle_canvas_click
 		)
+	}
+
+	const update_mouse_pos = (pos: Point2D): void => {
+		const new_tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos)
+
+		set_screen_pixel_cursor_pos(
+			pos
+		);
+
+		set_tile_cursor_pos(
+			new_tile_pos
+		);
 	}
 
 	const editor_handle_canvas_keys_down = (keys: Array<string>) => {

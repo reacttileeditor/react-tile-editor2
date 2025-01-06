@@ -186,7 +186,7 @@ export const Game_Manager_ƒ = {
 	},
 
 	/*----------------------- ui interaction -----------------------*/
-	set_cursor_pos: (me: Game_Manager_Data, coords: Point2D, buttons_pressed: Mouse_Button_State): Game_Manager_Data => {
+	set_cursor_pos: (me: Game_Manager_Data, coords: Point2D): Game_Manager_Data => {
 		return {
 			...cloneDeep(me),
 			cursor_pos: coords,

@@ -197,10 +197,23 @@ export const Game_View = (props: Game_View_Props) => {
 
 
 	/*----------------------- IO routines -----------------------*/
-	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: Mouse_Button_State) => {
+	const update_mouse_pos = (pos: Point2D) => {
 		if( props.get_Game_Manager_Data() != null ){
-			props.set_Game_Manager_Data( Game_Manager_ƒ.set_cursor_pos(props.get_Game_Manager_Data(), pos, buttons_pressed));
+			props.set_Game_Manager_Data( Game_Manager_ƒ.set_cursor_pos(props.get_Game_Manager_Data(), pos));
 		}
+	}
+
+	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: Mouse_Button_State) => {
+		Standard_Input_ƒ.handle_canvas_mouse_move(
+			pos,
+			buttons_pressed,
+			props._Tilemap_Manager(),
+			props._Asset_Manager(),
+			props._Blit_Manager(),
+			update_mouse_pos,
+			props.set_Blit_Manager,
+			handle_canvas_mouse_click
+		)
 	}
 
 	const handle_canvas_mouse_click = (pos: Point2D, buttons_pressed: Mouse_Button_State) => {
