@@ -40,34 +40,64 @@ export const Standard_Input_ƒ = {
 		pos: Point2D,
 		_BM: Blit_Manager_Data,
 		set_Blit_Manager: (newVal: Blit_Manager_Data) => void,
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
 	) => {
 		let move = { x: 0, y: 0};
 		let depth = 0;
 		const move_trigger_buffer_size = 50;
 
-		//console.log(`mouse pos: ${pos.x}, ${pos.y}`)
+
+		//calculate the map bounds, so that if we're sufficiently past them, we can choose not to scroll.
+		const map_bounds = Tilemap_Manager_ƒ.get_map_bounds(_TM);
+		const map_bounds_in_pixels = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, { x: map_bounds.w, y: map_bounds.h});
+
+		const map_bound_rectangle = {
+			x: 70,
+			y: 70,
+			w: -(map_bounds_in_pixels.x - Vals.default_canvas_rect.w + 70),
+			h: -(map_bounds_in_pixels.y - Vals.default_canvas_rect.h + 70),
+		}
+
+		const viewport_pos = _BM.state.intended_viewport_offset;
+
+
+		// Set up a scaling function to control acceleration globally, and give more acceleration as you closer to the edge of the screen.
 		const scale_movement_depth = (val: number):number  => (
 			Math.round( (val / move_trigger_buffer_size) * 2.0) 
 		);
 	
 		if( is_within_rectangle(pos, Vals.default_canvas_rect) ) {
-			if( pos.y >= Vals.default_canvas_size.y - move_trigger_buffer_size ){
-				move.y -= scale_movement_depth(Math.max( 0, pos.y - (Vals.default_canvas_size.y - move_trigger_buffer_size) ));
+
+			if( pos.x <=  move_trigger_buffer_size ){
+				if((viewport_pos.x < map_bound_rectangle.x)){
+					move.x += scale_movement_depth(Math.max( 0, move_trigger_buffer_size - pos.x));
+				}
 			}
 
 			if( pos.y <=  move_trigger_buffer_size ){
-				move.y += scale_movement_depth(Math.max( 0, move_trigger_buffer_size - pos.y));
+				if((viewport_pos.y < map_bound_rectangle.y)){
+					move.y += scale_movement_depth(Math.max( 0, move_trigger_buffer_size - pos.y));
+				}
 			}
 
 			if( pos.x >= Vals.default_canvas_size.x - move_trigger_buffer_size ){
-				move.x -= scale_movement_depth(Math.max( 0, pos.x - (Vals.default_canvas_size.x - move_trigger_buffer_size) ));
+				if((viewport_pos.x > map_bound_rectangle.w)){
+					move.x -= scale_movement_depth(Math.max( 0, pos.x - (Vals.default_canvas_size.x - move_trigger_buffer_size) ));
+				}
 			}
 
-			if( pos.x <=  move_trigger_buffer_size ){
-
-				move.x += scale_movement_depth(Math.max( 0, move_trigger_buffer_size - pos.x));
+			if( pos.y >= Vals.default_canvas_size.y - move_trigger_buffer_size ){
+				if((viewport_pos.y > map_bound_rectangle.h)){
+					move.y -= scale_movement_depth(Math.max( 0, pos.y - (Vals.default_canvas_size.y - move_trigger_buffer_size) ));
+				}
 			}
+
 		}
+
+
+
+			
 
 		if( !equals(move, {x: 0, y: 0}) ){
 			set_Blit_Manager(

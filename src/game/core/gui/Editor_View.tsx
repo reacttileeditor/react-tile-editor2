@@ -85,11 +85,12 @@ export const Editor_View = (props: Editor_View_Props) => {
 			
 		){
 			//console.log('EDITOR RENDER TICK')
-			const bm = props._Blit_Manager();
 			Standard_Input_ƒ.move_viewport_based_on_mouse_position(
 				screen_pixel_cursor_pos,
-				bm,
-				props.set_Blit_Manager
+				props._Blit_Manager(),
+				props.set_Blit_Manager,
+				props._Tilemap_Manager(),
+				props._Asset_Manager(),
 			);
 
 
