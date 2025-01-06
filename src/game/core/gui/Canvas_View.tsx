@@ -22,6 +22,7 @@ interface State {
 }
 
 import { Point2D, Rectangle } from '../../interfaces';
+import { constrain } from "../engine/Utils";
 
 export type Mouse_Button_State = {
 	back: boolean,
@@ -132,9 +133,6 @@ export const Canvas_View = (props: Props) => {
 		props.handle_canvas_mouse_move( mousePos, buttons_pressed );
 	}
 
-	const constrain = ( min_limit: number, value: number, max_limit: number ) => {
-		return Math.min( Math.max(min_limit, value), max_limit);
-	}
 
 	const handle_canvas_click = ( e: React.MouseEvent<HTMLCanvasElement>, buttons_pressed: Mouse_Button_State ) => {
 		var mousePos = get_mouse_pos_for_action(e, false);

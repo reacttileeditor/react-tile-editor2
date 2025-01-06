@@ -10,7 +10,7 @@ import { Tilemap_Metadata, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../e
 
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
-import { useInterval } from "../engine/Utils";
+import { constrain_point_within_rect, useInterval } from "../engine/Utils";
 import { Button, Divider, Drawer, Dropdown, IconButton, Input, List, Modal, RadioTile, RadioTileGroup, Tooltip, Whisper } from "rsuite";
 import { Icon, Page, Trash, Global, PeoplesCostomize, Copy } from "@rsuite/icons";
 import { BsFileEarmarkLock2, BsFileEarmark, BsClipboard2Plus } from "react-icons/bs";
@@ -24,6 +24,7 @@ import { Game_Manager_ƒ } from "../engine/Game_Manager";
 import { includes, map } from "ramda";
 import { Map_Generation_ƒ } from "../engine/Map_Generation";
 import { Tile_Name } from "../data/Tile_Types";
+import { Vals } from "../constants/Constants";
 
 
 interface Editor_View_Props {
@@ -83,7 +84,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			props.context_connected
 			
 		){
-			console.log('EDITOR RENDER TICK')
+			//console.log('EDITOR RENDER TICK')
 			const bm = props._Blit_Manager();
 			Standard_Input_ƒ.move_viewport_based_on_mouse_position(
 				screen_pixel_cursor_pos,
@@ -954,9 +955,12 @@ export const Tooltip_Manager = (props: {
 }) => {
 
 	const get_tooltip_data = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): EditorTooltip_Data => ({
-		pos: Blit_Manager_ƒ.yield_absolute_coords_for_world_coords(
-			_BM,
-			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, _AM, props.cursor_pos)
+		pos: constrain_point_within_rect(
+			Blit_Manager_ƒ.yield_absolute_coords_for_world_coords(
+				_BM,
+				Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, _AM, props.cursor_pos)
+			),
+			Vals.default_canvas_rect
 		),
 		tile_pos: props.cursor_pos, //Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, props.cursor_pos ),
 		tile_name: Tilemap_Manager_ƒ.get_tile_name_for_pos(

@@ -147,6 +147,16 @@ export const add_points = (a: Point2D, b: Point2D): Point2D => (
 
 
 
+
+export const constrain = ( min_limit: number, value: number, max_limit: number ) => {
+	return Math.min( Math.max(min_limit, value), max_limit);
+}
+
+export const constrain_point_within_rect = (pos: Point2D, rect: Rectangle): Point2D => ({
+	x: constrain(rect.x, pos.x, rect.x + rect.w),
+	y: constrain(rect.y, pos.y, rect.y + rect.h)
+})
+
 /*
 	For stuff like random tile animations, we want a solution that will allow us to generate a series of random number sequences which act as "shuffles" of a preformed deck of possibilities.   I.e. if there are 5 animations in a set `[1,2,3,4,5]`, then we want results like `[2,3,5,4,1]` or `[5,1,3,2,4]`.
 

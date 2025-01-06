@@ -56,11 +56,12 @@ export const Standard_Input_ƒ = {
 		let depth = 0;
 		const move_trigger_buffer_size = 50;
 
+		console.log(`mouse pos: ${pos.x}, ${pos.y}`)
 		const scale_movement_depth = (val: number):number  => (
 			Math.round( (val / move_trigger_buffer_size) * 2.0) 
 		);
 	
-		if( is_within_rectangle(pos, {x: 0, y: 0, w: Vals.default_canvas_size.x, h: Vals.default_canvas_size.y}) ) {
+		if( is_within_rectangle(pos, Vals.default_canvas_rect) ) {
 			if( pos.y >= Vals.default_canvas_size.y - move_trigger_buffer_size ){
 				move.y -= scale_movement_depth(Math.max( 0, pos.y - (Vals.default_canvas_size.y - move_trigger_buffer_size) ));
 			}
