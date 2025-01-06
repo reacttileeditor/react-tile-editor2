@@ -111,26 +111,54 @@ export const Standard_Input_ƒ = {
 		keys: Array<string>,
 		_BM: Blit_Manager_Data,
 		set_Blit_Manager: (newVal: Blit_Manager_Data) => void,
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
 	) => {
 		let move = { x: 0, y: 0};
 
 		const magnitude = 8;
 
-		if( _.includes(keys, 'ArrowDown') ){
-			move.y -= 1 * magnitude;
+		//calculate the map bounds, so that if we're sufficiently past them, we can choose not to scroll.
+		const map_bounds = Tilemap_Manager_ƒ.get_map_bounds(_TM);
+		const map_bounds_in_pixels = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, { x: map_bounds.w, y: map_bounds.h});
+
+		const map_bound_rectangle = {
+			x: 70,
+			y: 70,
+			w: -(map_bounds_in_pixels.x - Vals.default_canvas_rect.w + 70),
+			h: -(map_bounds_in_pixels.y - Vals.default_canvas_rect.h + 70),
+		}
+
+		const viewport_pos = _BM.state.intended_viewport_offset;
+
+
+
+
+
+		if( _.includes(keys, 'ArrowLeft') ){
+			if((viewport_pos.x < map_bound_rectangle.x)){
+				move.x +=  1 * magnitude;
+			}
 		}
 
 		if( _.includes(keys, 'ArrowUp') ){
-			move.y +=  1 * magnitude;
-		}
-
-		if( _.includes(keys, 'ArrowLeft') ){
-			move.x +=  1 * magnitude;
+			if((viewport_pos.y < map_bound_rectangle.y)){
+				move.y +=  1 * magnitude;
+			}
 		}
 
 		if( _.includes(keys, 'ArrowRight') ){
-			move.x -=  1 * magnitude;
+			if((viewport_pos.x > map_bound_rectangle.w)){
+				move.x -=  1 * magnitude;
+			}
 		}
+
+		if( _.includes(keys, 'ArrowDown') ){
+			if((viewport_pos.y > map_bound_rectangle.h)){
+				move.y -= 1 * magnitude;
+			}
+		}
+
 
 		set_Blit_Manager(
 			Blit_Manager_ƒ.add_viewport_velocity(_BM, move.x, move.y)

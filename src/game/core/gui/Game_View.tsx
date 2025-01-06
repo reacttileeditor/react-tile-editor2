@@ -241,6 +241,8 @@ export const Game_View = (props: Game_View_Props) => {
 			keys,
 			props._Blit_Manager(),
 			props.set_Blit_Manager,
+			props._Tilemap_Manager(),
+			props._Asset_Manager(),
 		);
 	}	
 
