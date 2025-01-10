@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import _, { cloneDeep, reduce, zip, zipWith } from "lodash";
 
-import { ƒ } from "./Utils";
+import { is_within_rectangle, ƒ } from "./Utils";
 import { Asset_Manager_Data } from "./Asset_Manager/Asset_Manager";
 
 
@@ -198,16 +198,27 @@ export const Blit_Manager_ƒ = {
 		vertically_flipped: 	boolean,
 		drawing_data:			Draw_Data_Types
 	}) => {
-		p._BM._Draw_List.push({
-			pos:					p.pos,
-			z_index:				p.z_index,
-			opacity:				p.opacity,
-			rotate: 				p.rotate,
-			brightness: 			p.brightness,
-			horizontally_flipped:	p.horizontally_flipped,
-			vertically_flipped:		p.vertically_flipped,
-			drawing_data:			p.drawing_data
-		});
+		const occlusion_margin = 150;
+		
+		if(
+			is_within_rectangle(p.pos, {
+				x: -p._BM.state.actual_viewport_offset.x - occlusion_margin,
+				y: -p._BM.state.actual_viewport_offset.y - occlusion_margin,
+				w: p._BM._dimensions.x + 2 * occlusion_margin,
+				h: p._BM._dimensions.y + 2 * occlusion_margin,
+			})
+		){
+			p._BM._Draw_List.push({
+				pos:					p.pos,
+				z_index:				p.z_index,
+				opacity:				p.opacity,
+				rotate: 				p.rotate,
+				brightness: 			p.brightness,
+				horizontally_flipped:	p.horizontally_flipped,
+				vertically_flipped:		p.vertically_flipped,
+				drawing_data:			p.drawing_data
+			});
+		}
 	},
 	
 	
@@ -412,7 +423,7 @@ export const Blit_Manager_ƒ = {
 			_dimensions: me._dimensions,
 			show_info: me.show_info,
 
-			
+
 			state: Blit_Manager_ƒ.iterate_viewport_tween(me),
 			/*
 				Manage time tracking.  No matter how long it took, each frame is only considered "1 tick" long, and all animations are based on that metric, alone.
