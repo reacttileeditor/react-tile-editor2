@@ -406,8 +406,13 @@ export const Blit_Manager_ƒ = {
 		
 		
 		return {
-			...cloneDeep(me),
+			ctx: me.ctx,
+			osb_ctx: me.osb_ctx,
+			_OffScreenBuffer: me._OffScreenBuffer,
+			_dimensions: me._dimensions,
+			show_info: me.show_info,
 
+			
 			state: Blit_Manager_ƒ.iterate_viewport_tween(me),
 			/*
 				Manage time tracking.  No matter how long it took, each frame is only considered "1 tick" long, and all animations are based on that metric, alone.
