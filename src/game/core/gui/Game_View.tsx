@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { cloneDeep, concat, filter, findIndex, includes, isEmpty, isNil, isNumber, last, map, reduce, size, uniq } from "lodash";
 
-import { ƒ } from "../engine/Utils";
+import { useInterval, ƒ } from "../engine/Utils";
 
 import { Canvas_View, Mouse_Button_State } from "./Canvas_View";
 import { Asset_Manager_Data } from "../engine/Asset_Manager/Asset_Manager";
@@ -155,13 +155,63 @@ export const Game_View = (props: Game_View_Props) => {
 
 	const [render_ticktock, set_render_ticktock] = useState<boolean>(false);
 	const [announcement_modal_hidden, set_announcement_modal_hidden] = useState<boolean>(false);
-	let render_loop_timeout = 0;
+
+	const [render_loop_interval, set_render_loop_interval] = useState<number|null>(null);
+	const [render_tick, set_render_tick] = useState<number>(0);
+
+
+
+
 
 
 	useEffect(() => {
-		console.log('game view process')
+		if(render_tick > 0){
+		render_canvas();
+		}
+	}, [render_tick]);
 
-		if( props.game_manager_loaded ) {
+	useInterval(() => {
+		if(
+			props.assets_loaded
+			&&
+			render_loop_interval == null
+			&&
+			props.context_connected
+			
+		){
+			//console.log('GAME RENDER TICK')
+
+			set_render_tick(render_tick + 1);
+			set_render_ticktock( !render_ticktock )
+		}
+	}, 16.666 );	
+		
+
+	useEffect(() => {
+
+		return () => {
+			if( render_loop_interval ){
+				console.log('GAME CLEANUP')
+
+				window.clearInterval(render_loop_interval as number);
+				set_render_loop_interval(null);
+			}
+		};
+	}, [render_loop_interval]);
+
+
+	/*----------------------- core drawing routines -----------------------*/
+
+	const render_canvas = () => {
+		if(
+			props.game_manager_loaded
+			&&
+			render_loop_interval == null
+			&&
+			props._Tilemap_Manager != null
+			
+		) {
+
 			Tilemap_Manager_ƒ.do_one_frame_of_rendering(
 				props._Tilemap_Manager(),
 				props._Asset_Manager(),
@@ -183,24 +233,12 @@ export const Game_View = (props: Game_View_Props) => {
 				props._Tilemap_Manager(),
 				props._Asset_Manager(),
 			);			
-			Game_Manager_ƒ.do_one_frame_of_rendering( new_state,  props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
+			Game_Manager_ƒ.do_one_frame_of_rendering( new_state,  props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());			
+
 		}
-
-		/*
-			Whether this is an appropriate solution gets into some deep and hard questions about React that I'm not prepared to answer; in a lot of other paradigms, we'd seize full control over the event loop.  Here, we are, instead, opting to "sleep" until our setTimeout fires.
-
-			I suspect that because this setTimeout is initiated AFTER all of our rendering code finishes executing, that this solution will not cause the main failure state we're concerned about, which is a 'pileup'; a 'sorceror's apprentice' failure where callbacks are queued up faster than we can process them..
-		*/
-		render_loop_timeout = window.setTimeout( () => {set_render_ticktock( !render_ticktock )}, 16.666 );
-	}, [render_ticktock, props.context_connected]);
+	}
 
 
-	useEffect(() => {
-		return () => {
-			console.log('game view cleanup');
-			window.clearInterval(render_loop_timeout)
-		};
-	}, []);
 
 
 	/*----------------------- IO routines -----------------------*/

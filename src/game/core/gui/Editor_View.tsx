@@ -69,6 +69,8 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [selected_tile_type, set_selected_tile_type] = useState<Tile_Name>('grass');
 
 
+	/*----------------------- draw interval routines -----------------------*/
+
 	useEffect(() => {
 		if(render_tick > 0){
 		render_canvas();
@@ -100,9 +102,6 @@ export const Editor_View = (props: Editor_View_Props) => {
 		// Your custom logic here
 	}, 16.666 );	
 		
-	useEffect(() => {
-
-	}, [props.assets_loaded, props._Tilemap_Manager(), props._Blit_Manager()]);
 
 	useEffect(() => {
 
@@ -116,35 +115,9 @@ export const Editor_View = (props: Editor_View_Props) => {
 		};
 	}, [render_loop_interval]);
 
-	/*----------------------- cursor stuff -----------------------*/
-	const draw_cursor = () => {
-		//const pos = this._Tilemap_Manager.convert_tile_coords_to_pixel_coords(0,4); 
-		//console.log(cursor_pos);
-
-		Asset_Manager_ƒ.draw_image_for_asset_name({
-			_AM:						props._Asset_Manager(),
-			asset_name:					'cursor',
-			_BM:						props._Blit_Manager(),
-			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( props._Tilemap_Manager(), props._Asset_Manager(), tile_cursor_pos ),
-			zorder:						zorder.rocks,
-			current_milliseconds:		0,
-			opacity:					1.0,
-			rotate:						0,
-			brightness:					1.0,
-			horizontally_flipped:		false,
-			vertically_flipped:			false,
-		})
-	}
 
 
 	/*----------------------- core drawing routines -----------------------*/
-	const start_render_loop = () => {
-		// if( !render_loop_interval ){
-		// 	set_render_loop_interval( window.setInterval( () => {set_render_tick(render_tick + 1), console.log(render_tick)}, 16.666 ) );
-		// }
-
-	
-	}
 
 	const render_canvas = () => {
 		if(
@@ -168,6 +141,27 @@ export const Editor_View = (props: Editor_View_Props) => {
 		}
 	}
 
+
+	/*----------------------- cursor stuff -----------------------*/
+	const draw_cursor = () => {
+		//const pos = this._Tilemap_Manager.convert_tile_coords_to_pixel_coords(0,4); 
+		//console.log(cursor_pos);
+
+		Asset_Manager_ƒ.draw_image_for_asset_name({
+			_AM:						props._Asset_Manager(),
+			asset_name:					'cursor',
+			_BM:						props._Blit_Manager(),
+			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( props._Tilemap_Manager(), props._Asset_Manager(), tile_cursor_pos ),
+			zorder:						zorder.rocks,
+			current_milliseconds:		0,
+			opacity:					1.0,
+			rotate:						0,
+			brightness:					1.0,
+			horizontally_flipped:		false,
+			vertically_flipped:			false,
+		})
+	}
+	
 	
 	/*----------------------- I/O routines -----------------------*/
 	const handle_canvas_click = (pos: Point2D, buttons_pressed: Mouse_Button_State) => {
