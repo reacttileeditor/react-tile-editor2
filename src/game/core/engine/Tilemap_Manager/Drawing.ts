@@ -222,7 +222,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		);
 
 
-		const metadata = _AM.static_vals.multi_tile_pattern_metadata;
+		const metadata = _AM.static_vals.post_loading_metadata;
 		const bounds = Tilemap_Manager_ƒ.get_map_bounds(me);
 
 

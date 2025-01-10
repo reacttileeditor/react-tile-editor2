@@ -189,6 +189,7 @@ export const Blit_Manager_ƒ = {
 /*----------------------- draw ops -----------------------*/
 	queue_draw_op: (p: {
 		_BM:					Blit_Manager_Data,
+		_AM:					Asset_Manager_Data,
 		pos:					Point2D,
 		z_index:				number,
 		opacity:				number,
@@ -198,8 +199,9 @@ export const Blit_Manager_ƒ = {
 		vertically_flipped: 	boolean,
 		drawing_data:			Draw_Data_Types
 	}) => {
-		const occlusion_margin = 150;
-		
+
+		const occlusion_margin = p._AM.static_vals.post_loading_metadata.max_asset_dimension;
+
 		if(
 			is_within_rectangle(p.pos, {
 				x: -p._BM.state.actual_viewport_offset.x - occlusion_margin,

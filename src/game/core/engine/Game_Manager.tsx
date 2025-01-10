@@ -624,6 +624,7 @@ export const Game_Manager_ƒ = {
 			Asset_Manager_ƒ.draw_hitpoints({
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
 				_BM:						_BM,
+				_AM:						_AM,
 				pos:						val.pixel_pos,
 				zorder:						zorder.rocks,
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
@@ -649,6 +650,7 @@ export const Game_Manager_ƒ = {
 			Asset_Manager_ƒ.draw_text({
 				text:						Custom_Object_ƒ.yield_text(val),
 				_BM:						_BM,
+				_AM:						_AM,
 				pos:						val.pixel_pos,
 				zorder:						Custom_Object_ƒ.yield_zorder(val),
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
@@ -752,6 +754,7 @@ export const Game_Manager_ƒ = {
 			Asset_Manager_ƒ.draw_hitpoints({
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
 				_BM:						_BM,
+				_AM:						_AM,
 				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, val.tile_pos),
 				zorder:						zorder.rocks,
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
@@ -778,6 +781,7 @@ export const Game_Manager_ƒ = {
 				Asset_Manager_ƒ.draw_text({
 					text:						Custom_Object_ƒ.yield_text(val),
 					_BM:						_BM,
+					_AM:						_AM,
 					pos:						val.pixel_pos,
 					zorder:						Custom_Object_ƒ.yield_zorder(val),
 					current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),

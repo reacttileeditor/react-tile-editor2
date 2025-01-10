@@ -322,6 +322,7 @@ export const Drawing = {
 		if( !Asset_Manager_ƒ.isAssetSpritesheet(metadata) ){
 			Blit_Manager_ƒ.queue_draw_op({
 				_BM:					p._BM,
+				_AM:					p._AM,
 				pos:					{ x: p.pos.x, y: p.pos.y },
 				z_index:				p.zorder,
 				opacity:				p.opacity,
@@ -346,6 +347,7 @@ export const Drawing = {
 		} else {
 			Blit_Manager_ƒ.queue_draw_op({
 				_BM:					p._BM,
+				_AM:					p._AM,
 				pos:					{ x: p.pos.x, y: p.pos.y },
 				z_index:				p.zorder,
 				opacity:				p.opacity,
@@ -375,6 +377,7 @@ export const Drawing = {
 	draw_text: (p: {
 		text: string,
 		_BM: Blit_Manager_Data,
+		_AM: Asset_Manager_Data,
 		pos: Point2D,
 		zorder: number,
 		current_milliseconds: number,
@@ -386,6 +389,7 @@ export const Drawing = {
 	}) => {
 		Blit_Manager_ƒ.queue_draw_op({
 			_BM:					p._BM,
+			_AM:					p._AM,
 			pos:					{ x: p.pos.x, y: p.pos.y },
 			z_index:				p.zorder,
 			opacity:				p.opacity,
@@ -402,6 +406,7 @@ export const Drawing = {
 	draw_hitpoints: (p: {
 		portion: number,
 		_BM: Blit_Manager_Data,
+		_AM: Asset_Manager_Data,
 		pos: Point2D,
 		zorder: number,
 		current_milliseconds: number,
@@ -409,6 +414,7 @@ export const Drawing = {
 	}) => {
 		Blit_Manager_ƒ.queue_draw_op({
 			_BM:					p._BM,
+			_AM:					p._AM,
 			pos:					{ x: p.pos.x, y: p.pos.y },
 			z_index:				p.zorder,
 			opacity:				p.opacity,

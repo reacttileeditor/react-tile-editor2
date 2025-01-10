@@ -3,6 +3,7 @@ import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager";
 import { filter, isString, map, size } from "lodash";
 import { is_all_true, ƒ } from "../Utils";
 import { concat, uniq } from "ramda";
+import { Point2D } from "../../../interfaces";
 
 
 
@@ -47,11 +48,46 @@ export const Initialization = {
 					preprocessed: false,
 				};
 
+
+				/*
+					Here, we're updating some "read from the image" metadata; we want to know the maximum possible sprite size we could be drawing on the screen, so we can do viewport culling and such.  The key distinction for "does bounds exist as a value" is that some assets are whole images (for which bounds doesn't get defined, but it'd be the full width/height of the image file), and for other assets, it's a spritesheet, so we're just clipping out a smaller region of it.
+
+					Regardless, we want to tally up a max size that we ever got.
+				*/
+				if( value.bounds != undefined ){
+					Asset_Manager_ƒ.update_max_asset_sizes(me, {x: value.bounds.w, y: value.bounds.h});
+				} else {
+					Asset_Manager_ƒ.update_max_asset_sizes(me, {x: temp_image.naturalWidth, y: temp_image.naturalHeight});
+				}
+
+
 				Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, value.name, do_once_app_ready, set_loaded_fraction );
 
 				temp_image.onload = null;
 			};
 		});
+	},
+
+	update_max_asset_sizes: (
+		me: Asset_Manager_Data,
+		bounds: Point2D,
+	): void => {
+		const prior_max_width = me.static_vals.post_loading_metadata.max_asset_width;
+		const prior_max_height = me.static_vals.post_loading_metadata.max_asset_height;
+		const prior_max_dimension = me.static_vals.post_loading_metadata.max_asset_dimension;
+
+		if(bounds.x > prior_max_width){
+			me.static_vals.post_loading_metadata.max_asset_width = bounds.x;
+		}
+		if(bounds.y > prior_max_height){
+			me.static_vals.post_loading_metadata.max_asset_height = bounds.y;
+		}
+		if(bounds.x > prior_max_dimension){
+			me.static_vals.post_loading_metadata.max_asset_dimension = bounds.x;
+		}
+		if(bounds.y > prior_max_dimension){
+			me.static_vals.post_loading_metadata.max_asset_dimension = bounds.y;
+		}
 	},
 
 	launch_if_all_assets_are_loaded: (
@@ -126,8 +162,8 @@ export const Initialization = {
 					max_mtp_width = Math.max(max_mtp_width, size(variant.restrictions[0]));
 					max_mtp_height = Math.max(max_mtp_height, size(variant.restrictions));
 
-					me.static_vals.multi_tile_pattern_metadata = {
-						...me.static_vals.multi_tile_pattern_metadata,
+					me.static_vals.post_loading_metadata = {
+						...me.static_vals.post_loading_metadata,
 						max_mtp_width: max_mtp_width,
 						max_mtp_height: max_mtp_height,
 					};

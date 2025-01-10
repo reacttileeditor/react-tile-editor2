@@ -31,9 +31,12 @@ export interface Static_Values {
 	assets_meta: Assets_Metadata_Dictionary,
 	tile_types: Array<Tile_Item>,
 	multi_tile_types: Array<Multi_Tile_Pattern>,
-	multi_tile_pattern_metadata: {
+	post_loading_metadata: {
 		max_mtp_width: number,
-		max_mtp_height: number,		
+		max_mtp_height: number,
+		max_asset_width: number,
+		max_asset_height: number,
+		max_asset_dimension: number,
 	}
 };
 
