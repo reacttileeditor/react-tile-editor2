@@ -135,19 +135,19 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		_AM.TileRNG.reset();
 
 
-		var merged_asset_maps = map(asset_maps[0], (row, row_index)=>(
+		return Tilemap_Manager_ƒ.merge_asset_maps(asset_maps);
+	},
+
+	merge_asset_maps: ( multiple_asset_maps: Array<Array<Array<Asset_Blit_List>>>): Asset_Blit_Tilemap => (
+		map(multiple_asset_maps[0], (row, row_index)=>(
 			map(row, (col, col_index)=> (
 				concat(
 					col,
-					asset_maps[1][row_index][col_index]
+					multiple_asset_maps[1][row_index][col_index]
 				)
 			))
-		  ));
-		  
-
-		//TODO -- merge the tilemaps!  don't throw one of them away.
-		return merged_asset_maps;
-	},
+		))
+	),
 
 	calculate_assets_used_for_individual_tilemap: (
 		tile_map: Tilemap_Single,
