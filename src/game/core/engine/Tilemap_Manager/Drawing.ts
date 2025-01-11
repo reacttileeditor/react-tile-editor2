@@ -123,39 +123,13 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		//step over all of the various "tile maps", like 'ui' or 'terrain', and collate all the tiles.
 		let asset_maps = _.map(me.tile_maps as unknown as Dictionary<Tilemap_Single>, (tile_map, tilemap_name) => {
 
-			return tile_map.map( (row_value, row_index) => {
-				return row_value.map( (tile_name, col_index) => {
-
-					let pos = {x: col_index, y: row_index};
-
-					let asset_list: Asset_Blit_List = [];
-					if( !includes( pos , mtp_results.reserved_tiles) ){
-						asset_list = Tilemap_Manager_ƒ.get_asset_list_at_coords(
-							me,
-							_AM,
-							_BM,
-							pos,
-							tile_name,
-							tilemap_name as unknown as Tilemap_Keys
-						);
-					}
-
-					if( includes( pos , mtp_results.reserved_tiles) ){
-						const matching_anchors: Array<MTP_Anchor_Data> = filter( propEq(pos, 'location') ) (mtp_results.anchor_data);
-
-						map(matching_anchors, (anchor)=>{
-
-							asset_list.push({
-								id: anchor.graphic,
-								zorder: anchor.zorder,
-							})
-						});
-					}
-
-					return asset_list;
-				});
-			});
-
+			return Tilemap_Manager_ƒ.calculate_assets_used_for_individual_tilemap(
+				tile_map,
+				tilemap_name as unknown as Tilemap_Keys,
+				me,
+				_AM,
+				_BM,
+			)
 		});
 
 		_AM.TileRNG.reset();
@@ -173,6 +147,65 @@ export const Tilemap_Manager_ƒ_Drawing = {
 
 		//TODO -- merge the tilemaps!  don't throw one of them away.
 		return merged_asset_maps;
+	},
+
+	calculate_assets_used_for_individual_tilemap: (
+		tile_map: Tilemap_Single,
+		tilemap_name: Tilemap_Keys,
+		me: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+	): Array<Array<Asset_Blit_List>> => {
+		/*
+			Take an individual tilemap, like `ui` or `terrain`, and spit out a grid of which assets each tile will be using.
+
+			Naturally, these would need to get merged by some other function to get a final, definitive list for each tile.
+		*/
+
+		let mtp_results: {
+			reserved_tiles: Array<Point2D>,
+			anchor_data: Array<MTP_Anchor_Data>,
+		} = {
+			reserved_tiles: [],
+			anchor_data: [],
+		}
+
+		if( tilemap_name == 'terrain'){
+			mtp_results = Tilemap_Manager_ƒ.mtp_scan(me, _AM);
+		}
+
+		return tile_map.map( (row_value, row_index) => {
+			return row_value.map( (tile_name, col_index) => {
+
+				let pos = {x: col_index, y: row_index};
+
+				let asset_list: Asset_Blit_List = [];
+				if( !includes( pos , mtp_results.reserved_tiles) ){
+					asset_list = Tilemap_Manager_ƒ.get_asset_list_at_coords(
+						me,
+						_AM,
+						_BM,
+						pos,
+						tile_name,
+						tilemap_name as unknown as Tilemap_Keys
+					);
+				}
+
+				if( includes( pos , mtp_results.reserved_tiles) ){
+					const matching_anchors: Array<MTP_Anchor_Data> = filter( propEq(pos, 'location') ) (mtp_results.anchor_data);
+
+					map(matching_anchors, (anchor)=>{
+
+						asset_list.push({
+							id: anchor.graphic,
+							zorder: anchor.zorder,
+						})
+					});
+				}
+
+				return asset_list;
+			});
+		});
 	},
 
 
