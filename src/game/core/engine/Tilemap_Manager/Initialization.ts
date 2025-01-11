@@ -68,7 +68,10 @@ export const Tilemap_Manager_ƒ_Initialization = {
 	},
 
 	cleared_cache: () : Cache_Data => ({
-		asset_blit_list_cache: [[[]]],
+		asset_blit_list_cache_by_tilemap: {
+			terrain: [[[]]],
+			ui: [[[]]],
+		}
 	}),
 
 /*----------------------- file writing -----------------------*/
@@ -94,7 +97,7 @@ export const Tilemap_Manager_ƒ_Initialization = {
 				metadata: _.cloneDeep(level_data.metadata),
 				tile_maps: _.cloneDeep(level_data.tile_maps),
 				creature_list: _.cloneDeep(level_data.creature_list),
-				asset_blit_list_cache: [[[]]],
+				...Tilemap_Manager_ƒ.cleared_cache(),
 				initialized: true,
 			})
 		}).catch((value) => {
@@ -193,7 +196,7 @@ export const Tilemap_Manager_ƒ_Initialization = {
 				metadata: _.cloneDeep(level_data.metadata),
 				tile_maps: _.cloneDeep(level_data.tile_maps),
 				creature_list: _.cloneDeep(level_data.creature_list),
-				asset_blit_list_cache: [[[]]],
+				...Tilemap_Manager_ƒ.cleared_cache(),
 				initialized: true,
 			}		
 		}

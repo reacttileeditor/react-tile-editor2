@@ -49,12 +49,32 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
 	) => {
 
-		if( !isEqual( me.asset_blit_list_cache, [[[]]]) ){
+
+		_.map(me.tile_maps as unknown as Dictionary<Tilemap_Single>, (tile_map, tilemap_name) => {
+			Tilemap_Manager_ƒ.draw_tiles_for_tilemap(
+				me,
+				_AM,
+				_BM,
+				tilemap_name as unknown as Tilemap_Keys,
+				set_Tilemap_Manager,
+			)
+		});
+	},
+
+	draw_tiles_for_tilemap: (
+		me: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		tilemap_name: Tilemap_Keys,
+		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
+	) => {
+
+		if( !isEqual( me.asset_blit_list_cache_by_tilemap[tilemap_name], [[[]]]) ){
 			Tilemap_Manager_ƒ.draw_all_assets(
 				me,
 				_AM,
 				_BM,
-				me.asset_blit_list_cache
+				me.asset_blit_list_cache_by_tilemap[tilemap_name]
 			);
 		} else {
 			const tilemap_of_assets: Asset_Blit_Tilemap = Tilemap_Manager_ƒ.calculate_tile_asset_map(me, _AM, _BM);
@@ -70,6 +90,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				Tilemap_Manager_ƒ.set_tile_asset_cache(
 					me,
 					_AM,
+					tilemap_name,
 					tilemap_of_assets,
 				)
 			)

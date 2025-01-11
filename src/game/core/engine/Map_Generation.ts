@@ -63,7 +63,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
 			},
 			creature_list: _.cloneDeep(me.creature_list),
-			asset_blit_list_cache: [[[]]],
+			...Tilemap_Manager_ƒ.cleared_cache(),
 			initialized: true,
 		}
 	},
@@ -334,7 +334,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
 			},
 			creature_list: _.cloneDeep(me.creature_list),
-			asset_blit_list_cache: [[[]]],
+			...Tilemap_Manager_ƒ.cleared_cache(),
 			initialized: true,
 		}
 	},

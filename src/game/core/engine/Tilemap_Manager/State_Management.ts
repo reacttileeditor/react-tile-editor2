@@ -63,13 +63,26 @@ export const Tilemap_Manager_ƒ_State_Management = {
 	set_tile_asset_cache: (
 		me: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
+		tilemap_name: Tilemap_Keys,
 		new_cache: Asset_Blit_Tilemap,
 	): Tilemap_Manager_Data => {
-		const new_tilemap_data = cloneDeep(me);
+		// const new_tilemap_data = cloneDeep(me);
+
+		// return {
+		// 	...new_tilemap_data,
+		// 	asset_blit_list_cache_by_tilemap: new_cache,
+		// }
 
 		return {
-			...new_tilemap_data,
-			asset_blit_list_cache: new_cache,
+			level_name: me.level_name,
+			metadata: me.metadata,
+			tile_maps: me.tile_maps,
+			creature_list: me.creature_list,
+			initialized: me.initialized,
+			asset_blit_list_cache_by_tilemap: {
+				terrain: tilemap_name == 'terrain' ? new_cache : me.asset_blit_list_cache_by_tilemap.terrain,
+				ui: tilemap_name == 'ui' ? new_cache : me.asset_blit_list_cache_by_tilemap.ui,
+			}			
 		}
 	},
 

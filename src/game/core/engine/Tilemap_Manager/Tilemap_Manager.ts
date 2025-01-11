@@ -36,7 +36,12 @@ export type Tile_View_State = {
 } & Cache_Data;
 
 export type Cache_Data = {
-	asset_blit_list_cache: Asset_Blit_Tilemap,
+	asset_blit_list_cache_by_tilemap: Asset_Blit_Tilemaps
+}
+
+export type Asset_Blit_Tilemaps = {
+	terrain: Asset_Blit_Tilemap,
+	ui: Asset_Blit_Tilemap,
 }
 
 export type Asset_Blit_Tilemap = Array<Array<Asset_Blit_List>>;
@@ -96,7 +101,7 @@ export const New_Tilemap_Manager = (): Tilemap_Manager_Data => {
 		metadata: _.cloneDeep(metadata_init),
 		tile_maps: _.cloneDeep(tile_maps_init),
 		creature_list: [],
-		asset_blit_list_cache: [[[]]],
+		...Tilemap_Manager_ƒ.cleared_cache(),
 		initialized: false,
 	}
 }
