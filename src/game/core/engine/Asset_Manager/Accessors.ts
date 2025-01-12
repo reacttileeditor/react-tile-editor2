@@ -9,6 +9,7 @@ import * as Utils from "../Utils";
 import { Asset_Blit_Item } from "../Tilemap_Manager/Tilemap_Manager";
 import { zorder } from "../../constants/zorder";
 import { MTP_Graphic_Item } from "../../data/Multi_Tile_Patterns";
+import Prando from "prando";
 
 
 
@@ -149,22 +150,26 @@ export const Accessors = {
 
 	convert_tile_variants_to_single_assets: (
 		me: Asset_Manager_Data,
-		graphic_item: Graphic_Item_Generic
+		graphic_item: Graphic_Item_Generic,
+		tile_RNG: Prando,
 	): Asset_Blit_Item => {
+		const tile_rand = Utils.dice_anchored_on_specific_random_seed(graphic_item.asset_variants.length, tile_RNG)
 
 		return {
-			id: graphic_item.asset_variants[Asset_Manager_ƒ._tile_dice( me, graphic_item.asset_variants.length ) -1],
+			id: graphic_item.asset_variants[tile_rand - 1],
 			zorder: graphic_item.zorder,
 		}
 	},
 
 	convert_MTP_variants_to_single_assets: (
 		me: Asset_Manager_Data,
-		graphic_item: MTP_Graphic_Item
+		graphic_item: MTP_Graphic_Item,
+		tile_RNG: Prando,
 	): Asset_Blit_Item => {
+		const tile_rand = Utils.dice_anchored_on_specific_random_seed(graphic_item.asset_variants.length, tile_RNG)
 
 		return {
-			id: graphic_item.asset_variants[Asset_Manager_ƒ._tile_dice( me, graphic_item.asset_variants.length ) -1],
+			id: graphic_item.asset_variants[tile_rand - 1],
 			zorder: graphic_item.zorder,
 		}
 	},

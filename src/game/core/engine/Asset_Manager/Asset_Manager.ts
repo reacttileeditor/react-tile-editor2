@@ -141,7 +141,6 @@ export type Asset_Manager_Data = {
 		tile_height: number,
 	};
 	static_vals: Static_Values;
-	TileRNG: Prando;
 }
 													
 export const New_Asset_Manager = (): Asset_Manager_Data => {
@@ -152,8 +151,6 @@ export const New_Asset_Manager = (): Asset_Manager_Data => {
 		},
 
 		static_vals: asset_list,
-		
-		TileRNG: new Prando(),
 	}
 }
 

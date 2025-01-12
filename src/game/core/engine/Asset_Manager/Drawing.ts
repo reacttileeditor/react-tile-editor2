@@ -12,12 +12,6 @@ import * as Utils from "../Utils";
 
 
 export const Drawing = {
-		
-/*----------------------- RNG functions -----------------------*/
-	_tile_dice: (me: Asset_Manager_Data, sides: number) => (
-		Utils.dice_anchored_on_specific_random_seed( sides, me.TileRNG )
-	),
-
 /*----------------------- auto-tiling logic -----------------------*/
 	should_we_draw_this_tile_based_on_its_autotiling_restrictions: ( tile_data: Tile_Comparator_Sample, autotile_restrictions: Autotile_Restriction_Sample ): boolean => {
 		/*

@@ -87,6 +87,8 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				_BM,
 			)
 
+			me.tile_RNGs[tilemap_name].reset();
+
 			Tilemap_Manager_ƒ.draw_all_assets(
 				me,
 				_AM,
@@ -160,8 +162,6 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				_BM,
 			)
 		});
-
-		_AM.TileRNG.reset();
 
 
 		return Tilemap_Manager_ƒ.merge_asset_maps(asset_maps);
@@ -255,7 +255,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		)
 
 		return map(asset_list, (val)=>(
-			Asset_Manager_ƒ.convert_tile_variants_to_single_assets(_AM, val)
+			Asset_Manager_ƒ.convert_tile_variants_to_single_assets(_AM, val, me.tile_RNGs[tilemap_name])
 		))
 
 	},
@@ -400,7 +400,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 												y: map_tile_row_index + ({x: graphic_item.anchor.x, y: graphic_item.anchor.y}).y
 											},
 											zorder: graphic_item.zorder,
-											graphic: Asset_Manager_ƒ.convert_MTP_variants_to_single_assets(_AM, graphic_item).id
+											graphic: Asset_Manager_ƒ.convert_MTP_variants_to_single_assets(_AM, graphic_item, me.tile_RNGs['terrain']).id
 
 										})
 									})

@@ -99,7 +99,7 @@ export const Tile_Palette_Element = (props: Props) => {
 
 	
 	const draw_canvas = (_BM: Blit_Manager_Data) => {
-		if(_BM != null){
+		if(_BM != null && _Tilemap_Manager != null){
 			let { consts } = props.asset_manager;
 
 			Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM);
@@ -109,7 +109,8 @@ export const Tile_Palette_Element = (props: Props) => {
 				map(asset_data_array, (asset_item)=>{
 					const derandomized_asset = Asset_Manager_ƒ.convert_tile_variants_to_single_assets(
 						props.asset_manager,
-						asset_item
+						asset_item,
+						_Tilemap_Manager.tile_RNGs.terrain
 					);
 
 					Asset_Manager_ƒ.draw_image_for_asset_name({
@@ -156,7 +157,7 @@ export const Tile_Palette_Element = (props: Props) => {
 				Blit_Manager_ƒ.draw_entire_frame(_BM)
 			);
 
-			props.asset_manager.TileRNG.reset();			
+			_Tilemap_Manager.tile_RNGs.terrain.reset();			
 		}
 	}
 	
