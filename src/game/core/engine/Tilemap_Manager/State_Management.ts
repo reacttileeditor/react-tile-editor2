@@ -39,25 +39,28 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		tilemap_name: Tilemap_Keys,
 	): Tilemap_Manager_Data => {
 
-		const new_tilemap_data = cloneDeep(me);
 		
 		if(
 			Tilemap_Manager_ƒ.is_within_map_bounds( me, pos )
+			&&
+			selected_tile_type && selected_tile_type != ''
 		){
-			if(selected_tile_type && selected_tile_type != ''){
-				new_tilemap_data.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
+			me.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
 
-				return {
-					...new_tilemap_data,
-					...Tilemap_Manager_ƒ.cleared_cache(),
+			return {
+				level_name: me.level_name,
+				metadata: me.metadata,
+				tile_maps: me.tile_maps,
+				creature_list: me.creature_list,
+				initialized: me.initialized,
+						asset_blit_list_cache_by_tilemap: {
+					terrain: tilemap_name == 'terrain' ? [[[]]] : me.asset_blit_list_cache_by_tilemap.terrain,
+					ui: tilemap_name == 'ui' ? [[[]]] : me.asset_blit_list_cache_by_tilemap.ui,
 				}
 			}
+		} else {
+			return me;
 		}
-
-		return {
-			...new_tilemap_data,
-		}
-
 	},
 
 	set_tile_asset_cache: (
@@ -82,7 +85,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 			asset_blit_list_cache_by_tilemap: {
 				terrain: tilemap_name == 'terrain' ? new_cache : me.asset_blit_list_cache_by_tilemap.terrain,
 				ui: tilemap_name == 'ui' ? new_cache : me.asset_blit_list_cache_by_tilemap.ui,
-			}			
+			}
 		}
 	},
 
