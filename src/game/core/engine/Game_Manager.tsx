@@ -719,6 +719,11 @@ export const Game_Manager_ƒ = {
 				creature_list: cloneDeep(_TM.creature_list),
 				initialized: true,
 				...Tilemap_Manager_ƒ.cleared_cache(),
+				asset_blit_list_cache_by_tilemap: {
+					terrain: _TM.asset_blit_list_cache_by_tilemap.terrain,
+					ui: [[[]]],
+				}
+
 			},
 			gm: me,
 		}
