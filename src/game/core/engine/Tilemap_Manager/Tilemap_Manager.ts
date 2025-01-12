@@ -25,12 +25,17 @@ import { MTP_Anchor_Data } from "../../data/Multi_Tile_Patterns";
 import { Tilemap_Manager_ƒ_Drawing } from "./Drawing";
 import { Tilemap_Manager_ƒ_State_Management } from "./State_Management";
 import { Tilemap_Manager_ƒ_Initialization, metadata_init, tile_maps_init } from "./Initialization";
+import Prando from "prando";
 
 
 export type Tile_View_State = {
 	level_name: string,
 	metadata: Tilemap_Metadata,
 	tile_maps: Tilemaps,
+	tile_RNGs: {
+		terrain: Prando,
+		ui: Prando,
+	},
 	creature_list: Array<Creature_Map_Instance>,
 	initialized: boolean,
 } & Cache_Data;
@@ -100,6 +105,11 @@ export const New_Tilemap_Manager = (): Tilemap_Manager_Data => {
 		level_name: '',
 		metadata: _.cloneDeep(metadata_init),
 		tile_maps: _.cloneDeep(tile_maps_init),
+		tile_RNGs: {
+			//Prando allows seeding with a string, so on a lark we're using the tilemap name. 
+			terrain: new Prando('terrain'),
+			ui: new Prando('ui'),
+		},
 		creature_list: [],
 		...Tilemap_Manager_ƒ.cleared_cache(),
 		initialized: false,

@@ -51,9 +51,10 @@ export const Tilemap_Manager_ƒ_State_Management = {
 				level_name: me.level_name,
 				metadata: me.metadata,
 				tile_maps: me.tile_maps,
+				tile_RNGs: me.tile_RNGs,
 				creature_list: me.creature_list,
 				initialized: me.initialized,
-						asset_blit_list_cache_by_tilemap: {
+				asset_blit_list_cache_by_tilemap: {
 					terrain: tilemap_name == 'terrain' ? [[[]]] : me.asset_blit_list_cache_by_tilemap.terrain,
 					ui: tilemap_name == 'ui' ? [[[]]] : me.asset_blit_list_cache_by_tilemap.ui,
 				}
@@ -80,6 +81,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 			level_name: me.level_name,
 			metadata: me.metadata,
 			tile_maps: me.tile_maps,
+			tile_RNGs: me.tile_RNGs,
 			creature_list: me.creature_list,
 			initialized: me.initialized,
 			asset_blit_list_cache_by_tilemap: {

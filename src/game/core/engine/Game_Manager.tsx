@@ -716,6 +716,7 @@ export const Game_Manager_ƒ = {
 					...cloneDeep(_TM.tile_maps),
 					ui: new_tile_map,
 				},
+				tile_RNGs: cloneDeep(_TM.tile_RNGs),
 				creature_list: cloneDeep(_TM.creature_list),
 				initialized: true,
 				...Tilemap_Manager_ƒ.cleared_cache(),

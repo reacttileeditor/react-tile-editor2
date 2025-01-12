@@ -23,6 +23,7 @@ import { Map_Generation_ƒ } from "../Map_Generation";
 import { boolean } from "yargs";
 import { MTP_Anchor_Data } from "../../data/Multi_Tile_Patterns";
 import { Cache_Data, Tilemap_Metadata, Tilemap_Persist_Data, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
+import Prando from "prando";
 
 
 
@@ -67,6 +68,14 @@ export const Tilemap_Manager_ƒ_Initialization = {
 		);
 	},
 
+	initialize_tileRNGs: () => (
+		{
+			//Prando allows seeding with a string, so on a lark we're using the tilemap name. 
+			terrain: new Prando('terrain'),
+			ui: new Prando('ui'),
+		}
+	),
+
 	cleared_cache: () : Cache_Data => ({
 		asset_blit_list_cache_by_tilemap: {
 			terrain: [[[]]],
@@ -96,6 +105,7 @@ export const Tilemap_Manager_ƒ_Initialization = {
 				level_name: level_name,
 				metadata: _.cloneDeep(level_data.metadata),
 				tile_maps: _.cloneDeep(level_data.tile_maps),
+				tile_RNGs: Tilemap_Manager_ƒ.initialize_tileRNGs(),
 				creature_list: _.cloneDeep(level_data.creature_list),
 				...Tilemap_Manager_ƒ.cleared_cache(),
 				initialized: true,
@@ -195,6 +205,7 @@ export const Tilemap_Manager_ƒ_Initialization = {
 				level_name: level_name,
 				metadata: _.cloneDeep(level_data.metadata),
 				tile_maps: _.cloneDeep(level_data.tile_maps),
+				tile_RNGs: Tilemap_Manager_ƒ.initialize_tileRNGs(),
 				creature_list: _.cloneDeep(level_data.creature_list),
 				...Tilemap_Manager_ƒ.cleared_cache(),
 				initialized: true,
