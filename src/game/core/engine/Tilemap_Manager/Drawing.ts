@@ -51,6 +51,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 
 
 		_.map(me.tile_maps as unknown as Dictionary<Tilemap_Single>, (tile_map, tilemap_name) => {
+			//if(tilemap_name == 'terrain'){
 			Tilemap_Manager_ƒ.draw_tiles_for_tilemap(
 				me,
 				_AM,
@@ -58,6 +59,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				tilemap_name as unknown as Tilemap_Keys,
 				set_Tilemap_Manager,
 			)
+			//}
 		});
 	},
 
@@ -77,7 +79,13 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				me.asset_blit_list_cache_by_tilemap[tilemap_name]
 			);
 		} else {
-			const tilemap_of_assets: Asset_Blit_Tilemap = Tilemap_Manager_ƒ.calculate_tile_asset_map(me, _AM, _BM);
+			const tilemap_of_assets: Asset_Blit_Tilemap = Tilemap_Manager_ƒ.calculate_assets_used_for_individual_tilemap(
+				me.tile_maps[tilemap_name],
+				tilemap_name as unknown as Tilemap_Keys,
+				me,
+				_AM,
+				_BM,
+			)
 
 			Tilemap_Manager_ƒ.draw_all_assets(
 				me,
