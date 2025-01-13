@@ -54,28 +54,30 @@ export const Announcement_Modal = (props: {
 
 	return <div className={`game-info-modal-anchor`}>
 		<div className={`game-info-modal ${props.announcement_modal_hidden ? 'hidden':''}`}>
-			<div className="content">
-			{
-				(()=>{
-					if( _GS.current_turn == 0 ){
-						return <>
-							<div>{`Starting Game`}</div>
-							<>{
-								map(_GS.objective_text.split('\n'), (val)=>(
-									<div className='body'>{`${val}`}</div>
-								) )
-							}</>
-						</>
-					} else {
-						return <div>{`Turn ${_GS.current_turn}`}</div>
-					}
-				})()
-				
-			}
-			</div>
+			<div className="core">
+				<div className="content">
+				{
+					(()=>{
+						if( _GS.current_turn == 0 ){
+							return <>
+								<div>{`Starting Game`}</div>
+								<>{
+									map(_GS.objective_text.split('\n'), (val)=>(
+										<div className='body'>{`${val}`}</div>
+									) )
+								}</>
+							</>
+						} else {
+							return <div>{`Turn ${_GS.current_turn}`}</div>
+						}
+					})()
+					
+				}
+				</div>
 			<div className="left-bg" />
 			<div className="right-bg" />
 			<div className="core-bg" />
+			</div>
 			<div className="shadow" />
 		</div>
 	</div>
