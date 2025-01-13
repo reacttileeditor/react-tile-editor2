@@ -92,7 +92,7 @@ export const Canvas_View = (props: Props) => {
 	const _mousemoveListener = (e: MouseEvent) => {
 		//console.log(`debug mouseP: ${e.pageX}, ${e.pageY}`);
 
-		var absolute_pos = { x: e.pageX, y: e.pageY};
+		var absolute_pos = { x: e.pageX - window.scrollX, y: e.pageY - window.scrollY};
 		var mousePos = get_mouse_pos_relative_to_canvas(absolute_pos, false)
 		let buttons_pressed = extract_which_mouse_button(e as unknown as React.MouseEvent<HTMLElement>)
 		props.handle_canvas_mouse_move( mousePos, buttons_pressed );
