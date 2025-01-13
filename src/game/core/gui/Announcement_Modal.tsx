@@ -61,14 +61,11 @@ export const Announcement_Modal = (props: {
 						if( _GS.current_turn == 0 ){
 							return <>
 								<div>{`Starting Game`}</div>
-								<>{
-									map(_GS.objective_text.split('\n'), (val)=>(
-										<div className='body'>{`${val}`}</div>
-									) )
-								}</>
+								<div className='body'><strong>Objective: </strong>{ Game_Manager_ƒ.describe_objectives(_GS.objective_type) }</div>
+								<div className='body'>Click anywhere to continue…</div>
 							</>
 						} else {
-							return <div>{`Turn ${_GS.current_turn}`}</div>
+							return <div className="centered">{`Turn ${_GS.current_turn}`}</div>
 						}
 					})()
 					
