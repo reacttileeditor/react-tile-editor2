@@ -103,12 +103,12 @@
 
 
 					&.hidden .core {
-						animation: disappear 0.5s ease-out 0.0s 1 both;
+						animation: disappear 1.0s ease-out 0.0s 1 both;
 						transform-origin: 50% -50% 50%;
 					}
 
 					&.hidden .shadow {
-						animation: fadeout 0.5s ease-out 0.0s 1 both;
+						animation: fadeout 0.2s ease-out 0.0s 1 both;
 						opacity: 0%;
 					}
 
@@ -141,6 +141,23 @@
 }
 
 @keyframes disappear {
+	0% {
+		opacity: 1.0;
+		transform: translateY(0%) scaleX(100%) ;
+	}
+
+	30% {
+		opacity: 0.0;
+	}	
+	
+	100% {
+		opacity: 0.0;
+		transform:  translateY(100%) rotateX(120deg) scaleX(80%);
+	}
+}
+
+
+@keyframes disappear_spring {
 	0% {
 		opacity: 1.0;
 		transform: scaleX(90%) translateY(10%) scaleY(120%);
