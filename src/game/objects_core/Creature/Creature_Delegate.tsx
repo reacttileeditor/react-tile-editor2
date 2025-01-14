@@ -1,10 +1,10 @@
 import _, { find } from "lodash";
 
-import { ƒ } from "../core/engine/Utils";
+import { ƒ } from "../../core/engine/Utils";
 
-import { Tilemap_Manager_Data, Direction } from "../core/engine/Tilemap_Manager/Tilemap_Manager";
+import { Tilemap_Manager_Data, Direction } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 
-import { Point2D, Rectangle } from '../interfaces';
+import { Point2D, Rectangle } from '../../interfaces';
 
 
 

@@ -19,7 +19,7 @@ import { GiPerspectiveDiceSixFacesOne, GiSpatter } from "react-icons/gi";
 
 import "./Editor_View.scss";
 import { Standard_Input_ƒ } from "./Standard_Input_Handling";
-import { Creature_Type_Name, Creature_ƒ } from "../../objects_core/Creature";
+import { Creature_Type_Name, Creature_ƒ } from "../../objects_core/Creature/Creature";
 import { Game_Manager_ƒ } from "../engine/Game_Manager";
 import { includes, map } from "ramda";
 import { Map_Generation_ƒ } from "../engine/Map_Generation";

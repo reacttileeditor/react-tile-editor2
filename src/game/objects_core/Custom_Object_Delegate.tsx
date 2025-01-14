@@ -10,7 +10,7 @@ import { Direction } from "../core/engine/Tilemap_Manager/Tilemap_Manager";
 import { Point2D, Rectangle } from '../interfaces';
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
 import { zorder } from "../core/constants/zorder";
-import { Change_Instance } from "./Creature";
+import { Change_Instance } from "./Creature/Creature";
 import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
 import { Vals } from "../core/constants/Constants";
 import { Base_Object_State, Base_Object_ƒ } from "./Base_Object";

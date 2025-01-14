@@ -8,7 +8,7 @@ import { ƒ } from "./Utils";
 
 import { Asset_Manager_Data, Tile_Comparator_Sample, Tile_Position_Comparator_Sample } from "./Asset_Manager/Asset_Manager";
 import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager/Tilemap_Manager";
-import { Creature_Data, Creature_ƒ } from "../../objects_core/Creature";
+import { Creature_Data, Creature_ƒ } from "../../objects_core/Creature/Creature";
 import { Point2D, Rectangle } from '../../interfaces';
 
 interface Tile_View_State {

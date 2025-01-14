@@ -10,7 +10,7 @@ import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "../engine/Blit_
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager/Tilemap_Manager";
 
-import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Path_Data } from "../../objects_core/Creature";
+import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Path_Data } from "../../objects_core/Creature/Creature";
 
 import "./Primary_View.scss";
 import "./Game_Status_Display.scss";
