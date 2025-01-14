@@ -10,7 +10,6 @@ import { Custom_Object_Type_Name, Custom_Object_Data, Custom_Object_ƒ, New_Cust
 import { Base_Object_Data, New_Base_Object } from "../Base_Object";
 import { Creature_Delegate, CT_Hermit_ƒ, CT_Human_Footman_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ, CT_Undead_Javelineer_ƒ } from "./Creature_Delegate";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager";
-import { Creature_Behavior_ƒ } from "./Creature_Behavior";
 import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
 import { add, filter, includes, reduce } from "ramda";

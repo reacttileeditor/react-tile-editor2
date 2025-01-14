@@ -20,7 +20,7 @@ import { Vals } from "../../core/constants/Constants";
 
 
 
-export const Creature_Behavior_ƒ = {
+export const Creature_ƒ_Behavior = {
 
 
 /*----------------------- movement -----------------------*/
@@ -90,11 +90,11 @@ export const Creature_Behavior_ƒ = {
 		change_list: Array<Change_Instance>,
 	) => {
 
-		const new_path_data = Creature_Behavior_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
+		const new_path_data = Creature_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
 
-		Creature_Behavior_ƒ.deduct_cost_from_last_move(me,_TM, _AM, change_list);
+		Creature_ƒ.deduct_cost_from_last_move(me,_TM, _AM, change_list);
 
-		Creature_Behavior_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
+		Creature_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
 
 	},
 
@@ -274,7 +274,7 @@ export const Creature_Behavior_ƒ = {
 		*/
 		//let current_tile_pos = Creature_ƒ.get_current_tile_pos_from_pixel_pos(me, _TM);
 
-		Creature_Behavior_ƒ.update_pixel_pos(me, _TM, offset_in_ms, change_list);
+		Creature_ƒ.update_pixel_pos(me, _TM, offset_in_ms, change_list);
 
 	},
 

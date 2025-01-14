@@ -10,7 +10,6 @@ import { Point2D, Rectangle } from '../../interfaces';
 import { Custom_Object_Type_Name, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../Custom_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager";
 import { Anim_Schedule_Element, Change_Instance, Creature_Data, Creature_ƒ, Path_Node_With_Direction, Path_Data, path_data_empty } from "./Creature";
-import { Creature_Behavior_ƒ } from "./Creature_Behavior";
 import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
 import { sort } from "ramda";
@@ -156,7 +155,7 @@ export const AI_Core_ƒ = {
 				Creature_ƒ.set(change_list, me, 'planned_tile_pos', target.tile_pos);
 
 
-				Creature_Behavior_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
+				Creature_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
 			}
 		}
 	},
@@ -242,7 +241,7 @@ export const AI_Core_ƒ = {
 				We have to set some kind of mode indicator that we're attacking, right now.
 			*/
 
-			Creature_Behavior_ƒ.begin_attack_mode(me, offset_in_ms, tick, change_list, spawnees, target);
+			Creature_ƒ.begin_attack_mode(me, offset_in_ms, tick, change_list, spawnees, target);
 
 		} else {
 			/*
@@ -255,16 +254,16 @@ export const AI_Core_ƒ = {
 						?
 						AI_Core_ƒ.construct_path_for_AI_enemies(me, _TM, _AM, _BM)
 						:
-						Creature_Behavior_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
+						Creature_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
 
 
 					Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
 
 
-					Creature_Behavior_ƒ.deduct_cost_from_last_move(me,_TM, _AM, change_list);
-					Creature_Behavior_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
+					Creature_ƒ.deduct_cost_from_last_move(me,_TM, _AM, change_list);
+					Creature_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
 				} else {
-					Creature_Behavior_ƒ.terminate_movement(me, _TM, offset_in_ms, tick, change_list, spawnees);
+					Creature_ƒ.terminate_movement(me, _TM, offset_in_ms, tick, change_list, spawnees);
 				}
 			}
 		}
