@@ -16,6 +16,7 @@ import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
 import { add, filter, includes, reduce } from "ramda";
 import { Creature_ƒ_Accessors } from "./Accessors";
 import { Creature_ƒ_State_Management } from "./State_Management";
+import { Creature_ƒ_Path_Management } from "./Path_Management";
 
 
 
@@ -194,6 +195,7 @@ export const Creature_ƒ = {
 	...Creature_Behavior_ƒ,
 	...Creature_ƒ_Accessors,
 	...Creature_ƒ_State_Management,
+	...Creature_ƒ_Path_Management,
 
 	/*----------------------- constructor/destructor stuff -----------------------*/
 
