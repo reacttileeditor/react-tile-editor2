@@ -53,7 +53,7 @@ export const Announcement_Modal = (props: {
 
 
 	return <div className={`game-info-modal-anchor`}>
-		<div className={`game-info-modal ${props.announcement_modal_hidden ? 'hidden':''}`}>
+		<div className={`game-info-modal ${props.announcement_modal_hidden ? 'hidden':'visible'}`}>
 			<div className="core">
 				<div className="content">
 				{
