@@ -8,7 +8,7 @@ import { angle_between, degrees_to_radians, dice, ƒ } from "../core/engine/Util
 import { Direction } from "../core/engine/Tilemap_Manager/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
-import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager";
+import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager/Game_Manager";
 import { zorder } from "../core/constants/zorder";
 import { Change_Instance } from "./Creature/Creature";
 import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";

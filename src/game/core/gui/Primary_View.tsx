@@ -14,7 +14,7 @@ import { Point2D, Rectangle } from '../../interfaces';
 import 'rsuite/dist/rsuite.min.css';
 import { CustomProvider } from 'rsuite';
 import "./Primary_View.scss";
-import { Game_Manager_Data, New_Game_Manager } from "../engine/Game_Manager";
+import { Game_Manager_Data, New_Game_Manager } from "../engine/Game_Manager/Game_Manager";
 import { Vals } from "../constants/Constants";
 
 interface Props {

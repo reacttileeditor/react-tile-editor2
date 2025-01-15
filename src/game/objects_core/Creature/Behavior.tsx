@@ -10,7 +10,7 @@ import { Point2D, Rectangle } from '../../interfaces';
 import { Custom_Object_Type_Name, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../Custom_Object";
 import { Base_Object_Data, Base_Object_ƒ, New_Base_Object } from "../Base_Object";
 import { Creature_Delegate, CT_Hermit_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ } from "./Creature_Delegate";
-import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager";
+import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";
 import { Anim_Schedule_Element, Behavior_Mode, Change_Instance, Creature_Data, Creature_ƒ, Path_Node_With_Direction, Path_Data } from "./Creature";
 import { AI_Core_ƒ } from "./AI_Core";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../../core/engine/Asset_Manager/Asset_Manager";

@@ -13,7 +13,7 @@ import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/T
 import "./Announcement_Modal.scss";
 
 import Foot_Icon from '../../../assets/feet-icon.png';
-import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game_Manager } from "../engine/Game_Manager";
+import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game_Manager } from "../engine/Game_Manager/Game_Manager";
 
 
 

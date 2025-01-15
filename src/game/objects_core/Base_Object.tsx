@@ -8,7 +8,7 @@ import { add_points, ƒ } from "../core/engine/Utils";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../core/engine/Tilemap_Manager/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../interfaces';
-import { Game_Manager_Data } from "../core/engine/Game_Manager";
+import { Game_Manager_Data } from "../core/engine/Game_Manager/Game_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
 import { Asset_Manager_Data } from "../core/engine/Asset_Manager/Asset_Manager";
 

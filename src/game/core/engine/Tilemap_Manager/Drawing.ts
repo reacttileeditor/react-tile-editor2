@@ -14,7 +14,7 @@ import localforage from "localforage";
 import { concat, equals, filter, find, includes, keys, propEq, reduce, slice, uniq, zipWith } from "ramda";
 import { Page } from '@rsuite/icons';
 import { Vals } from "../../constants/Constants";
-import { Creature_Map_Instance, Game_Manager_ƒ } from "../Game_Manager";
+import { Creature_Map_Instance, Game_Manager_ƒ } from "../Game_Manager/Game_Manager";
 import { Creature_ƒ } from "../../../objects_core/Creature/Creature";
 import { zorder } from "../../constants/zorder";
 
