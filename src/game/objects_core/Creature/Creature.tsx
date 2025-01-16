@@ -17,6 +17,7 @@ import { add, filter, includes, reduce } from "ramda";
 import { Creature_ƒ_Accessors } from "./Accessors";
 import { Creature_ƒ_State_Management } from "./State_Management";
 import { Creature_ƒ_Path_Management } from "./Path_Management";
+import { Creature_ƒ_Processing } from "./Processing";
 
 
 
@@ -193,6 +194,7 @@ export const New_Creature = (
 export const Creature_ƒ = {
 	/*----------------------- function imports -----------------------*/
 	...Creature_ƒ_Behavior,
+	...Creature_ƒ_Processing,
 	...Creature_ƒ_Accessors,
 	...Creature_ƒ_State_Management,
 	...Creature_ƒ_Path_Management,
