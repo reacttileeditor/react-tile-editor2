@@ -10,7 +10,7 @@ import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../core/eng
 import { Point2D, Rectangle } from '../interfaces';
 import { Change_Instance, Creature_Type_Name } from "./Creature/Creature";
 import { Custom_Object_Delegate, Custom_Object_Delegate_States} from "./Custom_Object_Delegate";
-import { Base_Object_Accessors, Base_Object_Data, Base_Object_ƒ, New_Base_Object } from "./Base_Object";
+import { Base_Object_Accessors, Base_Object_Data, Base_Object_State, Base_Object_Statics, Base_Object_ƒ, New_Base_Object } from "./Base_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager/Game_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
 import { Asset_Manager_Data } from "../core/engine/Asset_Manager/Asset_Manager";
@@ -29,7 +29,9 @@ export type Custom_Object_Data = {
 	text: string,
 	delegate_state: Custom_Object_Delegate_States,
 	scheduled_events: Array<Scheduled_Event>,
-} & Base_Object_Data;
+} & Base_Object_Statics &
+Base_Object_State &
+Base_Object_Accessors;
 
 export type Scheduled_Event = {
 	tick_offset: number,
@@ -40,91 +42,67 @@ export type Scheduled_Event = {
 }
 
 
+
 export const New_Custom_Object = (
 	p: {
 		accessors: Base_Object_Accessors,
+		//base object statics
+		creation_timestamp?: number,
+		unique_id?: string,
 
-		pixel_pos: Point2D,
+		//base object state
+		pixel_pos?: Point2D,
+		should_remove?: boolean,
+		is_done_with_turn?: boolean,
 		rotate?: number,
 		velocity?: Point2D,
 		accel?: Point2D, 
+
 		type_name: Custom_Object_Type_Name,
-		creation_timestamp?: number,
-		should_remove?: boolean,
-		is_done_with_turn?: boolean,
 		text?: string,
 		scheduled_events?: Array<Scheduled_Event>,
 		delegate_state?: Custom_Object_Delegate_States,
 	}
-): Custom_Object_Data => (
-	_New_Custom_Object({
+): Custom_Object_Data => {
+
+	return {
+		//accessors
 		get_GM_instance: p.accessors.get_GM_instance,
 		_Asset_Manager: p.accessors._Asset_Manager,
 		_Blit_Manager: p.accessors._Blit_Manager,
 		_Tilemap_Manager: p.accessors._Tilemap_Manager,
-	
-		pixel_pos: p.pixel_pos,
-		rotate: p.rotate ??  0,
-		velocity: p.velocity,
-		accel: p.accel,
-		type_name: p.type_name,
+
+		//static values
+		unique_id: p.unique_id ?? uuid(),
 		creation_timestamp: p.creation_timestamp ?? 0,
+
+		//state	
+		pixel_pos: cloneDeep(p.pixel_pos) ?? {x:0, y: 0},  //TODO use TM
 		should_remove: p.should_remove ?? false,
-		is_done_with_turn: p.is_done_with_turn ?? false,
-		text: p.text ?? '',
-		delegate_state: p.delegate_state ?? {},		
-		scheduled_events: p.scheduled_events,
-	})
-)
+		is_done_with_turn: p.is_done_with_turn ?? false,	
+		rotate: p.rotate ?? 0,
+		velocity: cloneDeep(p.velocity) ?? {x: 0, y: 0},
+		accel: cloneDeep(p.accel) ?? {x: 0, y: 0},
 
 
-export const _New_Custom_Object = (
-	p: {
-		get_GM_instance: () => Game_Manager_Data;
-		_Asset_Manager: () => Asset_Manager_Data,
-		_Blit_Manager: () => Blit_Manager_Data,
-		_Tilemap_Manager: () => Tilemap_Manager_Data,
-		pixel_pos: Point2D,
-		rotate: number,
-		velocity?: Point2D,
-		accel?: Point2D, 
-		type_name: Custom_Object_Type_Name,
-		creation_timestamp: number,
-		should_remove: boolean,
-		is_done_with_turn: boolean,
-		unique_id?: string,
-		text?: string,
-		scheduled_events?: Array<Scheduled_Event>,
-		delegate_state: Custom_Object_Delegate_States,
-	}): Custom_Object_Data => {
-
-	return {
-		...New_Base_Object({
-			get_GM_instance: p.get_GM_instance,
-			_Asset_Manager: p._Asset_Manager,
-			_Blit_Manager: p._Blit_Manager,
-			_Tilemap_Manager: p._Tilemap_Manager,
-			pixel_pos: cloneDeep(p.pixel_pos),
-			rotate: p.rotate,
-			unique_id: p.unique_id,
-			creation_timestamp: p.creation_timestamp,
-			should_remove: p.should_remove,
-			is_done_with_turn: p.is_done_with_turn,
-			velocity: p.velocity,
-			accel: p.accel,
-		}),
 		type_name: p.type_name,
 		text: p.text ?? '',
 		scheduled_events: ƒ.if(p.scheduled_events != undefined,
 			p.scheduled_events,
 			[]
 		),
-		delegate_state: Custom_Object_ƒ.cast_delegate_state(p.type_name, p.delegate_state),
+		delegate_state: Custom_Object_ƒ.cast_delegate_state(p.type_name, p.delegate_state as Custom_Object_Delegate_States),
 	}
 }
 
 export const Custom_Object_ƒ = {
 /*----------------------- basetype management -----------------------*/
+	get_accessors: (me: Base_Object_Data): Base_Object_Accessors => ({
+		get_GM_instance: me.get_GM_instance,
+		_Asset_Manager: me._Asset_Manager,
+		_Blit_Manager: me._Blit_Manager,
+		_Tilemap_Manager: me._Tilemap_Manager,
+	}),
 
 
 	get_delegate: (type_name: Custom_Object_Type_Name): Custom_Object_Delegate => {
@@ -204,11 +182,8 @@ export const Custom_Object_ƒ = {
 		const final_values = { 
 			change_list: change_list,
 			spawnees: spawnees,
-			new_object: _New_Custom_Object({
-				get_GM_instance: me.get_GM_instance,
-				_Asset_Manager: me._Asset_Manager,
-				_Blit_Manager: me._Blit_Manager,
-				_Tilemap_Manager: me._Tilemap_Manager,
+			new_object: New_Custom_Object({
+				accessors: Custom_Object_ƒ.get_accessors(me),
 
 				pixel_pos: processed_data.pixel_pos,
 				velocity: processed_data.velocity,

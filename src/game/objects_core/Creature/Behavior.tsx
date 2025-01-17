@@ -261,7 +261,7 @@ export const Creature_ƒ_Behavior = {
 						Creature_ƒ.set(change_list_, target, 'last_changed_hitpoints', offset_in_ms);
 
 						spawnees_.push(New_Custom_Object({
-							accessors: Base_Object_ƒ.get_accessors(me),
+							accessors: Custom_Object_ƒ.get_accessors(me),
 							pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
 							type_name: 'text_label' as Custom_Object_Type_Name,
 							creation_timestamp: tick,
@@ -269,7 +269,7 @@ export const Creature_ƒ_Behavior = {
 						}));
 				
 						spawnees_.push(New_Custom_Object({
-							accessors: Base_Object_ƒ.get_accessors(me),
+							accessors: Custom_Object_ƒ.get_accessors(me),
 							pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
 							type_name: 'hit_star_bg' as Custom_Object_Type_Name,
 							creation_timestamp: tick,
