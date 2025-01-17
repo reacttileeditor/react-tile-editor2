@@ -17,7 +17,6 @@ import { Base_Object_State, Base_Object_ƒ } from "./Base_Object";
 import { CO_Shot_State } from "../core/data/Custom_Objects/Shot";
 import { CO_Hit_Star_State } from "../core/data/Custom_Objects/Hit_Star";
 
-export type Custom_Object_Type_Name = 'shot';
 
 export type Custom_Object_Delegate_States = {} | CO_Shot_State | CO_Hit_Star_State;
 
@@ -48,6 +47,13 @@ export type Custom_Object_Delegate<Delegate_State_Type> = {
 	time_to_live: () => number,
 }
 
+
+
+
+
+/*
+	The Base_ƒ is basically a root class the other delegates inherit from.  I'm leery of inheritance here, but in practice most CODs don't need to redefine most of these values (it's conceivable pure physics objects could amount to nothing more than an asset name), so it makes sense to use a lightweight inheritance model.
+*/
 export const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate<unknown> = {
 	process_single_frame: (
 		me: Custom_Object_Data<unknown>,
@@ -84,7 +90,7 @@ export const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate<unknown> = {
 	),
 
 	yield_zorder: () => (
-		13
+		zorder.characters
 	),
 }
 

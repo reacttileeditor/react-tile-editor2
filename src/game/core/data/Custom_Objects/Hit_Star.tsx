@@ -2,7 +2,7 @@
 
 import { zorder } from "../../constants/zorder";
 import { Change_Instance } from "../../../objects_core/Creature/Creature";
-import { Custom_Object_Data, Custom_Object_Type_Name, Custom_Object_ƒ, New_Custom_Object } from "../../../objects_core/Custom_Object";
+import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../../../objects_core/Custom_Object";
 import { Custom_Object_Delegate, Custom_Object_Delegate_Base_ƒ, Custom_Object_Update } from "../../../objects_core/Custom_Object_Delegate";
 import { Base_Object_ƒ } from "../../../objects_core/Base_Object";
 import { map, range } from "lodash";
@@ -37,7 +37,7 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate<CO_Hit_Star_State> = {
 				New_Custom_Object({
 					accessors: Base_Object_ƒ.get_accessors(me),
 					pixel_pos: me.pixel_pos,
-					type_name: 'hit_spark' as Custom_Object_Type_Name,
+					type_name: 'hit_spark',
 					creation_timestamp: tick,
 					velocity: {x:0, y:-7.5},
 					accel: {x:0, y:1.0},

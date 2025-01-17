@@ -23,7 +23,7 @@ export const CO_Hit_Spark_ƒ: Custom_Object_Delegate<CO_Hit_Spark_State> = {
 		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data<unknown>>,
 	} => {
-		const _prior_delegate_state = Custom_Object_ƒ.get_delegate_state(me) as CO_Hit_Spark_State;
+		const _prior_delegate_state = me.delegate_state;
 
 		console.log('process hit spark', _prior_delegate_state.angle)
 				
