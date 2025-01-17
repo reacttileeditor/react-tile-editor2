@@ -12,16 +12,16 @@ export type CO_Hit_Spark_State = {
 	angle: number,
 }
 
-export const CO_Hit_Spark_ƒ: Custom_Object_Delegate = {
+export const CO_Hit_Spark_ƒ: Custom_Object_Delegate<CO_Hit_Spark_State> = {
 	...Custom_Object_Delegate_Base_ƒ,
 
 	process_single_frame: (
-		me: Custom_Object_Data,
+		me: Custom_Object_Data<CO_Hit_Spark_State>,
 		tick: number,
 	): {
-		data: Custom_Object_Update,
+		data: Custom_Object_Update<CO_Hit_Spark_State>,
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
 	} => {
 		const _prior_delegate_state = Custom_Object_ƒ.get_delegate_state(me) as CO_Hit_Spark_State;
 

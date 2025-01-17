@@ -22,23 +22,23 @@ export type Custom_Object_Type_Name = 'shot';
 export type Custom_Object_Delegate_States = {} | CO_Shot_State | CO_Hit_Star_State;
 
 
-export type Custom_Object_Update = {
-	delegate_state: Custom_Object_Delegate_States,
+export type Custom_Object_Update<Delegate_State_Type> = {
+	delegate_state: Delegate_State_Type,
 } & Base_Object_State;
 
 
-export type Custom_Object_Delegate = {
+export type Custom_Object_Delegate<Delegate_State_Type> = {
 	process_single_frame: (
-		me: Custom_Object_Data,
+		me: Custom_Object_Data<Delegate_State_Type>,
 		tick: number,
 	) => {
-		data: Custom_Object_Update,
+		data: Custom_Object_Update<Delegate_State_Type>,
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
 	},
 
 	should_be_removed: (
-		me: Custom_Object_Data,
+		me: Custom_Object_Data<Delegate_State_Type>,
 		tick: number,
 		offset_in_ms: number,
 	) => boolean,
@@ -48,14 +48,14 @@ export type Custom_Object_Delegate = {
 	time_to_live: () => number,
 }
 
-export const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
+export const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate<unknown> = {
 	process_single_frame: (
-		me: Custom_Object_Data,
+		me: Custom_Object_Data<unknown>,
 		tick: number,
 	): {
-		data: Custom_Object_Update,
+		data: Custom_Object_Update<unknown>,
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
 	} => {
 
 		return {
@@ -69,7 +69,7 @@ export const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 	},
 
 	should_be_removed: (
-		me: Custom_Object_Data,
+		me: Custom_Object_Data<unknown>,
 		tick: number,
 		offset_in_ms: number,
 	) => {

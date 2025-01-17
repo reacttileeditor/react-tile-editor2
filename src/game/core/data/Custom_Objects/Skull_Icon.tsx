@@ -13,16 +13,16 @@ import { Game_Manager_ƒ } from "../../engine/Game_Manager/Game_Manager";
 
 
 
-export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
+export const CO_Skull_Icon_ƒ: Custom_Object_Delegate<{}> = {
 	...Custom_Object_Delegate_Base_ƒ,
 
 	process_single_frame: (
-		me: Custom_Object_Data,
+		me: Custom_Object_Data<{}>,
 		tick: number,
 	): {
-		data: Custom_Object_Update,
+		data: Custom_Object_Update<{}>,
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
 	} => {
 
 

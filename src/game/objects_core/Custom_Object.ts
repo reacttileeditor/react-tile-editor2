@@ -24,10 +24,10 @@ import { CO_Hit_Spark_State, CO_Hit_Spark_ƒ } from "../core/data/Custom_Objects
 
 export type Custom_Object_Type_Name = 'shot' | 'text_label' | 'skull_icon' | 'hit_star_bg' | 'hit_spark' ;
 
-export type Custom_Object_Data = {
+export type Custom_Object_Data<Delegate_State_Type> = {
 	type_name: Custom_Object_Type_Name,
 	text: string,
-	delegate_state: Custom_Object_Delegate_States,
+	delegate_state: Delegate_State_Type,
 	scheduled_events: Array<Scheduled_Event>,
 } & Base_Object_Statics &
 Base_Object_State &
@@ -37,13 +37,13 @@ export type Scheduled_Event = {
 	tick_offset: number,
 	command: (
 		change_list_inner: Array<Change_Instance>,
-		spawnees_: Array<Custom_Object_Data>,
+		spawnees_: Array<Custom_Object_Data<unknown>>,
 	) => void,
 }
 
 
 
-export const New_Custom_Object = (
+export const New_Custom_Object = <Delegate_State_Type>(
 	p: {
 		accessors: Base_Object_Accessors,
 		//base object statics
@@ -61,9 +61,9 @@ export const New_Custom_Object = (
 		type_name: Custom_Object_Type_Name,
 		text?: string,
 		scheduled_events?: Array<Scheduled_Event>,
-		delegate_state?: Custom_Object_Delegate_States,
+		delegate_state: Delegate_State_Type,
 	}
-): Custom_Object_Data => {
+): Custom_Object_Data<Delegate_State_Type> => {
 
 	return {
 		//accessors
@@ -91,7 +91,7 @@ export const New_Custom_Object = (
 			p.scheduled_events,
 			[]
 		),
-		delegate_state: Custom_Object_ƒ.cast_delegate_state(p.type_name, p.delegate_state as Custom_Object_Delegate_States),
+		delegate_state: p.delegate_state,
 	}
 }
 
@@ -105,7 +105,7 @@ export const Custom_Object_ƒ = {
 	}),
 
 
-	get_delegate: (type_name: Custom_Object_Type_Name): Custom_Object_Delegate => {
+	get_delegate: (type_name: Custom_Object_Type_Name): Custom_Object_Delegate<any> => {
 		return {
 			shot: CO_Shot_ƒ,
 			text_label: CO_Text_Label_ƒ,
@@ -115,7 +115,7 @@ export const Custom_Object_ƒ = {
 		}[type_name];
 	},
 
-	cast_delegate_state: (type_name: Custom_Object_Type_Name, p: Custom_Object_Delegate_States): Custom_Object_Delegate_States => {
+	cast_delegate_state: (type_name: Custom_Object_Type_Name, p: unknown): Custom_Object_Delegate_States => {
 		return {
 			shot: p as CO_Shot_State,
 			text_label: p as {},
@@ -125,7 +125,7 @@ export const Custom_Object_ƒ = {
 		}[type_name];
 	},
 
-	get_delegate_state: (me: Custom_Object_Data) => {
+	get_delegate_state: (me: Custom_Object_Data<unknown>) => {
 		return Custom_Object_ƒ.cast_delegate_state(me.type_name, me.delegate_state)
 	},
 
@@ -134,10 +134,10 @@ export const Custom_Object_ƒ = {
 		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)
 	),
 
-	process_single_frame: (me: Custom_Object_Data, _Tilemap_Manager: Tilemap_Manager_Data, offset_in_ms: number, tick: number): {
+	process_single_frame: (me: Custom_Object_Data<unknown>, _Tilemap_Manager: Tilemap_Manager_Data, offset_in_ms: number, tick: number): {
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>,
-		new_object: Custom_Object_Data
+		spawnees: Array<Custom_Object_Data<unknown>>,
+		new_object: Custom_Object_Data<unknown>
 	} => {
 
 		if( me.accel.y !== 0){
@@ -159,7 +159,7 @@ export const Custom_Object_ƒ = {
 		const processed_data = processed_results.data;
 
 		const change_list: Array<Change_Instance> = processed_results.change_list;
-		const spawnees: Array<Custom_Object_Data> = processed_results.spawnees;
+		const spawnees: Array<Custom_Object_Data<unknown>> = processed_results.spawnees;
 
 		let scheduled_events = me_after_physics.scheduled_events;
 		
@@ -207,15 +207,15 @@ export const Custom_Object_ƒ = {
 		return final_values;
 	},
 
-	yield_asset: (me: Custom_Object_Data) => (
+	yield_asset: (me: Custom_Object_Data<unknown>) => (
 		Custom_Object_ƒ.get_delegate(me.type_name).yield_asset()
 	),
 
-	yield_text: (me: Custom_Object_Data) => (
+	yield_text: (me: Custom_Object_Data<unknown>) => (
 		me.text
 	),
 
-	yield_zorder: (me: Custom_Object_Data) => (
+	yield_zorder: (me: Custom_Object_Data<unknown>) => (
 		Custom_Object_ƒ.get_delegate(me.type_name).yield_zorder()
 	),
 }

@@ -40,7 +40,7 @@ export interface Game_State {
 	selected_object_index?: number,
 	turn_list: Array<Individual_Game_Turn_State>,
 	current_frame_state: Individual_Game_Turn_State,
-	custom_object_list: Array<Custom_Object_Data>,
+	custom_object_list: Array<Custom_Object_Data<unknown>>,
 }
 
 export interface Individual_Game_Turn_State {

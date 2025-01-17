@@ -189,7 +189,7 @@ export const Creature_ƒ_Behavior = {
 		offset_in_ms: number,
 		tick: number,
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>
+		spawnees: Array<Custom_Object_Data<unknown>>
 	) => {
 		Creature_ƒ.set(change_list, me, 'is_done_with_turn', true);
 	},
@@ -203,7 +203,7 @@ export const Creature_ƒ_Behavior = {
 		offset_in_ms: number,
 		tick: number,
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
 		target: Creature_Data,
 	) => {
 
@@ -235,7 +235,7 @@ export const Creature_ƒ_Behavior = {
 		offset_in_ms: number,
 		tick: number,
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
 		target: Creature_Data,
 
 	) => {
@@ -254,7 +254,7 @@ export const Creature_ƒ_Behavior = {
 				},
 				scheduled_events: [{
 					tick_offset: tick + Vals.shot_flight_duration,
-					command: (change_list_: Array<Change_Instance>, spawnees_: Array<Custom_Object_Data>) => {
+					command: (change_list_: Array<Change_Instance>, spawnees_: Array<Custom_Object_Data<unknown>>) => {
 						//alert('damage')
 
 						Creature_ƒ.add(change_list_, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
@@ -266,6 +266,7 @@ export const Creature_ƒ_Behavior = {
 							type_name: 'text_label' as Custom_Object_Type_Name,
 							creation_timestamp: tick,
 							text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
+							delegate_state: {},
 						}));
 				
 						spawnees_.push(New_Custom_Object({
@@ -291,6 +292,7 @@ export const Creature_ƒ_Behavior = {
 				type_name: 'text_label' as Custom_Object_Type_Name,
 				creation_timestamp: tick,
 				text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
+				delegate_state: {},
 			}));
 	
 			spawnees.push(New_Custom_Object({

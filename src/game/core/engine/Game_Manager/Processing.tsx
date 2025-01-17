@@ -55,7 +55,7 @@ do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM:
 
 
 	} else {		
-		let spawnees: Array<Custom_Object_Data> = [];
+		let spawnees: Array<Custom_Object_Data<unknown>> = [];
 		let master_change_list: Array<Change_Instance> = [];
 
 		map( me.game_state.current_frame_state.creature_list, (val,idx) => {
@@ -77,7 +77,7 @@ do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM:
 
 
 
-		let spawnees_phase2: Array<Custom_Object_Data> = [];
+		let spawnees_phase2: Array<Custom_Object_Data<unknown>> = [];
 
 		/*
 			collate all of the changes and new objects

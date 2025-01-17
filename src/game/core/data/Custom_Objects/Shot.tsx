@@ -19,16 +19,16 @@ export type CO_Shot_State = {
 	original_pos: Point2D,
 }
 
-export const CO_Shot_ƒ: Custom_Object_Delegate = {
+export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 	...Custom_Object_Delegate_Base_ƒ,
 
 	process_single_frame: (
-		me: Custom_Object_Data,
+		me: Custom_Object_Data<CO_Shot_State>,
 		tick: number,
 	): {
-		data: Custom_Object_Update,
+		data: Custom_Object_Update<CO_Shot_State>,
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
 	} => {
 		const _prior_delegate_state = me.delegate_state as CO_Shot_State;
 		const GM = me.get_GM_instance();
@@ -88,7 +88,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 	yield_asset: () => 'arrow_placeholder',
 
 	should_be_removed: (
-		me: Custom_Object_Data,
+		me: Custom_Object_Data<CO_Shot_State>,
 		tick: number,
 		offset_in_ms: number,
 	) => {

@@ -100,7 +100,7 @@ export const Creature_ƒ_Processing = {
 		offset_in_ms: number,
 		tick: number,
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>
+		spawnees: Array<Custom_Object_Data<unknown>>
 	) => {
 		/*
 			MOVEMENT:
@@ -125,7 +125,7 @@ export const Creature_ƒ_Processing = {
 		offset_in_ms: number,
 		tick: number,
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>
+		spawnees: Array<Custom_Object_Data<unknown>>
 	) => {
 		let mode_tick = Creature_ƒ.get_time_since_mode_start(me, tick)
 
@@ -163,14 +163,15 @@ export const Creature_ƒ_Processing = {
 		offset_in_ms: number,
 		tick: number,
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>
+		spawnees: Array<Custom_Object_Data<unknown>>
 	) => {
 		if( me.current_hitpoints <= 0 ) {
-			spawnees.push(New_Custom_Object({
+			spawnees.push(New_Custom_Object<{}>({
 				accessors: Base_Object_ƒ.get_accessors(me),
 				pixel_pos: me.pixel_pos,
 				type_name: 'skull_icon' as Custom_Object_Type_Name,
 				creation_timestamp: tick,
+				delegate_state: {}
 			}));
 
 
@@ -190,10 +191,10 @@ export const Creature_ƒ_Processing = {
 		tick: number,
 	): {
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>
+		spawnees: Array<Custom_Object_Data<unknown>>
 	} => {
 		let change_list: Array<Change_Instance> = [];
-		const spawnees: Array<Custom_Object_Data> = [];
+		const spawnees: Array<Custom_Object_Data<unknown>> = [];
 
 
 		if( tick >= me.next_behavior_reconsideration_timestamp ) {

@@ -133,7 +133,7 @@ export const AI_Core_ƒ = {
 		offset_in_ms: number,
 		tick: number,
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>
+		spawnees: Array<Custom_Object_Data<unknown>>
 	) => {
 		/*
 			Units will not have paths upon starting a turn, so basically, at this juncture, we make one.
@@ -216,7 +216,7 @@ export const AI_Core_ƒ = {
 		offset_in_ms: number,
 		tick: number,
 		change_list: Array<Change_Instance>,
-		spawnees: Array<Custom_Object_Data>
+		spawnees: Array<Custom_Object_Data<unknown>>
 	) => {
 
 
