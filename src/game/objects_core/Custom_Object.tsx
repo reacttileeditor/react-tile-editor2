@@ -142,6 +142,10 @@ export const Custom_Object_ƒ = {
 		}[type_name];
 	},
 
+	get_delegate_state: (me: Custom_Object_Data) => {
+		return Custom_Object_ƒ.cast_delegate_state(me.type_name, me.delegate_state)
+	},
+
 /*----------------------- movement -----------------------*/
 	get_current_mid_turn_tile_pos: (me: Base_Object_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Point2D => (
 		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)
@@ -223,8 +227,8 @@ export const Custom_Object_ƒ = {
 		return final_values;
 	},
 
-	yield_image: (me: Custom_Object_Data) => (
-		Custom_Object_ƒ.get_delegate(me.type_name).yield_image()
+	yield_asset: (me: Custom_Object_Data) => (
+		Custom_Object_ƒ.get_delegate(me.type_name).yield_asset()
 	),
 
 	yield_text: (me: Custom_Object_Data) => (

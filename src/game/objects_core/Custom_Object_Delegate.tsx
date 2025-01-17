@@ -41,12 +41,12 @@ export type Custom_Object_Delegate = {
 		offset_in_ms: number,
 	) => boolean,
 
-	yield_image: () => string,
+	yield_asset: () => string,
 	yield_zorder: () => number,
 	time_to_live: () => number,
 }
 
-const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
+export const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 	process_single_frame: (
 		me: Custom_Object_Data,
 		tick: number,
@@ -77,7 +77,7 @@ const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate = {
 	time_to_live: () => 300,
 
 	
-	yield_image: () => (
+	yield_asset: () => (
 		'red_dot'
 	),
 
@@ -159,7 +159,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate = {
 			spawnees: [],
 		}
 	},
-	yield_image: () => 'arrow_placeholder',
+	yield_asset: () => 'arrow_placeholder',
 
 	should_be_removed: (
 		me: Custom_Object_Data,
@@ -197,7 +197,7 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate = {
 			spawnees: [],
 		}
 	},
-	yield_image: () => 'omit_image',
+	yield_asset: () => 'omit_image',
 	yield_zorder: () => zorder.text,
 	time_to_live: () => 70,
 
@@ -230,7 +230,7 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate = {
 			spawnees: [],
 		}
 	},
-	yield_image: () => 'deaths_head',
+	yield_asset: () => 'deaths_head',
 }
 
 
@@ -284,7 +284,7 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate = {
 			spawnees: spawnees,
 		}
 	},
-	yield_image: () => 'hit_star',
+	yield_asset: () => 'hit_star',
 	yield_zorder: () => zorder.fx,
 	time_to_live: () => 70,
 }
@@ -327,7 +327,7 @@ export const CO_Hit_Spark_ƒ: Custom_Object_Delegate = {
 			spawnees: [],
 		}
 	},
-	yield_image: () => 'red_dot',
+	yield_asset: () => 'red_dot',
 	yield_zorder: () => zorder.fx,
 	time_to_live: () => 15,
 }

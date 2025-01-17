@@ -95,7 +95,7 @@ export const Game_Manager_ƒ_Drawing = {
 		map( me.game_state.custom_object_list, (val,idx) => {
 			Asset_Manager_ƒ.draw_image_for_asset_name({
 				_AM:						_AM,
-				asset_name:					Custom_Object_ƒ.yield_image(val),
+				asset_name:					Custom_Object_ƒ.yield_asset(val),
 				_BM:						_BM,
 				pos:						val.pixel_pos,
 				zorder:						Custom_Object_ƒ.yield_zorder(val),
@@ -166,7 +166,7 @@ export const Game_Manager_ƒ_Drawing = {
 
 				Asset_Manager_ƒ.draw_image_for_asset_name({
 					_AM:						_AM,
-					asset_name:					Custom_Object_ƒ.yield_image(val),
+					asset_name:					Custom_Object_ƒ.yield_asset(val),
 					_BM:						_BM,
 					pos:						val.pixel_pos,
 					zorder:						Custom_Object_ƒ.yield_zorder(val),
