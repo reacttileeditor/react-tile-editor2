@@ -105,6 +105,13 @@ export const Custom_Object_ƒ = {
 	}),
 
 
+	/*
+		A huge architectural feature of Custom_Objects is that there's a broad layer of universal functionality.
+
+		All -UNIQUE- functionality, instead of being provided via inheritance, is provided via a delegate pattern; there's a sidecar/assistant object called a "delegate", and it supplies all of the specific behavior like what graphics a CO uses, how it moves, whether it has effects on things in-game (like a projectile dealing damage to a victim, etc, etc).
+
+		The reason for this choice is that virtually all of this behavior would be additive; rather than replacing a broad swath of the behavior inside a Custom Object.  95% of the behavior/inherited-code would remain the same.  We've cordoned off that 5% that "might change", and established it as "delegate code".  Said delegate code -does- use inheritance from a base type, since for these delegates, they almost always replace the code in question rather than adding new functions.
+	*/
 	get_delegate: (type_name: Custom_Object_Type_Name): Custom_Object_Delegate<any> => {
 		return {
 			shot: CO_Shot_ƒ,
@@ -115,19 +122,7 @@ export const Custom_Object_ƒ = {
 		}[type_name];
 	},
 
-	cast_delegate_state: (type_name: Custom_Object_Type_Name, p: unknown): Custom_Object_Delegate_States => {
-		return {
-			shot: p as CO_Shot_State,
-			text_label: p as {},
-			skull_icon: p as {},
-			hit_star_bg: p as CO_Hit_Star_State,
-			hit_spark: p as CO_Hit_Spark_State,
-		}[type_name];
-	},
 
-	get_delegate_state: (me: Custom_Object_Data<unknown>) => {
-		return Custom_Object_ƒ.cast_delegate_state(me.type_name, me.delegate_state)
-	},
 
 /*----------------------- movement -----------------------*/
 	get_current_mid_turn_tile_pos: (me: Base_Object_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Point2D => (
