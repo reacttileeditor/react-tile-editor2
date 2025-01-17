@@ -9,12 +9,17 @@ import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../core/eng
 
 import { Point2D, Rectangle } from '../interfaces';
 import { Change_Instance, Creature_Type_Name } from "./Creature/Creature";
-import { Custom_Object_Delegate, CO_Shot_ƒ, CO_Text_Label_ƒ, Custom_Object_Delegate_States, CO_Shot_State, CO_Skull_Icon_ƒ, CO_Hit_Star_BG_ƒ, CO_Hit_Spark_ƒ, CO_Hit_Star_State, CO_Hit_Spark_State } from "./Custom_Object_Delegate";
+import { Custom_Object_Delegate, Custom_Object_Delegate_States} from "./Custom_Object_Delegate";
 import { Base_Object_Accessors, Base_Object_Data, Base_Object_ƒ, New_Base_Object } from "./Base_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager/Game_Manager";
 import { Blit_Manager_Data } from "../core/engine/Blit_Manager";
 import { Asset_Manager_Data } from "../core/engine/Asset_Manager/Asset_Manager";
 import { filter, isEmpty, map, without } from "ramda";
+import { CO_Shot_State, CO_Shot_ƒ } from "../core/data/Custom_Objects/Shot";
+import { CO_Text_Label_ƒ } from "../core/data/Custom_Objects/Text_Label";
+import { CO_Skull_Icon_ƒ } from "../core/data/Custom_Objects/Skull_Icon";
+import { CO_Hit_Star_BG_ƒ, CO_Hit_Star_State } from "../core/data/Custom_Objects/Hit_Star";
+import { CO_Hit_Spark_State, CO_Hit_Spark_ƒ } from "../core/data/Custom_Objects/Hit_Spark";
  
 
 export type Custom_Object_Type_Name = 'shot' | 'text_label' | 'skull_icon' | 'hit_star_bg' | 'hit_spark' ;
