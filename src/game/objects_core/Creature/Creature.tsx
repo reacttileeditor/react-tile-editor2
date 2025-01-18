@@ -165,17 +165,11 @@ export const New_Creature = (
 		should_remove: boolean,
 	}): Creature_Data => {
 	return {
-		// ...New_Base_Object({
-		 	get_GM_instance: p.get_GM_instance,
-		 	_Asset_Manager: p._Asset_Manager,
-		 	_Blit_Manager: p._Blit_Manager,
-			_Tilemap_Manager: p._Tilemap_Manager,
-		// 	pixel_pos: Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(p._Tilemap_Manager(), p._Asset_Manager(), p.tile_pos),
-		// 	unique_id: p.unique_id,
-		// 	should_remove: p.should_remove,
-		// 	creation_timestamp: p.creation_timestamp,
-		// 	is_done_with_turn: p.is_done_with_turn,
-		// }),
+		get_GM_instance: p.get_GM_instance,
+		_Asset_Manager: p._Asset_Manager,
+		_Blit_Manager: p._Blit_Manager,
+		_Tilemap_Manager: p._Tilemap_Manager,
+
 
 		//static values
 		unique_id: p.unique_id ?? uuid(),

@@ -10,7 +10,6 @@ import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../../core/
 import { Point2D, Rectangle } from '../../interfaces';
 import { Change_Instance, Creature_Type_Name } from "../Creature/Creature";
 import { Custom_Object_Delegate, Custom_Object_Delegate_States} from "./Custom_Object_Delegate";
-import { Base_Object_Accessors, Base_Object_Data, Base_Object_State, Base_Object_Statics } from "../Base_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";
 import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
 import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manager";
@@ -42,6 +41,35 @@ export type Scheduled_Event = {
 		spawnees_: Array<Custom_Object_Data<unknown>>,
 	) => void,
 }
+
+/*----------------------- base values -----------------------*/
+
+export type Base_Object_Data = 
+	Base_Object_Statics &
+	Base_Object_State &
+	Base_Object_Accessors;
+
+export type Base_Object_Statics = {
+	unique_id: string;
+	creation_timestamp: number,
+}
+
+export type Base_Object_State = {
+	pixel_pos: Point2D;
+	rotate: number,
+	should_remove: boolean,
+	is_done_with_turn: boolean,
+	velocity: Point2D,
+	accel: Point2D,
+}
+
+export type Base_Object_Accessors = {
+	get_GM_instance: () => Game_Manager_Data;
+	_Asset_Manager: () => Asset_Manager_Data,
+	_Blit_Manager: () => Blit_Manager_Data,
+	_Tilemap_Manager: () => Tilemap_Manager_Data,
+} 
+
 
 
 

@@ -11,9 +11,8 @@ import { Point2D, Rectangle } from '../../interfaces';
 import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";
 import { zorder } from "../../core/constants/zorder";
 import { Change_Instance } from "../Creature/Creature";
-import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
+import { Base_Object_State, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
 import { Vals } from "../../core/constants/Constants";
-import { Base_Object_State } from "../Base_Object";
 import { CO_Shot_State } from "../../core/data/Custom_Objects/Shot";
 import { CO_Hit_Star_State } from "../../core/data/Custom_Objects/Hit_Star";
 
