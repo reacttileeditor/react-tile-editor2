@@ -1,0 +1,39 @@
+
+import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
+
+import { Point2D, Rectangle } from '../../interfaces';
+import { Change_Instance, Creature_Type_Name } from "../Creature/Creature";
+import { Custom_Object_Delegate, Custom_Object_Delegate_States} from "./Custom_Object_Delegate";
+import { Base_Object_Accessors, Base_Object_Data, Base_Object_State, Base_Object_Statics, Base_Object_ƒ, New_Base_Object } from "../Base_Object";
+import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";
+import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
+import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manager";
+import { Custom_Object_Data, Custom_Object_ƒ } from "./Custom_Object";
+ 
+
+export const Custom_Object_ƒ_Accessors = {
+	get_accessors: (me: Base_Object_Data): Base_Object_Accessors => ({
+		get_GM_instance: me.get_GM_instance,
+		_Asset_Manager: me._Asset_Manager,
+		_Blit_Manager: me._Blit_Manager,
+		_Tilemap_Manager: me._Tilemap_Manager,
+	}),
+
+	get_current_mid_turn_tile_pos: (me: Base_Object_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Point2D => (
+		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)
+	),
+
+
+	yield_asset: (me: Custom_Object_Data<unknown>) => (
+		Custom_Object_ƒ.get_delegate(me.type_name).yield_asset()
+	),
+
+	yield_text: (me: Custom_Object_Data<unknown>) => (
+		me.text
+	),
+
+	yield_zorder: (me: Custom_Object_Data<unknown>) => (
+		Custom_Object_ƒ.get_delegate(me.type_name).yield_zorder()
+	),
+}
+
