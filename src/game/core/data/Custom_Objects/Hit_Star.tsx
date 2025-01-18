@@ -53,7 +53,7 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate<CO_Hit_Star_State> = {
 
 		return {
 			data: {
-				...Base_Object_ƒ.get_base_object_state(me),
+				...Custom_Object_ƒ.get_base_object_state(me),
 				delegate_state: me.delegate_state,
 			},
 			change_list: [],

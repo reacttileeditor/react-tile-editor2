@@ -4,7 +4,6 @@ import { zorder } from "../../constants/zorder";
 import { Change_Instance } from "../../../objects_core/Creature/Creature";
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
 import { Custom_Object_Delegate, Custom_Object_Delegate_Base_ƒ, Custom_Object_Update } from "../../../objects_core/Custom_Object/Custom_Object_Delegate";
-import { Base_Object_ƒ } from "../../../objects_core/Base_Object";
 import { Point2D } from "../../../interfaces";
 import { cloneDeep } from "lodash";
 import { angle_between, ƒ } from "../../engine/Utils";
@@ -32,7 +31,7 @@ export const CO_Text_Label_ƒ: Custom_Object_Delegate<{}> = {
 
 		return {
 			data: {
-				...Base_Object_ƒ.get_base_object_state(me),
+				...Custom_Object_ƒ.get_base_object_state(me),
 				pixel_pos: {x: me.pixel_pos.x + addend.x, y: me.pixel_pos.y + addend.y},
 				delegate_state: me.delegate_state,
 			},

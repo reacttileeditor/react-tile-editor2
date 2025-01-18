@@ -19,6 +19,19 @@ export const Custom_Object_ƒ_Accessors = {
 		_Tilemap_Manager: me._Tilemap_Manager,
 	}),
 
+
+	get_base_object_state: (me: Base_Object_Data): Base_Object_State => ({
+		pixel_pos: me.pixel_pos,
+		rotate: me.rotate,
+		should_remove: me.should_remove,
+		is_done_with_turn: me.is_done_with_turn,
+		velocity: me.velocity,
+		accel: me.accel,		
+	}),
+
+
+
+
 	get_current_mid_turn_tile_pos: (me: Base_Object_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Point2D => (
 		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)
 	),

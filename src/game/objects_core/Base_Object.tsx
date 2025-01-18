@@ -88,25 +88,6 @@ export const Base_Object_ƒ = {
 		_Tilemap_Manager: me._Tilemap_Manager,
 	}),
 
-	get_base_object_state: (me: Base_Object_Data): Base_Object_State => ({
-		pixel_pos: me.pixel_pos,
-		rotate: me.rotate,
-		should_remove: me.should_remove,
-		is_done_with_turn: me.is_done_with_turn,
-		velocity: me.velocity,
-		accel: me.accel,		
-	}),
-
-	process_physics: (me: Base_Object_Data): Base_Object_Data => {
-		const new_velocity = add_points(me.velocity, me.accel);
-
-
-		return {
-			...me,
-			pixel_pos: add_points(me.pixel_pos, new_velocity),
-			velocity: new_velocity,
-		}
-	},
 }
 
 

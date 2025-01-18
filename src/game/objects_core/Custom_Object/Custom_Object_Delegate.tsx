@@ -66,7 +66,7 @@ export const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate<unknown> = {
 
 		return {
 			data: {
-				...Base_Object_ƒ.get_base_object_state(me),
+				...Custom_Object_ƒ.get_base_object_state(me),
 				delegate_state: me.delegate_state,
 			},
 			change_list: [],
