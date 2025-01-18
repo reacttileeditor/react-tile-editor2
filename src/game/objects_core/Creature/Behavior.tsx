@@ -238,7 +238,7 @@ export const Creature_ƒ_Behavior = {
 		if( Creature_ƒ.get_delegate(me.type_name).yield_weapon_range() > 1 ){
 
 			spawnees.push(New_Custom_Object({
-				accessors: Custom_Object_ƒ.get_accessors(me),
+				accessors: Creature_ƒ.get_accessors(me),
 				pixel_pos: me.pixel_pos,
 				type_name: 'shot',
 				creation_timestamp: tick,
@@ -256,7 +256,7 @@ export const Creature_ƒ_Behavior = {
 						Creature_ƒ.set(change_list_, target, 'last_changed_hitpoints', offset_in_ms);
 
 						spawnees_.push(New_Custom_Object({
-							accessors: Custom_Object_ƒ.get_accessors(me),
+							accessors: Creature_ƒ.get_accessors(me),
 							pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
 							type_name: 'text_label',
 							creation_timestamp: tick,
@@ -265,7 +265,7 @@ export const Creature_ƒ_Behavior = {
 						}));
 				
 						spawnees_.push(New_Custom_Object({
-							accessors: Custom_Object_ƒ.get_accessors(me),
+							accessors: Creature_ƒ.get_accessors(me),
 							pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
 							type_name: 'hit_star_bg',
 							creation_timestamp: tick,
@@ -282,7 +282,7 @@ export const Creature_ƒ_Behavior = {
 			Creature_ƒ.set(change_list, target, 'last_changed_hitpoints', offset_in_ms);
 
 			spawnees.push(New_Custom_Object({
-				accessors: Custom_Object_ƒ.get_accessors(me),
+				accessors: Creature_ƒ.get_accessors(me),
 				pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
 				type_name: 'text_label',
 				creation_timestamp: tick,
@@ -291,7 +291,7 @@ export const Creature_ƒ_Behavior = {
 			}));
 	
 			spawnees.push(New_Custom_Object({
-				accessors: Custom_Object_ƒ.get_accessors(me),
+				accessors: Creature_ƒ.get_accessors(me),
 				pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
 				type_name: 'hit_star_bg',
 				creation_timestamp: tick,

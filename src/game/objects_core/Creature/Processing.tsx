@@ -163,7 +163,7 @@ export const Creature_ƒ_Processing = {
 	) => {
 		if( me.current_hitpoints <= 0 ) {
 			spawnees.push(New_Custom_Object<{}>({
-				accessors: Custom_Object_ƒ.get_accessors(me),
+				accessors: Creature_ƒ.get_accessors(me),
 				pixel_pos: me.pixel_pos,
 				type_name: 'skull_icon',
 				creation_timestamp: tick,

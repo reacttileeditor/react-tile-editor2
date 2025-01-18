@@ -6,7 +6,6 @@ import { ƒ } from "../../core/engine/Utils";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../../interfaces';
-import { Base_Object_Data, New_Base_Object } from "../Base_Object";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";
 import { Creature_ƒ_Behavior } from "./Behavior";
 import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manager";
@@ -27,7 +26,6 @@ export type Path_Node_With_Direction = {
 export type Creature_Type_Name = 'hermit' | 'peasant' | 'skeleton' | 'undead_javelineer' | 'human_footman';
 
 
-
 export type Change_Type = 
 	'add' |
 	'set';
@@ -46,7 +44,7 @@ export type Change_Instance = {
 	target_obj_uuid: string, //uuid, actually
 };
 
-export type Creature_Keys = (keyof Creature_Data & keyof Base_Object_Data);
+export type Creature_Keys = (keyof Creature_Data & keyof Core_Data);
 
 export type Variable_Specific_Change_Instance = {
 	type: Change_Type,
@@ -54,6 +52,29 @@ export type Variable_Specific_Change_Instance = {
 }
 
 export type Change_Value = (number|string|Point2D|boolean|Path_Data|Creature_Data);
+
+
+
+export type Anim_Schedule_Element = {
+	direction: Direction,
+	duration: number,
+	start_time: number,
+	start_pos: Point2D,
+	end_pos: Point2D,
+}
+
+export type Path_Data = {
+	path_this_turn: Array<Point2D>;
+	path_this_turn_with_directions: Array<Path_Node_With_Direction>;
+	path_reachable_this_turn: Array<Point2D>;
+	path_reachable_this_turn_with_directions: Array<Path_Node_With_Direction>;
+}
+
+export type ValueOf<T> = T[keyof T];
+
+
+/*----------------------- Core Data Types -----------------------*/
+
 
 
 export type Creature_Data = {
@@ -78,27 +99,36 @@ export type Creature_Data = {
 	walk_segment_start_time: number,
 	path_data: Path_Data;
 	target?: Creature_Data;
-} & Base_Object_Data;
+} & Core_Data;
 
-export type Anim_Schedule_Element = {
-	direction: Direction,
-	duration: number,
-	start_time: number,
-	start_pos: Point2D,
-	end_pos: Point2D,
+
+export type Core_Data = 
+	Core_Statics &
+	Core_State &
+	Core_Accessors;
+
+export type Core_Statics = {
+	unique_id: string;
+	creation_timestamp: number,
 }
 
-export type Path_Data = {
-	path_this_turn: Array<Point2D>;
-	path_this_turn_with_directions: Array<Path_Node_With_Direction>;
-	path_reachable_this_turn: Array<Point2D>;
-	path_reachable_this_turn_with_directions: Array<Path_Node_With_Direction>;
+export type Core_State = {
+	pixel_pos: Point2D;
+	// rotate: number,
+	should_remove: boolean,
+	is_done_with_turn: boolean,
+	// velocity: Point2D,
+	// accel: Point2D,
 }
 
-export type ValueOf<T> = T[keyof T];
+export type Core_Accessors = {
+	get_GM_instance: () => Game_Manager_Data;
+	_Asset_Manager: () => Asset_Manager_Data,
+	_Blit_Manager: () => Blit_Manager_Data,
+	_Tilemap_Manager: () => Tilemap_Manager_Data,
+} 
 
-
-
+/*----------------------- Initializers -----------------------*/
 
 
 export const path_data_empty = {
@@ -135,17 +165,30 @@ export const New_Creature = (
 		should_remove: boolean,
 	}): Creature_Data => {
 	return {
-		...New_Base_Object({
-			get_GM_instance: p.get_GM_instance,
-			_Asset_Manager: p._Asset_Manager,
-			_Blit_Manager: p._Blit_Manager,
+		// ...New_Base_Object({
+		 	get_GM_instance: p.get_GM_instance,
+		 	_Asset_Manager: p._Asset_Manager,
+		 	_Blit_Manager: p._Blit_Manager,
 			_Tilemap_Manager: p._Tilemap_Manager,
-			pixel_pos: Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(p._Tilemap_Manager(), p._Asset_Manager(), p.tile_pos),
-			unique_id: p.unique_id,
-			should_remove: p.should_remove,
-			creation_timestamp: p.creation_timestamp,
-			is_done_with_turn: p.is_done_with_turn,
-		}),
+		// 	pixel_pos: Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(p._Tilemap_Manager(), p._Asset_Manager(), p.tile_pos),
+		// 	unique_id: p.unique_id,
+		// 	should_remove: p.should_remove,
+		// 	creation_timestamp: p.creation_timestamp,
+		// 	is_done_with_turn: p.is_done_with_turn,
+		// }),
+
+		//static values
+		unique_id: p.unique_id ?? uuid(),
+		creation_timestamp: p.creation_timestamp,
+		
+		//state	
+		pixel_pos: Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
+			p._Tilemap_Manager(),
+			p._Asset_Manager(),
+			p.tile_pos
+		),
+		should_remove: p.should_remove,
+		is_done_with_turn: p.is_done_with_turn,
 
 		//static values
 		type_name: p.type_name,

@@ -9,10 +9,19 @@ import { Point2D, Rectangle } from '../../interfaces';
 import { Creature_Delegate, CT_Hermit_ƒ, CT_Human_Footman_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ, CT_Undead_Javelineer_ƒ } from "./Creature_Delegate";
 import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
-import { Creature_Data, Creature_Type_Name, Creature_ƒ } from "./Creature";
+import { Core_Accessors, Creature_Data, Creature_Type_Name, Creature_ƒ } from "./Creature";
 
 
 export const Creature_ƒ_Accessors = {
+
+	get_accessors: (me: Creature_Data): Core_Accessors => ({
+		get_GM_instance: me.get_GM_instance,
+		_Asset_Manager: me._Asset_Manager,
+		_Blit_Manager: me._Blit_Manager,
+		_Tilemap_Manager: me._Tilemap_Manager,
+	}),
+
+
 	/*----------------------- introspection -----------------------*/
 	list_all_creature_types: (): Array<Creature_Type_Name> => {
 		return ['hermit','peasant','skeleton','undead_javelineer','human_footman'];
