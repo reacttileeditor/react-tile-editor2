@@ -6,10 +6,15 @@ import { ƒ } from "../../core/engine/Utils";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../../interfaces';
-import { Creature_Delegate, CT_Hermit_ƒ, CT_Human_Footman_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ, CT_Undead_Javelineer_ƒ } from "./Creature_Delegate";
+import { Creature_Delegate} from "./Creature_Delegate";
 import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
 import { Core_Accessors, Creature_Data, Creature_Type_Name, Creature_ƒ } from "./Creature";
+import { CT_Hermit_ƒ } from "../../core/data/Creatures/Hermit";
+import { CT_Peasant_ƒ } from "../../core/data/Creatures/Peasant";
+import { CT_Skeleton_ƒ } from "../../core/data/Creatures/Skeleton";
+import { CT_Undead_Javelineer_ƒ } from "../../core/data/Creatures/Undead_Javelineer";
+import { CT_Human_Footman_ƒ } from "../../core/data/Creatures/Human_Footman";
 
 
 export const Creature_ƒ_Accessors = {
@@ -22,10 +27,6 @@ export const Creature_ƒ_Accessors = {
 	}),
 
 
-	/*----------------------- introspection -----------------------*/
-	list_all_creature_types: (): Array<Creature_Type_Name> => {
-		return ['hermit','peasant','skeleton','undead_javelineer','human_footman'];
-	},
 
 
 	/*----------------------- getters -----------------------*/
@@ -62,7 +63,13 @@ export const Creature_ƒ_Accessors = {
 	),
 
 
+
 	/*----------------------- basetype management -----------------------*/
+	list_all_creature_types: (): Array<Creature_Type_Name> => {
+		return ['hermit','peasant','skeleton','undead_javelineer','human_footman'];
+	},
+
+
 
 
 	get_delegate: (type_name: Creature_Type_Name): Creature_Delegate => {

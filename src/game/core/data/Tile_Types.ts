@@ -8,7 +8,10 @@ import { Static_Values, Tile_Item } from "../engine/Asset_Manager/Asset_Manager"
 */
 
 
-export type Tile_Name =
+export type Tile_Name = Tile_Name__Excluding_Virtual_Tiles | Tile_Name__Virtual_Tiles_Only;
+
+
+export type Tile_Name__Excluding_Virtual_Tiles = 
 "grass" |
 "grass-and-scree" |
 "dirt" |
@@ -23,8 +26,9 @@ export type Tile_Name =
 "water_shallow" |
 "wideleaf_scrub" |
 "menhir-big" |
-"menhir-small" |
-"red-path-unreachable-dot" |
+"menhir-small";
+
+export type Tile_Name__Virtual_Tiles_Only = "red-path-unreachable-dot" |
 "arrowhead-green" |
 "arrow-green" |
 "cursor_green";
