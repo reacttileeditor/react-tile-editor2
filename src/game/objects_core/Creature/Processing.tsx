@@ -7,7 +7,7 @@ import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../../core/
 import { Pathfinder_ƒ } from "../../core/engine/Pathfinding";
 
 import { Point2D, Rectangle } from '../../interfaces';
-import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../Custom_Object";
+import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../Custom_Object/Custom_Object";
 import { Base_Object_Data, Base_Object_ƒ, New_Base_Object } from "../Base_Object";
 import { Creature_Delegate, CT_Hermit_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ } from "./Creature_Delegate";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";

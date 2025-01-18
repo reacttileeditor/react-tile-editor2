@@ -2,8 +2,8 @@
 
 import { zorder } from "../../constants/zorder";
 import { Change_Instance } from "../../../objects_core/Creature/Creature";
-import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object";
-import { Custom_Object_Delegate, Custom_Object_Delegate_Base_ƒ, Custom_Object_Update } from "../../../objects_core/Custom_Object_Delegate";
+import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
+import { Custom_Object_Delegate, Custom_Object_Delegate_Base_ƒ, Custom_Object_Update } from "../../../objects_core/Custom_Object/Custom_Object_Delegate";
 import { Base_Object_ƒ } from "../../../objects_core/Base_Object";
 
 

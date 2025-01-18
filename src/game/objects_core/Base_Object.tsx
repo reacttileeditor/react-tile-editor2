@@ -97,11 +97,6 @@ export const Base_Object_ƒ = {
 		accel: me.accel,		
 	}),
 
-
-	get_current_mid_turn_tile_pos: (me: Base_Object_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Point2D => (
-		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)
-	),
-
 	process_physics: (me: Base_Object_Data): Base_Object_Data => {
 		const new_velocity = add_points(me.velocity, me.accel);
 

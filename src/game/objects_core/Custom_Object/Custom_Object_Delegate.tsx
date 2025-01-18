@@ -3,19 +3,19 @@ import ReactDOM from "react-dom";
 import _, { cloneDeep, find, map, range, size } from "lodash";
 import { v4 as uuid } from "uuid";
 
-import { angle_between, degrees_to_radians, dice, ƒ } from "../core/engine/Utils";
+import { angle_between, degrees_to_radians, dice, ƒ } from "../../core/engine/Utils";
 
-import { Direction } from "../core/engine/Tilemap_Manager/Tilemap_Manager";
+import { Direction } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 
-import { Point2D, Rectangle } from '../interfaces';
-import { Game_Manager_Data, Game_Manager_ƒ } from "../core/engine/Game_Manager/Game_Manager";
-import { zorder } from "../core/constants/zorder";
-import { Change_Instance } from "./Creature/Creature";
+import { Point2D, Rectangle } from '../../interfaces';
+import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";
+import { zorder } from "../../core/constants/zorder";
+import { Change_Instance } from "../Creature/Creature";
 import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
-import { Vals } from "../core/constants/Constants";
-import { Base_Object_State, Base_Object_ƒ } from "./Base_Object";
-import { CO_Shot_State } from "../core/data/Custom_Objects/Shot";
-import { CO_Hit_Star_State } from "../core/data/Custom_Objects/Hit_Star";
+import { Vals } from "../../core/constants/Constants";
+import { Base_Object_State, Base_Object_ƒ } from "../Base_Object";
+import { CO_Shot_State } from "../../core/data/Custom_Objects/Shot";
+import { CO_Hit_Star_State } from "../../core/data/Custom_Objects/Hit_Star";
 
 
 export type Custom_Object_Delegate_States = {} | CO_Shot_State | CO_Hit_Star_State;

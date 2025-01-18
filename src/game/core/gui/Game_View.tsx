@@ -16,7 +16,7 @@ import "./Primary_View.scss";
 import "./Game_Status_Display.scss";
 
 import { Point2D, Rectangle } from '../../interfaces';
-import { Custom_Object_Data, Custom_Object_ƒ } from "../../objects_core/Custom_Object";
+import { Custom_Object_Data, Custom_Object_ƒ } from "../../objects_core/Custom_Object/Custom_Object";
 
 interface Game_View_Props {
 	_Asset_Manager: () => Asset_Manager_Data,

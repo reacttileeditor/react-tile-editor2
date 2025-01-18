@@ -15,7 +15,7 @@ import { Pathfinder_ƒ } from "../Pathfinding";
 import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Creature_Type_Name } from "../../../objects_core/Creature/Creature";
 
 import { Point2D, Rectangle } from '../../../interfaces';
-import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object";
+import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
 import { Tooltip_Data } from "../../gui/Game_View";
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
