@@ -8,13 +8,8 @@ import { Pathfinder_ƒ } from "../../core/engine/Pathfinding";
 
 import { Point2D, Rectangle } from '../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../Custom_Object/Custom_Object";
-import { Base_Object_Data, Base_Object_ƒ, New_Base_Object } from "../Base_Object";
-import { Creature_Delegate, CT_Hermit_ƒ, CT_Peasant_ƒ, CT_Skeleton_ƒ } from "./Creature_Delegate";
-import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";
 import { Anim_Schedule_Element, Behavior_Mode, Change_Instance, Creature_Data, Creature_ƒ, Path_Node_With_Direction, Path_Data } from "./Creature";
-import { AI_Core_ƒ } from "./AI_Core";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../../core/engine/Asset_Manager/Asset_Manager";
-import { Blit_Manager_Data, Blit_Manager_ƒ, ms_to_ticks, ticks_to_ms } from "../../core/engine/Blit_Manager";
 import { Vals } from "../../core/constants/Constants";
 
 
@@ -243,7 +238,7 @@ export const Creature_ƒ_Behavior = {
 		if( Creature_ƒ.get_delegate(me.type_name).yield_weapon_range() > 1 ){
 
 			spawnees.push(New_Custom_Object({
-				accessors: Base_Object_ƒ.get_accessors(me),
+				accessors: Custom_Object_ƒ.get_accessors(me),
 				pixel_pos: me.pixel_pos,
 				type_name: 'shot',
 				creation_timestamp: tick,
@@ -287,7 +282,7 @@ export const Creature_ƒ_Behavior = {
 			Creature_ƒ.set(change_list, target, 'last_changed_hitpoints', offset_in_ms);
 
 			spawnees.push(New_Custom_Object({
-				accessors: Base_Object_ƒ.get_accessors(me),
+				accessors: Custom_Object_ƒ.get_accessors(me),
 				pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
 				type_name: 'text_label',
 				creation_timestamp: tick,
@@ -296,7 +291,7 @@ export const Creature_ƒ_Behavior = {
 			}));
 	
 			spawnees.push(New_Custom_Object({
-				accessors: Base_Object_ƒ.get_accessors(me),
+				accessors: Custom_Object_ƒ.get_accessors(me),
 				pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
 				type_name: 'hit_star_bg',
 				creation_timestamp: tick,

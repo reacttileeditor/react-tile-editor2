@@ -79,15 +79,3 @@ export const New_Base_Object = (
 
 
 
-
-export const Base_Object_ƒ = {
-	get_accessors: (me: Base_Object_Data): Base_Object_Accessors => ({
-		get_GM_instance: me.get_GM_instance,
-		_Asset_Manager: me._Asset_Manager,
-		_Blit_Manager: me._Blit_Manager,
-		_Tilemap_Manager: me._Tilemap_Manager,
-	}),
-
-}
-
-

@@ -4,7 +4,6 @@ import { zorder } from "../../constants/zorder";
 import { Change_Instance } from "../../../objects_core/Creature/Creature";
 import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../../../objects_core/Custom_Object/Custom_Object";
 import { Custom_Object_Delegate, Custom_Object_Delegate_Base_ƒ, Custom_Object_Update } from "../../../objects_core/Custom_Object/Custom_Object_Delegate";
-import { Base_Object_ƒ } from "../../../objects_core/Base_Object";
 import { map, range } from "lodash";
 import { degrees_to_radians, dice } from "../../engine/Utils";
 
@@ -35,7 +34,7 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate<CO_Hit_Star_State> = {
 
 		const spawnees = (local_tick == 0 ? map(range(3), (val) => (
 				New_Custom_Object({
-					accessors: Base_Object_ƒ.get_accessors(me),
+					accessors: Custom_Object_ƒ.get_accessors(me),
 					pixel_pos: me.pixel_pos,
 					type_name: 'hit_spark',
 					creation_timestamp: tick,
