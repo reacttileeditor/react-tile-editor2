@@ -85,8 +85,8 @@ export const Tilemap_Manager_ƒ_State_Management = {
 			creature_list: me.creature_list,
 			initialized: me.initialized,
 			asset_blit_list_cache_by_tilemap: {
-				terrain: tilemap_name == 'terrain' ? new_cache : me.asset_blit_list_cache_by_tilemap.terrain,
-				ui: tilemap_name == 'ui' ? new_cache : me.asset_blit_list_cache_by_tilemap.ui,
+				...me.asset_blit_list_cache_by_tilemap,
+				[tilemap_name]: new_cache,
 			}
 		}
 	},
@@ -105,7 +105,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		});
 	},
 
-	clear_tile_map: (me: Tilemap_Manager_Data, tilemap_name: Tilemap_Keys, _AM: Asset_Manager_Data ): Tilemap_Manager_Data => {
+	xclear_tile_map: (me: Tilemap_Manager_Data, tilemap_name: Tilemap_Keys, _AM: Asset_Manager_Data ): Tilemap_Manager_Data => {
 		let { consts, static_vals } = _AM;
 
 		const new_tilemap_data = cloneDeep(me);
@@ -115,6 +115,26 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		return {
 			...new_tilemap_data,
 			...Tilemap_Manager_ƒ.cleared_cache(),
+		}
+	},
+
+	clear_tile_map: (me: Tilemap_Manager_Data, tilemap_name: Tilemap_Keys, _AM: Asset_Manager_Data ): Tilemap_Manager_Data => {
+
+
+		return {
+			level_name: me.level_name,
+			metadata: me.metadata,
+			tile_maps: {
+				...me.tile_maps,
+				[tilemap_name]: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
+			},
+			tile_RNGs: me.tile_RNGs,
+			creature_list: me.creature_list,
+			initialized: me.initialized,
+			asset_blit_list_cache_by_tilemap: {
+				...me.asset_blit_list_cache_by_tilemap,
+				[tilemap_name]: [[[]]],
+			}			
 		}
 	},
 
