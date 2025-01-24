@@ -105,19 +105,6 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		});
 	},
 
-	xclear_tile_map: (me: Tilemap_Manager_Data, tilemap_name: Tilemap_Keys, _AM: Asset_Manager_Data ): Tilemap_Manager_Data => {
-		let { consts, static_vals } = _AM;
-
-		const new_tilemap_data = cloneDeep(me);
-
-		new_tilemap_data.tile_maps[tilemap_name] = Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM);
-
-		return {
-			...new_tilemap_data,
-			...Tilemap_Manager_ƒ.cleared_cache(),
-		}
-	},
-
 	clear_tile_map: (me: Tilemap_Manager_Data, tilemap_name: Tilemap_Keys, _AM: Asset_Manager_Data ): Tilemap_Manager_Data => {
 
 
