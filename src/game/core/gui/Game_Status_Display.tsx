@@ -79,8 +79,9 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 		<>{
 			_GS
 			&&
+			<>
 			<div
-				className="game_status_display"
+				className="next_turn_control centered_text"
 			>
 				<Button
 					disabled={ _GM.animation_state.is_animating_live_game }
@@ -98,16 +99,16 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 						)
 					}}
 				>
-					Next Turn
+					{`${_GM.animation_state.is_animating_live_game ? 'Playing…': 'Next Turn'}`}
 				</Button>
-				<Label_and_Data_Pair
-					label={'Turn #:'}
-					data={`${_GS.current_turn}`}
-				/>
-				<br />
-				<hr />
-				<br />
-				<>
+				<div className="annotations">
+					{`Turn: ${_GS.current_turn}`}
+				</div>
+			</div>
+			<div
+				className="game_status_display"
+			>
+				<div className="centered_text">
 				{
 					(selected_creature !== undefined ?
 						<Label_and_Data_Pair
@@ -115,22 +116,16 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_prettyprint_name()}`}
 						/> :
 						<Label_and_Data_Pair
-							label={''}
-							data={`No Unit Selected.`}
+							label={'No Unit Selected.'}
+							data={`\u00A0`}
 						/>
 					)
 				}
-				</>
-				<>
-				{
+				</div>
+				<>{
 					(selected_creature !== undefined)
-					&&
+					?
 					<>
-						<Label_and_Data_Pair
-							label={'Team:'}
-							data={`${selected_creature.team}`}
-						/>
-
 						<Tile_Palette_Element
 							asset_manager={props._Asset_Manager()}
 							tile_name={''}
@@ -146,7 +141,13 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 							handle_click={ ()=>{} }
 							canvas_size={ {x: 100, y: 100} }
 							centering_offset={ {x: 0, y: -0.6} }
-							/>
+						/>
+
+						<Label_and_Data_Pair
+							label={'Team:'}
+							data={`${selected_creature.team}`}
+						/>
+
 						<Label_and_Data_Pair
 							label={'Hitpoints:'}
 							data={`${selected_creature.current_hitpoints} / ${Creature_ƒ.get_delegate(selected_creature.type_name).yield_max_hitpoints()}`}
@@ -160,10 +161,43 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_damage()}`}
 						/>
 					</>
-				}
-				</>
 
+					:
+					<>
+						<Tile_Palette_Element
+							asset_manager={props._Asset_Manager()}
+							tile_name={''}
+							asset_list={[{
+								id: 'pedestal',
+								zorder: zorder.grass,
+							}]}
+							use_black_background={false}
+							highlight={false}
+							handle_click={ ()=>{} }
+							canvas_size={ {x: 100, y: 100} }
+							centering_offset={ {x: 0, y: -0.6} }
+						/>
+						<Label_and_Data_Pair
+							label={'Team:'}
+							data={`\u00A0`}
+						/>
+
+						<Label_and_Data_Pair
+							label={'Hitpoints:'}
+							data={`\u00A0`}
+						/>
+						<Label_and_Data_Pair
+							label={'Moves:'}
+							data={`\u00A0`}
+						/>
+						<Label_and_Data_Pair
+							label={'Damage:'}
+							data={`\u00A0`}
+						/>
+					</>
+				}</>
 			</div>
+			</>
 		}</>
 	)
 }

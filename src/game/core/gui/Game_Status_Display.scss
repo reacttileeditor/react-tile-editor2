@@ -2,7 +2,29 @@
 @import './backgrounds.scss';
 
 .master_node {
+	.centered_text {
+		text-align: center;
+	}
 
+	.next_turn_control {
+		background: #000d;
+		position: absolute;
+		right: calc(200px + 1.5rem + 5rem);
+		bottom: 2rem;
+		border: 1px solid #fffa;
+
+		background: rgba(0, 0, 0, 0.75);
+		border-radius: 0.5rem;
+		padding: 0.5rem 1.0rem;
+
+		.annotations {
+			margin-top: 1rem;
+			font-family: 'pixel';
+			font-size: 1.5rem;
+			color: white;
+		}
+
+	}
 
 	.game_status_display {
 		height: 2 * 325px;
@@ -54,7 +76,9 @@
 				border: 2px solid rgb(96,89,105);
 			}*/
 		}
+	}
 
+	.game_status_display, .next_turn_control {
 		.label_and_data_pair {
 			display: flex;
 			flex-flow: row;
@@ -73,4 +97,5 @@
 			}
 		}
 	}
+	
 }
