@@ -23,7 +23,7 @@ export const Character_Image_Data: Array<Image_Data> = [{
 	url: "characters/skeleton_warrior_stand_se.png",
 	name: "skeleton_warrior_stand_se",
 	frames: 3,
-	frame_duration: 170,
+	frame_duration: 250,
 	ping_pong: true,
 	pad: 2,
 	bounds: {
@@ -36,7 +36,7 @@ export const Character_Image_Data: Array<Image_Data> = [{
 	url: "characters/undead_javelineer_se_stand.png",
 	name: "undead_javelineer_se_stand",
 	frames: 5,
-	frame_duration: 170,
+	frame_duration: 250,
 	ping_pong: true,
 	pad: 2,
 	bounds: {

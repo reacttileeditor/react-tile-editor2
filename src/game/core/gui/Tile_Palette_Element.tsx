@@ -142,7 +142,7 @@ export const Tile_Palette_Element = (props: Props) => {
 						y: Math.floor(props.canvas_size.y/1.1)
 					},
 					zorder:						zorder.rocks,
-					current_milliseconds:		0,
+					current_milliseconds:		_BM.time_tracker.current_millisecond,
 					opacity:					1.0,
 					rotate:						0,
 					brightness:					1.0,

@@ -10,7 +10,7 @@ import { Tilemap_Metadata, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../e
 
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
-import { constrain_point_within_rect, useInterval } from "../engine/Utils";
+import { constrain_point_within_rect, is_within_rectangle, useInterval } from "../engine/Utils";
 import { Button, Divider, Drawer, Dropdown, IconButton, Input, List, Modal, RadioTile, RadioTileGroup, Tooltip, Whisper } from "rsuite";
 import { Icon, Page, Trash, Global, PeoplesCostomize, Copy } from "@rsuite/icons";
 import { BsFileEarmarkLock2, BsFileEarmark, BsClipboard2Plus } from "react-icons/bs";
@@ -962,6 +962,15 @@ export const Tooltip_Manager = (props: {
 	show_tooltip: boolean,
 }) => {
 
+	const show_tooltip = props.show_tooltip
+		&& is_within_rectangle (
+			Blit_Manager_ƒ.yield_absolute_coords_for_world_coords(
+				props._Blit_Manager(),
+				Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( props._Tilemap_Manager(), props._Asset_Manager(), props.cursor_pos)
+			),
+			Vals.default_canvas_rect
+		);
+
 	const get_tooltip_data = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): EditorTooltip_Data => ({
 		pos: constrain_point_within_rect(
 			Blit_Manager_ƒ.yield_absolute_coords_for_world_coords(
@@ -979,7 +988,7 @@ export const Tooltip_Manager = (props: {
 	});
 
 
-	return <div className={`map-tooltip-anchor`} style={{display: `${props.show_tooltip ? 'block' : 'none'}`}}>
+	return <div className={`map-tooltip-anchor`} style={{display: `${show_tooltip ? 'block' : 'none'}`}}>
 		{
 			<Map_Tooltip
 				{...get_tooltip_data( props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager())}

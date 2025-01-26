@@ -6,7 +6,7 @@ export const CT_Skeleton_ƒ: Creature_Delegate = {
 	...Creature_Delegate_Base_ƒ,
 
 	yield_moves_per_turn: () => 8,
-	yield_creature_image: () => 'skeleton-se',
+	yield_creature_image: () => 'skeleton_warrior_stand_se',
 	yield_prettyprint_name: () => 'Skeleton',
 	yield_damage: (): number => ( 2 ),
 
