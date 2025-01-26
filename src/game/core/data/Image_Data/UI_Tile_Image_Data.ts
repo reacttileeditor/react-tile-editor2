@@ -199,5 +199,17 @@ export const UI_Tile_Image_Data: Array<Image_Data> = [{
 		w: 54,
 		h: 34,
 	},
+},
+
+
+{
+	url: "pedestal.png",
+	name: "pedestal",
+	bounds: {
+		x: 0,
+		y: 0,
+		w: 64,
+		h: 67,
+	},
 }];
 	

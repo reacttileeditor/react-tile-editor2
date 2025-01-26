@@ -137,11 +137,16 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 							asset_list={[{
 								id: asset_name,
 								zorder: zorder.rocks,
+							},{
+								id: 'pedestal',
+								zorder: zorder.grass,
 							}]}
+							use_black_background={false}
 							highlight={false}
 							handle_click={ ()=>{} }
-							canvas_size={ {x: 50, y: 50} }
-						/>
+							canvas_size={ {x: 100, y: 100} }
+							centering_offset={ {x: 0, y: -0.6} }
+							/>
 						<Label_and_Data_Pair
 							label={'Hitpoints:'}
 							data={`${selected_creature.current_hitpoints} / ${Creature_ƒ.get_delegate(selected_creature.type_name).yield_max_hitpoints()}`}

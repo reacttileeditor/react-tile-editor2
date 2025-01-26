@@ -414,6 +414,7 @@ export const Blit_Manager_ƒ = {
 		}
 
 		//var bitmap = me._OffScreenBuffer.transferToImageBitmap();
+		me.ctx.clearRect( 0, 0, me.ctx.canvas.width, me.ctx.canvas.height )
 		me.ctx.drawImage(me._OffScreenBuffer, 0, 0);
 
 		
@@ -496,9 +497,10 @@ export const Blit_Manager_ƒ = {
 
 
 /*----------------------- utility draw ops -----------------------*/
-	fill_canvas_with_solid_color: ( me: Blit_Manager_Data ) => {
+	fill_canvas_with_solid_color: ( me: Blit_Manager_Data, fill_color: string ) => {
 		me.osb_ctx.save();
-	    me.osb_ctx.fillStyle = "#000000";
+	    me.osb_ctx.fillStyle = fill_color;
+		me.osb_ctx.clearRect( 0, 0, me.ctx.canvas.width, me.ctx.canvas.height )
 		me.osb_ctx.fillRect(0,0, me.ctx.canvas.width, me.ctx.canvas.height);
 		me.osb_ctx.restore();
 	},

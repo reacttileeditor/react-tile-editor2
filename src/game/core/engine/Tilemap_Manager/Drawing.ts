@@ -436,7 +436,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		cursor_pos: Point2D,
 	) => {
 		if(me.initialized){
-			Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM);
+			Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM, "#000000");
 			Tilemap_Manager_ƒ.draw_tiles(me, _AM, _BM, set_Tilemap_Manager);
 
 			if(draw_map_data_units){

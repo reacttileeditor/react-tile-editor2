@@ -445,6 +445,7 @@ export const Tile_Palette_Drawer = (props: {
 								asset_manager={props._Asset_Manager()}
 								tile_name={tile_type}
 								asset_list={[]}
+								use_black_background={true}
 								highlight={false}
 								handle_click={ ()=>{} }
 								canvas_size={ {x: 70, y: 70} }
@@ -519,9 +520,11 @@ export const Unit_Palette_Drawer = (props: {
 									id: `${Creature_ƒ.get_delegate(creature_type).yield_creature_image()}`,
 									zorder: zorder.rocks,
 								}]}
+								use_black_background={true}
 								highlight={false}
 								handle_click={ ()=>{} }
 								canvas_size={ {x: 70, y: 70} }
+								centering_offset={ {x: 0, y: -0.8} }
 							/>
 						</div>
 					),

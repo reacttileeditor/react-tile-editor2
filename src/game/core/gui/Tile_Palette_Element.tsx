@@ -17,6 +17,8 @@ interface Props {
 	asset_list: Asset_Blit_List,
 	handle_click(): void,
 	canvas_size: Point2D,
+	use_black_background: boolean,
+	centering_offset?: Point2D, 
 }
 
 
@@ -102,7 +104,14 @@ export const Tile_Palette_Element = (props: Props) => {
 		if(_BM != null && _Tilemap_Manager != null){
 			let { consts } = props.asset_manager;
 
-			Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM);
+			const centering_offset = props.centering_offset ? props.centering_offset : {x: 0, y: 0}; 
+
+			if(props.use_black_background){
+				Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM, "#000000");
+			} else {
+				Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM, "#00000000");
+
+			}
 
 			if(  _.size(props.tile_name) > 0 ){
 				let asset_data_array = Asset_Manager_ƒ.get_tile_graphics_data(props.asset_manager, props.tile_name);
@@ -118,8 +127,8 @@ export const Tile_Palette_Element = (props: Props) => {
 						asset_name:					derandomized_asset.id,
 						_BM:						_BM,
 						pos:						{
-							x: Math.floor(props.canvas_size.x/2),
-							y: Math.floor(props.canvas_size.y/2)
+							x: Math.floor(props.canvas_size.x/(2 + centering_offset.x)),
+							y: Math.floor(props.canvas_size.y/(2 + centering_offset.y))
 						},
 						zorder:						derandomized_asset.zorder,
 						current_milliseconds:		_BM.time_tracker.current_millisecond,
@@ -138,9 +147,9 @@ export const Tile_Palette_Element = (props: Props) => {
 					asset_name:					asset.id,
 					_BM:						_BM,
 					pos:						{
-						x: Math.floor(props.canvas_size.x/2),
-						y: Math.floor(props.canvas_size.y/1.1)
-					},
+						x: Math.floor(props.canvas_size.x/(2 + centering_offset.x)),
+						y: Math.floor(props.canvas_size.y/(2 + centering_offset.y))
+				},
 					zorder:						asset.zorder,
 					current_milliseconds:		_BM.time_tracker.current_millisecond,
 					opacity:					1.0,
