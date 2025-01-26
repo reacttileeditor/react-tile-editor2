@@ -21,6 +21,7 @@ import { Custom_Object_Data, Custom_Object_ƒ } from "../../objects_core/Custom_
 import Foot_Icon from '../../../assets/feet-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game_Manager } from "../engine/Game_Manager/Game_Manager";
 import { Button } from "rsuite";
+import { zorder } from "../constants/zorder";
 
 
 
@@ -133,7 +134,10 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 						<Tile_Palette_Element
 							asset_manager={props._Asset_Manager()}
 							tile_name={''}
-							asset_name={asset_name}
+							asset_list={[{
+								id: asset_name,
+								zorder: zorder.rocks,
+							}]}
 							highlight={false}
 							handle_click={ ()=>{} }
 							canvas_size={ {x: 50, y: 50} }

@@ -4,7 +4,7 @@ import _, { map } from "lodash";
 
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, New_Blit_Manager } from "../engine/Blit_Manager";
-import { New_Tilemap_Manager, Tilemap_Manager_Data } from "../engine/Tilemap_Manager/Tilemap_Manager";
+import { Asset_Blit_List, New_Tilemap_Manager, Tilemap_Manager_Data } from "../engine/Tilemap_Manager/Tilemap_Manager";
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { useInterval, ƒ } from "../engine/Utils";
@@ -14,7 +14,7 @@ interface Props {
 	asset_manager: Asset_Manager_Data,
 	highlight: boolean,
 	tile_name: string,
-	asset_name: string,
+	asset_list: Asset_Blit_List,
 	handle_click(): void,
 	canvas_size: Point2D,
 }
@@ -52,7 +52,7 @@ export const Tile_Palette_Element = (props: Props) => {
 
 			//draw_canvas();
 		}
-	}, [_Blit_Manager, props.asset_name]);
+	}, [_Blit_Manager, props.asset_list]);
 
 
 	useEffect(() => {
@@ -132,16 +132,16 @@ export const Tile_Palette_Element = (props: Props) => {
 				})
 			}
 
-			if( _.size(props.asset_name) > 0 ){
+			map(props.asset_list, (asset)=>{
 				Asset_Manager_ƒ.draw_image_for_asset_name({
 					_AM:						props.asset_manager,
-					asset_name:					props.asset_name,
+					asset_name:					asset.id,
 					_BM:						_BM,
 					pos:						{
 						x: Math.floor(props.canvas_size.x/2),
 						y: Math.floor(props.canvas_size.y/1.1)
 					},
-					zorder:						zorder.rocks,
+					zorder:						asset.zorder,
 					current_milliseconds:		_BM.time_tracker.current_millisecond,
 					opacity:					1.0,
 					rotate:						0,
@@ -149,7 +149,8 @@ export const Tile_Palette_Element = (props: Props) => {
 					horizontally_flipped:		false,
 					vertically_flipped:			false,
 				})
-			}
+			})
+
 
 
 

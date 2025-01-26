@@ -444,7 +444,7 @@ export const Tile_Palette_Drawer = (props: {
 							<Tile_Palette_Element
 								asset_manager={props._Asset_Manager()}
 								tile_name={tile_type}
-								asset_name={''}
+								asset_list={[]}
 								highlight={false}
 								handle_click={ ()=>{} }
 								canvas_size={ {x: 70, y: 70} }
@@ -515,7 +515,10 @@ export const Unit_Palette_Drawer = (props: {
 							<Tile_Palette_Element
 								asset_manager={props._Asset_Manager()}
 								tile_name={''}
-								asset_name={`${Creature_ƒ.get_delegate(creature_type).yield_creature_image()}`}
+								asset_list={[{
+									id: `${Creature_ƒ.get_delegate(creature_type).yield_creature_image()}`,
+									zorder: zorder.rocks,
+								}]}
 								highlight={false}
 								handle_click={ ()=>{} }
 								canvas_size={ {x: 70, y: 70} }
