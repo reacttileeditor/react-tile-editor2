@@ -129,13 +129,22 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 						<Tile_Palette_Element
 							asset_manager={props._Asset_Manager()}
 							tile_name={''}
-							asset_list={[{
-								id: asset_name,
-								zorder: zorder.rocks,
-							},{
-								id: 'pedestal',
-								zorder: zorder.grass,
-							}]}
+							asset_list={
+								size(asset_name) > 0
+								?
+								[{
+									id: asset_name,
+									zorder: zorder.rocks,
+								},{
+									id: 'pedestal',
+									zorder: zorder.grass,
+								}]
+								:
+								[{
+									id: 'pedestal',
+									zorder: zorder.grass,
+								}]
+							}
 							use_black_background={false}
 							highlight={false}
 							handle_click={ ()=>{} }
