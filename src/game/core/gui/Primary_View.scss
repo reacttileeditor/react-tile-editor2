@@ -10,7 +10,7 @@
 
 
 body {
-	background: #5a5458 !important;
+	background: #201c20 !important;
 
 
 }
@@ -54,8 +54,8 @@ body {
 		
 		.editor_screen, .game_screen, .loading_screen {
 			.toolbar {
-				@include stone-border;
-				@include stone-bg;
+				@include smoke-glass-border-small;
+				@include smoke-glass-bg;
 
 				display: flex;
 				flex-flow: row nowrap;
@@ -63,7 +63,7 @@ body {
 				align-items: center;
 				
 				min-height: 4rem;
-				margin-bottom: 1rem;
+				margin-bottom: 2rem;
 				padding-left: 1rem;
 
 				button {
@@ -209,7 +209,7 @@ body {
 				right: 0px;
 				width: 100%;
 				height: 100%;
-				@include stone-border;
+				@include smoke-glass-border-outset;
 
 				box-sizing: border-box;
 				box-shadow: inset 0px 5px 9px 4px rgb(0 0 0);
@@ -335,12 +335,12 @@ body {
 		.instructional_text {
 			font-family: 'pixel';
 			font-size: 1.5rem;
-			margin-top: 1rem;
+			margin-top: 2rem;
 			padding: 2rem;
 			box-sizing: content-box;
 
-			@include stone-border;
-			@include stone-bg;
+			@include smoke-glass-border-small;
+			@include smoke-glass-bg;
 		}
 
 	}

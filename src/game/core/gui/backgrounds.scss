@@ -13,4 +13,32 @@
 }
 
 
+@mixin smoke-glass-bg {
+	background: url('~/src/game/assets/gui/ui-bg-texture.png');
+	background-size: 80px 80px;
+	color:rgb(188, 190, 186)
+}
 
+@mixin smoke-glass-border-tall {
+	border-image: url('~/src/game/assets/gui/smoke-glass-border-tall.png') round;
+	border-image-slice: 20 24 16 24 fill;
+	border-image-width: 40px 48px 32px 48px;
+	border-image-outset: 10px;
+	image-rendering: pixelated;
+}
+
+@mixin smoke-glass-border-small {
+	border-image: url('~/src/game/assets/gui/smoke-glass-border-small.png') round;
+	border-image-slice: 15 17 15 17 fill;
+	border-image-width: 30px 34px 30px 34px;
+	border-image-outset: 10px;
+	image-rendering: pixelated;
+}
+
+@mixin smoke-glass-border-outset {
+	border-image: url('~/src/game/assets/gui/smoke-glass-border-outset.png') round;
+	border-image-slice: 34 24 20 24 fill;
+	border-image-width: 68px 48px 40px 48px;
+	border-image-outset: 30px;
+	image-rendering: pixelated;
+}

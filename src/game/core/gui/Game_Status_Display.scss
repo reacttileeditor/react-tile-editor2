@@ -49,8 +49,8 @@
 		button {
 			margin-bottom: 1rem;
 		}
-		@include stone-border;
-		@include stone-bg;
+		@include smoke-glass-border-tall;
+		@include smoke-glass-bg;
 
 		.tile_cell {
 			width: 200px;
