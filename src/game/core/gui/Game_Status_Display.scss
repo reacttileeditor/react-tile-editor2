@@ -18,10 +18,17 @@
 		border: 1px solid #fffa;
 
 		background: rgba(0, 0, 0, 0.75);
-		padding: 1.5rem 2.0rem 1.0rem 1.5rem;
+		padding: 1.5rem 1.5rem 1.0rem 1.5rem;
 
 		@include smoke-glass-border-small-upper-left;
 
+		button {
+			border: 3px #777;
+			border-style: outset;
+			border-radius: 0;
+			font-family: "pixel";
+			font-size: 32px;
+		}
 
 		.annotations {
 			margin-top: 1rem;
