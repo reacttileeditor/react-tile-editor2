@@ -6,16 +6,22 @@
 		text-align: center;
 	}
 
+	.game_screen {
+		position: relative;	
+	}
+
 	.next_turn_control {
 		background: #000d;
 		position: absolute;
-		right: calc(200px + 1.5rem + 5rem);
-		bottom: 2rem;
+		right: 4px;
+		bottom: 4px;
 		border: 1px solid #fffa;
 
 		background: rgba(0, 0, 0, 0.75);
-		border-radius: 0.5rem;
-		padding: 0.5rem 1.0rem;
+		padding: 1.5rem 2.0rem 1.0rem 1.5rem;
+
+		@include smoke-glass-border-small-upper-left;
+
 
 		.annotations {
 			margin-top: 1rem;

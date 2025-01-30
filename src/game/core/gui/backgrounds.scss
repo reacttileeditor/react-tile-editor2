@@ -42,3 +42,13 @@
 	border-image-outset: 30px;
 	image-rendering: pixelated;
 }
+
+
+
+@mixin smoke-glass-border-small-upper-left {
+	border-image: url('~/src/game/assets/gui/smoke-glass-border-small.png') round;
+	border-image-slice: 15 17 15 17 fill;
+	border-image-width:  30px 0px 0px 34px;
+	border-image-outset: 10px 0px 0px 10px;
+	image-rendering: pixelated;
+}

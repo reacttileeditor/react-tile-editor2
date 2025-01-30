@@ -48,10 +48,41 @@ interface Game_Status_Display_Props {
 }
 
 
+
+export const New_Turn_Controls = (props: Game_Status_Display_Props) => {
+	const _GS = props.get_Game_Manager_Data()?.game_state;
+	const _GM = props.get_Game_Manager_Data();
+
+	return <div
+		className="next_turn_control centered_text"
+	>
+		<Button
+			disabled={ _GM.animation_state.is_animating_live_game }
+			onClick={(evt)=>{
+				props.set_announcement_modal_hidden(true);
+
+				const newData = Game_Manager_ƒ.advance_turn_start(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
+
+				props.set_Game_Manager_Data(
+					newData.gm
+				)
+
+				props.set_Tilemap_Manager(
+					newData.tm
+				)
+			}}
+		>
+			{`${_GM.animation_state.is_animating_live_game ? 'Playing…': 'Next Turn'}`}
+		</Button>
+		<div className="annotations">
+			{`Turn: ${_GS.current_turn}`}
+		</div>
+	</div>
+}
+
 export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 
 	const _GS = props.get_Game_Manager_Data()?.game_state;
-	const _GM = props.get_Game_Manager_Data();
 	const [asset_name, set_asset_name] = useState<string>('');
 
 
@@ -80,31 +111,6 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 			_GS
 			&&
 			<>
-			<div
-				className="next_turn_control centered_text"
-			>
-				<Button
-					disabled={ _GM.animation_state.is_animating_live_game }
-					onClick={(evt)=>{
-						props.set_announcement_modal_hidden(true);
-
-						const newData = Game_Manager_ƒ.advance_turn_start(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
-
-						props.set_Game_Manager_Data(
-							newData.gm
-						)
-
-						props.set_Tilemap_Manager(
-							newData.tm
-						)
-					}}
-				>
-					{`${_GM.animation_state.is_animating_live_game ? 'Playing…': 'Next Turn'}`}
-				</Button>
-				<div className="annotations">
-					{`Turn: ${_GS.current_turn}`}
-				</div>
-			</div>
 			<div
 				className="game_status_display"
 			>

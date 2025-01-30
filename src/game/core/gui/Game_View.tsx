@@ -123,7 +123,7 @@ import Distance_Icon from '../../assets/distance-icon.png';
 import Left_Click_Icon from '../../assets/left-click-icon.png';
 import Right_Click_Icon from '../../assets/right-click-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, Game_and_Tilemap_Manager_Data, New_Game_Manager } from "../engine/Game_Manager/Game_Manager";
-import { Game_Status_Display } from "./Game_Status_Display";
+import { Game_Status_Display, New_Turn_Controls } from "./Game_Status_Display";
 import { Announcement_Modal } from "./Announcement_Modal";
 import { Button } from "rsuite";
 import { Standard_Input_ƒ } from "./Standard_Input_Handling";
@@ -293,23 +293,35 @@ export const Game_View = (props: Game_View_Props) => {
 			</Button>
 		</div>
 		<div className="game_node">
-			<Canvas_View
-				assets_loaded={props.assets_loaded}
-				connect_context_to_blit_manager={props.connect_context_to_blit_manager}
-				_Tilemap_Manager={props._Tilemap_Manager()}
-				dimensions={props.dimensions}
-				handle_canvas_click={handle_canvas_mouse_click}
-				handle_canvas_keys_down={game_handle_canvas_keys_down}
-				handle_canvas_mouse_move={handle_canvas_mouse_move}
-			/>
-			<Tooltip_Manager
-				announcement_modal_hidden={announcement_modal_hidden}
-				get_Game_Manager_Data={props.get_Game_Manager_Data}
-				_Asset_Manager={props._Asset_Manager}
-				_Blit_Manager={props._Blit_Manager}
-				_Tilemap_Manager={props._Tilemap_Manager}
-				render_ticktock={render_ticktock}
-			/>
+			<div className="game_screen">
+				<Canvas_View
+					assets_loaded={props.assets_loaded}
+					connect_context_to_blit_manager={props.connect_context_to_blit_manager}
+					_Tilemap_Manager={props._Tilemap_Manager()}
+					dimensions={props.dimensions}
+					handle_canvas_click={handle_canvas_mouse_click}
+					handle_canvas_keys_down={game_handle_canvas_keys_down}
+					handle_canvas_mouse_move={handle_canvas_mouse_move}
+				/>
+				<Tooltip_Manager
+					announcement_modal_hidden={announcement_modal_hidden}
+					get_Game_Manager_Data={props.get_Game_Manager_Data}
+					_Asset_Manager={props._Asset_Manager}
+					_Blit_Manager={props._Blit_Manager}
+					_Tilemap_Manager={props._Tilemap_Manager}
+					render_ticktock={render_ticktock}
+				/>
+				<New_Turn_Controls
+					set_announcement_modal_hidden={set_announcement_modal_hidden}
+					get_Game_Manager_Data={props.get_Game_Manager_Data}
+					set_Game_Manager_Data={props.set_Game_Manager_Data}
+					_Asset_Manager={props._Asset_Manager}
+					_Blit_Manager={props._Blit_Manager}
+					_Tilemap_Manager={props._Tilemap_Manager}
+					set_Tilemap_Manager={props.set_Tilemap_Manager}
+					render_ticktock={render_ticktock}
+				/>
+			</div>			
 			<Announcement_Modal
 				announcement_modal_hidden={announcement_modal_hidden}
 				set_announcement_modal_hidden={set_announcement_modal_hidden}
