@@ -127,6 +127,38 @@ export const Character_Image_Data: Array<Image_Data> = [{
 		h: 158,
 	},
 },{
+	url: "characters/human_hermit_ne_stand.png",
+	name: "human_hermit_ne_stand",
+},{
+	url: "characters/human_hermit_se_stand.png",
+	name: "human_hermit_se_stand",
+},{
+	url: "characters/human_hermit_se_walk.png",
+	name: "human_hermit_se_walk",
+	frames: 8,
+	frame_duration: 100,
+	ping_pong: false,
+	pad: 2,
+	bounds: {
+		x: 0,
+		y: 0,
+		w: 68,
+		h: 116,
+	},
+},{
+	url: "characters/human_hermit_se_walk.png",
+	name: "human_hermit_ne_walk",
+	frames: 8,
+	frame_duration: 100,
+	ping_pong: false,
+	pad: 2,
+	bounds: {
+		x: 0,
+		y: 0,
+		w: 68,
+		h: 116,
+	},
+},{
 	url: "characters/undead_javelineer_se_attack.png",
 	name: "undead_javelineer_se_attack",
 	frames: 12,

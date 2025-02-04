@@ -1,4 +1,5 @@
 import { Creature_Delegate, Creature_Delegate_Base_ƒ } from "../../../objects_core/Creature/Creature_Delegate";
+import { Direction } from "../../engine/Tilemap_Manager/Tilemap_Manager";
 
 export const CT_Hermit_ƒ: Creature_Delegate = {
 	...Creature_Delegate_Base_ƒ,
@@ -7,4 +8,27 @@ export const CT_Hermit_ƒ: Creature_Delegate = {
 	yield_creature_image: () => 'hermit',
 	yield_prettyprint_name: () => 'Hermit',
 	yield_weapon_range: () => 3,
+
+	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction: Direction):string => (
+		{
+			'north_east':	'human_hermit_ne_stand',
+			'north_west':	'human_hermit_ne_stand',
+			'east':			'human_hermit_ne_stand',
+			'south_east':	'human_hermit_se_stand',
+			'west':			'human_hermit_se_stand',
+			'south_west':	'human_hermit_se_stand',	
+		}[direction]
+	),
+
+
+	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction: Direction):string => (
+		{
+			'north_east':	'human_hermit_ne_walk',
+			'north_west':	'human_hermit_ne_walk',
+			'east':			'human_hermit_ne_walk',
+			'south_east':	'human_hermit_se_walk',
+			'west':			'human_hermit_se_walk',
+			'south_west':	'human_hermit_se_walk',	
+		}[direction]
+	),	
 }
