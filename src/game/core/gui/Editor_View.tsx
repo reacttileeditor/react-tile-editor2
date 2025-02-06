@@ -6,12 +6,12 @@ import { Canvas_View, Mouse_Button_State } from "./Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
-import { Tilemap_Metadata, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager/Tilemap_Manager";
+import { Tilemap_Metadata, Tilemap_Manager_Data, Tilemap_Manager_ƒ, Directions, Direction } from "../engine/Tilemap_Manager/Tilemap_Manager";
 
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { constrain_point_within_rect, is_within_rectangle, useInterval } from "../engine/Utils";
-import { Button, Divider, Drawer, Dropdown, IconButton, Input, List, Modal, RadioTile, RadioTileGroup, Tooltip, Whisper } from "rsuite";
+import { Button, Divider, Drawer, Dropdown, IconButton, Input, List, Modal, RadioTile, RadioTileGroup, Slider, Tooltip, Whisper } from "rsuite";
 import { Icon, Page, Trash, Global, PeoplesCostomize, Copy } from "@rsuite/icons";
 import { BsFileEarmarkLock2, BsFileEarmark, BsClipboard2Plus } from "react-icons/bs";
 import { GiPerspectiveDiceSixFacesOne, GiSpatter } from "react-icons/gi";
@@ -21,7 +21,7 @@ import "./Editor_View.scss";
 import { Standard_Input_ƒ } from "./Standard_Input_Handling";
 import { Creature_Type_Name, Creature_ƒ } from "../../objects_core/Creature/Creature";
 import { Game_Manager_ƒ } from "../engine/Game_Manager/Game_Manager";
-import { includes, map } from "ramda";
+import { includes, indexOf, map } from "ramda";
 import { Map_Generation_ƒ } from "../engine/Map_Generation";
 import { Tile_Name } from "../data/Tile_Types";
 import { Vals } from "../constants/Constants";
@@ -470,6 +470,12 @@ export const Unit_Palette_Drawer = (props: {
 }) => {
 
 
+	const [direction, _set_direction] = useState<Direction>('south_east');
+
+	const set_direction = (input: number) => {
+		_set_direction( Directions[input]);
+	}
+
 
 
 	const creature_list: Array<Creature_Type_Name> = Creature_ƒ.list_all_creature_types();
@@ -502,6 +508,25 @@ export const Unit_Palette_Drawer = (props: {
 						[1,2,3])
 					}
 				</Dropdown>
+			</div>
+			<div className="team-selection">
+				<Slider
+					min={0}
+					max={Directions.length - 1}
+					value={indexOf(direction, Directions)}
+					className="team-slider"
+					handleStyle={{
+					borderRadius: 10,
+					color: '#fff',
+					fontSize: 12,
+					width: 32,
+					height: 22
+					}}
+					graduated
+					tooltip={false}
+					handleTitle={direction}
+					onChange={set_direction}
+				/>
 			</div>
 			<div className="unit-palette">
 				{

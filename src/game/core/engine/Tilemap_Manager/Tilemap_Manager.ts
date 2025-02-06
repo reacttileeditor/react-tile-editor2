@@ -91,6 +91,14 @@ export type Direction =
 	'west' |
 	'south_west';
 
+export const Directions: Array<Direction> = [
+	'north_east',
+	'east',
+	'south_east',
+	'north_west',
+	'west',
+	'south_west'
+];
 
 
 
