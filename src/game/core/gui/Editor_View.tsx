@@ -62,6 +62,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 	const [show_unit_palette_drawer, set_show_unit_palette_drawer] = useState<boolean>(false);
 	const [selected_creature_type, set_selected_creature_type] = useState<Creature_Type_Name>('hermit');
+	const [selected_creature_direction, set_selected_creature_direction] = useState<Direction>('south_east');
 	const [selected_creature_team, set_selected_creature_team] = useState<number>(1);
 	const [selected_tool, set_selected_tool] = useState<Editor_Tool_Types>('tiles');
 
@@ -182,6 +183,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 				Tilemap_Manager_ƒ.add_creature_at_pos(props._Tilemap_Manager(), {
 					type_name: selected_creature_type,
 					pos: Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
+					direction: selected_creature_direction,
 					team: selected_creature_team,
 				})
 			);
@@ -369,6 +371,8 @@ export const Editor_View = (props: Editor_View_Props) => {
 				set_show_unit_palette_drawer={set_show_unit_palette_drawer}
 				selected_creature_type={selected_creature_type}
 				set_selected_creature_type={set_selected_creature_type}
+				selected_creature_direction={selected_creature_direction}
+				set_selected_creature_direction={set_selected_creature_direction}
 				selected_creature_team={selected_creature_team}
 				set_selected_creature_team={set_selected_creature_team}
 				_Asset_Manager={props._Asset_Manager}
@@ -464,16 +468,16 @@ export const Unit_Palette_Drawer = (props: {
 	set_show_unit_palette_drawer: Dispatch<SetStateAction<boolean>>,
 	selected_creature_type: Creature_Type_Name,
 	set_selected_creature_type: Dispatch<SetStateAction<Creature_Type_Name>>,
+	selected_creature_direction: Direction,
+	set_selected_creature_direction: Dispatch<SetStateAction<Direction>>,
 	selected_creature_team: number,
 	set_selected_creature_team: Dispatch<SetStateAction<number>>,
 	_Asset_Manager: () => Asset_Manager_Data,
 }) => {
 
 
-	const [direction, _set_direction] = useState<Direction>('south_east');
-
 	const set_direction = (input: number) => {
-		_set_direction( Directions[input]);
+		props.set_selected_creature_direction( Directions[input]);
 	}
 
 
@@ -513,7 +517,7 @@ export const Unit_Palette_Drawer = (props: {
 				<Slider
 					min={0}
 					max={Directions.length - 1}
-					value={indexOf(direction, Directions)}
+					value={indexOf(props.selected_creature_direction, Directions)}
 					className="team-slider"
 					handleStyle={{
 					borderRadius: 10,
@@ -524,7 +528,7 @@ export const Unit_Palette_Drawer = (props: {
 					}}
 					graduated
 					tooltip={false}
-					handleTitle={direction}
+					handleTitle={props.selected_creature_direction}
 					onChange={set_direction}
 				/>
 			</div>

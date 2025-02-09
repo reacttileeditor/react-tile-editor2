@@ -658,7 +658,8 @@ export const second_level = {
 				"x": 1,
 				"y": 5
 			},
-			"team": 1
+			"team": 1,
+			"direction": "south_east"
 		},
 		{
 			"type_name": "human_footman",
@@ -666,7 +667,8 @@ export const second_level = {
 				"x": 2,
 				"y": 8
 			},
-			"team": 1
+			"team": 1,
+			"direction": "south_east"
 		},
 		{
 			"type_name": "skeleton",
@@ -674,7 +676,8 @@ export const second_level = {
 				"x": 5,
 				"y": 8
 			},
-			"team": 2
+			"team": 2,
+			"direction": "south_east"
 		},
 		{
 			"type_name": "skeleton",
@@ -682,7 +685,8 @@ export const second_level = {
 				"x": 5,
 				"y": 5
 			},
-			"team": 2
+			"team": 2,
+			"direction": "south_east"
 		},
 		{
 			"type_name": "undead_javelineer",
@@ -690,7 +694,8 @@ export const second_level = {
 				"x": 7,
 				"y": 5
 			},
-			"team": 2
+			"team": 2,
+			"direction": "south_east"
 		}
 	]
 }

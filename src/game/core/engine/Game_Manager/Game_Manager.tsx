@@ -89,6 +89,7 @@ export type Creature_Map_Instance = {
 	pos: Point2D,
 	type_name: Creature_Type_Name,
 	team: number,
+	direction: Direction,
 }
 
 
@@ -126,6 +127,7 @@ export const New_Game_Manager = (p: {
 			get_BM: p._Blit_Manager,
 			get_TM: p._Tilemap_Manager,
 			pos: creature.pos,
+			direction: creature.direction,
 			type_name: creature.type_name,
 			team: creature.team,
 		})
@@ -176,6 +178,7 @@ export const Game_Manager_ƒ = {
 		pos: Point2D,
 		type_name: Creature_Type_Name,
 		team: number,
+		direction: Direction
 	}): Creature_Data => {
 		return New_Creature({
 			get_GM_instance: p.get_GM,
@@ -184,6 +187,7 @@ export const Game_Manager_ƒ = {
 			_Blit_Manager: p.get_BM,
 			_Tilemap_Manager: p.get_TM,
 			planned_tile_pos: p.pos,
+			direction: p.direction,
 			type_name: p.type_name,
 			team: p.team,
 			creation_timestamp: 0,
