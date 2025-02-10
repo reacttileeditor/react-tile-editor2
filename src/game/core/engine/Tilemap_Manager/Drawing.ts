@@ -460,7 +460,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				_BM:						_BM,
 				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me, _AM, val.pos),
 				zorder:						zorder.rocks,
-				current_milliseconds:		0,
+				current_milliseconds:		ticks_to_ms(_BM.time_tracker.current_tick),
 				opacity:					1.0,
 				rotate:						0,
 				brightness:					isEqual(cursor_pos, val.pos) ? 1.0 + 0.75 * Math.sin( _BM.time_tracker.current_tick * 0.2) : 1.0,
