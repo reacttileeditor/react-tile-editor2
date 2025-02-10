@@ -456,7 +456,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		map( me.creature_list, (val,idx) => {
 			Asset_Manager_ƒ.draw_image_for_asset_name({
 				_AM:						_AM,
-				asset_name:					Creature_ƒ.get_delegate(val.type_name).yield_creature_image(),
+				asset_name:					Creature_ƒ.get_delegate(val.type_name).yield_stand_asset_for_direction(Creature_ƒ.get_delegate(val.type_name), val.direction),
 				_BM:						_BM,
 				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me, _AM, val.pos),
 				zorder:						zorder.rocks,
@@ -464,7 +464,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				opacity:					1.0,
 				rotate:						0,
 				brightness:					isEqual(cursor_pos, val.pos) ? 1.0 + 0.75 * Math.sin( _BM.time_tracker.current_tick * 0.2) : 1.0,
-				horizontally_flipped:		false,
+				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.direction),
 				vertically_flipped:			false,
 			})
 		})
