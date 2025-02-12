@@ -146,7 +146,7 @@ export const Character_Image_Data: Array<Image_Data> = [{
 		h: 116,
 	},
 },{
-	url: "characters/human_hermit_se_walk.png",
+	url: "characters/human_hermit_ne_walk.png",
 	name: "human_hermit_ne_walk",
 	frames: 8,
 	frame_duration: 100,
