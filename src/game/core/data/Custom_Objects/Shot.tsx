@@ -84,7 +84,8 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 			spawnees: [],
 		}
 	},
-	yield_asset: () => 'arrow_placeholder',
+	//yield_asset: () => 'arrow_placeholder',
+	yield_asset: () => 'arcane_shot',
 
 	should_be_removed: (
 		me: Custom_Object_Data<CO_Shot_State>,

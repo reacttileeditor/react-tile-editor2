@@ -36,5 +36,18 @@ export const Misc_Image_Data: Array<Image_Data> = [{
 },{
 	url: "hit_star.png",
 	name: "hit_star",
+},{
+	url: "effects/particles2.png",
+	name: "arcane_shot",
+	frames: 5,
+	frame_duration: 30,
+	ping_pong: true,
+	pad: 3,
+	bounds: {
+		x: 1,
+		y: 210,
+		w: 15,
+		h: 15,
+	},
 }];
 	
