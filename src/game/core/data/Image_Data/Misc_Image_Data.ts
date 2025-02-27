@@ -49,5 +49,18 @@ export const Misc_Image_Data: Array<Image_Data> = [{
 		w: 15,
 		h: 15,
 	},
+},{
+	url: "effects/particles2.png",
+	name: "arcane_shot_particle",
+	frames: 8,
+	frame_duration: 30,
+	ping_pong: true,
+	pad: 3,
+	bounds: {
+		x: 1,
+		y: 228,
+		w: 7,
+		h: 7,
+	},
 }];
 	

@@ -2,7 +2,7 @@
 
 import { zorder } from "../../constants/zorder";
 import { Change_Instance } from "../../../objects_core/Creature/Creature";
-import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
+import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../../../objects_core/Custom_Object/Custom_Object";
 import { Custom_Object_Delegate, Custom_Object_Delegate_Base_ƒ, Custom_Object_Update } from "../../../objects_core/Custom_Object/Custom_Object_Delegate";
 import { Point2D } from "../../../interfaces";
 import { cloneDeep } from "lodash";
@@ -71,8 +71,23 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 			visual_rotate_angle = 90 + visual_rotate_angle * 180 / Math.PI ;
 			console.error(visual_rotate_angle)
 
+
 		}
 
+		const spawnees: Array<Custom_Object_Data<unknown>> = [];
+
+		if(lifetime_tick == 1){
+			spawnees.push(New_Custom_Object({
+				accessors: Custom_Object_ƒ.get_accessors(me),
+				pixel_pos: me.pixel_pos,
+				type_name: 'text_label',
+				creation_timestamp: tick,
+				text: `dude`,
+				parent_id: me.unique_id,
+				delegate_state: {},
+			}));
+		}
+				
 		return {
 			data: {
 				...Custom_Object_ƒ.get_base_object_state(me),
@@ -81,7 +96,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 				delegate_state: _prior_delegate_state,
 			},
 			change_list: [],
-			spawnees: [],
+			spawnees: spawnees,
 		}
 	},
 	//yield_asset: () => 'arrow_placeholder',

@@ -50,8 +50,9 @@ export type Base_Object_Data =
 	Base_Object_Accessors;
 
 export type Base_Object_Statics = {
-	unique_id: string;
 	creation_timestamp: number,
+	unique_id: string;
+	parent_id?: string;
 }
 
 export type Base_Object_State = {
@@ -79,6 +80,7 @@ export const New_Custom_Object = <Delegate_State_Type>(
 		//base object statics
 		creation_timestamp?: number,
 		unique_id?: string,
+		parent_id?: string,
 
 		//base object state
 		pixel_pos?: Point2D,
@@ -103,8 +105,9 @@ export const New_Custom_Object = <Delegate_State_Type>(
 		_Tilemap_Manager: p.accessors._Tilemap_Manager,
 
 		//static values
-		unique_id: p.unique_id ?? uuid(),
 		creation_timestamp: p.creation_timestamp ?? 0,
+		unique_id: p.unique_id ?? uuid(),
+		parent_id: p.parent_id ?? undefined,
 
 		//state	
 		pixel_pos: cloneDeep(p.pixel_pos) ?? {x:0, y: 0},  //TODO use TM

@@ -10,15 +10,22 @@ import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manage
 import { Base_Object_Data, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "./Custom_Object";
 import { filter, map, without } from "ramda";
 import { add_points } from "../../core/engine/Utils";
+import { cloneDeep } from "lodash";
  
 
 export const Custom_Object_ƒ_Processing = {
 /*----------------------- movement -----------------------*/
 
-	process_single_frame: (me: Custom_Object_Data<unknown>, _Tilemap_Manager: Tilemap_Manager_Data, offset_in_ms: number, tick: number): {
+	process_single_frame: (
+		me: Custom_Object_Data<unknown>,
+		_Tilemap_Manager: Tilemap_Manager_Data,
+		offset_in_ms: number,
+		tick: number,
+		parent_object: Custom_Object_Data<unknown> | undefined,
+	): {
 		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data<unknown>>,
-		new_object: Custom_Object_Data<unknown>
+		new_object: Custom_Object_Data<unknown>,
 	} => {
 
 		if( me.accel.y !== 0){
@@ -30,6 +37,10 @@ export const Custom_Object_ƒ_Processing = {
 		};
 		if( me.accel.y !== 0){
 			//debugger;
+		}
+
+		if( parent_object !== undefined ){
+			me_after_physics.pixel_pos = cloneDeep(parent_object.pixel_pos)
 		}
 
 		const processed_results = Custom_Object_ƒ.get_delegate(me_after_physics.type_name).process_single_frame(
