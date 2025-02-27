@@ -21,9 +21,10 @@ import { CO_Hit_Star_BG_ƒ, CO_Hit_Star_State } from "../../core/data/Custom_Obj
 import { CO_Hit_Spark_State, CO_Hit_Spark_ƒ } from "../../core/data/Custom_Objects/Hit_Spark";
 import { Custom_Object_ƒ_Accessors } from "./Accessors";
 import { Custom_Object_ƒ_Processing } from "./Processing";
+import { CO_Particle_System_ƒ } from "../../core/data/Custom_Objects/Particle_System";
  
 
-export type Custom_Object_Type_Name = 'shot' | 'text_label' | 'skull_icon' | 'hit_star_bg' | 'hit_spark' ;
+export type Custom_Object_Type_Name = 'shot' | 'text_label' | 'skull_icon' | 'hit_star_bg' | 'hit_spark' | 'particle_system' ;
 
 export type Custom_Object_Data<Delegate_State_Type> = {
 	type_name: Custom_Object_Type_Name,
@@ -149,6 +150,7 @@ export const Custom_Object_ƒ = {
 			skull_icon: CO_Skull_Icon_ƒ,
 			hit_star_bg: CO_Hit_Star_BG_ƒ,
 			hit_spark: CO_Hit_Spark_ƒ,
+			particle_system: CO_Particle_System_ƒ,
 		}[type_name];
 	},
 

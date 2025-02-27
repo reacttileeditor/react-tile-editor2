@@ -22,30 +22,19 @@ export const CO_Particle_System_ƒ: Custom_Object_Delegate<CO_Particle_System_St
 		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data<unknown>>,
 	} => {
-		const _prior_delegate_state = me.delegate_state;
-
-		console.log('process hit spark', _prior_delegate_state.angle)
-				
-		const magnitude = 2.5;
-		const gravity = 0;
-		let addend = {
-			x: Math.cos(_prior_delegate_state.angle) * magnitude,
-			y: Math.sin(_prior_delegate_state.angle) * magnitude + gravity
-		};
 
 
 		return {
 			data: {
 				...Custom_Object_ƒ.get_base_object_state(me),
-				pixel_pos: {x: me.pixel_pos.x + addend.x, y: me.pixel_pos.y + addend.y},
 				delegate_state: me.delegate_state,
 			},
 			change_list: [],
 			spawnees: [],
 		}
 	},
-	yield_asset: () => 'red_dot',
+	yield_asset: () => 'deaths_head',
 	yield_zorder: () => zorder.fx,
-	time_to_live: () => 15,
+	time_to_live: () => 40,
 }
 

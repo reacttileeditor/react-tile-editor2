@@ -73,9 +73,11 @@ do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM:
 		let all_objects = concat( cloneDeep(me.game_state.custom_object_list), cloneDeep(spawnees));
 		let all_objects_processed_data = map( all_objects, (val,idx) => {
 			let parent_object: Custom_Object_Data<unknown> | undefined = undefined;
-			
+
 			if(val.parent_id !== undefined){
 				parent_object = find(all_objects, (obj)=>(obj.unique_id == val.parent_id));
+
+				console.error(parent_object?.type_name);
 			}
 
 			return (Custom_Object_ƒ.process_single_frame(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM), tick, parent_object))

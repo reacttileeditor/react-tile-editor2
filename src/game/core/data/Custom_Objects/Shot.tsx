@@ -69,7 +69,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 
 			visual_rotate_angle = Math.atan2(  next_pos.y - prior_pos.y , next_pos.x - prior_pos.x )
 			visual_rotate_angle = 90 + visual_rotate_angle * 180 / Math.PI ;
-			console.error(visual_rotate_angle)
+			//console.error(visual_rotate_angle)
 
 
 		}
@@ -80,14 +80,14 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 			spawnees.push(New_Custom_Object({
 				accessors: Custom_Object_ƒ.get_accessors(me),
 				pixel_pos: me.pixel_pos,
-				type_name: 'text_label',
+				type_name: 'particle_system',
 				creation_timestamp: tick,
-				text: `dude`,
+				text: ``,
 				parent_id: me.unique_id,
 				delegate_state: {},
 			}));
 		}
-				
+
 		return {
 			data: {
 				...Custom_Object_ƒ.get_base_object_state(me),
