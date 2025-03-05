@@ -35,6 +35,6 @@ export const CO_Particle_System_ƒ: Custom_Object_Delegate<CO_Particle_System_St
 	},
 	yield_asset: () => 'deaths_head',
 	yield_zorder: () => zorder.fx,
-	time_to_live: () => 40,
+	time_to_live: () => 400,
 }
 

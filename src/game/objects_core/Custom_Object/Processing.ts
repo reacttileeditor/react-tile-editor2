@@ -62,7 +62,7 @@ export const Custom_Object_ƒ_Processing = {
 		map( (val)=>{
 			val.command(change_list, spawnees);
 
-			console.warn( change_list, spawnees )
+			//console.warn( change_list, spawnees )
 		}, current_events );
 
 
@@ -91,6 +91,7 @@ export const Custom_Object_ƒ_Processing = {
 				),
 				text: me.text,
 				unique_id: me.unique_id,
+				parent_id: me.parent_id,
 				scheduled_events: scheduled_events,
 				delegate_state: processed_data.delegate_state,
 			})
