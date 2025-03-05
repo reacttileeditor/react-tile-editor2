@@ -25,6 +25,9 @@ export const Creature_ƒ_Behavior = {
 
 /*----------------------- movement -----------------------*/
 	calculate_current_walk_anim_segment: (me: Creature_Data, _TM: Tilemap_Manager_Data, path_data: Path_Data, initial_time_so_far: number = 0): Anim_Schedule_Element|undefined => {
+		/*
+			To be clear; this is JUST one tile long; just the hop between two adjacent tiles.
+		*/
 		var time_so_far = initial_time_so_far;
 
 		const first_tile = first(path_data.path_reachable_this_turn_with_directions);
@@ -44,7 +47,15 @@ export const Creature_ƒ_Behavior = {
 		);
 	},
 
+	guess_anim_pos_at_time_offset: (me: Creature_Data, _TM: Tilemap_Manager_Data, path_data: Path_Data, time_so_far: number): Point2D|undefined => {
 
+		const duration_per_tile_walked = 300;
+		const tile_offset = Math.floor( time_so_far / duration_per_tile_walked);
+
+		const truncated_tile_offset = Math.min( size(path_data.path_reachable_this_turn_with_directions), tile_offset );
+
+		return path_data.path_reachable_this_turn_with_directions[truncated_tile_offset].position;
+	},
 
 
 
