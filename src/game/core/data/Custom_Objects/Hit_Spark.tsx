@@ -24,7 +24,7 @@ export const CO_Hit_Spark_ƒ: Custom_Object_Delegate<CO_Hit_Spark_State> = {
 	} => {
 		const _prior_delegate_state = me.delegate_state;
 
-		console.log('process hit spark', _prior_delegate_state.angle)
+		//console.log('process hit spark', _prior_delegate_state.angle)
 				
 		const magnitude = 2.5;
 		const gravity = 0;

@@ -5,7 +5,7 @@ import { Point2D, Rectangle } from '../../interfaces';
 import { Change_Instance, Creature_Type_Name } from "../Creature/Creature";
 import { Custom_Object_Delegate, Custom_Object_Delegate_States} from "./Custom_Object_Delegate";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";
-import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
+import { Blit_Manager_Data, ticks_to_ms } from "../../core/engine/Blit_Manager";
 import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manager";
 import { Base_Object_Accessors, Base_Object_Data, Base_Object_State, Custom_Object_Data, Custom_Object_ƒ } from "./Custom_Object";
  
@@ -47,5 +47,14 @@ export const Custom_Object_ƒ_Accessors = {
 	yield_zorder: (me: Custom_Object_Data<unknown>) => (
 		Custom_Object_ƒ.get_delegate(me.type_name).yield_zorder()
 	),
+
+	get_lifetime_tick: (me: Custom_Object_Data<unknown>, tick: number): number => (
+		tick - me.creation_timestamp 
+	),
+
+	get_lifetime_ms: (me: Custom_Object_Data<unknown>, current_ms: number): number => (
+		current_ms - ticks_to_ms(me.creation_timestamp) 
+	), 
+
 }
 

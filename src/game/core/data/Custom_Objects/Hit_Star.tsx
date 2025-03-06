@@ -28,9 +28,9 @@ export const CO_Hit_Star_BG_ƒ: Custom_Object_Delegate<CO_Hit_Star_State> = {
 		spawnees: Array<Custom_Object_Data<unknown>>,
 	} => {
 		const _prior_delegate_state = me.delegate_state as CO_Hit_Star_State;
-		console.log('process hit star', _prior_delegate_state.angle)
+		//console.log('process hit star', _prior_delegate_state.angle)
 
-		const local_tick = tick - me.creation_timestamp; 
+		const local_tick = Custom_Object_ƒ.get_lifetime_tick(me, tick); 
 
 		const spawnees = (local_tick == 0 ? map(range(3), (val) => (
 				New_Custom_Object({

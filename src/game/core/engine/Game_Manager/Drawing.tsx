@@ -99,7 +99,10 @@ export const Game_Manager_ƒ_Drawing = {
 				_BM:						_BM,
 				pos:						val.pixel_pos,
 				zorder:						Custom_Object_ƒ.yield_zorder(val),
-				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
+				current_milliseconds:		Custom_Object_ƒ.get_lifetime_ms(
+					val,
+					Game_Manager_ƒ.get_time_offset(me, _BM)
+				),
 				opacity:					1.0,
 				rotate:						val.rotate,
 				brightness:					1.0,
@@ -113,7 +116,10 @@ export const Game_Manager_ƒ_Drawing = {
 				_AM:						_AM,
 				pos:						val.pixel_pos,
 				zorder:						Custom_Object_ƒ.yield_zorder(val),
-				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
+				current_milliseconds:		Custom_Object_ƒ.get_lifetime_ms(
+					val,
+					Game_Manager_ƒ.get_time_offset(me, _BM)
+				),
 				opacity:					1.0,
 				rotate:						0,
 				brightness:					1.0,
@@ -170,7 +176,10 @@ export const Game_Manager_ƒ_Drawing = {
 					_BM:						_BM,
 					pos:						val.pixel_pos,
 					zorder:						Custom_Object_ƒ.yield_zorder(val),
-					current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
+					current_milliseconds:		Custom_Object_ƒ.get_lifetime_ms(
+						val,
+						Game_Manager_ƒ.get_time_offset(me, _BM)
+					),
 					opacity:					1.0,
 					rotate:						val.rotate,
 					brightness:					1.0,
@@ -184,7 +193,10 @@ export const Game_Manager_ƒ_Drawing = {
 					_AM:						_AM,
 					pos:						val.pixel_pos,
 					zorder:						Custom_Object_ƒ.yield_zorder(val),
-					current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
+					current_milliseconds:		Custom_Object_ƒ.get_lifetime_ms(
+													val,
+													Game_Manager_ƒ.get_time_offset(me, _BM)
+												),
 					opacity:					1.0,
 					rotate:						val.rotate,
 					brightness:					1.0,
