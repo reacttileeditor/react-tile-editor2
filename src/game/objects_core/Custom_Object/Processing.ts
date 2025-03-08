@@ -41,15 +41,6 @@ export const Custom_Object_ƒ_Processing = {
 		if( parent_object !== undefined ){
 			me_after_physics.pixel_pos = cloneDeep(parent_object.pixel_pos)
 
-			if( parent_object.should_remove ){
-				/*
-					We handle "breaking the link with our parent" by nulling out the parent_id field.
-					Because we don't skip processing any frames, even though this would only be true for one frame, it should consistently always work.
-				*/
-
-				debugger;
-				parent_id = undefined;
-			}
 		}
 
 /*----------------------- base values -----------------------*/
