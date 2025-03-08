@@ -12,6 +12,7 @@ export const CO_Skull_Icon_ƒ: Custom_Object_Delegate<{}> = {
 	process_single_frame: (
 		me: Custom_Object_Data<{}>,
 		tick: number,
+		parent_object: Custom_Object_Data<unknown> | undefined,
 	): {
 		data: Custom_Object_Update<{}>,
 		change_list: Array<Change_Instance>,

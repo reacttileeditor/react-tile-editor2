@@ -35,15 +35,28 @@ export const Custom_Object_ƒ_Processing = {
 		};
 
 
-/*----------------------- parent position pinning -----------------------*/
+/*----------------------- parent handling -----------------------*/
+		let parent_id = me.parent_id;
+
 		if( parent_object !== undefined ){
 			me_after_physics.pixel_pos = cloneDeep(parent_object.pixel_pos)
+
+			if( parent_object.should_remove ){
+				/*
+					We handle "breaking the link with our parent" by nulling out the parent_id field.
+					Because we don't skip processing any frames, even though this would only be true for one frame, it should consistently always work.
+				*/
+
+				debugger;
+				parent_id = undefined;
+			}
 		}
 
 /*----------------------- base values -----------------------*/
 		const processed_results = Custom_Object_ƒ.get_delegate(me_after_physics.type_name).process_single_frame(
 			me_after_physics,
 			tick,
+			parent_object
 		);
 
 		const processed_data = processed_results.data;
@@ -83,14 +96,15 @@ export const Custom_Object_ƒ_Processing = {
 				type_name: me.type_name,
 				is_done_with_turn: false, //isEmpty(scheduled_events),
 				creation_timestamp: me.creation_timestamp,
-				should_remove: Custom_Object_ƒ.get_delegate(me.type_name).should_be_removed(
+				should_remove: Custom_Object_ƒ.get_delegate(me.type_name)._should_be_removed(
 					me,
+					parent_object,
 					tick,
 					offset_in_ms
 				),
 				text: me.text,
 				unique_id: me.unique_id,
-				parent_id: me.parent_id,
+				parent_id: parent_id,
 				scheduled_events: scheduled_events,
 				delegate_state: processed_data.delegate_state,
 			})

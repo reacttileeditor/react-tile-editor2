@@ -30,14 +30,23 @@ export type Custom_Object_Delegate<Delegate_State_Type> = {
 	process_single_frame: (
 		me: Custom_Object_Data<Delegate_State_Type>,
 		tick: number,
+		parent_object: Custom_Object_Data<unknown> | undefined,
 	) => {
 		data: Custom_Object_Update<Delegate_State_Type>,
 		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data<unknown>>,
 	},
 
+	_should_be_removed: (
+		me: Custom_Object_Data<Delegate_State_Type>,
+		parent_object: Custom_Object_Data<unknown> | undefined,
+		tick: number,
+		offset_in_ms: number,
+	) => boolean,	
+	
 	should_be_removed: (
 		me: Custom_Object_Data<Delegate_State_Type>,
+		parent_object: Custom_Object_Data<unknown> | undefined,
 		tick: number,
 		offset_in_ms: number,
 	) => boolean,
@@ -62,6 +71,7 @@ export const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate<unknown> = {
 	process_single_frame: (
 		me: Custom_Object_Data<unknown>,
 		tick: number,
+		parent_object: Custom_Object_Data<unknown> | undefined,
 	): {
 		data: Custom_Object_Update<unknown>,
 		change_list: Array<Change_Instance>,
@@ -78,8 +88,9 @@ export const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate<unknown> = {
 		}
 	},
 
-	should_be_removed: (
+	_should_be_removed: (
 		me: Custom_Object_Data<unknown>,
+		parent_object: Custom_Object_Data<unknown> | undefined,
 		tick: number,
 		offset_in_ms: number,
 	) => {
@@ -93,9 +104,20 @@ export const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate<unknown> = {
 				&&
 				(tick - me.creation_timestamp) > ms_to_ticks(me.animation_length)
 			)
-			?
-			true
-			:
+			||
+			Custom_Object_ƒ.get_delegate(me.type_name).should_be_removed(me, parent_object, tick, offset_in_ms)
+		)
+	},
+
+	should_be_removed: (
+		me: Custom_Object_Data<unknown>,
+		parent_object: Custom_Object_Data<unknown> | undefined,
+		tick: number,
+		offset_in_ms: number,
+	) => {
+
+
+		return (
 			false
 		)
 	},

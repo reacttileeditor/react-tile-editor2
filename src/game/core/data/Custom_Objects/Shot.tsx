@@ -24,6 +24,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 	process_single_frame: (
 		me: Custom_Object_Data<CO_Shot_State>,
 		tick: number,
+		parent_object: Custom_Object_Data<unknown> | undefined,
 	): {
 		data: Custom_Object_Update<CO_Shot_State>,
 		change_list: Array<Change_Instance>,
@@ -104,6 +105,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 
 	should_be_removed: (
 		me: Custom_Object_Data<CO_Shot_State>,
+		parent_object: Custom_Object_Data<unknown> | undefined,
 		tick: number,
 		offset_in_ms: number,
 	) => {

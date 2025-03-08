@@ -17,6 +17,7 @@ export const CO_Hit_Spark_ƒ: Custom_Object_Delegate<CO_Hit_Spark_State> = {
 	process_single_frame: (
 		me: Custom_Object_Data<CO_Hit_Spark_State>,
 		tick: number,
+		parent_object: Custom_Object_Data<unknown> | undefined,
 	): {
 		data: Custom_Object_Update<CO_Hit_Spark_State>,
 		change_list: Array<Change_Instance>,

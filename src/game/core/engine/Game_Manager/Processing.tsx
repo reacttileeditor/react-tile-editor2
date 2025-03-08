@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { cloneDeep, concat, filter, find, findIndex, isEmpty, isEqual, isNil, isNumber, last, map, reduce, size, toArray, uniq } from "lodash";
-import { includes } from "ramda"
+import { includes, sort } from "ramda"
 
 import { constrain_point_within_rect, ƒ } from "../Utils";
 
@@ -71,6 +71,11 @@ do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM:
 			Add the new custom_objects to our existing list, and then process all custom_objects (existing and new).
 		*/
 		let all_objects = concat( cloneDeep(me.game_state.custom_object_list), cloneDeep(spawnees));
+		// let all_objects_sorted = sort((a,b)=>(
+		// 	((a.parent_id !== undefined) ? 1 : -1) +  
+		// 	((b.parent_id !== undefined) ? -1 : 1) 
+		// ), all_objects )
+
 		let all_objects_processed_data = map( all_objects, (val,idx) => {
 			let parent_object: Custom_Object_Data<unknown> | undefined = undefined;
 
@@ -150,6 +155,11 @@ do_paused_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _A
 	const tick = me.animation_state.processing_tick;
 
 	let all_objects = cloneDeep(me.game_state.custom_object_list);
+	// let all_objects_sorted = sort((a,b)=>(
+	// 	((a.parent_id !== undefined) ? 1 : -1) +  
+	// 	((b.parent_id !== undefined) ? -1 : 1) 
+	// ), all_objects )
+
 	let all_objects_processed_data = map( all_objects, (val,idx) => {
 		let parent_object: Custom_Object_Data<unknown> | undefined = undefined;
 

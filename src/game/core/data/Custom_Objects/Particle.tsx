@@ -17,6 +17,7 @@ export const CO_Particle_ƒ: Custom_Object_Delegate<CO_Particle_State> = {
 	process_single_frame: (
 		me: Custom_Object_Data<CO_Particle_State>,
 		tick: number,
+		parent_object: Custom_Object_Data<unknown> | undefined,
 	): {
 		data: Custom_Object_Update<CO_Particle_State>,
 		change_list: Array<Change_Instance>,

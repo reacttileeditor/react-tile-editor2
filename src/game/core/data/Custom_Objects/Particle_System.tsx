@@ -17,6 +17,7 @@ export const CO_Particle_System_ƒ: Custom_Object_Delegate<CO_Particle_System_St
 	process_single_frame: (
 		me: Custom_Object_Data<CO_Particle_System_State>,
 		tick: number,
+		parent_object: Custom_Object_Data<unknown> | undefined,
 	): {
 		data: Custom_Object_Update<CO_Particle_System_State>,
 		change_list: Array<Change_Instance>,
@@ -50,5 +51,17 @@ export const CO_Particle_System_ƒ: Custom_Object_Delegate<CO_Particle_System_St
 	yield_asset: () => 'deaths_head',
 	yield_zorder: () => zorder.fx,
 	time_to_live: () => 400,
+
+	should_be_removed: (
+		me: Custom_Object_Data<unknown>,
+		parent_object,
+		tick: number,
+		offset_in_ms: number,
+	) => {
+
+		return (
+			parent_object === undefined
+		)
+	},
 }
 
