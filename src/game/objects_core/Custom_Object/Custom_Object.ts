@@ -12,7 +12,7 @@ import { Change_Instance, Creature_Type_Name } from "../Creature/Creature";
 import { Custom_Object_Delegate, Custom_Object_Delegate_States} from "./Custom_Object_Delegate";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";
 import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
-import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ } from "../../core/engine/Asset_Manager/Asset_Manager";
 import { filter, isEmpty, map, without } from "ramda";
 import { CO_Shot_State, CO_Shot_ƒ } from "../../core/data/Custom_Objects/Shot";
 import { CO_Text_Label_ƒ } from "../../core/data/Custom_Objects/Text_Label";
@@ -55,6 +55,7 @@ export type Base_Object_Statics = {
 	creation_timestamp: number,
 	unique_id: string;
 	parent_id?: string;
+	animation_length: number,
 }
 
 export type Base_Object_State = {
@@ -98,6 +99,11 @@ export const New_Custom_Object = <Delegate_State_Type>(
 		delegate_state: Delegate_State_Type,
 	}
 ): Custom_Object_Data<Delegate_State_Type> => {
+	//TODO:  we don't sufficiently handle the possibility of us having multiple animation variants of differing length here
+	const animation_length = Asset_Manager_ƒ.get_animation_lengths_for_asset(
+		p.accessors._Asset_Manager(),
+		Custom_Object_ƒ.get_delegate(p.type_name).yield_asset()
+	)[0];
 
 	return {
 		//accessors
@@ -110,6 +116,7 @@ export const New_Custom_Object = <Delegate_State_Type>(
 		creation_timestamp: p.creation_timestamp ?? 0,
 		unique_id: p.unique_id ?? uuid(),
 		parent_id: p.parent_id ?? undefined,
+		animation_length: animation_length,
 
 		//state	
 		pixel_pos: cloneDeep(p.pixel_pos) ?? {x:0, y: 0},  //TODO use TM

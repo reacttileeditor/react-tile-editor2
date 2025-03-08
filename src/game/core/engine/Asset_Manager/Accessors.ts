@@ -91,6 +91,21 @@ export const Accessors = {
 		}
 	},
 
+/*----------------------- asset data accessors -----------------------*/
+	get_animation_lengths_for_asset: (
+		_AM: Asset_Manager_Data,
+		asset_name: string,
+	): Array<number> =>{
+		if(asset_name !== 'omit_image'){
+			return Asset_Manager_ƒ.calculate_animation_durations(
+				Asset_Manager_ƒ.get_data_for_asset_name(_AM, asset_name)
+			)
+		} else {
+			return [0];
+		}
+	},
+
+
 /*----------------------- object info -----------------------*/
 	get_image_data_for_object: (me: Asset_Manager_Data, image_name: string):Image_Data|undefined => {
 		let { image_data_list } = me.static_vals;

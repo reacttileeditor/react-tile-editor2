@@ -15,6 +15,7 @@ import { Base_Object_State, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Obj
 import { Vals } from "../../core/constants/Constants";
 import { CO_Shot_State } from "../../core/data/Custom_Objects/Shot";
 import { CO_Hit_Star_State } from "../../core/data/Custom_Objects/Hit_Star";
+import { ms_to_ticks } from "../../core/engine/Blit_Manager";
 
 
 export type Custom_Object_Delegate_States = {} | CO_Shot_State | CO_Hit_Star_State;
@@ -44,6 +45,10 @@ export type Custom_Object_Delegate<Delegate_State_Type> = {
 	yield_asset: () => string,
 	yield_zorder: () => number,
 	time_to_live: () => number,
+
+	should_remove_at_animation_end: (
+		me: Custom_Object_Data<Delegate_State_Type>,
+	) => boolean,
 }
 
 
@@ -78,7 +83,21 @@ export const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate<unknown> = {
 		tick: number,
 		offset_in_ms: number,
 	) => {
-		return ƒ.if( (tick - me.creation_timestamp) > Custom_Object_ƒ.get_delegate(me.type_name).time_to_live(), true, false )
+
+
+		return (
+			((tick - me.creation_timestamp) > Custom_Object_ƒ.get_delegate(me.type_name).time_to_live())
+			||
+			(
+				Custom_Object_ƒ.get_delegate(me.type_name).should_remove_at_animation_end(me)
+				&&
+				(tick - me.creation_timestamp) > ms_to_ticks(me.animation_length)
+			)
+			?
+			true
+			:
+			false
+		)
 	},
 	
 	time_to_live: () => 300,
@@ -91,6 +110,10 @@ export const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate<unknown> = {
 	yield_zorder: () => (
 		zorder.characters
 	),
+
+	should_remove_at_animation_end: (me: Custom_Object_Data<unknown>) => (
+		false
+	),	
 }
 
 

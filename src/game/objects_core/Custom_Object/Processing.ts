@@ -28,21 +28,19 @@ export const Custom_Object_ƒ_Processing = {
 		new_object: Custom_Object_Data<unknown>,
 	} => {
 
-		if( me.accel.y !== 0){
-			//debugger;
-		}
+/*----------------------- physics -----------------------*/
 		const me_after_physics = {
 			...me,
 			...Custom_Object_ƒ.process_physics(me),
 		};
-		if( me.accel.y !== 0){
-			//debugger;
-		}
 
+
+/*----------------------- parent position pinning -----------------------*/
 		if( parent_object !== undefined ){
 			me_after_physics.pixel_pos = cloneDeep(parent_object.pixel_pos)
 		}
 
+/*----------------------- base values -----------------------*/
 		const processed_results = Custom_Object_ƒ.get_delegate(me_after_physics.type_name).process_single_frame(
 			me_after_physics,
 			tick,
@@ -53,6 +51,7 @@ export const Custom_Object_ƒ_Processing = {
 		const change_list: Array<Change_Instance> = processed_results.change_list;
 		const spawnees: Array<Custom_Object_Data<unknown>> = processed_results.spawnees;
 
+/*----------------------- scheduled events -----------------------*/
 		let scheduled_events = me_after_physics.scheduled_events;
 		
 		let current_events = filter( (val)=>(
@@ -70,7 +69,7 @@ export const Custom_Object_ƒ_Processing = {
 
 
 
-
+/*----------------------- final object -----------------------*/
 		const final_values = { 
 			change_list: change_list,
 			spawnees: spawnees,

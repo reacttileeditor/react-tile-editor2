@@ -56,5 +56,8 @@ export const Custom_Object_ƒ_Accessors = {
 		current_ms - ticks_to_ms(me.creation_timestamp) 
 	), 
 
+	should_remove_at_animation_end: (me: Custom_Object_Data<unknown>) => (
+		Custom_Object_ƒ.get_delegate(me.type_name).should_remove_at_animation_end(me)
+	),
 }
 
