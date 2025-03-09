@@ -24,7 +24,6 @@ export const CO_Particle_ƒ: Custom_Object_Delegate<CO_Particle_State> = {
 		spawnees: Array<Custom_Object_Data<unknown>>,
 	} => {
 
-
 		return {
 			data: {
 				...Custom_Object_ƒ.get_base_object_state(me),
@@ -36,7 +35,7 @@ export const CO_Particle_ƒ: Custom_Object_Delegate<CO_Particle_State> = {
 	},
 	yield_asset: () => 'arcane_shot_particle',
 	yield_zorder: () => zorder.fx,
-	time_to_live: () => 400,
+	time_to_live: () => 1000,
 	should_remove_at_animation_end: (me: Custom_Object_Data<unknown>) => (
 		true
 	),	

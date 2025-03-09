@@ -57,12 +57,12 @@ interface Blit_Manager_State {
 
 
 export const ticks_to_ms = (tick_val: number): number => (
-	Math.round( tick_val * (1000 / 60))
+	Math.floor( tick_val * (1000 / 60))
 )
 
 
 export const ms_to_ticks = (ms_val: number): number => (
-	Math.round( ms_val * (60 / 1000))
+	Math.floor( ms_val * (60 / 1000))
 )
 
 
