@@ -9,6 +9,7 @@ import { cloneDeep } from "lodash";
 import { angle_between, ƒ } from "../../engine/Utils";
 import { Vals } from "../../constants/Constants";
 import { Game_Manager_ƒ } from "../../engine/Game_Manager/Game_Manager";
+import { CO_Particle_System_State } from "./Particle_System";
 
 
 
@@ -78,14 +79,16 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 		const spawnees: Array<Custom_Object_Data<unknown>> = [];
 
 		if(lifetime_tick == 1){
-			spawnees.push(New_Custom_Object({
+			spawnees.push(New_Custom_Object<CO_Particle_System_State>({
 				accessors: Custom_Object_ƒ.get_accessors(me),
 				pixel_pos: me.pixel_pos,
 				type_name: 'particle_system',
 				creation_timestamp: tick,
 				text: ``,
 				parent_id: me.unique_id,
-				delegate_state: {},
+				delegate_state: {
+					spawn_rate_overflow: 0,
+				},
 			}));
 		}
 

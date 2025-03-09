@@ -5,11 +5,14 @@ import { Change_Instance } from "../../../objects_core/Creature/Creature";
 import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../../../objects_core/Custom_Object/Custom_Object";
 import { Custom_Object_Delegate, Custom_Object_Delegate_Base_ƒ, Custom_Object_Update } from "../../../objects_core/Custom_Object/Custom_Object_Delegate";
 import * as Utils from "../../engine/Utils";
+import { map, range } from "ramda";
+import { CO_Particle_State } from "./Particle";
+import { size } from "lodash";
 
 
 
 export type CO_Particle_System_State = {
-	angle: number,
+	spawn_rate_overflow: number,
 }
 
 export const CO_Particle_System_ƒ: Custom_Object_Delegate<CO_Particle_System_State> = {
@@ -24,14 +27,18 @@ export const CO_Particle_System_ƒ: Custom_Object_Delegate<CO_Particle_System_St
 		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data<unknown>>,
 	} => {
-		const lifetime_tick = (tick - me.creation_timestamp);
-
 		const spawnees: Array<Custom_Object_Data<unknown>> = [];
+		const lifetime_tick = (tick - me.creation_timestamp);
+		const spawn_angle = Utils.degrees_to_radians( Utils.dice(360) );
+		const momentum = Utils.dice(20) / 15.0;
+		const spawn_rate = 0.2; //per frame
 
-		if(lifetime_tick % 2 == 0){
-			const spawn_angle = Utils.degrees_to_radians( Utils.dice(360) );
-			const momentum = Utils.dice(20) / 15.0;
+		/*
+			For the spawn rate, we need to be able to handle fractional values, because it turns out a hugely desirable problem space lies in the 0-2 particles-per-frame amount.   What we do is floor the value, and pass on the fractional part as an addend for the next frame's amount.
+		*/
+		const cumulative_spawn_amount = spawn_rate + me.delegate_state.spawn_rate_overflow;
 
+		map( (val)=>{
 			spawnees.push(New_Custom_Object({
 				accessors: Custom_Object_ƒ.get_accessors(me),
 				pixel_pos: me.pixel_pos,
@@ -41,12 +48,14 @@ export const CO_Particle_System_ƒ: Custom_Object_Delegate<CO_Particle_System_St
 				velocity: {x: momentum * Math.cos(spawn_angle), y: momentum * Math.cos(spawn_angle)},
 				delegate_state: {},
 			}));
-		}		
+		}, range( 0, Math.floor(cumulative_spawn_amount) ) );
 
 		return {
 			data: {
 				...Custom_Object_ƒ.get_base_object_state(me),
-				delegate_state: me.delegate_state,
+				delegate_state: {
+					spawn_rate_overflow: cumulative_spawn_amount - Math.floor(cumulative_spawn_amount),
+				},
 			},
 			change_list: [],
 			spawnees: spawnees,
