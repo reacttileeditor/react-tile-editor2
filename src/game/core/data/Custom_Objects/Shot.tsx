@@ -88,6 +88,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 				parent_id: me.unique_id,
 				delegate_state: {
 					spawn_rate_overflow: 0,
+					particle_type_name: 'arcane',
 				},
 			}));
 		}

@@ -10,9 +10,30 @@ import { CO_Particle_State } from "./Particle";
 import { size } from "lodash";
 
 
+export type Particle_System_Data = {
+	spawn_angle_width: number,
+	spawn_rate: number,
+	momentum: number,
+	momentum_delta: number,
+}
+
+export const Particle_Type_Data: { [k: string]: Particle_System_Data } = {
+	arcane: {
+		spawn_angle_width: 360,
+		spawn_rate: 0.2,
+		momentum: 1/15,
+		momentum_delta: 20,
+	}
+}
+
+//type Particle_Types = { [k: string]: Particle_System_Data }
+
+//export type Particle_Type_Names = keyof Particle_Types;
+export type Particle_Type_Names = (keyof typeof Particle_Type_Data)
 
 export type CO_Particle_System_State = {
 	spawn_rate_overflow: number,
+	particle_type_name: Particle_Type_Names,
 }
 
 export const CO_Particle_System_ƒ: Custom_Object_Delegate<CO_Particle_System_State> = {
@@ -27,6 +48,9 @@ export const CO_Particle_System_ƒ: Custom_Object_Delegate<CO_Particle_System_St
 		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data<unknown>>,
 	} => {
+
+		const particle_data = Particle_Type_Data[me.delegate_state.particle_type_name];
+
 		const spawnees: Array<Custom_Object_Data<unknown>> = [];
 		const lifetime_tick = (tick - me.creation_timestamp);
 		const spawn_angle = Utils.degrees_to_radians( Utils.dice(360) );
@@ -55,6 +79,7 @@ export const CO_Particle_System_ƒ: Custom_Object_Delegate<CO_Particle_System_St
 				...Custom_Object_ƒ.get_base_object_state(me),
 				delegate_state: {
 					spawn_rate_overflow: cumulative_spawn_amount - Math.floor(cumulative_spawn_amount),
+					particle_type_name: me.delegate_state.particle_type_name
 				},
 			},
 			change_list: [],
