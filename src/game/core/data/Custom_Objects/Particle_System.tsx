@@ -52,10 +52,9 @@ export const CO_Particle_System_ƒ: Custom_Object_Delegate<CO_Particle_System_St
 		const particle_data = Particle_Type_Data[me.delegate_state.particle_type_name];
 
 		const spawnees: Array<Custom_Object_Data<unknown>> = [];
-		const lifetime_tick = (tick - me.creation_timestamp);
-		const spawn_angle = Utils.degrees_to_radians( Utils.dice(360) );
-		const momentum = Utils.dice(20) / 15.0;
-		const spawn_rate = 0.2; //per frame
+		const spawn_angle = Utils.degrees_to_radians( Utils.dice( particle_data.spawn_angle_width ) );
+		const momentum = Utils.dice( particle_data.momentum_delta ) * particle_data.momentum;
+		const spawn_rate = particle_data.spawn_rate; //per frame
 
 		/*
 			For the spawn rate, we need to be able to handle fractional values, because it turns out a hugely desirable problem space lies in the 0-2 particles-per-frame amount.   What we do is floor the value, and pass on the fractional part as an addend for the next frame's amount.
