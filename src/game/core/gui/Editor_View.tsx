@@ -31,6 +31,7 @@ import { Edit_Metadata_Modal } from "./Editor_Components/Edit_Metadata_Modal";
 import { Generate_Map_Modal } from "./Editor_Components/Generate_Map_Modal";
 import { Tile_Palette_Drawer } from "./Editor_Components/Tile_Palette_Drawer";
 import { Unit_Palette_Drawer } from "./Editor_Components/Unit_Palette_Drawer";
+import { Editor_Tooltip_Manager } from "./Editor_Components/Editor_Tooltip_Manager";
 
 
 interface Editor_View_Props {
@@ -401,7 +402,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			{
 				render_tick > 0
 				&&
-				<Tooltip_Manager
+				<Editor_Tooltip_Manager
 					cursor_pos={tile_cursor_pos}
 					show_tooltip={true}
 					_Asset_Manager={props._Asset_Manager}
@@ -422,71 +423,3 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 
 
-
-
-
-export type EditorTooltip_Data = {
-	pos: Point2D,
-	tile_pos: Point2D,
-	tile_name: string,
-};
-
-export const Tooltip_Manager = (props: {
-	cursor_pos: Point2D,
-	_Asset_Manager: () => Asset_Manager_Data,
-	_Blit_Manager: () => Blit_Manager_Data,
-	_Tilemap_Manager: () => Tilemap_Manager_Data,
-	render_ticktock: boolean,
-	show_tooltip: boolean,
-}) => {
-
-	const show_tooltip = props.show_tooltip
-		&& is_within_rectangle (
-			Blit_Manager_ƒ.yield_absolute_coords_for_world_coords(
-				props._Blit_Manager(),
-				Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( props._Tilemap_Manager(), props._Asset_Manager(), props.cursor_pos)
-			),
-			Vals.default_canvas_rect
-		);
-
-	const get_tooltip_data = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): EditorTooltip_Data => ({
-		pos: constrain_point_within_rect(
-			Blit_Manager_ƒ.yield_absolute_coords_for_world_coords(
-				_BM,
-				Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, _AM, props.cursor_pos)
-			),
-			Vals.default_canvas_rect
-		),
-		tile_pos: props.cursor_pos, //Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, props.cursor_pos ),
-		tile_name: Tilemap_Manager_ƒ.get_tile_name_for_pos(
-			_TM,
-			props.cursor_pos, //Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, props.cursor_pos ),
-			'terrain',
-		),
-	});
-
-
-	return <div className={`map-tooltip-anchor`} style={{display: `${show_tooltip ? 'block' : 'none'}`}}>
-		{
-			<Map_Tooltip
-				{...get_tooltip_data( props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager())}
-			/>
-		}
-	</div>
-}
-
-const Map_Tooltip = (props: EditorTooltip_Data) => {
-
-
-
-	return <div
-		className="map-tooltip"
-		style={{
-			left: `${props.pos.x * 2}px`,
-			top: `${props.pos.y * 2}px`
-		}}
-	>
-		<div className="data-row">{`${props.tile_pos.x}, ${props.tile_pos.y}`}</div>
-		<div className="data-row">{`${props.tile_name}`}</div>
-	</div>
-}

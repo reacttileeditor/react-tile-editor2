@@ -16,7 +16,6 @@ import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Cha
 
 import { Point2D, Rectangle } from '../../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
-import { Tooltip_Data } from "../../gui/Game_View";
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
 import { Game_Manager_Data, Game_Manager_ƒ, Game_and_Tilemap_Manager_Data } from "./Game_Manager";

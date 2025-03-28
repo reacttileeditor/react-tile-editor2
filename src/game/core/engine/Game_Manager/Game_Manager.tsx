@@ -16,13 +16,13 @@ import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Cha
 
 import { Point2D, Rectangle } from '../../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
-import { Tooltip_Data } from "../../gui/Game_View";
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
 import { Game_Manager_ƒ_Drawing } from "./Drawing";
 import { Game_Manager_ƒ_State_Management } from "./State_Management";
 import { Game_Manager_ƒ_Accessors } from "./Accessors";
 import { Game_Manager_ƒ_Processing } from "./Processing";
+import { Game_Tooltip_Data } from "../../gui/Game_Components/Game_Tooltip_Manager";
 
 interface Game_View_Props {
 	_Asset_Manager: () => Asset_Manager_Data,
@@ -81,7 +81,7 @@ export type Game_Manager_Data = {
 	animation_state: Animation_State;
 	game_state: Game_State;
 	update_game_state_for_ui: Function;
-	update_tooltip_state: (p: Tooltip_Data) => void;
+	update_tooltip_state: (p: Game_Tooltip_Data) => void;
 	cursor_pos: Point2D;
 }
 
@@ -165,7 +165,7 @@ export const Game_Manager_ƒ = {
  		me.update_game_state_for_ui = func;
 	},
 
-	set_tooltip_update_function: (me: Game_Manager_Data, func: (p: Tooltip_Data) => void) => {
+	set_tooltip_update_function: (me: Game_Manager_Data, func: (p: Game_Tooltip_Data) => void) => {
 		me.update_tooltip_state = func;
 	},
 

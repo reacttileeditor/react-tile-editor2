@@ -16,10 +16,10 @@ import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Cha
 
 import { Point2D, Rectangle } from '../../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
-import { Tooltip_Data } from "../../gui/Game_View";
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
 import { Game_Manager_Data, Game_Manager_ƒ, Game_State, Individual_Game_Turn_State, Individual_Game_Turn_State_Init, Objective_Types } from "./Game_Manager";
+import { Game_Tooltip_Data } from "../../gui/Game_Components/Game_Tooltip_Manager";
 
 export const Game_Manager_ƒ_Accessors = {
 
@@ -62,7 +62,7 @@ write_full_objective_text: (me: Game_Manager_Data, objective_type: Objective_Typ
 
 /*----------------------- GUI values -----------------------*/
 
-get_tooltip_data: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Tooltip_Data => {
+get_tooltip_data: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_Tooltip_Data => {
 	const constrained_pos = constrain_point_within_rect(me.cursor_pos, Vals.default_canvas_rect);
 
 	const tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, constrained_pos )
