@@ -15,7 +15,7 @@ import { Standard_Input_ƒ } from "./Standard_Input_Handling";
 import { Button } from "rsuite";
 import { Game_Tooltip_Manager } from "./Game_Components/Game_Tooltip_Manager";
 import { Game_Status_Display, New_Turn_Controls } from "./Game_Components/Game_Status_Display";
-import { Announcement_Modal } from "./Announcement_Modal";
+import { Announcement_Modal } from "./Game_Components/Announcement_Modal";
 
 
 
