@@ -31,6 +31,9 @@ export const Misc_Image_Data: Array<Image_Data> = [{
 	url: "deaths_head.png",
 	name: "deaths_head",
 },{
+	url: "target.png",
+	name: "target_indicator",
+},{
 	url: "arrow_placeholder.png",
 	name: "arrow_placeholder",
 },{

@@ -93,6 +93,17 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 			}));
 		}
 
+		if(lifetime_tick == 1){
+			spawnees.push(New_Custom_Object<{}>({
+				accessors: Custom_Object_ƒ.get_accessors(me),
+				pixel_pos: me.pixel_pos,
+				type_name: 'target_indicator',
+				creation_timestamp: tick,
+				text: ``,
+				delegate_state: {},
+			}));
+		}
+
 		return {
 			data: {
 				...Custom_Object_ƒ.get_base_object_state(me),
