@@ -52,9 +52,13 @@ export const Creature_ƒ_Behavior = {
 		const duration_per_tile_walked = 300;
 		const tile_offset = Math.floor( time_so_far / duration_per_tile_walked);
 
-		const truncated_tile_offset = Math.min( size(path_data.path_reachable_this_turn_with_directions), tile_offset );
+		const truncated_tile_offset = Math.min( Math.max(size(path_data.path_reachable_this_turn_with_directions) - 1, 0), tile_offset );
 
-		return path_data.path_reachable_this_turn_with_directions[truncated_tile_offset].position;
+		if( truncated_tile_offset == 0 ){
+			return me.tile_pos;
+		} else {
+			return path_data.path_reachable_this_turn_with_directions[truncated_tile_offset].position;
+		}
 	},
 
 

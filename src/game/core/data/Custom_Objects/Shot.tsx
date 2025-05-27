@@ -1,7 +1,7 @@
 
 
 import { zorder } from "../../constants/zorder";
-import { Change_Instance } from "../../../objects_core/Creature/Creature";
+import { Change_Instance, Creature_ƒ } from "../../../objects_core/Creature/Creature";
 import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../../../objects_core/Custom_Object/Custom_Object";
 import { Custom_Object_Delegate, Custom_Object_Delegate_Base_ƒ, Custom_Object_Update } from "../../../objects_core/Custom_Object/Custom_Object_Delegate";
 import { Point2D } from "../../../interfaces";
@@ -10,6 +10,7 @@ import { angle_between, ƒ } from "../../engine/Utils";
 import { Vals } from "../../constants/Constants";
 import { Game_Manager_ƒ } from "../../engine/Game_Manager/Game_Manager";
 import { CO_Particle_System_State } from "./Particle_System";
+import { Tilemap_Manager_ƒ } from "../../engine/Tilemap_Manager/Tilemap_Manager";
 
 
 
@@ -44,6 +45,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 		let next_pos = cloneDeep(original_pos);
 
 		let visual_rotate_angle = me.rotate;
+		let probable_target_pos: Point2D | undefined = undefined;
 
 		if(target){
 			const target_pos = target.pixel_pos;
@@ -74,7 +76,20 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 			//console.error(visual_rotate_angle)
 
 
+			const accessors = Creature_ƒ.get_accessors(target);
+			const probable_target_pos_tile = Creature_ƒ.guess_anim_pos_at_time_offset(target, accessors._Tilemap_Manager(), target.path_data, Vals.shot_flight_duration);
+
+			probable_target_pos = probable_target_pos_tile
+				?
+				Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
+					accessors._Tilemap_Manager(),
+					accessors._Asset_Manager(),
+					probable_target_pos_tile
+				)
+				:
+				next_pos;	
 		}
+
 
 		const spawnees: Array<Custom_Object_Data<unknown>> = [];
 
@@ -93,10 +108,10 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 			}));
 		}
 
-		if(lifetime_tick == 1){
+		if(lifetime_tick == 1 && probable_target_pos){
 			spawnees.push(New_Custom_Object<{}>({
 				accessors: Custom_Object_ƒ.get_accessors(me),
-				pixel_pos: me.pixel_pos,
+				pixel_pos: probable_target_pos,
 				type_name: 'target_indicator',
 				creation_timestamp: tick,
 				text: ``,
