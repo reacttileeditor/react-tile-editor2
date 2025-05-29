@@ -57,6 +57,7 @@ export const Creature_ƒ_Behavior = {
 		if( truncated_tile_offset == 0 ){
 			return me.tile_pos;
 		} else {
+			//console.log(`path size: ${size(path_data.path_reachable_this_turn_with_directions)}, index: ${tile_offset}`)
 			return path_data.path_reachable_this_turn_with_directions[truncated_tile_offset].position;
 		}
 	},
