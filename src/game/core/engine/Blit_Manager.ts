@@ -48,6 +48,8 @@ type Draw_Data_Types = Draw_Data_Image_With_Bounds|Draw_Data_Image_With_No_Bound
 
 
 interface Blit_Manager_State {
+	last_scroll_tick: number,
+	last_scroll_initiation_tick: number,
 	//we've got two values here - we do a "intended" value for the viewport, but when we change the current camera position, we actually tween towards it gradually.  The current position we're *actually* aimed at gets stored in a different variable, since it either has to be derived from some sort of tweening function, or directly stored (if we did the tweeing function, the time-offset certainly would have to, so dimensionally this at least will always require one dimension of data storage).
 	intended_viewport_offset: Point2D,
 	actual_viewport_offset: Point2D,
@@ -121,6 +123,8 @@ export const New_Blit_Manager = ( ctx: CanvasRenderingContext2D, dimensions: Poi
 		},
 
 		state: {
+			last_scroll_tick: 0,
+			last_scroll_initiation_tick: 0,
 			viewport_tween_progress: 0,
 			intended_viewport_offset: {x: 0, y: 0},
 			actual_viewport_offset: {x: 0, y: 0},
@@ -138,36 +142,93 @@ export const Blit_Manager_ƒ = {
 	},
 
 /*----------------------- state manipulation -----------------------*/
-	adjust_viewport_pos: ( me: Blit_Manager_Data, x: number, y: number): Blit_Manager_Data => {
+	/*
+		If we try to start scrolling, record the time at which we started, and record the last moment we actually scrolled.  Only start moving once a delay has been elapsed.
+	*/
+
+	viewport_debounce_test: (me: Blit_Manager_Data): boolean => {
+		const condition_past_delay = (me.state.last_scroll_tick - me.state.last_scroll_initiation_tick > 20);
+		const condition_not_just_started = (me.state.last_scroll_tick == me.time_tracker.current_tick - 1);
+
+		console.error(condition_past_delay, condition_not_just_started, me.state.last_scroll_tick - me.state.last_scroll_initiation_tick);
+		return (
+			condition_past_delay && condition_not_just_started
+		)
+	},
+
+	get_viewport_debounce_values: (me: Blit_Manager_Data): {
+		last_scroll_tick: number,
+		last_scroll_initiation_tick: number,
+	} => {
+
 		return {
-			...cloneDeep(me),
-			state: {
-				viewport_tween_progress: (
-					me.state.viewport_tween_progress == 1.0 
-					?
-					0.0
-					:
-					me.state.viewport_tween_progress * 0.3
-				),
-				intended_viewport_offset: {
-					x: me.state.intended_viewport_offset.x + x,
-					y: me.state.intended_viewport_offset.y + y
-				},
-				actual_viewport_offset: me.state.actual_viewport_offset,
-				viewport_velocity: me.state.viewport_velocity,
+			last_scroll_tick: me.time_tracker.current_tick,
+
+			/*
+				If we're exactly 1 frame further than the last scroll frame, we're "continuously scrolling", so leave this value alone.  If we're any other value, we've started a new scroll, so change it to the current tick.
+			*/
+			last_scroll_initiation_tick: me.state.last_scroll_tick == me.time_tracker.current_tick - 1
+				?
+				me.state.last_scroll_initiation_tick
+				:
+				me.time_tracker.current_tick,
+		}
+	},
+
+
+	adjust_viewport_pos: ( me: Blit_Manager_Data, x: number, y: number): Blit_Manager_Data => {
+
+		if( Blit_Manager_ƒ.viewport_debounce_test(me) ){
+			return {
+				...cloneDeep(me),
+				state: {
+					...Blit_Manager_ƒ.get_viewport_debounce_values(me),
+					viewport_tween_progress: (
+						me.state.viewport_tween_progress == 1.0 
+						?
+						0.0
+						:
+						me.state.viewport_tween_progress * 0.3
+					),
+					intended_viewport_offset: {
+						x: me.state.intended_viewport_offset.x + x,
+						y: me.state.intended_viewport_offset.y + y
+					},
+					actual_viewport_offset: me.state.actual_viewport_offset,
+					viewport_velocity: me.state.viewport_velocity,
+				}
+			}
+		} else {
+			return {
+				...cloneDeep(me),
+				state: {
+					...me.state,
+					...Blit_Manager_ƒ.get_viewport_debounce_values(me),
+				}
 			}
 		}
 	},
 
 	add_viewport_velocity: ( me: Blit_Manager_Data, x: number, y: number): Blit_Manager_Data => {
-		return {
-			...cloneDeep(me),
-			state: {
-				...me.state,
-				viewport_velocity: {
-					x: me.state.viewport_velocity.x + x,
-					y: me.state.viewport_velocity.y + y
-				}				
+		if( Blit_Manager_ƒ.viewport_debounce_test(me) ){
+			return {
+				...cloneDeep(me),
+				state: {
+					...me.state,
+					...Blit_Manager_ƒ.get_viewport_debounce_values(me),
+					viewport_velocity: {
+						x: me.state.viewport_velocity.x + x,
+						y: me.state.viewport_velocity.y + y
+					}				
+				}
+			}
+		} else {
+			return {
+				...cloneDeep(me),
+				state: {
+					...me.state,
+					...Blit_Manager_ƒ.get_viewport_debounce_values(me),
+				}
 			}
 		}
 	},
@@ -477,6 +538,8 @@ export const Blit_Manager_ƒ = {
 		// 	}
 		// } else {
 			return {
+				last_scroll_tick: me.state.last_scroll_tick,
+				last_scroll_initiation_tick: me.state.last_scroll_initiation_tick,
 				viewport_tween_progress: 1.0,
 				intended_viewport_offset: {
 					x: intended_viewport_offset.x + viewport_velocity.x,
