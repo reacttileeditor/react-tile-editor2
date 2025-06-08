@@ -147,10 +147,10 @@ export const Blit_Manager_ƒ = {
 	*/
 
 	viewport_debounce_test: (me: Blit_Manager_Data, use_debounce: boolean): boolean => {
-		const condition_past_delay = (me.state.last_scroll_tick - me.state.last_scroll_initiation_tick > 20);
+		const condition_past_delay = (me.state.last_scroll_tick - me.state.last_scroll_initiation_tick > 10);
 		const condition_not_just_started = (me.state.last_scroll_tick == me.time_tracker.current_tick - 1);
 
-		console.error(condition_past_delay, condition_not_just_started, me.state.last_scroll_tick - me.state.last_scroll_initiation_tick);
+		//console.error(condition_past_delay, condition_not_just_started, me.state.last_scroll_tick - me.state.last_scroll_initiation_tick);
 		return (
 			(use_debounce && condition_past_delay && condition_not_just_started) || !use_debounce
 		)
@@ -192,7 +192,6 @@ export const Blit_Manager_ƒ = {
 		y: number,
 		use_debounce: boolean,
 	): Blit_Manager_Data => {
-		console.error('adjust viewport pos')
 
 		if( Blit_Manager_ƒ.viewport_debounce_test(me, use_debounce) ){
 			return {
@@ -231,7 +230,6 @@ export const Blit_Manager_ƒ = {
 		y: number,
 		use_debounce: boolean,
 	): Blit_Manager_Data => {
-		console.error(`add viewport vel ${me.time_tracker.current_tick}`)
 		if( Blit_Manager_ƒ.viewport_debounce_test(me, use_debounce) ){
 			return {
 				...cloneDeep(me),
