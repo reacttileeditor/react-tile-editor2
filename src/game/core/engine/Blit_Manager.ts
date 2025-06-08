@@ -146,43 +146,59 @@ export const Blit_Manager_ƒ = {
 		If we try to start scrolling, record the time at which we started, and record the last moment we actually scrolled.  Only start moving once a delay has been elapsed.
 	*/
 
-	viewport_debounce_test: (me: Blit_Manager_Data): boolean => {
+	viewport_debounce_test: (me: Blit_Manager_Data, use_debounce: boolean): boolean => {
 		const condition_past_delay = (me.state.last_scroll_tick - me.state.last_scroll_initiation_tick > 20);
 		const condition_not_just_started = (me.state.last_scroll_tick == me.time_tracker.current_tick - 1);
 
 		console.error(condition_past_delay, condition_not_just_started, me.state.last_scroll_tick - me.state.last_scroll_initiation_tick);
 		return (
-			condition_past_delay && condition_not_just_started
+			(use_debounce && condition_past_delay && condition_not_just_started) || !use_debounce
 		)
 	},
 
-	get_viewport_debounce_values: (me: Blit_Manager_Data): {
+	get_viewport_debounce_values: (
+		me: Blit_Manager_Data,
+		use_debounce: boolean,
+	): {
 		last_scroll_tick: number,
 		last_scroll_initiation_tick: number,
 	} => {
 
-		return {
-			last_scroll_tick: me.time_tracker.current_tick,
+		if(use_debounce){
+			return {
+				last_scroll_tick: me.time_tracker.current_tick,
 
-			/*
-				If we're exactly 1 frame further than the last scroll frame, we're "continuously scrolling", so leave this value alone.  If we're any other value, we've started a new scroll, so change it to the current tick.
-			*/
-			last_scroll_initiation_tick: me.state.last_scroll_tick == me.time_tracker.current_tick - 1
-				?
-				me.state.last_scroll_initiation_tick
-				:
-				me.time_tracker.current_tick,
+				/*
+					If we're exactly 1 frame further than the last scroll frame, we're "continuously scrolling", so leave this value alone.  If we're any other value, we've started a new scroll, so change it to the current tick.
+				*/
+				last_scroll_initiation_tick: me.state.last_scroll_tick == me.time_tracker.current_tick - 1
+					?
+					me.state.last_scroll_initiation_tick
+					:
+					me.time_tracker.current_tick,
+			}
+		} else {
+			return {
+				last_scroll_tick: me.state.last_scroll_tick,
+				last_scroll_initiation_tick: me.state.last_scroll_initiation_tick,
+			}
 		}
 	},
 
 
-	adjust_viewport_pos: ( me: Blit_Manager_Data, x: number, y: number): Blit_Manager_Data => {
+	adjust_viewport_pos: (
+		me: Blit_Manager_Data,
+		x: number,
+		y: number,
+		use_debounce: boolean,
+	): Blit_Manager_Data => {
+		console.error('adjust viewport pos')
 
-		if( Blit_Manager_ƒ.viewport_debounce_test(me) ){
+		if( Blit_Manager_ƒ.viewport_debounce_test(me, use_debounce) ){
 			return {
 				...cloneDeep(me),
 				state: {
-					...Blit_Manager_ƒ.get_viewport_debounce_values(me),
+					...Blit_Manager_ƒ.get_viewport_debounce_values(me, use_debounce),
 					viewport_tween_progress: (
 						me.state.viewport_tween_progress == 1.0 
 						?
@@ -203,19 +219,25 @@ export const Blit_Manager_ƒ = {
 				...cloneDeep(me),
 				state: {
 					...me.state,
-					...Blit_Manager_ƒ.get_viewport_debounce_values(me),
+					...Blit_Manager_ƒ.get_viewport_debounce_values(me, use_debounce),
 				}
 			}
 		}
 	},
 
-	add_viewport_velocity: ( me: Blit_Manager_Data, x: number, y: number): Blit_Manager_Data => {
-		if( Blit_Manager_ƒ.viewport_debounce_test(me) ){
+	add_viewport_velocity: (
+		me: Blit_Manager_Data,
+		x: number,
+		y: number,
+		use_debounce: boolean,
+	): Blit_Manager_Data => {
+		console.error(`add viewport vel ${me.time_tracker.current_tick}`)
+		if( Blit_Manager_ƒ.viewport_debounce_test(me, use_debounce) ){
 			return {
 				...cloneDeep(me),
 				state: {
 					...me.state,
-					...Blit_Manager_ƒ.get_viewport_debounce_values(me),
+					...Blit_Manager_ƒ.get_viewport_debounce_values(me, use_debounce),
 					viewport_velocity: {
 						x: me.state.viewport_velocity.x + x,
 						y: me.state.viewport_velocity.y + y
@@ -227,7 +249,7 @@ export const Blit_Manager_ƒ = {
 				...cloneDeep(me),
 				state: {
 					...me.state,
-					...Blit_Manager_ƒ.get_viewport_debounce_values(me),
+					...Blit_Manager_ƒ.get_viewport_debounce_values(me, use_debounce),
 				}
 			}
 		}

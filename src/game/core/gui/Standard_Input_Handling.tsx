@@ -101,7 +101,7 @@ export const Standard_Input_ƒ = {
 
 		if( !equals(move, {x: 0, y: 0}) ){
 			set_Blit_Manager(
-				Blit_Manager_ƒ.add_viewport_velocity(_BM, move.x, move.y)
+				Blit_Manager_ƒ.add_viewport_velocity(_BM, move.x, move.y, true)
 			)
 		}
 	},
@@ -161,7 +161,7 @@ export const Standard_Input_ƒ = {
 
 
 		set_Blit_Manager(
-			Blit_Manager_ƒ.add_viewport_velocity(_BM, move.x, move.y)
+			Blit_Manager_ƒ.add_viewport_velocity(_BM, move.x, move.y, false)
 		)
 	}
 }
