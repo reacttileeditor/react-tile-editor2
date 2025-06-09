@@ -11,6 +11,7 @@ import { Vals } from "../../constants/Constants";
 import { Game_Manager_ƒ } from "../../engine/Game_Manager/Game_Manager";
 import { CO_Particle_System_State } from "./Particle_System";
 import { Tilemap_Manager_ƒ } from "../../engine/Tilemap_Manager/Tilemap_Manager";
+import { CO_Shot_Utils_ƒ } from "../Custom_Object_Utilities/Shot_Utils";
 
 
 
@@ -32,63 +33,27 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data<unknown>>,
 	} => {
-		const _prior_delegate_state = me.delegate_state as CO_Shot_State;
+		const _prior_delegate_state = me.delegate_state;
 		const GM = me.get_GM_instance();
-		const prior_pos = me.pixel_pos;
-		const original_pos = _prior_delegate_state.original_pos;
 
 
 		const target = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.target_obj );
 		const source = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.source_obj );
 		const lifetime_tick = (tick - me.creation_timestamp);
 
-		let next_pos = cloneDeep(original_pos);
 
-		let visual_rotate_angle = me.rotate;
 		let probable_target_pos: Point2D | undefined = undefined;
 
-		if(target){
-			const target_pos = target.pixel_pos;
-			const source_pos = source.pixel_pos;
-
-			const angle = angle_between({source: original_pos, dest: target_pos});
-
-			const magnitude = Math.hypot( (original_pos.x - target_pos.x), (original_pos.y - target_pos.y) ) / Vals.shot_flight_duration;
-
-
-			const arcing_height = -40 * Math.sin( (lifetime_tick / Vals.shot_flight_duration) * Math.PI );
 
 
 
-
-
-
-			const addend: Point2D = { x: lifetime_tick * magnitude * Math.cos(angle), y: lifetime_tick * magnitude * Math.sin(angle) + arcing_height }
-
-			next_pos = {x: original_pos.x + addend.x, y: original_pos.y + addend.y}
-
-			/*
-				The calculations for the visual angle are a fair bit different, since we don't care about the final position, but rather, the position of the very next "key point"
-			*/
-
-			visual_rotate_angle = Math.atan2(  next_pos.y - prior_pos.y , next_pos.x - prior_pos.x )
-			visual_rotate_angle = 90 + visual_rotate_angle * 180 / Math.PI ;
-			//console.error(visual_rotate_angle)
-
-
-			const accessors = Creature_ƒ.get_accessors(target);
-			const probable_target_pos_tile = Creature_ƒ.guess_anim_pos_at_time_offset(target, accessors._Tilemap_Manager(), target.path_data, Vals.shot_flight_duration);
-
-			probable_target_pos = probable_target_pos_tile
-				?
-				Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
-					accessors._Tilemap_Manager(),
-					accessors._Asset_Manager(),
-					probable_target_pos_tile
-				)
-				:
-				next_pos;	
-		}
+		const new_values = CO_Shot_Utils_ƒ.calculate_arcing_shot_trajectory(
+			me,
+			_prior_delegate_state.original_pos,
+			lifetime_tick,
+			target,
+			source
+		)
 
 
 		const spawnees: Array<Custom_Object_Data<unknown>> = [];
@@ -122,8 +87,8 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 		return {
 			data: {
 				...Custom_Object_ƒ.get_base_object_state(me),
-				pixel_pos: next_pos,
-				rotate: visual_rotate_angle,
+				pixel_pos: new_values.pixel_pos,
+				rotate: new_values.rotate,
 				delegate_state: _prior_delegate_state,
 			},
 			change_list: [],
