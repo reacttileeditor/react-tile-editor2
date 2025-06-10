@@ -27,7 +27,7 @@ export const CO_Shot_Utils_ƒ = {
 		let probable_target_pos: Point2D | undefined = undefined;
 
 		if(target){
-			const target_pos = target.pixel_pos;
+			const target_pos = CO_Shot_Utils_ƒ.calculate_probable_target_pos(target);
 			const source_pos = source.pixel_pos;
 
 
@@ -78,7 +78,6 @@ export const CO_Shot_Utils_ƒ = {
 
 
 	calculate_probable_target_pos: (
-		original_pos: Point2D,
 		target: Creature_Data,
 	): Point2D => {
 
@@ -93,7 +92,7 @@ export const CO_Shot_Utils_ƒ = {
 				probable_target_pos_tile
 			)
 			:
-			original_pos;
+			target.pixel_pos;
 
 		return probable_target_pos;
 	}

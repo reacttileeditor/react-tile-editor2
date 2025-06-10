@@ -42,7 +42,6 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 		const lifetime_tick = (tick - me.creation_timestamp);
 
 
-		let probable_target_pos: Point2D | undefined = undefined;
 
 
 
@@ -54,6 +53,8 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 			target,
 			source
 		)
+
+
 
 
 		const spawnees: Array<Custom_Object_Data<unknown>> = [];
@@ -73,16 +74,16 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 			}));
 		}
 
-		if(lifetime_tick == 1 && probable_target_pos){
-			spawnees.push(New_Custom_Object<{}>({
-				accessors: Custom_Object_ƒ.get_accessors(me),
-				pixel_pos: probable_target_pos,
-				type_name: 'target_indicator',
-				creation_timestamp: tick,
-				text: ``,
-				delegate_state: {},
-			}));
-		}
+		// if(lifetime_tick == 1 && probable_target_pos){
+		// 	spawnees.push(New_Custom_Object<{}>({
+		// 		accessors: Custom_Object_ƒ.get_accessors(me),
+		// 		pixel_pos: probable_target_pos,
+		// 		type_name: 'target_indicator',
+		// 		creation_timestamp: tick,
+		// 		text: ``,
+		// 		delegate_state: {},
+		// 	}));
+		// }
 
 		return {
 			data: {
