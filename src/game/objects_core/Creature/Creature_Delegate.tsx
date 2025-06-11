@@ -6,6 +6,7 @@ import { Tilemap_Manager_Data, Direction } from "../../core/engine/Tilemap_Manag
 
 import { Point2D, Rectangle } from '../../interfaces';
 import { Tile_Name, Tile_Name__Excluding_Virtual_Tiles } from "../../core/data/Tile_Types";
+import { Custom_Object_Type_Name } from "../Custom_Object/Custom_Object";
 
 
 
@@ -27,6 +28,7 @@ export type Creature_Delegate = {
 	yield_max_hitpoints: () => number,
 	yield_weapon_range: () => number,
 	action_delay_for_animation: (animation_name: string) => number,
+	yield_shot_type: () => Custom_Object_Type_Name,
 }
 
 /*
@@ -84,6 +86,7 @@ export const Creature_Delegate_Base_ƒ: Creature_Delegate = {
 	yield_max_hitpoints: (): number => ( 100 ),
 	yield_weapon_range: () => ( 1 ),
 	action_delay_for_animation: (animation_name: string) => ( 0 ),
+	yield_shot_type: () => ( 'shot' ),
 }
 
 

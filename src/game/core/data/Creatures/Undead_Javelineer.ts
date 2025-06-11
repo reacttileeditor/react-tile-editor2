@@ -44,4 +44,5 @@ export const CT_Undead_Javelineer_ƒ: Creature_Delegate = {
 	),
 
 	action_delay_for_animation: (animation_name: string) => ( 42 ),
+	yield_shot_type: () => ( 'shot_javelin' ),
 }

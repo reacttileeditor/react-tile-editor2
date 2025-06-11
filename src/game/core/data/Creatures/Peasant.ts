@@ -36,4 +36,5 @@ export const CT_Peasant_ƒ: Creature_Delegate = {
 	yield_move_cost_for_tile_type: Creature_Delegate_Base_ƒ.yield_move_cost_for_tile_type,
 	yield_weapon_range: Creature_Delegate_Base_ƒ.yield_weapon_range,
 	action_delay_for_animation: Creature_Delegate_Base_ƒ.action_delay_for_animation,
+	yield_shot_type: () => ( 'shot' ),
 }

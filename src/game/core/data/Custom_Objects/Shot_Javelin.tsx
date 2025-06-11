@@ -21,7 +21,7 @@ export type CO_Shot_State = {
 	original_pos: Point2D,
 }
 
-export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
+export const CO_Shot_Javelin_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 	...Custom_Object_Delegate_Base_ƒ,
 
 	process_single_frame: (
@@ -46,7 +46,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 
 
 
-		const new_values = CO_Shot_Utils_ƒ.calculate_serpentine_shot_trajectory(
+		const new_values = CO_Shot_Utils_ƒ.calculate_arcing_shot_trajectory(
 			me,
 			_prior_delegate_state.original_pos,
 			lifetime_tick,
@@ -59,32 +59,6 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 
 		const spawnees: Array<Custom_Object_Data<unknown>> = [];
 
-		if(lifetime_tick == 1){
-			spawnees.push(New_Custom_Object<CO_Particle_System_State>({
-				accessors: Custom_Object_ƒ.get_accessors(me),
-				pixel_pos: me.pixel_pos,
-				type_name: 'particle_system',
-				creation_timestamp: tick,
-				text: ``,
-				parent_id: me.unique_id,
-				delegate_state: {
-					spawn_rate_overflow: 0,
-					particle_type_name: 'arcane',
-				},
-			}));
-		}
-
-		// if(lifetime_tick == 1 && probable_target_pos){
-		// 	spawnees.push(New_Custom_Object<{}>({
-		// 		accessors: Custom_Object_ƒ.get_accessors(me),
-		// 		pixel_pos: probable_target_pos,
-		// 		type_name: 'target_indicator',
-		// 		creation_timestamp: tick,
-		// 		text: ``,
-		// 		delegate_state: {},
-		// 	}));
-		// }
-
 		return {
 			data: {
 				...Custom_Object_ƒ.get_base_object_state(me),
@@ -96,8 +70,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 			spawnees: spawnees,
 		}
 	},
-	//yield_asset: () => 'arrow_placeholder',
-	yield_asset: () => 'arcane_shot',
+	yield_asset: () => 'arrow_placeholder',
 
 	should_be_removed: (
 		me: Custom_Object_Data<CO_Shot_State>,
