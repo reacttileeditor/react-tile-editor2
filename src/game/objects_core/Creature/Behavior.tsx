@@ -256,7 +256,7 @@ export const Creature_ƒ_Behavior = {
 			spawnees.push(New_Custom_Object({
 				accessors: Creature_ƒ.get_accessors(me),
 				pixel_pos: me.pixel_pos,
-				type_name: 'shot',
+				type_name: Creature_ƒ.get_delegate(me.type_name).yield_shot_type(),
 				creation_timestamp: tick,
 				delegate_state: {
 					target_obj: target.unique_id,

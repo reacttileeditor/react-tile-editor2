@@ -25,9 +25,10 @@ import { CO_Particle_System_ƒ } from "../../core/data/Custom_Objects/Particle_S
 import { CO_Particle_ƒ } from "../../core/data/Custom_Objects/Particle";
 import { CO_Target_Indicator_ƒ } from "../../core/data/Custom_Objects/Target_Indicator";
 import { CO_Shot_Javelin_ƒ } from "../../core/data/Custom_Objects/Shot_Javelin";
+import { CO_Shot_Magic_Missile_ƒ } from "../../core/data/Custom_Objects/Shot_Magic_Missile";
  
 
-export type Custom_Object_Type_Name = 'shot' | 'shot_javelin' | 'text_label' | 'skull_icon' | 'hit_star_bg' | 'hit_spark' | 'particle_system' | 'particle' | 'target_indicator';
+export type Custom_Object_Type_Name = 'shot' | 'shot_javelin' | 'shot_magic_missile' | 'text_label' | 'skull_icon' | 'hit_star_bg' | 'hit_spark' | 'particle_system' | 'particle' | 'target_indicator';
 
 export type Custom_Object_Data<Delegate_State_Type> = {
 	type_name: Custom_Object_Type_Name,
@@ -157,6 +158,7 @@ export const Custom_Object_ƒ = {
 		return {
 			shot: CO_Shot_ƒ,
 			shot_javelin: CO_Shot_Javelin_ƒ,
+			shot_magic_missile: CO_Shot_Magic_Missile_ƒ,
 			text_label: CO_Text_Label_ƒ,
 			skull_icon: CO_Skull_Icon_ƒ,
 			hit_star_bg: CO_Hit_Star_BG_ƒ,

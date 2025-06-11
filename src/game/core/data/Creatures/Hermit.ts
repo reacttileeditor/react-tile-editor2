@@ -7,7 +7,7 @@ export const CT_Hermit_ƒ: Creature_Delegate = {
 	yield_moves_per_turn: () =>  10,
 	yield_creature_image: () => 'hermit',
 	yield_prettyprint_name: () => 'Hermit',
-	yield_weapon_range: () => 3,
+	yield_weapon_range: () => 14,
 
 	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction: Direction):string => (
 		{
@@ -30,5 +30,7 @@ export const CT_Hermit_ƒ: Creature_Delegate = {
 			'west':			'human_hermit_se_walk',
 			'south_west':	'human_hermit_se_walk',	
 		}[direction]
-	),	
+	),
+	action_delay_for_animation: (animation_name: string) => ( 1 ),
+	yield_shot_type: () => ( 'shot_magic_missile' ),
 }
