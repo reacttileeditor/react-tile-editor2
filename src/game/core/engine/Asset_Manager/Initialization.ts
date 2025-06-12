@@ -18,7 +18,7 @@ export const Initialization = {
 		do_once_app_ready: ()=>void,
 		set_loaded_fraction: Dispatch<SetStateAction<number>>,
 	) => {
-		me.static_vals.image_data_list.map( ( value, index ) => {
+		map(me.static_vals.image_data_list, ( value, index ) => {
 
 			var temp_image = new Image();
 			var temp_url = PATH_PREFIX + value.url;

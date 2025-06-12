@@ -12,6 +12,7 @@ import { concat, filter, uniq } from "ramda";
 import { Initialization } from "./Initialization";
 import { Drawing } from "./Drawing";
 import { Accessors } from "./Accessors";
+import { Image_Data_Dictionary } from "../../data/Image_Data";
 
 export interface Image_Data {
 	url: string,
@@ -25,7 +26,7 @@ export interface Image_Data {
 };
 
 export interface Static_Values {
-	image_data_list: Array<Image_Data>,
+	image_data_list: Image_Data_Dictionary,
 	image_sequence_data_list: Image_Sequence_Dictionary,
 	raw_image_list: Image_Dictionary,
 	assets_meta: Assets_Metadata_Dictionary,

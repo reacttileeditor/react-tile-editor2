@@ -13,12 +13,12 @@ import { Tile_Image_Data } from "./Image_Data/Tile_Image_Data";
 // 	UI_Tile_Image_Data,
 // ]);
 
-export type Image_Dictionary = { [k: string]: Image_Data };
+export type Image_Data_Dictionary = { [k: string]: Image_Data };
 
 
 export type Image_Names = (keyof typeof image_data_list)
 
-export const image_data_list = reduce((acc: Image_Dictionary, val: Image_Dictionary) => mergeDeepRight( acc, val), {}, 
+export const image_data_list = reduce((acc: Image_Data_Dictionary, val: Image_Data_Dictionary) => mergeDeepRight( acc, val), {}, 
 [
 		Character_Image_Data,
 		Misc_Image_Data,
