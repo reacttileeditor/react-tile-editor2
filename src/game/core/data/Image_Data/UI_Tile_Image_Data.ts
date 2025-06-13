@@ -1,4 +1,5 @@
 import { Image_Data } from "../../engine/Asset_Manager/Asset_Manager";
+import { Image_Data_Dictionary } from "../Image_Data";
 
 export type UI_Tile_Image_Data_Type = {
 	[Property in _UI_Tile_Image_Data_Type as `${string & Property}`]: Image_Data
@@ -219,3 +220,4 @@ export const UI_Tile_Image_Data = {
 	}
 };
 	
+const Safety: Image_Data_Dictionary = UI_Tile_Image_Data;

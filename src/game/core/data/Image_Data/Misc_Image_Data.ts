@@ -1,4 +1,5 @@
 import { Image_Data } from "../../engine/Asset_Manager/Asset_Manager";
+import { Image_Data_Dictionary } from "../Image_Data";
 
 
 export type Misc_Image_Data_Type = {
@@ -74,3 +75,4 @@ export const Misc_Image_Data = {
 	}
 };
 	
+const Safety: Image_Data_Dictionary = Misc_Image_Data;

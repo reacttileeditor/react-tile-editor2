@@ -1,4 +1,5 @@
 import { Image_Data } from "../../engine/Asset_Manager/Asset_Manager";
+import { Image_Data_Dictionary } from "../Image_Data";
 
 
 export type Tile_Image_Data_Type = {
@@ -1123,3 +1124,4 @@ export const Tile_Image_Data = {
 	}
 };
 	
+const Safety: Image_Data_Dictionary = Tile_Image_Data;
