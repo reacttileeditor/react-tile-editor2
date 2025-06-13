@@ -10,6 +10,7 @@ import { Asset_Blit_Item } from "../Tilemap_Manager/Tilemap_Manager";
 import { zorder } from "../../constants/zorder";
 import { MTP_Graphic_Item } from "../../data/Multi_Tile_Patterns";
 import Prando from "prando";
+import { Image_Data_Names } from "../../data/Image_Data";
 
 
 
@@ -27,7 +28,7 @@ export const Accessors = {
 
 	yield_tile_name_list: (me: Asset_Manager_Data) => {
 		return sortedUniq(
-		map( 
+			map( 
 				filter(me.static_vals.tile_types, (val) => (val.omit_from_random_map_generation != true)),
 				(value,index)=>(value.name)
 			)
@@ -54,7 +55,7 @@ export const Accessors = {
 /*----------------------- asset data access -----------------------*/
 	get_data_for_individual_asset: (
 		_AM: Asset_Manager_Data,
-		asset_name: string,
+		asset_name: Image_Data_Names,
 	): Asset_Data_Record => {
 		let { raw_image_list, image_data_list, assets_meta } = _AM.static_vals;
 
@@ -66,7 +67,7 @@ export const Accessors = {
 
 		return {
 			raw_image: raw_image_list[ asset_name ]!,
-			image_data: image_data_list[asset_name]!,
+			image_data: image_data_list[ asset_name ]!,
 			metadata: assets_meta[ asset_name ]!
 		};		
 	},
@@ -75,7 +76,7 @@ export const Accessors = {
 		_AM: Asset_Manager_Data,
 		asset_name: string,
 	): Array<Asset_Data_Record> => {
-		let { raw_image_list, image_data_list, assets_meta, image_sequence_data_list } = _AM.static_vals;
+		let { image_sequence_data_list } = _AM.static_vals;
 
 		if( includes(asset_name, keys(image_sequence_data_list)) ){
 			let real_asset_name = image_sequence_data_list[asset_name][0];
@@ -105,7 +106,7 @@ export const Accessors = {
 
 
 /*----------------------- object info -----------------------*/
-	get_image_data_for_object: (me: Asset_Manager_Data, image_name: string):Image_Data|undefined => {
+	get_image_data_for_object: (me: Asset_Manager_Data, image_name: Image_Data_Names): Image_Data => {
 		let { image_data_list } = me.static_vals;
 
 		return image_data_list[image_name];

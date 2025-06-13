@@ -12,7 +12,7 @@ import { concat, filter, uniq } from "ramda";
 import { Initialization } from "./Initialization";
 import { Drawing } from "./Drawing";
 import { Accessors } from "./Accessors";
-import { Image_Data_Dictionary } from "../../data/Image_Data";
+import { Image_Data_Dictionary, Image_Data_Names } from "../../data/Image_Data";
 
 export interface Image_Data {
 	url: string,
