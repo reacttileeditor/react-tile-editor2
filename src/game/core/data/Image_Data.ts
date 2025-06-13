@@ -26,7 +26,9 @@ export const image_data_list: Image_Data_Names = reduce((acc: any, val: any) => 
 	]
 );
 
-export type Image_Data_Names = keyof Image_Data_Type;
+export type Image_Data_Names = (keyof Image_Data_Type) | Image_Sequence_Dictionary_Names;
+
+export type Nonsequence_Image_Data_Names = (keyof Image_Data_Type);
 
 //export type Image_Data_Names = (keyof typeof image_data_list)
 
@@ -37,7 +39,7 @@ export type Image_Data_Names = keyof Image_Data_Type;
 // type _Image_Data_Names = (keyof typeof image_data_list)
 
 
- export type Image_Data_Type = 
+export type Image_Data_Type = 
  	Character_Image_Data_Type &
 	Misc_Image_Data_Type &
 	Tile_Image_Data_Type &
@@ -50,6 +52,7 @@ export type Image_Data_Names = keyof Image_Data_Type;
 
 ///const mergedObj = mergeDeepRight( obj1, obj2);
 
+type Image_Sequence_Dictionary_Names = 'test_repeating_anim' | 'wideleaf_scrub1' | 'wideleaf_scrub2' | 'water_sparkles' | 'water_ripples_1' | 'water_ripples_2' | 'water_reeds_1';
 
 export const image_sequence_data_list: Image_Sequence_Dictionary = {
 	test_repeating_anim: ['animation_test', 'animation_test2', 'water-underlay'],
