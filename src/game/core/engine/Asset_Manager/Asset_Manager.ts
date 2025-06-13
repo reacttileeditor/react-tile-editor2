@@ -17,7 +17,6 @@ import { Image_Data_Dictionary } from "../../data/Image_Data";
 export interface Image_Data {
 	url: string,
 	not_a_tile?: boolean, 
-	name: string,
 	bounds?: Rectangle,
 	frames?: number,
 	frame_duration?: number,

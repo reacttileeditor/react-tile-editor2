@@ -36,10 +36,10 @@ export const Initialization = {
 			}
 
 			temp_image.onload = () => {
-				me.static_vals.raw_image_list[ value.name ] = temp_image;
+				me.static_vals.raw_image_list[ index ] = temp_image;
 				
 
-				me.static_vals.assets_meta[ value.name ] = {
+				me.static_vals.assets_meta[ index ] = {
 					dim: {
 						w: temp_image.naturalWidth,
 						h: temp_image.naturalHeight
@@ -61,7 +61,7 @@ export const Initialization = {
 				}
 
 
-				Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, value.name, do_once_app_ready, set_loaded_fraction );
+				Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, index, do_once_app_ready, set_loaded_fraction );
 
 				temp_image.onload = null;
 			};

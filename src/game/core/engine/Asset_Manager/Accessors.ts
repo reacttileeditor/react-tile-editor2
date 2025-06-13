@@ -17,14 +17,12 @@ import Prando from "prando";
 export const Accessors = {
 /*----------------------- Global Dataset Info -----------------------*/
 	yield_asset_name_list: (me: Asset_Manager_Data) => {
-		return filter(
+		return keys(filter(
 			me.static_vals.image_data_list,
 			(value, index) => {
 				return value.not_a_tile !== true;
 			}
-		).map( (value,index) => {
-			return value.name;
-		})
+		));
 	},
 
 	yield_tile_name_list: (me: Asset_Manager_Data) => {
@@ -60,7 +58,7 @@ export const Accessors = {
 	): Asset_Data_Record => {
 		let { raw_image_list, image_data_list, assets_meta } = _AM.static_vals;
 
-		const image_data = find(image_data_list, {name: asset_name})
+		const image_data = image_data_list[asset_name];
 
 		if(image_data == undefined){
 			throw new Error( `Could not find an image in our image_data_list for the asset named ${asset_name}.` )
@@ -68,7 +66,7 @@ export const Accessors = {
 
 		return {
 			raw_image: raw_image_list[ asset_name ]!,
-			image_data: find(image_data_list, {name: asset_name})!,
+			image_data: image_data_list[asset_name]!,
 			metadata: assets_meta[ asset_name ]!
 		};		
 	},
@@ -110,7 +108,7 @@ export const Accessors = {
 	get_image_data_for_object: (me: Asset_Manager_Data, image_name: string):Image_Data|undefined => {
 		let { image_data_list } = me.static_vals;
 
-		return find( image_data_list, (value, index) => (value.name == image_name) );
+		return image_data_list[image_name];
 	},
 
 
