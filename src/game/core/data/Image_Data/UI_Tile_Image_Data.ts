@@ -4,7 +4,6 @@ import { Image_Data } from "../../engine/Asset_Manager/Asset_Manager";
 export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	"arrow-horizontal-bar": {
 		url: "arrow-tiles.png",
-		name: "arrow-horizontal-bar",
 		bounds: {
 			x: 57,
 			y: 1,
@@ -14,7 +13,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrow-se-bar": {
 		url: "arrow-tiles.png",
-		name: "arrow-se-bar",
 		bounds: {
 			x: 113,
 			y: 1,
@@ -24,7 +22,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrow-ne-bar": {
 		url: "arrow-tiles.png",
-		name: "arrow-ne-bar",
 		bounds: {
 			x: 1,
 			y: 1,
@@ -34,7 +31,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrow-w-to-se-bar": {
 		url: "arrow-tiles.png",
-		name: "arrow-w-to-se-bar",
 		bounds: {
 			x: 57,
 			y: 37,
@@ -44,7 +40,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrow-nw-to-e-bar": {
 		url: "arrow-tiles.png",
-		name: "arrow-nw-to-e-bar",
 		bounds: {
 			x: 113,
 			y: 37,
@@ -54,7 +49,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrow-sw-to-e-bar": {
 		url: "arrow-tiles.png",
-		name: "arrow-sw-to-e-bar",
 		bounds: {
 			x: 57,
 			y: 73,
@@ -64,7 +58,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrow-w-to-ne-bar": {
 		url: "arrow-tiles.png",
-		name: "arrow-w-to-ne-bar",
 		bounds: {
 			x: 113,
 			y: 73,
@@ -74,7 +67,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrow-se-to-ne-bar": {
 		url: "arrow-tiles.png",
-		name: "arrow-se-to-ne-bar",
 		bounds: {
 			x: 1,
 			y: 37,
@@ -84,7 +76,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrow-sw-to-nw-bar": {
 		url: "arrow-tiles.png",
-		name: "arrow-sw-to-nw-bar",
 		bounds: {
 			x: 1,
 			y: 73,
@@ -94,7 +85,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrow-se-endcap": {
 		url: "arrow-tiles.png",
-		name: "arrow-se-endcap",
 		bounds: {
 			x: 113,
 			y: 145,
@@ -104,7 +94,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrow-ne-endcap": {
 		url: "arrow-tiles.png",
-		name: "arrow-ne-endcap",
 		bounds: {
 			x: 1,
 			y: 109,
@@ -114,7 +103,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrow-sw-endcap": {
 		url: "arrow-tiles.png",
-		name: "arrow-sw-endcap",
 		bounds: {
 			x: 1,
 			y: 145,
@@ -124,7 +112,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrow-nw-endcap": {
 		url: "arrow-tiles.png",
-		name: "arrow-nw-endcap",
 		bounds: {
 			x: 113,
 			y: 109,
@@ -134,7 +121,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrow-e-endcap": {
 		url: "arrow-tiles.png",
-		name: "arrow-e-endcap",
 		bounds: {
 			x: 57,
 			y: 145,
@@ -144,7 +130,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrow-w-endcap": {
 		url: "arrow-tiles.png",
-		name: "arrow-w-endcap",
 		bounds: {
 			x: 57,
 			y: 109,
@@ -154,7 +139,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"red-path-unreachable-dot": {
 		url: "map-cursor-red-tiny.png",
-		name: "red-path-unreachable-dot",
 		bounds: {
 			x: 0,
 			y: 0,
@@ -164,7 +148,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrowhead-ne": {
 		url: "arrow-tiles.png",
-		name: "arrowhead-ne",
 		bounds: {
 			x: 1,
 			y: 181,
@@ -174,7 +157,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrowhead-w": {
 		url: "arrow-tiles.png",
-		name: "arrowhead-w",
 		bounds: {
 			x: 57,
 			y: 181,
@@ -184,7 +166,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrowhead-nw": {
 		url: "arrow-tiles.png",
-		name: "arrowhead-nw",
 		bounds: {
 			x: 113,
 			y: 181,
@@ -194,7 +175,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrowhead-sw": {
 		url: "arrow-tiles.png",
-		name: "arrowhead-sw",
 		bounds: {
 			x: 1,
 			y: 217,
@@ -204,7 +184,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrowhead-e": {
 		url: "arrow-tiles.png",
-		name: "arrowhead-e",
 		bounds: {
 			x: 57,
 			y: 217,
@@ -214,7 +193,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"arrowhead-se": {
 		url: "arrow-tiles.png",
-		name: "arrowhead-se",
 		bounds: {
 			x: 113,
 			y: 217,
@@ -226,7 +204,6 @@ export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
 
 	pedestal: {
 		url: "pedestal.png",
-		name: "pedestal",
 		bounds: {
 			x: 0,
 			y: 0,

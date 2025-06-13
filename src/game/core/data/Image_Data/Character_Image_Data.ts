@@ -4,31 +4,24 @@ import { Image_Data } from "../../engine/Asset_Manager/Asset_Manager";
 export const Character_Image_Data: { [k: string]: Image_Data } = {
 	hermit:	{
 		url: "char1.png",
-		name: "hermit",
 	},
 	"peasant-ne": {
 		url: "char2-ne.png",
-		name: "peasant-ne",
 	},
 	"peasant-se": {
 		url: "char2.png",
-		name: "peasant-se",
 	},
 	"skeleton-ne": {
 		url: "char3-ne.png",
-		name: "skeleton-ne",
 	},
 	"undead-javelineer-se": {
 		url: "characters/undead_javelineer.png",
-		name: "undead-javelineer-se",
 	},
 	"skeleton-se": {
 		url: "char3.png",
-		name: "skeleton-se",
 	},
 	skeleton_warrior_stand_se: {
 		url: "characters/skeleton_warrior_stand_se.png",
-		name: "skeleton_warrior_stand_se",
 		frames: 3,
 		frame_duration: 250,
 		ping_pong: true,
@@ -42,7 +35,6 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	undead_javelineer_se_stand: {
 		url: "characters/undead_javelineer_se_stand.png",
-		name: "undead_javelineer_se_stand",
 		frames: 5,
 		frame_duration: 250,
 		ping_pong: true,
@@ -56,11 +48,9 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	undead_javelineer_ne_stand: {
 		url: "characters/undead_javelineer_ne_stand.png",
-		name: "undead_javelineer_ne_stand",
 	},
 	human_footman_se_stand: {
 		url: "characters/human_footman_stand_se.png",
-		name: "human_footman_se_stand",
 		frames: 5,
 		frame_duration: 170,
 		ping_pong: true,
@@ -74,7 +64,6 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	human_footman_ne_stand: {
 		url: "characters/human_footman_ne_stand.png",
-		name: "human_footman_ne_stand",
 		frames: 5,
 		frame_duration: 170,
 		ping_pong: true,
@@ -88,7 +77,6 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	human_footman_se_walk: {
 		url: "characters/human_footman_se_walk.png",
-		name: "human_footman_se_walk",
 		frames: 8,
 		frame_duration: 100,
 		ping_pong: false,
@@ -102,7 +90,6 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	human_footman_ne_walk: {
 		url: "characters/human_footman_ne_walk.png",
-		name: "human_footman_ne_walk",
 		frames: 8,
 		frame_duration: 100,
 		ping_pong: false,
@@ -116,7 +103,6 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	human_footman_ne_attack: {
 		url: "characters/human_footman_ne_attack.png",
-		name: "human_footman_ne_attack",
 		frames: 10,
 		frame_duration: 100,
 		ping_pong: false,
@@ -130,7 +116,6 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	human_footman_se_attack: {
 		url: "characters/human_footman_se_attack.png",
-		name: "human_footman_se_attack",
 		frames: 10,
 		frame_duration: 100,
 		ping_pong: false,
@@ -144,15 +129,12 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	human_hermit_ne_stand: {
 		url: "characters/human_hermit_ne_stand.png",
-		name: "human_hermit_ne_stand",
 	},
 	human_hermit_se_stand: {
 		url: "characters/human_hermit_se_stand.png",
-		name: "human_hermit_se_stand",
 	},
 	human_hermit_se_walk: {
 		url: "characters/human_hermit_se_walk.png",
-		name: "human_hermit_se_walk",
 		frames: 8,
 		frame_duration: 100,
 		ping_pong: false,
@@ -166,7 +148,6 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	human_hermit_ne_walk: {
 		url: "characters/human_hermit_ne_walk.png",
-		name: "human_hermit_ne_walk",
 		frames: 8,
 		frame_duration: 100,
 		ping_pong: false,
@@ -180,7 +161,6 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	undead_javelineer_se_attack: {
 		url: "characters/undead_javelineer_se_attack.png",
-		name: "undead_javelineer_se_attack",
 		frames: 12,
 		frame_duration: 100,
 		ping_pong: false,
@@ -194,7 +174,6 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"peasant-se-walk": {
 		url: "char2-se-walk.png",
-		name: "peasant-se-walk",
 		frames: 8,
 		frame_duration: 100,
 		ping_pong: false,
@@ -208,7 +187,6 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"peasant-ne-walk": {
 		url: "char2-ne-walk.png",
-		name: "peasant-ne-walk",
 		frames: 8,
 		frame_duration: 100,
 		ping_pong: false,
@@ -222,7 +200,6 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"skeleton-ne-walk": {
 		url: "characters/skeleton_warrior_walk_ne.png",
-		name: "skeleton-ne-walk",
 		frames: 8,
 		frame_duration: 100,
 		ping_pong: false,
@@ -236,7 +213,6 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"skeleton-se-walk": {
 		url: "char3-se-walk.png",
-		name: "skeleton-se-walk",
 		frames: 8,
 		frame_duration: 100,
 		ping_pong: false,
@@ -250,7 +226,6 @@ export const Character_Image_Data: { [k: string]: Image_Data } = {
 	},
 	"skeleton-se-attack": {
 		url: "char3-se-attack.png",
-		name: "skeleton-se-attack",
 		frames: 10,
 		frame_duration: 100,
 		ping_pong: false,
