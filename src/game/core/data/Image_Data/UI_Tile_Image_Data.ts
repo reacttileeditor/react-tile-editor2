@@ -1,7 +1,13 @@
 import { Image_Data } from "../../engine/Asset_Manager/Asset_Manager";
 
+export type UI_Tile_Image_Data_Type = {
+	[Property in _UI_Tile_Image_Data_Type as `${string & Property}`]: Image_Data
+};
 
-export const UI_Tile_Image_Data: { [k: string]: Image_Data } = {
+type _UI_Tile_Image_Data_Type = (keyof typeof UI_Tile_Image_Data)
+
+
+export const UI_Tile_Image_Data = {
 	"arrow-horizontal-bar": {
 		url: "arrow-tiles.png",
 		bounds: {

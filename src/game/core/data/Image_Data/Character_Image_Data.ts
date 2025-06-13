@@ -1,7 +1,12 @@
 import { Image_Data } from "../../engine/Asset_Manager/Asset_Manager";
 
+export type Character_Image_Data_Type = {
+	[Property in _Character_Image_Data_Type as `${string & Property}`]: Image_Data
+};
 
-export const Character_Image_Data: { [k: string]: Image_Data } = {
+type _Character_Image_Data_Type = (keyof typeof Character_Image_Data)
+
+export const Character_Image_Data = {
 	hermit:	{
 		url: "char1.png",
 	},

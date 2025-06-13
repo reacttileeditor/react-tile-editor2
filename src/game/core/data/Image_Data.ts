@@ -1,9 +1,9 @@
 import { concat, flatten, mergeDeepRight, mergeDeepWith, reduce, zipWith } from "ramda";
 import { Image_Data, Image_Sequence_Dictionary } from "../engine/Asset_Manager/Asset_Manager";
-import { Character_Image_Data } from "./Image_Data/Character_Image_Data";
-import { Misc_Image_Data } from "./Image_Data/Misc_Image_Data";
-import { UI_Tile_Image_Data } from "./Image_Data/UI_Tile_Image_Data";
-import { Tile_Image_Data } from "./Image_Data/Tile_Image_Data";
+import { Character_Image_Data, Character_Image_Data_Type } from "./Image_Data/Character_Image_Data";
+import { Misc_Image_Data, Misc_Image_Data_Type } from "./Image_Data/Misc_Image_Data";
+import { UI_Tile_Image_Data, UI_Tile_Image_Data_Type } from "./Image_Data/UI_Tile_Image_Data";
+import { Tile_Image_Data, Tile_Image_Data_Type } from "./Image_Data/Tile_Image_Data";
 
 
 // export const image_data_list: Array<Image_Data> = flatten([
@@ -17,7 +17,7 @@ export type Image_Data_Dictionary = { [k: string]: Image_Data };
 
 
 
-export const image_data_list = reduce((acc: Image_Data_Dictionary, val: Image_Data_Dictionary) => mergeDeepRight( acc, val), {}, 
+export const image_data_list: Image_Data_Names = reduce((acc: any, val: any) => mergeDeepRight( acc, val), {}, 
 	[
 		Character_Image_Data,
 		Misc_Image_Data,
@@ -26,17 +26,25 @@ export const image_data_list = reduce((acc: Image_Data_Dictionary, val: Image_Da
 	]
 );
 
+export type Image_Data_Names = keyof Image_Data_Type;
+
 //export type Image_Data_Names = (keyof typeof image_data_list)
 
-export type Image_Data_Names = 
-	(keyof typeof Character_Image_Data) &
-	(keyof typeof Misc_Image_Data) &
-	(keyof typeof Tile_Image_Data) &
-	(keyof typeof UI_Tile_Image_Data); 
+// type Image_Data_Names = {
+//     [Property in _Image_Data_Names as `${string & Property}`]: Image_Data
+// };
 
-export type Test = (keyof typeof Misc_Image_Data)
+// type _Image_Data_Names = (keyof typeof image_data_list)
 
-console.error(image_data_list);
+
+ export type Image_Data_Type = 
+ 	Character_Image_Data_Type &
+	Misc_Image_Data_Type &
+	Tile_Image_Data_Type &
+	UI_Tile_Image_Data_Type; 
+
+//export type Test = (keyof typeof Misc_Image_Data)
+
 	
 //const mergeArrays = (arr1: Image_Dictionary, arr2: Image_Dictionary) => concat(arr1, arr2);
 

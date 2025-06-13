@@ -1,7 +1,15 @@
 import { Image_Data } from "../../engine/Asset_Manager/Asset_Manager";
 
 
-export const Tile_Image_Data: { [k: string]: Image_Data } = {
+export type Tile_Image_Data_Type = {
+	[Property in _Tile_Image_Data_Type as `${string & Property}`]: Image_Data
+};
+
+type _Tile_Image_Data_Type = (keyof typeof Tile_Image_Data)
+
+
+
+export const Tile_Image_Data = {
 	dirt1: {
 		url: "test2.png",
 	},

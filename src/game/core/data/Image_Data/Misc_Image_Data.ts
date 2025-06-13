@@ -1,15 +1,14 @@
 import { Image_Data } from "../../engine/Asset_Manager/Asset_Manager";
 
 
-type Stuff = {
-    [Property in Test as `${string & Property}`]: Image_Data
+export type Misc_Image_Data_Type = {
+    [Property in _Misc_Image_Data_Type as `${string & Property}`]: Image_Data
 };
 
-export type Test = (keyof typeof Misc_Image_Data)
+type _Misc_Image_Data_Type = (keyof typeof Misc_Image_Data)
 
-//{ [k: string]: Image_Data }
 
-export const Misc_Image_Data  = {
+export const Misc_Image_Data = {
 	cursor: {
 		url: "map-cursor.png",
 		not_a_tile: true,
