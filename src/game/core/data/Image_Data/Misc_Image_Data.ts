@@ -1,7 +1,15 @@
 import { Image_Data } from "../../engine/Asset_Manager/Asset_Manager";
 
 
-export const Misc_Image_Data: { [k: string]: Image_Data } = {
+type Stuff = {
+    [Property in Test as `${string & Property}`]: Image_Data
+};
+
+export type Test = (keyof typeof Misc_Image_Data)
+
+//{ [k: string]: Image_Data }
+
+export const Misc_Image_Data  = {
 	cursor: {
 		url: "map-cursor.png",
 		not_a_tile: true,

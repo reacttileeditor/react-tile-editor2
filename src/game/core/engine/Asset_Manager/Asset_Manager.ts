@@ -73,12 +73,12 @@ export interface Tile_Item {
 
 
 export interface Graphic_Item_Basic {
-	asset_variants: Array<string>,
+	asset_variants: Array<Image_Data_Names>,
 	zorder: number,
 };
 
 export interface Graphic_Item_Autotiled {
-	asset_variants: Array<string>,
+	asset_variants: Array<Image_Data_Names>,
 	zorder: number,
 	restrictions: Autotile_Restriction_Sample,
 };

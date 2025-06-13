@@ -6,6 +6,7 @@ import { add, concat, findIndex, reduce, slice, uniq } from "ramda";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../Blit_Manager";
 import { Point2D } from "../../../interfaces";
 import * as Utils from "../Utils";
+import { Image_Data_Names } from "../../data/Image_Data";
 
 
 
@@ -246,7 +247,7 @@ export const Drawing = {
 	draw_image_for_asset_name: (p: {
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
-		asset_name: string,
+		asset_name: Image_Data_Names,
 		pos: Point2D,
 		zorder: number,
 		current_milliseconds: number,
@@ -288,7 +289,7 @@ export const Drawing = {
 	draw_image_for_asset_name__single_image: (p: {
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
-		asset_name: string,
+		asset_name: Image_Data_Names,
 		pos: Point2D,
 		zorder: number,
 		current_milliseconds: number,

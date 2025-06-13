@@ -26,6 +26,7 @@ import { Tilemap_Manager_ƒ_Drawing } from "./Drawing";
 import { Tilemap_Manager_ƒ_State_Management } from "./State_Management";
 import { Tilemap_Manager_ƒ_Initialization, metadata_init, tile_maps_init } from "./Initialization";
 import Prando from "prando";
+import { Image_Data_Names } from "../../data/Image_Data";
 
 
 export type Tile_View_State = {
@@ -54,7 +55,7 @@ export type Asset_Blit_Tilemap = Array<Array<Asset_Blit_List>>;
 export type Asset_Blit_List = Array<Asset_Blit_Item>;
 
 export type Asset_Blit_Item = {
-	id: string,
+	id: Image_Data_Names,
 	zorder: number,
 }
 

@@ -74,7 +74,7 @@ export const Accessors = {
 
 	get_data_for_asset_name: (
 		_AM: Asset_Manager_Data,
-		asset_name: string,
+		asset_name: Image_Data_Names,
 	): Array<Asset_Data_Record> => {
 		let { image_sequence_data_list } = _AM.static_vals;
 
