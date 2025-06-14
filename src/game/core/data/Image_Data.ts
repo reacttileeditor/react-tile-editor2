@@ -10,7 +10,7 @@ import { Tile_Image_Data, Tile_Image_Data_Type } from "./Image_Data/Tile_Image_D
 export type Image_Data_Dictionary = { [k: string]: Image_Data };
 
 
-export const image_data_list: Image_Data_Names = reduce((acc: any, val: any) => mergeDeepRight( acc, val), {}, 
+export const image_data_list: Image_Data_Type = reduce((acc: any, val: any) => mergeDeepRight( acc, val), {}, 
 	[
 		Character_Image_Data,
 		Misc_Image_Data,
@@ -35,17 +35,11 @@ export type Image_Data_Type =
 
 
 
-//type Image_Sequence_Dictionary_Names = 'test_repeating_anim' | 'wideleaf_scrub1' | 'wideleaf_scrub2' | 'water_sparkles' | 'water_ripples_1' | 'water_ripples_2' | 'water_reeds_1';
-
-
 
 
 
 export type Image_Sequence_Dictionary_Names = (keyof Image_Sequence_Dictionary)
 
-// export type _Image_Sequence_Dictionary = {
-//     [Property in (keyof typeof image_sequence_data_list) as `${string & Property}`]:  Array<Image_Data_Names>
-// };
 
 export type Image_Sequence_Dictionary = typeof image_sequence_data_list;
 
