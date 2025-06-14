@@ -12,7 +12,7 @@ import { concat, filter, uniq } from "ramda";
 import { Initialization } from "./Initialization";
 import { Drawing } from "./Drawing";
 import { Accessors } from "./Accessors";
-import { Image_Data_Dictionary, Image_Data_Names } from "../../data/Image_Data";
+import { Image_And_Image_Sequence_Data_Names, Image_Data_Dictionary, Image_Data_Names, Image_Data_Type, Image_Sequence_Dictionary } from "../../data/Image_Data";
 
 export interface Image_Data {
 	url: string,
@@ -25,7 +25,7 @@ export interface Image_Data {
 };
 
 export interface Static_Values {
-	image_data_list: Image_Data_Dictionary,
+	image_data_list: Image_Data_Type,
 	image_sequence_data_list: Image_Sequence_Dictionary,
 	raw_image_list: Image_Dictionary,
 	assets_meta: Assets_Metadata_Dictionary,
@@ -73,20 +73,17 @@ export interface Tile_Item {
 
 
 export interface Graphic_Item_Basic {
-	asset_variants: Array<Image_Data_Names>,
+	asset_variants: Array<Image_And_Image_Sequence_Data_Names>,
 	zorder: number,
 };
 
 export interface Graphic_Item_Autotiled {
-	asset_variants: Array<Image_Data_Names>,
+	asset_variants: Array<Image_And_Image_Sequence_Data_Names>,
 	zorder: number,
 	restrictions: Autotile_Restriction_Sample,
 };
 
 
-export interface Image_Sequence_Dictionary {
-	[index: string]: Array<string>,
-}
 
 
 export interface Asset_Data_Record {

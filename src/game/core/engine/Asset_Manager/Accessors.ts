@@ -10,7 +10,7 @@ import { Asset_Blit_Item } from "../Tilemap_Manager/Tilemap_Manager";
 import { zorder } from "../../constants/zorder";
 import { MTP_Graphic_Item } from "../../data/Multi_Tile_Patterns";
 import Prando from "prando";
-import { Image_Data_Names } from "../../data/Image_Data";
+import { Image_And_Image_Sequence_Data_Names, Image_Data_Names } from "../../data/Image_Data";
 
 
 
@@ -74,26 +74,29 @@ export const Accessors = {
 
 	get_data_for_asset_name: (
 		_AM: Asset_Manager_Data,
-		asset_name: Image_Data_Names,
+		asset_name: Image_And_Image_Sequence_Data_Names,
 	): Array<Asset_Data_Record> => {
 		let { image_sequence_data_list } = _AM.static_vals;
 
 		if( includes(asset_name, keys(image_sequence_data_list)) ){
-			let real_asset_name = image_sequence_data_list[asset_name][0];
-			const asset_names = image_sequence_data_list[asset_name];
+			//narrow the type casting through a shitty cast to indicate that, yes, it's ONLY a sequence, rather than a key that could be either.
+
+			let real_asset_name = image_sequence_data_list[(asset_name as keyof typeof image_sequence_data_list)][0];
+			const asset_names = image_sequence_data_list[asset_name as keyof typeof image_sequence_data_list];
 
 			return map( asset_names, (individual_asset_name)=>(
 				Asset_Manager_ƒ.get_data_for_individual_asset(_AM, individual_asset_name)
 			));
 		} else {
-			return [Asset_Manager_ƒ.get_data_for_individual_asset(_AM, asset_name)];
+			//etc, we've determined it's got to be an image data record.
+			return [Asset_Manager_ƒ.get_data_for_individual_asset(_AM, asset_name as Image_Data_Names)];
 		}
 	},
 
 /*----------------------- asset data accessors -----------------------*/
 	get_animation_lengths_for_asset: (
 		_AM: Asset_Manager_Data,
-		asset_name: string,
+		asset_name: Image_Data_Names | 'omit_image',
 	): Array<number> =>{
 		if(asset_name !== 'omit_image'){
 			return Asset_Manager_ƒ.calculate_animation_durations(
