@@ -15,6 +15,7 @@ import { CT_Peasant_ƒ } from "../../core/data/Creatures/Peasant";
 import { CT_Skeleton_ƒ } from "../../core/data/Creatures/Skeleton";
 import { CT_Undead_Javelineer_ƒ } from "../../core/data/Creatures/Undead_Javelineer";
 import { CT_Human_Footman_ƒ } from "../../core/data/Creatures/Human_Footman";
+import { Image_Data_Names } from "../../core/data/Image_Data";
 
 
 export const Creature_ƒ_Accessors = {
@@ -39,20 +40,20 @@ export const Creature_ƒ_Accessors = {
 		Creature_ƒ.get_delegate(me.type_name).yield_moves_per_turn()
 	),
 
-	yield_walk_asset_for_direction: (me: Creature_Data, direction: Direction):string => (
+	yield_walk_asset_for_direction: (me: Creature_Data, direction: Direction): Image_Data_Names => (
 		Creature_ƒ.get_delegate(me.type_name).yield_walk_asset_for_direction(Creature_ƒ.get_delegate(me.type_name), direction)
 	),
 
-	yield_stand_asset_for_direction: (me: Creature_Data, direction: Direction):string => (
+	yield_stand_asset_for_direction: (me: Creature_Data, direction: Direction): Image_Data_Names => (
 		Creature_ƒ.get_delegate(me.type_name).yield_stand_asset_for_direction(Creature_ƒ.get_delegate(me.type_name), direction)
 	),
 
-	yield_attack_asset_for_direction: (me: Creature_Data, direction: Direction):string => (
+	yield_attack_asset_for_direction: (me: Creature_Data, direction: Direction): Image_Data_Names => (
 		Creature_ƒ.get_delegate(me.type_name).yield_attack_asset_for_direction(Creature_ƒ.get_delegate(me.type_name), direction)
 	),
 
 
-	yield_creature_image: (me: Creature_Data) => (
+	yield_creature_image: (me: Creature_Data): Image_Data_Names => (
 		Creature_ƒ.get_delegate(me.type_name).yield_creature_image()
 	),
 

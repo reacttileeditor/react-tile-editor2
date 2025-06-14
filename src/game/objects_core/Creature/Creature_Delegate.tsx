@@ -7,21 +7,22 @@ import { Tilemap_Manager_Data, Direction } from "../../core/engine/Tilemap_Manag
 import { Point2D, Rectangle } from '../../interfaces';
 import { Tile_Name, Tile_Name__Excluding_Virtual_Tiles } from "../../core/data/Tile_Types";
 import { Custom_Object_Type_Name } from "../Custom_Object/Custom_Object";
+import { Image_Data_Names } from "../../core/data/Image_Data";
 
 
 
 
 export type Creature_Delegate = {
-	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction: Direction) => string,
-	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction: Direction) => string,
-	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction: Direction) => string,
+	yield_walk_asset_for_direction: (kind: Creature_Delegate, direction: Direction) => Image_Data_Names,
+	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction: Direction) => Image_Data_Names,
+	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction: Direction) => Image_Data_Names,
 
 	yield_move_cost_for_tile_type: (tile_type: string) => number|null,
 
 	yield_prettyprint_name: () => string,
 
 
-	yield_creature_image: () => string,
+	yield_creature_image: () => Image_Data_Names,
 /*----------------------- stats -----------------------*/
 	yield_moves_per_turn: () => number,
 	yield_damage: () => number,
@@ -43,9 +44,9 @@ export type Move_Speed_Dict = {
 
 
 export const Creature_Delegate_Base_ƒ: Creature_Delegate = {
-	yield_walk_asset_for_direction: (kind: Creature_Delegate,direction: Direction):string => ( kind.yield_creature_image() ),
-	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction: Direction):string => ( kind.yield_creature_image() ),
-	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction: Direction) => ( kind.yield_creature_image() ),
+	yield_walk_asset_for_direction: (kind: Creature_Delegate,direction: Direction): Image_Data_Names => ( kind.yield_creature_image() ),
+	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction: Direction): Image_Data_Names => ( kind.yield_creature_image() ),
+	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction: Direction): Image_Data_Names => ( kind.yield_creature_image() ),
 
 	yield_move_cost_for_tile_type: (tile_type: string): number|null => {
 		const real_type = tile_type as Tile_Name__Excluding_Virtual_Tiles;
@@ -79,7 +80,7 @@ export const Creature_Delegate_Base_ƒ: Creature_Delegate = {
 	yield_prettyprint_name: () => ( 'Generic Unit' ),
 
 
-	yield_creature_image: () => ( '' ),
+	yield_creature_image: () => ( 'hermit' ),
 /*----------------------- stats -----------------------*/
 	yield_moves_per_turn: (): number => ( 1 ),
 	yield_damage: (): number => ( 5 ),

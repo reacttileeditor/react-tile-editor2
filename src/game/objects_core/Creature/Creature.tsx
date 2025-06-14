@@ -15,6 +15,7 @@ import { Creature_ƒ_Accessors } from "./Accessors";
 import { Creature_ƒ_State_Management } from "./State_Management";
 import { Creature_ƒ_Path_Management } from "./Path_Management";
 import { Creature_ƒ_Processing } from "./Processing";
+import { Image_Data_Names } from "../../core/data/Image_Data";
 
 
 
@@ -24,6 +25,9 @@ export type Path_Node_With_Direction = {
 }
 
 export type Creature_Type_Name = 'hermit' | 'peasant' | 'skeleton' | 'undead_javelineer' | 'human_footman';
+
+export type Creature_Animation_Chart = { [k in Direction]: Image_Data_Names };
+
 
 
 export type Change_Type = 
