@@ -17,6 +17,7 @@ import { zorder } from "../../constants/zorder";
 
 
 import "./Game_Status_Display.scss";
+import { Image_And_Image_Sequence_Data_Names } from "../../data/Image_Data";
 
 
 
@@ -69,7 +70,7 @@ export const New_Turn_Controls = (props: Game_Status_Display_Props) => {
 export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 
 	const _GS = props.get_Game_Manager_Data()?.game_state;
-	const [asset_name, set_asset_name] = useState<string>('');
+	const [asset_name, set_asset_name] = useState<Image_And_Image_Sequence_Data_Names>('grass1');
 
 
 

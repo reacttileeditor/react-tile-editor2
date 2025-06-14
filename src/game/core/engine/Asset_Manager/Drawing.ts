@@ -6,7 +6,7 @@ import { add, concat, findIndex, reduce, slice, uniq } from "ramda";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../Blit_Manager";
 import { Point2D } from "../../../interfaces";
 import * as Utils from "../Utils";
-import { Image_Data_Names } from "../../data/Image_Data";
+import { Image_And_Image_Sequence_Data_Names, Image_Data_Names } from "../../data/Image_Data";
 
 
 
@@ -247,7 +247,7 @@ export const Drawing = {
 	draw_image_for_asset_name: (p: {
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
-		asset_name: Image_Data_Names,
+		asset_name: Image_And_Image_Sequence_Data_Names | 'omit_image',
 		pos: Point2D,
 		zorder: number,
 		current_milliseconds: number,
@@ -271,6 +271,7 @@ export const Drawing = {
 
 				Asset_Manager_ƒ.draw_image_for_asset_name__single_image({
 					...p,
+					asset_name: p.asset_name as Image_Data_Names,
 					asset_data: info.asset_data,
 					current_milliseconds: info.current_time_offset,
 				})				
@@ -281,6 +282,7 @@ export const Drawing = {
 				Asset_Manager_ƒ.draw_image_for_asset_name__single_image({
 					asset_data: asset_data_records[0],
 					...p,
+					asset_name: p.asset_name as Image_Data_Names,
 				})
 			}
 		}

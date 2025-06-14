@@ -24,6 +24,7 @@ import { boolean } from "yargs";
 import { MTP_Anchor_Data } from "../../data/Multi_Tile_Patterns";
 import { Asset_Blit_List, Asset_Blit_Tilemap, Tilemap_Single, Tilemap_Keys, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
 import Prando from "prando";
+import { Image_Data_Names } from "../../data/Image_Data";
 
 
 
@@ -400,7 +401,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 												y: map_tile_row_index + ({x: graphic_item.anchor.x, y: graphic_item.anchor.y}).y
 											},
 											zorder: graphic_item.zorder,
-											graphic: Asset_Manager_ƒ.convert_MTP_variants_to_single_assets(_AM, graphic_item, me.tile_RNGs['terrain']).id
+											graphic: Asset_Manager_ƒ.convert_MTP_variants_to_single_assets(_AM, graphic_item, me.tile_RNGs['terrain']).id as Image_Data_Names
 
 										})
 									})

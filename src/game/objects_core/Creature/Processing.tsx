@@ -12,6 +12,7 @@ import { AI_Core_ƒ } from "./AI_Core";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../../core/engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ms_to_ticks, ticks_to_ms } from "../../core/engine/Blit_Manager";
 import { Vals } from "../../core/constants/Constants";
+import { Image_Data_Names } from "../../core/data/Image_Data";
 
 
 
@@ -76,7 +77,7 @@ export const Creature_ƒ_Processing = {
 		me.behavior_mode
 	),
 
-	yield_animation_asset_for_time: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number):  string => {
+	yield_animation_asset_for_time: (me: Creature_Data, _TM: Tilemap_Manager_Data, offset_in_ms: number):  Image_Data_Names => {
 		const anim_type = Creature_ƒ.yield_current_animation_type( me, _TM, offset_in_ms);
 
 		return {

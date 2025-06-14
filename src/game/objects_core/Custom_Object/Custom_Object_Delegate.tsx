@@ -52,7 +52,7 @@ export type Custom_Object_Delegate<Delegate_State_Type> = {
 		offset_in_ms: number,
 	) => boolean,
 
-	yield_asset: () => Image_Data_Names,
+	yield_asset: () => Image_Data_Names | 'omit_image',
 	yield_zorder: () => number,
 	time_to_live: () => number,
 
