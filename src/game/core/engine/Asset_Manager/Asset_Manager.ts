@@ -16,7 +16,8 @@ import { Image_And_Image_Sequence_Data_Names, Image_Data_Dictionary, Image_Data_
 
 export interface Image_Data {
 	url: string,
-	not_a_tile?: boolean, 
+	not_a_tile?: boolean,
+	uses_team_color?: boolean, 
 	bounds?: Rectangle,
 	frames?: number,
 	frame_duration?: number,

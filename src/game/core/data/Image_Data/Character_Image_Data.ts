@@ -23,6 +23,7 @@ export const Character_Image_Data = {
 	},
 	"undead-javelineer-se": {
 		url: "characters/undead_javelineer.png",
+		uses_team_color: true,
 	},
 	"skeleton-se": {
 		url: "char3.png",

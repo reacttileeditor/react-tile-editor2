@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager";
+import { Asset_Manager_Data, Asset_Manager_ƒ, Image_Data } from "./Asset_Manager";
 import { filter, isString, map, size } from "lodash";
 import { is_all_true, ƒ } from "../Utils";
 import { concat, uniq } from "ramda";
@@ -18,6 +18,7 @@ export const Initialization = {
 		do_once_app_ready: ()=>void,
 		set_loaded_fraction: Dispatch<SetStateAction<number>>,
 	) => {
+		console.error('launch app');
 		map(me.static_vals.image_data_list, ( value, index ) => {
 
 			var temp_image = new Image();
@@ -34,8 +35,12 @@ export const Initialization = {
 					}
 				}
 			}
+			// temp_image.onload = () => {
+			// 	console.log(`loading ${temp_url} ${temp_image.complete}`)
+			// }
 
 			temp_image.onload = () => {
+				console.log(`loading ${temp_url} ${temp_image.complete}`)
 				me.static_vals.raw_image_list[ index ] = temp_image;
 				
 
@@ -62,10 +67,25 @@ export const Initialization = {
 
 
 				Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, index, do_once_app_ready, set_loaded_fraction );
+				if( value.uses_team_color ){
+					Asset_Manager_ƒ.prepare_alternate_team_colors(
+						value,
+						temp_image,
+						index
+					);
+				}
 
 				temp_image.onload = null;
 			};
 		});
+	},
+
+	prepare_alternate_team_colors: (
+		image_data: Image_Data,
+		image_element: HTMLImageElement,
+		image_name: string,
+	)=>{
+		console.log(`applying team color to ${image_data.url}`);
 	},
 
 	update_max_asset_sizes: (
