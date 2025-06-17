@@ -34,10 +34,10 @@ export const Generate_Map_Modal = (props: {
 			value={generation_type}
 			onChange={(value: string|number, event)=>{set_generation_type(value as unknown as Editor_Map_Generation_Types) }}
 		>
-			<RadioTile icon={<Icon as={GiPerspectiveDiceSixFacesOne} />} label="True Random" value="true_random">
+			<RadioTile icon={<Icon as={GiPerspectiveDiceSixFacesOne as React.ElementType} />} label="True Random" value="true_random">
 				Generates a map by randomly filling each map tile with one of the possible known tile types.  The simplest and first thing we coded.
 			</RadioTile>
-			<RadioTile icon={<Icon as={GiSpatter} />} label="Blob Regions" value="blob_regions">
+			<RadioTile icon={<Icon as={GiSpatter as React.ElementType} />} label="Blob Regions" value="blob_regions">
 				Generates a bunch of contiguous geographic regions composed of a single tile type.
 			</RadioTile>
 

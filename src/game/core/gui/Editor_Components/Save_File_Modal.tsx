@@ -40,7 +40,7 @@ export const Save_File_Modal = (props: {
 				>
 					<span>
 						<Whisper placement='top' speaker={<Tooltip>{"This file is built into the source code, and can neither be deleted nor overwritten."}</Tooltip>}>
-							<Icon as={BsFileEarmarkLock2} className="file-icon"/>
+							<Icon as={BsFileEarmarkLock2 as React.ElementType} className="file-icon"/>
 						</Whisper>
 						{val}
 						</span>
@@ -55,7 +55,7 @@ export const Save_File_Modal = (props: {
 					onClick={()=>{set_selected_file(val)}}
 					className={ val == selected_file ? 'selected' : ''}
 				>
-					<span><Icon as={BsFileEarmark} className="file-icon"/>{val}</span>
+					<span><Icon as={BsFileEarmark as React.ElementType} className="file-icon"/>{val}</span>
 					<Icon
 						as={Trash} className="delete-icon"
 						onClick={(evt)=>{
