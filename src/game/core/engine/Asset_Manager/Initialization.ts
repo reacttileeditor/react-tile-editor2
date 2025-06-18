@@ -5,7 +5,7 @@ import { is_all_true, ƒ } from "../Utils";
 import { concat, uniq } from "ramda";
 import { Point2D } from "../../../interfaces";
 
-
+var has_launched_app_already = true;
 
 var PATH_PREFIX = "./assets/"
 
@@ -19,7 +19,8 @@ export const Initialization = {
 		set_loaded_fraction: Dispatch<SetStateAction<number>>,
 	) => {
 		console.error('launch app');
-		map(me.static_vals.image_data_list, ( value, index ) => {
+		if(!has_launched_app_already){
+			map(me.static_vals.image_data_list, ( value, index ) => {
 
 			var temp_image = new Image();
 			var temp_url = PATH_PREFIX + value.url;
@@ -39,45 +40,50 @@ export const Initialization = {
 			// 	console.log(`loading ${temp_url} ${temp_image.complete}`)
 			// }
 
-			temp_image.onload = () => {
-				console.log(`loading ${temp_url} ${temp_image.complete}`)
-				me.static_vals.raw_image_list[ index ] = temp_image;
-				
+			if( me.static_vals.raw_image_list[ index ] == undefined ){
+				temp_image.onload = () => {
+					console.log(`loading ${temp_url} ${temp_image.complete}`)
+					me.static_vals.raw_image_list[ index ] = temp_image;
+					
 
-				me.static_vals.assets_meta[ index ] = {
-					dim: {
-						w: temp_image.naturalWidth,
-						h: temp_image.naturalHeight
-					},
-					bounds: value.bounds,
-					preprocessed: false,
+					me.static_vals.assets_meta[ index ] = {
+						dim: {
+							w: temp_image.naturalWidth,
+							h: temp_image.naturalHeight
+						},
+						bounds: value.bounds,
+						preprocessed: false,
+					};
+
+
+					/*
+						Here, we're updating some "read from the image" metadata; we want to know the maximum possible sprite size we could be drawing on the screen, so we can do viewport culling and such.  The key distinction for "does bounds exist as a value" is that some assets are whole images (for which bounds doesn't get defined, but it'd be the full width/height of the image file), and for other assets, it's a spritesheet, so we're just clipping out a smaller region of it.
+
+						Regardless, we want to tally up a max size that we ever got.
+					*/
+					if( value.bounds != undefined ){
+						Asset_Manager_ƒ.update_max_asset_sizes(me, {x: value.bounds.w, y: value.bounds.h});
+					} else {
+						Asset_Manager_ƒ.update_max_asset_sizes(me, {x: temp_image.naturalWidth, y: temp_image.naturalHeight});
+					}
+
+
+					Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, index, do_once_app_ready, set_loaded_fraction );
+					if( value.uses_team_color ){
+						Asset_Manager_ƒ.prepare_alternate_team_colors(
+							value,
+							temp_image,
+							index
+						);
+					}
+
+					temp_image.onload = null;
 				};
+			}
+			});
 
-
-				/*
-					Here, we're updating some "read from the image" metadata; we want to know the maximum possible sprite size we could be drawing on the screen, so we can do viewport culling and such.  The key distinction for "does bounds exist as a value" is that some assets are whole images (for which bounds doesn't get defined, but it'd be the full width/height of the image file), and for other assets, it's a spritesheet, so we're just clipping out a smaller region of it.
-
-					Regardless, we want to tally up a max size that we ever got.
-				*/
-				if( value.bounds != undefined ){
-					Asset_Manager_ƒ.update_max_asset_sizes(me, {x: value.bounds.w, y: value.bounds.h});
-				} else {
-					Asset_Manager_ƒ.update_max_asset_sizes(me, {x: temp_image.naturalWidth, y: temp_image.naturalHeight});
-				}
-
-
-				Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, index, do_once_app_ready, set_loaded_fraction );
-				if( value.uses_team_color ){
-					Asset_Manager_ƒ.prepare_alternate_team_colors(
-						value,
-						temp_image,
-						index
-					);
-				}
-
-				temp_image.onload = null;
-			};
-		});
+			has_launched_app_already = false;
+		}
 	},
 
 	prepare_alternate_team_colors: (
