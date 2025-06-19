@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction } from "react";
 import { Asset_Manager_Data, Asset_Manager_ƒ, Image_Data } from "./Asset_Manager";
-import { filter, isString, map, size } from "lodash";
+import { cloneDeep, filter, isArray, isString, map, size } from "lodash";
 import { is_all_true, ƒ } from "../Utils";
 import { concat, uniq } from "ramda";
 import { Point2D } from "../../../interfaces";
 
-var has_launched_app_already = true;
+var has_launched_app_already = false;
 
 var PATH_PREFIX = "./assets/"
 
@@ -71,6 +71,7 @@ export const Initialization = {
 					Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, index, do_once_app_ready, set_loaded_fraction );
 					if( value.uses_team_color ){
 						Asset_Manager_ƒ.prepare_alternate_team_colors(
+							me,
 							value,
 							temp_image,
 							index
@@ -82,15 +83,23 @@ export const Initialization = {
 			}
 			});
 
-			has_launched_app_already = false;
+			has_launched_app_already = true;
 		}
 	},
 
 	prepare_alternate_team_colors: (
+		me: Asset_Manager_Data,
 		image_data: Image_Data,
 		image_element: HTMLImageElement,
 		image_name: string,
 	)=>{
+		if( !isArray( me.static_vals.raw_image_team_color_list[ image_name ] ) ){
+			me.static_vals.raw_image_team_color_list[ image_name ] = [];
+		}
+		
+		me.static_vals.raw_image_team_color_list[ image_name ][0] = cloneDeep(image_element);
+		
+
 		console.log(`applying team color to ${image_data.url}`);
 	},
 
