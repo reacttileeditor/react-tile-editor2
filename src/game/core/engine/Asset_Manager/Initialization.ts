@@ -1,9 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
 import { Asset_Manager_Data, Asset_Manager_ƒ, Image_Data } from "./Asset_Manager";
 import { cloneDeep, filter, isArray, isString, map, size } from "lodash";
-import { is_all_true, ƒ } from "../Utils";
+import { is_all_true, modulo, ƒ } from "../Utils";
 import { concat, uniq } from "ramda";
 import { Point2D } from "../../../interfaces";
+import convert from "color-convert";
 
 var has_launched_app_already = false;
 
@@ -85,22 +86,6 @@ export const Initialization = {
 
 			has_launched_app_already = true;
 		}
-	},
-
-	prepare_alternate_team_colors: (
-		me: Asset_Manager_Data,
-		image_data: Image_Data,
-		image_element: HTMLImageElement,
-		image_name: string,
-	)=>{
-		if( !isArray( me.static_vals.raw_image_team_color_list[ image_name ] ) ){
-			me.static_vals.raw_image_team_color_list[ image_name ] = [];
-		}
-		
-		me.static_vals.raw_image_team_color_list[ image_name ][0] = cloneDeep(image_element);
-		
-
-		console.log(`applying team color to ${image_data.url}`);
 	},
 
 	update_max_asset_sizes: (
@@ -293,5 +278,97 @@ export const Initialization = {
 
 	},
 
+
+
+	prepare_alternate_team_colors: (
+		me: Asset_Manager_Data,
+		image_data: Image_Data,
+		image_element: HTMLImageElement,
+		image_name: string,
+	)=>{
+		console.log(`applying team color to ${image_data.url}`);
+		
+		const set_image = (new_image_element: HTMLImageElement) => {
+			if( !isArray( me.static_vals.raw_image_team_color_list[ image_name ] ) ){
+				me.static_vals.raw_image_team_color_list[ image_name ] = [];
+			}
+	
+			me.static_vals.raw_image_list[ image_name ] = cloneDeep(new_image_element);
+
+			me.static_vals.raw_image_team_color_list[ image_name ][0] = cloneDeep(new_image_element);
+		}		
+
+		Asset_Manager_ƒ.apply_team_color_conversion(image_element, set_image)
+	},
+
+
+	apply_team_color_conversion: (
+		original_image: HTMLImageElement,
+		set_image: (new_image_element: HTMLImageElement) => void,
+	) => {
+
+		/*----------------------- prepare an offscreen buffer -----------------------*/
+		var new_image_element = cloneDeep(original_image);
+		
+
+
+		const osb = document.createElement('canvas');
+		osb.width = original_image.naturalWidth;
+		osb.height = original_image.naturalHeight;
+		const osb_ctx = (osb.getContext("2d") as CanvasRenderingContext2D);
+		osb_ctx.drawImage(original_image, 0, 0 );
+
+		const image_data: globalThis.ImageData = osb_ctx.getImageData(0, 0, original_image.naturalWidth, original_image.naturalHeight);
+
+		/*----------------------- do the actual color conversion -----------------------*/
+
+		//for now we're gonna do some maximal fuckery and just shift the colors.
+
+		for (let i = 0; i < image_data.data.length; i += 4) {
+			if(
+				image_data.data[i + 0] == 249 &&
+				image_data.data[i + 1] == 48 &&
+				image_data.data[i + 2] == 61
+			){
+				image_data.data[i + 3] = 0;
+			}
+
+			const hsl_version = convert.rgb.hsl(image_data.data[i + 0],image_data.data[i + 1], image_data.data[i + 2] );
+			hsl_version[0] = modulo(hsl_version[0] + 50, 255);
+			const back_to_rgb = convert.hsl.rgb(hsl_version);
+
+			image_data.data[i + 0] = back_to_rgb[0];
+			image_data.data[i + 1] = back_to_rgb[1];
+			image_data.data[i + 2] = back_to_rgb[2];
+			
+		}
+		osb_ctx.putImageData(image_data, 0, 0);		
+
+		/*----------------------- prepare an offscreen buffer -----------------------*/
+		osb.toBlob((blob: Blob|null) => {
+			if(blob != null){
+				const url = URL.createObjectURL(blob);
+			
+				original_image.onload = () => {
+				// no longer need to read the blob so it's revoked
+					URL.revokeObjectURL(url);
+					original_image.onload = null;
+				};
+			
+				original_image.src = url;
+
+				const style = [
+					'font-size: 100px;',
+					`padding: ${original_image.naturalHeight}px ${original_image.naturalWidth}px;`,
+					`background: url(${osb.toDataURL()}) no-repeat;`,
+					'background-size: contain;'
+				].join(' ');
+				console.log('%c ', style);
+
+				set_image(original_image)
+			}
+		})
+
+	}
 
 }
