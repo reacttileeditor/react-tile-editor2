@@ -11,6 +11,7 @@
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "@types/uuid": "^3.4.7",
+    "color-convert": "^3.1.0",
     "localforage": "^1.10.0",
     "lodash": "^4.17.11",
     "prando": "^4.0.0",
