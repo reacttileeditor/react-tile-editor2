@@ -70,7 +70,7 @@ export const Initialization = {
 
 
 					Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, index, do_once_app_ready, set_loaded_fraction );
-					if( value.uses_team_color ){
+					if( value.uses_palette_swap ){
 						Asset_Manager_ƒ.prepare_alternate_palette_colors(
 							me,
 							value,
