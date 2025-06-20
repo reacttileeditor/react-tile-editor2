@@ -78,6 +78,7 @@ export const Game_Manager_ƒ_Drawing = {
 				brightness:					ƒ.if( (Game_Manager_ƒ.get_time_offset(me, _BM) - val.last_changed_hitpoints) < 80, 3.0, 1.0),
 				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
 				vertically_flipped:			false,
+				palette:					`team${val.team}`
 			});
 
 			Asset_Manager_ƒ.draw_hitpoints({
@@ -154,6 +155,7 @@ export const Game_Manager_ƒ_Drawing = {
 				brightness:					isEqual(cursor_pos, val.tile_pos) ? 1.0 + 0.75 * Math.sin(Game_Manager_ƒ.get_tick_offset(me, _BM) * 0.2) : 1.0,
 				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
 				vertically_flipped:			false,
+				palette:					`team${val.team}`
 			})
 
 			Asset_Manager_ƒ.draw_hitpoints({

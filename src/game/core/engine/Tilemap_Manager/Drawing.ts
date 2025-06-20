@@ -467,6 +467,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				brightness:					isEqual(cursor_pos, val.pos) ? 1.0 + 0.75 * Math.sin( _BM.time_tracker.current_tick * 0.2) : 1.0,
 				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.direction),
 				vertically_flipped:			false,
+				palette:					`team${val.team}`
 			})
 		})
 	},

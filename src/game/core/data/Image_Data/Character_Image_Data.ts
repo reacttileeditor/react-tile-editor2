@@ -23,7 +23,6 @@ export const Character_Image_Data = {
 	},
 	"undead-javelineer-se": {
 		url: "characters/undead_javelineer.png",
-		uses_palette_swap: true,
 	},
 	"skeleton-se": {
 		url: "char3.png",
@@ -53,6 +52,7 @@ export const Character_Image_Data = {
 			w: 58,
 			h: 158,
 		},
+		uses_palette_swap: true,
 	},
 	undead_javelineer_ne_stand: {
 		url: "characters/undead_javelineer_ne_stand.png",

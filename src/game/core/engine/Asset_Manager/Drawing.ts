@@ -263,7 +263,7 @@ export const Drawing = {
 		*/
 		if( p.asset_name !== 'omit_image' ){
 			const asset_data_records = Asset_Manager_ƒ.get_data_for_asset_name(p._AM, p.asset_name, p.palette);
-
+	
 			if( size(asset_data_records) > 1 ){
 				let info = Asset_Manager_ƒ.get_current_frame_number_and_asset_data_for_animation_sequence(
 					Asset_Manager_ƒ.deterministically_convolute_animation_sequence(asset_data_records, p.current_milliseconds),

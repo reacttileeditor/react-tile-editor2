@@ -74,7 +74,7 @@ export const Accessors = {
 		);
 
 		return {
-			raw_image: raw_image_list[ asset_name ]!,
+			raw_image: raw_image!,
 			image_data: image_data_list[ asset_name ]!,
 			metadata: assets_meta[ asset_name ]!
 		};		
@@ -112,6 +112,7 @@ export const Accessors = {
 		palette?: string,
 	): HTMLImageElement => {
 		let { raw_image_list, image_data_list, assets_meta, raw_image_palette_swap_list } = _AM.static_vals;
+	
 
 		if(image_data.uses_palette_swap && palette){
 			return raw_image_palette_swap_list[ asset_name ][ palette ];
