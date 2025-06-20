@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { Asset_Manager_Data, Asset_Manager_ƒ, Image_Data } from "./Asset_Manager";
-import { cloneDeep, filter, isArray, isString, map, size } from "lodash";
-import { is_all_true, modulo, ƒ } from "../Utils";
+import { cloneDeep, filter, isArray, isString, map, range, size } from "lodash";
+import { is_all_true, log_image_from_canvas, modulo, ƒ } from "../Utils";
 import { concat, uniq } from "ramda";
 import { Point2D } from "../../../interfaces";
 import convert from "color-convert";
@@ -71,7 +71,7 @@ export const Initialization = {
 
 					Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, index, do_once_app_ready, set_loaded_fraction );
 					if( value.uses_team_color ){
-						Asset_Manager_ƒ.prepare_alternate_team_colors(
+						Asset_Manager_ƒ.prepare_alternate_palette_colors(
 							me,
 							value,
 							temp_image,
@@ -280,7 +280,7 @@ export const Initialization = {
 
 
 
-	prepare_alternate_team_colors: (
+	prepare_alternate_palette_colors: (
 		me: Asset_Manager_Data,
 		image_data: Image_Data,
 		image_element: HTMLImageElement,
@@ -288,28 +288,32 @@ export const Initialization = {
 	)=>{
 		console.log(`applying team color to ${image_data.url}`);
 		
-		const set_image = (new_image_element: HTMLImageElement) => {
-			if( !isArray( me.static_vals.raw_image_team_color_list[ image_name ] ) ){
-				me.static_vals.raw_image_team_color_list[ image_name ] = [];
-			}
-	
-			me.static_vals.raw_image_list[ image_name ] = cloneDeep(new_image_element);
+		map(range(3), (value, index) => {
+			const palette_key = `team${index}`
 
-			me.static_vals.raw_image_team_color_list[ image_name ][0] = cloneDeep(new_image_element);
-		}		
+			const set_image = (new_image_element: HTMLImageElement) => {
+				if( !isArray( me.static_vals.raw_image_palette_swap_list[ image_name ] ) ){
+					me.static_vals.raw_image_palette_swap_list[ image_name ] = {};
+				}
+		
+				me.static_vals.raw_image_list[ image_name ] = cloneDeep(new_image_element);
 
-		Asset_Manager_ƒ.apply_team_color_conversion(image_element, set_image)
+				me.static_vals.raw_image_palette_swap_list[ image_name ][palette_key] = cloneDeep(new_image_element);
+			}		
+
+			Asset_Manager_ƒ.apply_palette_shift_conversion(image_element, set_image)
+		})
 	},
 
 
-	apply_team_color_conversion: (
+	apply_palette_shift_conversion: (
 		original_image: HTMLImageElement,
 		set_image: (new_image_element: HTMLImageElement) => void,
 	) => {
 
 		/*----------------------- prepare an offscreen buffer -----------------------*/
-		var new_image_element = cloneDeep(original_image);
-		
+		var new_image_element = new Image();
+
 
 
 		const osb = document.createElement('canvas');
@@ -348,27 +352,23 @@ export const Initialization = {
 		osb.toBlob((blob: Blob|null) => {
 			if(blob != null){
 				const url = URL.createObjectURL(blob);
+				new_image_element.src = url;
 			
-				original_image.onload = () => {
+				new_image_element.onload = () => {
 				// no longer need to read the blob so it's revoked
+					log_image_from_canvas(new_image_element);
+
 					URL.revokeObjectURL(url);
-					original_image.onload = null;
+					new_image_element.onload = null;
 				};
 			
-				original_image.src = url;
 
-				const style = [
-					'font-size: 100px;',
-					`padding: ${original_image.naturalHeight}px ${original_image.naturalWidth}px;`,
-					`background: url(${osb.toDataURL()}) no-repeat;`,
-					'background-size: contain;'
-				].join(' ');
-				console.log('%c ', style);
 
-				set_image(original_image)
+				set_image(new_image_element)
 			}
 		})
 
 	}
 
 }
+

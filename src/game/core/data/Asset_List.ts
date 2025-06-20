@@ -11,7 +11,7 @@ export const asset_list: Static_Values = {
 
 
 	raw_image_list: {},
-	raw_image_team_color_list: {},
+	raw_image_palette_swap_list: {},
 	assets_meta: {},
 	
 	tile_types: tile_types,
