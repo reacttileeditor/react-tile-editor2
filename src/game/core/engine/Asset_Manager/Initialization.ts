@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { Asset_Manager_Data, Asset_Manager_ƒ, Image_Data } from "./Asset_Manager";
-import { cloneDeep, filter, isArray, isString, map, range, size } from "lodash";
+import { cloneDeep, filter, isArray, isObjectLike, isString, map, range, size } from "lodash";
 import { is_all_true, log_image_from_canvas, modulo, ƒ } from "../Utils";
 import { concat, uniq } from "ramda";
 import { Point2D } from "../../../interfaces";
@@ -292,13 +292,13 @@ export const Initialization = {
 			const palette_key = `team${index}`
 
 			const set_image = (new_image_element: HTMLImageElement) => {
-				if( !isArray( me.static_vals.raw_image_palette_swap_list[ image_name ] ) ){
+				if( !isObjectLike( me.static_vals.raw_image_palette_swap_list[ image_name ] ) ){
 					me.static_vals.raw_image_palette_swap_list[ image_name ] = {};
 				}
 		
-				me.static_vals.raw_image_list[ image_name ] = cloneDeep(new_image_element);
+				//me.static_vals.raw_image_list[ image_name ] = cloneDeep(new_image_element);
 
-				me.static_vals.raw_image_palette_swap_list[ image_name ][palette_key] = cloneDeep(new_image_element);
+				me.static_vals.raw_image_palette_swap_list[ image_name ][palette_key] = new_image_element;
 			}		
 
 			Asset_Manager_ƒ.apply_palette_shift_conversion(image_element, set_image)
