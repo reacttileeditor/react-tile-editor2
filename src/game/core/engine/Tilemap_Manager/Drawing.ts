@@ -25,6 +25,7 @@ import { MTP_Anchor_Data } from "../../data/Multi_Tile_Patterns";
 import { Asset_Blit_List, Asset_Blit_Tilemap, Tilemap_Single, Tilemap_Keys, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager";
 import Prando from "prando";
 import { Image_Data_Names } from "../../data/Image_Data";
+import { Palette_Names } from "../../data/Palette_List";
 
 
 
@@ -467,7 +468,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				brightness:					isEqual(cursor_pos, val.pos) ? 1.0 + 0.75 * Math.sin( _BM.time_tracker.current_tick * 0.2) : 1.0,
 				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.direction),
 				vertically_flipped:			false,
-				palette:					`team${val.team}`
+				palette:					`team${val.team}` as Palette_Names
 			})
 		})
 	},

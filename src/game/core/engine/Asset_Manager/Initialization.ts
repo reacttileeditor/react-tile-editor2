@@ -2,9 +2,10 @@ import { Dispatch, SetStateAction } from "react";
 import { Asset_Manager_Data, Asset_Manager_ƒ, Image_Data } from "./Asset_Manager";
 import { cloneDeep, filter, isArray, isObjectLike, isString, map, range, size } from "lodash";
 import { is_all_true, log_image_from_canvas, modulo, ƒ } from "../Utils";
-import { concat, uniq } from "ramda";
+import { concat, keys, uniq } from "ramda";
 import { Point2D } from "../../../interfaces";
 import convert from "color-convert";
+import { palette_list, Palette_Names } from "../../data/Palette_List";
 
 var has_launched_app_already = false;
 
@@ -288,8 +289,8 @@ export const Initialization = {
 	)=>{
 		console.log(`applying team color to ${image_data.url}`);
 		
-		map(range(3), (value, index) => {
-			const palette_key = `team${index}`
+		map(keys(palette_list), (palette_name, index) => {
+			const palette_key = palette_name
 
 			const set_image = (new_image_element: HTMLImageElement) => {
 				if( !isObjectLike( me.static_vals.raw_image_palette_swap_list[ image_name ] ) ){
@@ -301,13 +302,14 @@ export const Initialization = {
 				me.static_vals.raw_image_palette_swap_list[ image_name ][palette_key] = new_image_element;
 			}		
 
-			Asset_Manager_ƒ.apply_palette_shift_conversion(image_element, set_image)
+			Asset_Manager_ƒ.apply_palette_shift_conversion(image_element, palette_key, set_image);
 		})
 	},
 
 
 	apply_palette_shift_conversion: (
 		original_image: HTMLImageElement,
+		palette: Palette_Names,
 		set_image: (new_image_element: HTMLImageElement) => void,
 	) => {
 
@@ -325,27 +327,11 @@ export const Initialization = {
 		const image_data: globalThis.ImageData = osb_ctx.getImageData(0, 0, original_image.naturalWidth, original_image.naturalHeight);
 
 		/*----------------------- do the actual color conversion -----------------------*/
+		Asset_Manager_ƒ.apply_individual_palette_HSL_shift(
+			image_data,
+			palette,
+		);
 
-		//for now we're gonna do some maximal fuckery and just shift the colors.
-
-		for (let i = 0; i < image_data.data.length; i += 4) {
-			if(
-				image_data.data[i + 0] == 249 &&
-				image_data.data[i + 1] == 48 &&
-				image_data.data[i + 2] == 61
-			){
-				image_data.data[i + 3] = 0;
-			}
-
-			const hsl_version = convert.rgb.hsl(image_data.data[i + 0],image_data.data[i + 1], image_data.data[i + 2] );
-			hsl_version[0] = modulo(hsl_version[0] + 50, 255);
-			const back_to_rgb = convert.hsl.rgb(hsl_version);
-
-			image_data.data[i + 0] = back_to_rgb[0];
-			image_data.data[i + 1] = back_to_rgb[1];
-			image_data.data[i + 2] = back_to_rgb[2];
-			
-		}
 		osb_ctx.putImageData(image_data, 0, 0);		
 
 		/*----------------------- prepare an offscreen buffer -----------------------*/
@@ -368,7 +354,35 @@ export const Initialization = {
 			}
 		})
 
-	}
+	},
 
+	apply_individual_palette_HSL_shift: (
+		image_data: globalThis.ImageData,
+		palette: Palette_Names,
+	) => {
+		//for now we're gonna do some maximal fuckery and just shift the colors.
+
+		const shift_amount = palette_list[palette].val
+
+		for (let i = 0; i < image_data.data.length; i += 4) {
+			if(
+				image_data.data[i + 0] == 249 &&
+				image_data.data[i + 1] == 48 &&
+				image_data.data[i + 2] == 61
+			){
+				image_data.data[i + 3] = 0;
+			}
+
+			const hsl_version = convert.rgb.hsl(image_data.data[i + 0],image_data.data[i + 1], image_data.data[i + 2] );
+			hsl_version[0] = modulo(hsl_version[0] + shift_amount, 255);
+			const back_to_rgb = convert.hsl.rgb(hsl_version);
+
+			image_data.data[i + 0] = back_to_rgb[0];
+			image_data.data[i + 1] = back_to_rgb[1];
+			image_data.data[i + 2] = back_to_rgb[2];
+			
+		}
+
+	}
 }
 

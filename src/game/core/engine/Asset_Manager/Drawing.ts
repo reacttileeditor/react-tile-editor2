@@ -7,6 +7,7 @@ import { Blit_Manager_Data, Blit_Manager_ƒ } from "../Blit_Manager";
 import { Point2D } from "../../../interfaces";
 import * as Utils from "../Utils";
 import { Image_And_Image_Sequence_Data_Names, Image_Data_Names } from "../../data/Image_Data";
+import { Palette_Names } from "../../data/Palette_List";
 
 
 
@@ -256,7 +257,7 @@ export const Drawing = {
 		brightness: number,
 		horizontally_flipped: boolean,
 		vertically_flipped: boolean,
-		palette?: string,
+		palette?: Palette_Names,
 	}) => {
 		/*
 			Before we get started, we have a special 'magic name' used to make various objects (such as floating hp numbers) skip drawing a sprite entirely.

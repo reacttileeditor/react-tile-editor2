@@ -19,6 +19,7 @@ import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Cust
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
 import { Game_Manager_Data, Game_Manager_ƒ } from "./Game_Manager";
+import { Palette_Names } from "../../data/Palette_List";
 
 export const Game_Manager_ƒ_Drawing = {
 	do_one_frame_of_rendering: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): void => {
@@ -78,7 +79,7 @@ export const Game_Manager_ƒ_Drawing = {
 				brightness:					ƒ.if( (Game_Manager_ƒ.get_time_offset(me, _BM) - val.last_changed_hitpoints) < 80, 3.0, 1.0),
 				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
 				vertically_flipped:			false,
-				palette:					`team${val.team}`
+				palette:					`team${val.team}` as Palette_Names
 			});
 
 			Asset_Manager_ƒ.draw_hitpoints({
@@ -155,7 +156,7 @@ export const Game_Manager_ƒ_Drawing = {
 				brightness:					isEqual(cursor_pos, val.tile_pos) ? 1.0 + 0.75 * Math.sin(Game_Manager_ƒ.get_tick_offset(me, _BM) * 0.2) : 1.0,
 				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
 				vertically_flipped:			false,
-				palette:					`team${val.team}`
+				palette:					`team${val.team}` as Palette_Names
 			})
 
 			Asset_Manager_ƒ.draw_hitpoints({

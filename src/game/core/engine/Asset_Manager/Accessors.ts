@@ -11,6 +11,7 @@ import { zorder } from "../../constants/zorder";
 import { MTP_Graphic_Item } from "../../data/Multi_Tile_Patterns";
 import Prando from "prando";
 import { Image_And_Image_Sequence_Data_Names, Image_Data_Names } from "../../data/Image_Data";
+import { Palette_Names } from "../../data/Palette_List";
 
 
 
@@ -56,7 +57,7 @@ export const Accessors = {
 	get_data_for_individual_asset: (
 		_AM: Asset_Manager_Data,
 		asset_name: Image_Data_Names,
-		palette?: string,
+		palette?: Palette_Names,
 	): Asset_Data_Record => {
 		let { raw_image_list, image_data_list, assets_meta } = _AM.static_vals;
 
@@ -86,7 +87,7 @@ export const Accessors = {
 	get_data_for_asset_name: (
 		_AM: Asset_Manager_Data,
 		asset_name: Image_And_Image_Sequence_Data_Names,
-		palette?: string,
+		palette?: Palette_Names,
 	): Array<Asset_Data_Record> => {
 		let { image_sequence_data_list } = _AM.static_vals;
 
@@ -109,7 +110,7 @@ export const Accessors = {
 		_AM: Asset_Manager_Data,
 		asset_name: Image_Data_Names,
 		image_data: Image_Data,
-		palette?: string,
+		palette?: Palette_Names,
 	): HTMLImageElement => {
 		let { raw_image_list, image_data_list, assets_meta, raw_image_palette_swap_list } = _AM.static_vals;
 	
