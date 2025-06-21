@@ -362,27 +362,25 @@ export const Initialization = {
 	) => {
 		//for now we're gonna do some maximal fuckery and just shift the colors.
 
-		const shift_amount = palette_list[palette].val
+		const pairs = palette_list[palette].pairs
 
-		for (let i = 0; i < image_data.data.length; i += 4) {
-			if(
-				image_data.data[i + 0] == 249 &&
-				image_data.data[i + 1] == 48 &&
-				image_data.data[i + 2] == 61
-			){
-				image_data.data[i + 3] = 0;
+		map( pairs, (pair, index)=>{
+			const palette_trigger_color = convert.hex.rgb(pair[0])
+			const final_color = convert.hex.rgb(pair[1]);
+
+			for (let i = 0; i < image_data.data.length; i += 4) {
+				if(
+					image_data.data[i + 0] == palette_trigger_color[0] &&
+					image_data.data[i + 1] == palette_trigger_color[1] &&
+					image_data.data[i + 2] == palette_trigger_color[2]
+				){
+					image_data.data[i + 0] = final_color[0];
+					image_data.data[i + 1] = final_color[1];
+					image_data.data[i + 2] = final_color[2];
+				}
+				
 			}
-
-			const hsl_version = convert.rgb.hsl(image_data.data[i + 0],image_data.data[i + 1], image_data.data[i + 2] );
-			hsl_version[0] = modulo(hsl_version[0] + shift_amount, 255);
-			const back_to_rgb = convert.hsl.rgb(hsl_version);
-
-			image_data.data[i + 0] = back_to_rgb[0];
-			image_data.data[i + 1] = back_to_rgb[1];
-			image_data.data[i + 2] = back_to_rgb[2];
-			
-		}
-
+		})
 	}
 }
 
