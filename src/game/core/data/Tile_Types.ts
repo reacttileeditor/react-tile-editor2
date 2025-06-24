@@ -31,7 +31,8 @@ export type Tile_Name__Excluding_Virtual_Tiles =
 export type Tile_Name__Virtual_Tiles_Only = "red-path-unreachable-dot" |
 "arrowhead-green" |
 "arrow-green" |
-"cursor_green";
+"cursor_green" |
+"tile_boundary";
 
 const ground_tiles = /(dirt|grass|menhir|sand|bush|wideleaf_scrub)/;
 const ground_level_tiles = /(dirt|grass|menhir|sand|bush|wideleaf_scrub|water_reeds|water_shallow)/;
@@ -877,7 +878,7 @@ export const tile_types: Array<Tile_Item> = [
 										[ ground_tiles, /.*/]
 							]
 		}],
-	}
+	},
 	/*,{
 		name: "anim_test",
 		variants: [{
@@ -887,5 +888,78 @@ export const tile_types: Array<Tile_Item> = [
 			}]
 		}],
 	}*/
+
+
+	{
+		name: "tile_boundary",
+		graphics: [{
+			zorder: zorder.rocks,
+			asset_variants: [
+				'tile_boundary_fill',
+			],
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'tile_boundary_ne1',
+			],
+			restrictions:	[
+										[/.*/, /^((?!(tile_boundary)).)*$/],
+									[/.*/, /tile_boundary/, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'tile_boundary_nw1',
+			],
+			restrictions:	[
+										[/^((?!(tile_boundary)).)*$/, /.*/],
+									[/.*/, /tile_boundary/, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'tile_boundary_w1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[/^((?!(tile_boundary)).)*$/, /tile_boundary/, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'tile_boundary_e1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, /tile_boundary/, /^((?!(tile_boundary)).)*$/],
+										[/.*/, /.*/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'tile_boundary_se1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, /tile_boundary/, /.*/],
+										[/.*/, /^((?!(tile_boundary)).)*$/]
+							]
+		},{
+			zorder: zorder.water_edge,
+			asset_variants: [
+				'tile_boundary_sw1',
+			],
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, /tile_boundary/, /.*/],
+										[ /^((?!(tile_boundary)).)*$/, /.*/]
+							]
+		}],
+
+	}
+
 ];
 	

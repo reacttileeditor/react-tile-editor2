@@ -223,6 +223,71 @@ export const UI_Tile_Image_Data = {
 		uses_palette_swap: true,
 	},
 
+
+	tile_boundary_fill: {
+		url: "tile_boundary_transitions.png",
+		bounds: {
+			x: 1,
+			y: 25,
+			w: 54,
+			h: 34,
+		},
+	},
+	tile_boundary_sw1: {
+		url: "tile_boundary_transitions.png",
+		bounds: {
+			x: 1,
+			y: 169,
+			w: 54,
+			h: 34,
+		},
+	},
+	tile_boundary_se1: {
+		url: "tile_boundary_transitions.png",
+		bounds: {
+			x: 1,
+			y: 61,
+			w: 54,
+			h: 34,
+		},
+	},
+	tile_boundary_w1: {
+		url: "tile_boundary_transitions.png",
+		bounds: {
+			x: 1,
+			y: 205,
+			w: 54,
+			h: 34,
+		},
+	},
+	tile_boundary_e1: {
+		url: "tile_boundary_transitions.png",
+		bounds: {
+			x: 1,
+			y: 97,
+			w: 54,
+			h: 34,
+		},
+	},
+	tile_boundary_nw1: {
+		url: "tile_boundary_transitions.png",
+		bounds: {
+			x: 1,
+			y: 241,
+			w: 54,
+			h: 34,
+		},
+	},
+	tile_boundary_ne1: {
+		url: "tile_boundary_transitions.png",
+		bounds: {
+			x: 1,
+			y: 133,
+			w: 54,
+			h: 34,
+		},
+	}
+
 };
 	
 const Safety: Image_Data_Dictionary = UI_Tile_Image_Data;
