@@ -57,6 +57,20 @@ export const Character_Image_Data = {
 	undead_javelineer_ne_stand: {
 		url: "characters/undead_javelineer_ne_stand.png",
 	},
+	undead_javelineer_se_attack: {
+		url: "characters/undead_javelineer_se_attack.png",
+		frames: 12,
+		frame_duration: 100,
+		ping_pong: false,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 98,
+			h: 178,
+		},
+		uses_palette_swap: true,
+	},
 	human_footman_se_stand: {
 		url: "characters/human_footman_stand_se.png",
 		frames: 5,
@@ -165,19 +179,6 @@ export const Character_Image_Data = {
 			y: 0,
 			w: 68,
 			h: 116,
-		},
-	},
-	undead_javelineer_se_attack: {
-		url: "characters/undead_javelineer_se_attack.png",
-		frames: 12,
-		frame_duration: 100,
-		ping_pong: false,
-		pad: 2,
-		bounds: {
-			x: 1,
-			y: 1,
-			w: 98,
-			h: 178,
 		},
 	},
 	"peasant-se-walk": {
