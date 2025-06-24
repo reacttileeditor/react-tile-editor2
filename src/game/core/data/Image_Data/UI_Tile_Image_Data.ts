@@ -217,7 +217,12 @@ export const UI_Tile_Image_Data = {
 			w: 64,
 			h: 67,
 		},
-	}
+	},
+	unit_team_indicator: {
+		url: "unit_team_indicator.png",
+		uses_palette_swap: true,
+	},
+
 };
 	
 const Safety: Image_Data_Dictionary = UI_Tile_Image_Data;
