@@ -6,6 +6,7 @@ import { Icon, Trash } from "@rsuite/icons";
 import { BsFileEarmark, BsFileEarmarkLock2 } from "react-icons/bs";
 import { includes } from "ramda";
 import { map } from "lodash";
+import { IconType } from "react-icons";
 
 export const Load_File_Modal = (props: {
 	show_load_dialog: boolean,
@@ -40,7 +41,7 @@ export const Load_File_Modal = (props: {
 				>
 					<span>
 						<Whisper placement='top' speaker={<Tooltip>{"This file is built into the source code, and can neither be deleted nor overwritten."}</Tooltip>}>
-							<Icon as={BsFileEarmarkLock2} className="file-icon"/>
+							<Icon as={BsFileEarmarkLock2 as React.ElementType} className="file-icon"/>
 						</Whisper>
 						{val}
 						</span>
@@ -57,7 +58,7 @@ export const Load_File_Modal = (props: {
 					}}
 					className={ val == selected_file ? 'selected' : ''}
 				>
-					<span><Icon as={BsFileEarmark} className="file-icon"/>{val}</span> 
+					<span><Icon as={BsFileEarmark as React.ElementType} className="file-icon"/>{val}</span> 
 					<Icon
 						as={Trash} className="delete-icon"
 						onClick={(evt)=>{

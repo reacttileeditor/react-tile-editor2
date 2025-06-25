@@ -284,7 +284,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			</Button>
 			<Whisper placement='top' speaker={<Tooltip>{"Copy Level to Clipboard"}</Tooltip>}>
 				<IconButton
-					icon={<Icon as={BsClipboard2Plus} />}
+					icon={<Icon as={BsClipboard2Plus as React.ElementType} />}
 					onClick={()=>{
 						Tilemap_Manager_ƒ.export_level_to_clipboard(props._Tilemap_Manager(), props._Asset_Manager());
 					}}

@@ -19,6 +19,7 @@ import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Cust
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
 import { Game_Manager_Data, Game_Manager_ƒ } from "./Game_Manager";
+import { Palette_Names } from "../../data/Palette_List";
 
 export const Game_Manager_ƒ_Drawing = {
 	do_one_frame_of_rendering: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): void => {
@@ -78,6 +79,7 @@ export const Game_Manager_ƒ_Drawing = {
 				brightness:					ƒ.if( (Game_Manager_ƒ.get_time_offset(me, _BM) - val.last_changed_hitpoints) < 80, 3.0, 1.0),
 				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
 				vertically_flipped:			false,
+				palette:					`team${val.team}` as Palette_Names
 			});
 
 			Asset_Manager_ƒ.draw_hitpoints({
@@ -154,6 +156,7 @@ export const Game_Manager_ƒ_Drawing = {
 				brightness:					isEqual(cursor_pos, val.tile_pos) ? 1.0 + 0.75 * Math.sin(Game_Manager_ƒ.get_tick_offset(me, _BM) * 0.2) : 1.0,
 				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
 				vertically_flipped:			false,
+				palette:					`team${val.team}` as Palette_Names
 			})
 
 			Asset_Manager_ƒ.draw_hitpoints({
@@ -166,44 +169,64 @@ export const Game_Manager_ƒ_Drawing = {
 				opacity:					1.0,
 			})			
 
-
-			map( me.game_state.custom_object_list, (val,idx) => {
-
+			/*
+				If there's a creature selected, then draw an indicator under every -other- creature to indicate the team.
+			*/
+			if(me.game_state.selected_object_index && me.game_state.selected_object_index != idx){
 				Asset_Manager_ƒ.draw_image_for_asset_name({
 					_AM:						_AM,
-					asset_name:					Custom_Object_ƒ.yield_asset(val),
+					asset_name:					'unit_team_indicator',
 					_BM:						_BM,
-					pos:						val.pixel_pos,
-					zorder:						Custom_Object_ƒ.yield_zorder(val),
-					current_milliseconds:		Custom_Object_ƒ.get_lifetime_ms(
-						val,
-						Game_Manager_ƒ.get_time_offset(me, _BM)
-					),
+					pos:						val.pixel_pos, 
+					zorder:						zorder.map_cursor_low,
+					current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 					opacity:					1.0,
-					rotate:						val.rotate,
+					rotate:						0.0,
 					brightness:					1.0,
 					horizontally_flipped:		false,
 					vertically_flipped:			false,
-				})
-	
-				Asset_Manager_ƒ.draw_text({
-					text:						Custom_Object_ƒ.yield_text(val),
-					_BM:						_BM,
-					_AM:						_AM,
-					pos:						val.pixel_pos,
-					zorder:						Custom_Object_ƒ.yield_zorder(val),
-					current_milliseconds:		Custom_Object_ƒ.get_lifetime_ms(
-													val,
-													Game_Manager_ƒ.get_time_offset(me, _BM)
-												),
-					opacity:					1.0,
-					rotate:						val.rotate,
-					brightness:					1.0,
-					horizontally_flipped:		false,
-					vertically_flipped:			false,
-				})
-			})	
+					palette:					`team${val.team}` as Palette_Names
+				});
+			}				
 		})
+
+
+		map( me.game_state.custom_object_list, (val,idx) => {
+
+			Asset_Manager_ƒ.draw_image_for_asset_name({
+				_AM:						_AM,
+				asset_name:					Custom_Object_ƒ.yield_asset(val),
+				_BM:						_BM,
+				pos:						val.pixel_pos,
+				zorder:						Custom_Object_ƒ.yield_zorder(val),
+				current_milliseconds:		Custom_Object_ƒ.get_lifetime_ms(
+					val,
+					Game_Manager_ƒ.get_time_offset(me, _BM)
+				),
+				opacity:					1.0,
+				rotate:						val.rotate,
+				brightness:					1.0,
+				horizontally_flipped:		false,
+				vertically_flipped:			false,
+			})
+
+			Asset_Manager_ƒ.draw_text({
+				text:						Custom_Object_ƒ.yield_text(val),
+				_BM:						_BM,
+				_AM:						_AM,
+				pos:						val.pixel_pos,
+				zorder:						Custom_Object_ƒ.yield_zorder(val),
+				current_milliseconds:		Custom_Object_ƒ.get_lifetime_ms(
+												val,
+												Game_Manager_ƒ.get_time_offset(me, _BM)
+											),
+				opacity:					1.0,
+				rotate:						val.rotate,
+				brightness:					1.0,
+				horizontally_flipped:		false,
+				vertically_flipped:			false,
+			})
+		})	
 		Game_Manager_ƒ.draw_cursor(me, _AM, _BM, _TM);
 
 	},

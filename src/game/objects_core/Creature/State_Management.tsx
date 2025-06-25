@@ -150,8 +150,8 @@ export const Creature_ƒ_State_Management = {
 			}
 		}
 
-		let add_changes: Array<Change_Value> = map(filter((val)=>(val.type == 'add'), incoming_changes), (val)=>(val.value));
-		let set_changes: Array<Change_Value>= map(filter((val)=>(val.type == 'set'), incoming_changes), (val)=>(val.value));
+		let add_changes: Array<Change_Value> = map(filter((changeItem)=>(changeItem.type == 'add'), incoming_changes), (val: Variable_Specific_Change_Instance)=>(val.value));
+		let set_changes: Array<Change_Value>= map(filter((changeItem)=>(changeItem.type == 'set'), incoming_changes), (val: Variable_Specific_Change_Instance)=>(val.value));
 
 		let reduced_add_op = reduce(
 			(a, b) => {

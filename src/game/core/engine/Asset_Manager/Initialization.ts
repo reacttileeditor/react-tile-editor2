@@ -1,11 +1,13 @@
 import { Dispatch, SetStateAction } from "react";
-import { Asset_Manager_Data, Asset_Manager_ƒ } from "./Asset_Manager";
-import { filter, isString, map, size } from "lodash";
-import { is_all_true, ƒ } from "../Utils";
-import { concat, uniq } from "ramda";
+import { Asset_Manager_Data, Asset_Manager_ƒ, Image_Data } from "./Asset_Manager";
+import { cloneDeep, filter, isArray, isObjectLike, isString, map, range, size } from "lodash";
+import { is_all_true, log_image_from_canvas, modulo, ƒ } from "../Utils";
+import { concat, keys, uniq } from "ramda";
 import { Point2D } from "../../../interfaces";
+import convert from "color-convert";
+import { palette_list, Palette_Names } from "../../data/Palette_List";
 
-
+var has_launched_app_already = false;
 
 var PATH_PREFIX = "./assets/"
 
@@ -18,7 +20,9 @@ export const Initialization = {
 		do_once_app_ready: ()=>void,
 		set_loaded_fraction: Dispatch<SetStateAction<number>>,
 	) => {
-		map(me.static_vals.image_data_list, ( value, index ) => {
+		console.error('launch app');
+		if(!has_launched_app_already){
+			map(me.static_vals.image_data_list, ( value, index ) => {
 
 			var temp_image = new Image();
 			var temp_url = PATH_PREFIX + value.url;
@@ -34,38 +38,55 @@ export const Initialization = {
 					}
 				}
 			}
+			// temp_image.onload = () => {
+			// 	console.log(`loading ${temp_url} ${temp_image.complete}`)
+			// }
 
-			temp_image.onload = () => {
-				me.static_vals.raw_image_list[ index ] = temp_image;
-				
+			if( me.static_vals.raw_image_list[ index ] == undefined ){
+				temp_image.onload = () => {
+					console.log(`loading ${temp_url} ${temp_image.complete}`)
+					me.static_vals.raw_image_list[ index ] = temp_image;
+					
 
-				me.static_vals.assets_meta[ index ] = {
-					dim: {
-						w: temp_image.naturalWidth,
-						h: temp_image.naturalHeight
-					},
-					bounds: value.bounds,
-					preprocessed: false,
+					me.static_vals.assets_meta[ index ] = {
+						dim: {
+							w: temp_image.naturalWidth,
+							h: temp_image.naturalHeight
+						},
+						bounds: value.bounds,
+						preprocessed: false,
+					};
+
+
+					/*
+						Here, we're updating some "read from the image" metadata; we want to know the maximum possible sprite size we could be drawing on the screen, so we can do viewport culling and such.  The key distinction for "does bounds exist as a value" is that some assets are whole images (for which bounds doesn't get defined, but it'd be the full width/height of the image file), and for other assets, it's a spritesheet, so we're just clipping out a smaller region of it.
+
+						Regardless, we want to tally up a max size that we ever got.
+					*/
+					if( value.bounds != undefined ){
+						Asset_Manager_ƒ.update_max_asset_sizes(me, {x: value.bounds.w, y: value.bounds.h});
+					} else {
+						Asset_Manager_ƒ.update_max_asset_sizes(me, {x: temp_image.naturalWidth, y: temp_image.naturalHeight});
+					}
+
+
+					Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, index, do_once_app_ready, set_loaded_fraction );
+					if( value.uses_palette_swap ){
+						Asset_Manager_ƒ.prepare_alternate_palette_colors(
+							me,
+							value,
+							temp_image,
+							index
+						);
+					}
+
+					temp_image.onload = null;
 				};
+			}
+			});
 
-
-				/*
-					Here, we're updating some "read from the image" metadata; we want to know the maximum possible sprite size we could be drawing on the screen, so we can do viewport culling and such.  The key distinction for "does bounds exist as a value" is that some assets are whole images (for which bounds doesn't get defined, but it'd be the full width/height of the image file), and for other assets, it's a spritesheet, so we're just clipping out a smaller region of it.
-
-					Regardless, we want to tally up a max size that we ever got.
-				*/
-				if( value.bounds != undefined ){
-					Asset_Manager_ƒ.update_max_asset_sizes(me, {x: value.bounds.w, y: value.bounds.h});
-				} else {
-					Asset_Manager_ƒ.update_max_asset_sizes(me, {x: temp_image.naturalWidth, y: temp_image.naturalHeight});
-				}
-
-
-				Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, index, do_once_app_ready, set_loaded_fraction );
-
-				temp_image.onload = null;
-			};
-		});
+			has_launched_app_already = true;
+		}
 	},
 
 	update_max_asset_sizes: (
@@ -259,4 +280,107 @@ export const Initialization = {
 	},
 
 
+
+	prepare_alternate_palette_colors: (
+		me: Asset_Manager_Data,
+		image_data: Image_Data,
+		image_element: HTMLImageElement,
+		image_name: string,
+	)=>{
+		console.log(`applying team color to ${image_data.url}`);
+		
+		map(keys(palette_list), (palette_name, index) => {
+			const palette_key = palette_name
+
+			const set_image = (new_image_element: HTMLImageElement) => {
+				if( !isObjectLike( me.static_vals.raw_image_palette_swap_list[ image_name ] ) ){
+					me.static_vals.raw_image_palette_swap_list[ image_name ] = {};
+				}
+		
+				//me.static_vals.raw_image_list[ image_name ] = cloneDeep(new_image_element);
+
+				me.static_vals.raw_image_palette_swap_list[ image_name ][palette_key] = new_image_element;
+			}		
+
+			Asset_Manager_ƒ.apply_palette_shift_conversion(image_element, palette_key, set_image);
+		})
+	},
+
+
+	apply_palette_shift_conversion: (
+		original_image: HTMLImageElement,
+		palette: Palette_Names,
+		set_image: (new_image_element: HTMLImageElement) => void,
+	) => {
+
+		/*----------------------- prepare an offscreen buffer -----------------------*/
+		var new_image_element = new Image();
+
+
+
+		const osb = document.createElement('canvas');
+		osb.width = original_image.naturalWidth;
+		osb.height = original_image.naturalHeight;
+		const osb_ctx = (osb.getContext("2d") as CanvasRenderingContext2D);
+		osb_ctx.drawImage(original_image, 0, 0 );
+
+		const image_data: globalThis.ImageData = osb_ctx.getImageData(0, 0, original_image.naturalWidth, original_image.naturalHeight);
+
+		/*----------------------- do the actual color conversion -----------------------*/
+		Asset_Manager_ƒ.apply_individual_palette_HSL_shift(
+			image_data,
+			palette,
+		);
+
+		osb_ctx.putImageData(image_data, 0, 0);		
+
+		/*----------------------- prepare an offscreen buffer -----------------------*/
+		osb.toBlob((blob: Blob|null) => {
+			if(blob != null){
+				const url = URL.createObjectURL(blob);
+				new_image_element.src = url;
+			
+				new_image_element.onload = () => {
+				// no longer need to read the blob so it's revoked
+					log_image_from_canvas(new_image_element);
+
+					URL.revokeObjectURL(url);
+					new_image_element.onload = null;
+				};
+			
+
+
+				set_image(new_image_element)
+			}
+		})
+
+	},
+
+	apply_individual_palette_HSL_shift: (
+		image_data: globalThis.ImageData,
+		palette: Palette_Names,
+	) => {
+		//for now we're gonna do some maximal fuckery and just shift the colors.
+
+		const pairs = palette_list[palette].pairs
+
+		map( pairs, (pair, index)=>{
+			const palette_trigger_color = convert.hex.rgb(pair[0])
+			const final_color = convert.hex.rgb(pair[1]);
+
+			for (let i = 0; i < image_data.data.length; i += 4) {
+				if(
+					image_data.data[i + 0] == palette_trigger_color[0] &&
+					image_data.data[i + 1] == palette_trigger_color[1] &&
+					image_data.data[i + 2] == palette_trigger_color[2]
+				){
+					image_data.data[i + 0] = final_color[0];
+					image_data.data[i + 1] = final_color[1];
+					image_data.data[i + 2] = final_color[2];
+				}
+				
+			}
+		})
+	}
 }
+

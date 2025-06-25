@@ -192,4 +192,24 @@ export const get_nth_permutation_of_deck = <T>(permutation_number: number, origi
 
 export const reorder_array = (original_array: Array<string>, new_order: Array<number>) : Array<string> => {
 	return map((val)=>(original_array[val]), new_order)
- }
+}
+
+export const log_image_from_canvas = (
+	original_image: HTMLImageElement,
+) => {
+	const osb = document.createElement('canvas');
+	osb.width = original_image.naturalWidth;
+	osb.height = original_image.naturalHeight;
+	const osb_ctx = (osb.getContext("2d") as CanvasRenderingContext2D);
+	osb_ctx.drawImage(original_image, 0, 0 );
+
+
+	const style = [
+		`font-size: ${original_image.naturalHeight}px;`,
+		`line-height: 0;`,
+		`padding: ${original_image.naturalHeight}px ${original_image.naturalWidth}px;`,
+		`background: url(${osb.toDataURL()}) no-repeat;`,
+		'background-size: contain;'
+	].join(' ');
+	console.log('%c ', style);
+}

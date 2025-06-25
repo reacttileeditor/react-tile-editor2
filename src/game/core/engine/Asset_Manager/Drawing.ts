@@ -7,6 +7,7 @@ import { Blit_Manager_Data, Blit_Manager_ƒ } from "../Blit_Manager";
 import { Point2D } from "../../../interfaces";
 import * as Utils from "../Utils";
 import { Image_And_Image_Sequence_Data_Names, Image_Data_Names } from "../../data/Image_Data";
+import { Palette_Names } from "../../data/Palette_List";
 
 
 
@@ -256,13 +257,14 @@ export const Drawing = {
 		brightness: number,
 		horizontally_flipped: boolean,
 		vertically_flipped: boolean,
+		palette?: Palette_Names,
 	}) => {
 		/*
 			Before we get started, we have a special 'magic name' used to make various objects (such as floating hp numbers) skip drawing a sprite entirely.
 		*/
 		if( p.asset_name !== 'omit_image' ){
-			const asset_data_records = Asset_Manager_ƒ.get_data_for_asset_name(p._AM, p.asset_name);
-
+			const asset_data_records = Asset_Manager_ƒ.get_data_for_asset_name(p._AM, p.asset_name, p.palette);
+	
 			if( size(asset_data_records) > 1 ){
 				let info = Asset_Manager_ƒ.get_current_frame_number_and_asset_data_for_animation_sequence(
 					Asset_Manager_ƒ.deterministically_convolute_animation_sequence(asset_data_records, p.current_milliseconds),
@@ -287,6 +289,7 @@ export const Drawing = {
 			}
 		}
 	},
+
 
 	draw_image_for_asset_name__single_image: (p: {
 		_AM: Asset_Manager_Data,

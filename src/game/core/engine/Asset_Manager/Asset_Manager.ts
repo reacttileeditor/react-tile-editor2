@@ -16,7 +16,8 @@ import { Image_And_Image_Sequence_Data_Names, Image_Data_Dictionary, Image_Data_
 
 export interface Image_Data {
 	url: string,
-	not_a_tile?: boolean, 
+	not_a_tile?: boolean,
+	uses_palette_swap?: boolean, 
 	bounds?: Rectangle,
 	frames?: number,
 	frame_duration?: number,
@@ -28,6 +29,7 @@ export interface Static_Values {
 	image_data_list: Image_Data_Type,
 	image_sequence_data_list: Image_Sequence_Dictionary,
 	raw_image_list: Image_Dictionary,
+	raw_image_palette_swap_list: Image_List_Dictionary,
 	assets_meta: Assets_Metadata_Dictionary,
 	tile_types: Array<Tile_Item>,
 	multi_tile_types: Array<Multi_Tile_Pattern>,
@@ -43,6 +45,11 @@ export interface Static_Values {
 interface Image_Dictionary {
 	[index: string]: HTMLImageElement
 }
+
+interface Image_List_Dictionary {
+	[index: string]: Image_Dictionary
+}
+
 
 interface Assets_Metadata_Dictionary {
 	[index: string]: Assets_Metadata_Spritesheet_Item|Assets_Metadata_Single_Image_Item,

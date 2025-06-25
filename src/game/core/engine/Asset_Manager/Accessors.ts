@@ -11,6 +11,7 @@ import { zorder } from "../../constants/zorder";
 import { MTP_Graphic_Item } from "../../data/Multi_Tile_Patterns";
 import Prando from "prando";
 import { Image_And_Image_Sequence_Data_Names, Image_Data_Names } from "../../data/Image_Data";
+import { Palette_Names } from "../../data/Palette_List";
 
 
 
@@ -56,6 +57,7 @@ export const Accessors = {
 	get_data_for_individual_asset: (
 		_AM: Asset_Manager_Data,
 		asset_name: Image_Data_Names,
+		palette?: Palette_Names,
 	): Asset_Data_Record => {
 		let { raw_image_list, image_data_list, assets_meta } = _AM.static_vals;
 
@@ -65,16 +67,27 @@ export const Accessors = {
 			throw new Error( `Could not find an image in our image_data_list for the asset named ${asset_name}.` )
 		}
 
+		const raw_image: HTMLImageElement = Asset_Manager_ƒ.maybe_get_palette_swap_of_asset(
+			_AM,
+			asset_name,
+			image_data,
+			palette,
+		);
+
 		return {
-			raw_image: raw_image_list[ asset_name ]!,
+			raw_image: raw_image!,
 			image_data: image_data_list[ asset_name ]!,
 			metadata: assets_meta[ asset_name ]!
 		};		
 	},
 
+
+
+
 	get_data_for_asset_name: (
 		_AM: Asset_Manager_Data,
 		asset_name: Image_And_Image_Sequence_Data_Names,
+		palette?: Palette_Names,
 	): Array<Asset_Data_Record> => {
 		let { image_sequence_data_list } = _AM.static_vals;
 
@@ -85,11 +98,27 @@ export const Accessors = {
 			const asset_names = image_sequence_data_list[asset_name as keyof typeof image_sequence_data_list];
 
 			return map( asset_names, (individual_asset_name)=>(
-				Asset_Manager_ƒ.get_data_for_individual_asset(_AM, individual_asset_name)
+				Asset_Manager_ƒ.get_data_for_individual_asset(_AM, individual_asset_name, palette)
 			));
 		} else {
 			//etc, we've determined it's got to be an image data record.
-			return [Asset_Manager_ƒ.get_data_for_individual_asset(_AM, asset_name as Image_Data_Names)];
+			return [Asset_Manager_ƒ.get_data_for_individual_asset(_AM, asset_name as Image_Data_Names, palette)];
+		}
+	},
+
+	maybe_get_palette_swap_of_asset: (
+		_AM: Asset_Manager_Data,
+		asset_name: Image_Data_Names,
+		image_data: Image_Data,
+		palette?: Palette_Names,
+	): HTMLImageElement => {
+		let { raw_image_list, image_data_list, assets_meta, raw_image_palette_swap_list } = _AM.static_vals;
+	
+
+		if(image_data.uses_palette_swap && palette){
+			return raw_image_palette_swap_list[ asset_name ][ palette ];
+		} else {
+			return raw_image_list[ asset_name ]!;
 		}
 	},
 
