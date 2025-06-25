@@ -19,6 +19,7 @@ import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Cust
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
 import { Game_Manager_Data, Game_Manager_ƒ, Game_and_Tilemap_Manager_Data } from "./Game_Manager";
+import { Map_Analysis_ƒ } from "../Map_Analysis";
 
 
 
@@ -48,7 +49,7 @@ export const Game_Manager_ƒ_State_Management = {
 			return {
 				tm:	selected_creature != undefined
 					?
-					Game_Manager_ƒ.adjust_tiles_to_display_unit_path(get_game_state(), selected_creature, _AM, _BM, _TM).tm
+					Game_Manager_ƒ.adjust_tiles_to_display_unit_path(new_game_data, selected_creature, _AM, _BM, _TM).tm
 					:
 					Tilemap_Manager_ƒ.clear_tile_map(_TM, 'ui', _AM),
 				gm: new_game_data
@@ -71,7 +72,7 @@ export const Game_Manager_ƒ_State_Management = {
 		const me = get_game_state();
 		
 		let newly_selected_creature_index: number|undefined = Game_Manager_ƒ.get_creature_index_for_pos(me, new_pos);
-		
+		let newly_selected_object_possible_moves: Array<Point2D> = [];
 
 		let new_creature: Creature_Data|undefined = undefined;
 		let new_creature_array = cloneDeep(me.game_state.current_frame_state.creature_list);
@@ -117,12 +118,24 @@ export const Game_Manager_ƒ_State_Management = {
 		} else if(newly_selected_creature_index === me.game_state.selected_object_index ) {
 			/*
 				We just clicked, a second time, on the current unit, so instead of selecting it, we actually want to toggle; to de-select it.
+
+				We also don't need to clear `newly_selected_object_possible_moves` because it's already empty.
 			*/
 			newly_selected_creature_index = undefined;
 		} else {
 			/*
 				We've clicked on a new creature, so we want to pass along the index to the return statement, which means we don't need to do anything.
 			*/
+
+			const creature = Game_Manager_ƒ.get_current_turn_state(me).creature_list[ newly_selected_creature_index as number ]
+
+			newly_selected_object_possible_moves = Map_Analysis_ƒ.calculate_accessible_tiles_for_remaining_movement(
+				creature,
+				_TM,
+				new_pos
+			);
+
+			console.log(newly_selected_object_possible_moves);
 		}
 
 		let new_turn_list = cloneDeep(me.game_state.turn_list);
@@ -136,12 +149,20 @@ export const Game_Manager_ƒ_State_Management = {
 					creature_list: new_creature_array
 				},
 				selected_object_index: newly_selected_creature_index == -1 ? me.game_state.selected_object_index : newly_selected_creature_index,
+				selected_object_possible_moves: newly_selected_object_possible_moves,
 				turn_list: new_turn_list
 			}
 		}
 	},
 
-	adjust_tiles_to_display_unit_path: (me: Game_Manager_Data, creature: Creature_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data ): Game_and_Tilemap_Manager_Data => {
+
+	adjust_tiles_to_display_unit_path: (
+		me: Game_Manager_Data,
+		creature: Creature_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		_TM: Tilemap_Manager_Data
+	): Game_and_Tilemap_Manager_Data => {
 
 		
 
@@ -168,6 +189,12 @@ export const Game_Manager_ƒ_State_Management = {
 					!size(creature.path_data.path_this_turn)
 				){
 					return 'cursor_green';
+				} else if (
+					!size(creature.path_data.path_this_turn)
+					&&
+					includes({x: x_idx, y: y_idx}, me.game_state.selected_object_possible_moves)
+				){
+					return 'tile_boundary';
 				}
 
 

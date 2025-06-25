@@ -893,12 +893,12 @@ export const tile_types: Array<Tile_Item> = [
 	{
 		name: "tile_boundary",
 		graphics: [{
-			zorder: zorder.rocks,
+			zorder: zorder.map_cursor_low,
 			asset_variants: [
 				'tile_boundary_fill',
 			],
 		},{
-			zorder: zorder.water_edge,
+			zorder: zorder.map_cursor,
 			asset_variants: [
 				'tile_boundary_ne1',
 			],
@@ -908,7 +908,7 @@ export const tile_types: Array<Tile_Item> = [
 										[/.*/, /.*/]
 							]
 		},{
-			zorder: zorder.water_edge,
+			zorder: zorder.map_cursor,
 			asset_variants: [
 				'tile_boundary_nw1',
 			],
@@ -918,7 +918,7 @@ export const tile_types: Array<Tile_Item> = [
 										[/.*/, /.*/]
 							]
 		},{
-			zorder: zorder.water_edge,
+			zorder: zorder.map_cursor,
 			asset_variants: [
 				'tile_boundary_w1',
 			],
@@ -928,7 +928,7 @@ export const tile_types: Array<Tile_Item> = [
 										[/.*/, /.*/]
 							]
 		},{
-			zorder: zorder.water_edge,
+			zorder: zorder.map_cursor,
 			asset_variants: [
 				'tile_boundary_e1',
 			],
@@ -938,7 +938,7 @@ export const tile_types: Array<Tile_Item> = [
 										[/.*/, /.*/]
 							]
 		},{
-			zorder: zorder.water_edge,
+			zorder: zorder.map_cursor,
 			asset_variants: [
 				'tile_boundary_se1',
 			],
@@ -948,7 +948,7 @@ export const tile_types: Array<Tile_Item> = [
 										[/.*/, /^((?!(tile_boundary)).)*$/]
 							]
 		},{
-			zorder: zorder.water_edge,
+			zorder: zorder.map_cursor,
 			asset_variants: [
 				'tile_boundary_sw1',
 			],
