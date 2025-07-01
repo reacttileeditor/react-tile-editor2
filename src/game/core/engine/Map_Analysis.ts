@@ -40,13 +40,36 @@ export const Map_Analysis_ƒ = {
 		location: Point2D,
 	): Array<Point2D> => {
 
-		const open_tiles: Array<Point2D> = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
-			_TM,
-			location,
-			[]
-		)
+		// const open_tiles: Array<Point2D> = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
+		// 	_TM,
+		// 	location,
+		// 	[]
+		// )
 
-		return concat(open_tiles, [location]);
+		// return concat(open_tiles, [location]);
+
+		/*
+			WARNING:  this entire system bakes in a cardinal assumption that our a-star pathfinding doesn't, which is that moving from tile A to tile B is purely determined by the cost of tile B.  This algorithm should be easily adaptable to a differential system (relying on A->B rather than just B), but it's important for future reference.   A differential system would be desirable for e.g. Civ-style "embarkation", or any similar things where it's more expensive to step "up" than it is to step "down".
+		*/
+
+
+		/*
+			The process we're following here is to gradually "grow" our current tile search, step by step, until we run out of tiles to move to.
+
+			We use a paired data structure, containing a location, and the number of moves remaining at that location.  When the algorithm is finished, we discard all of the "remaining moves" data, since we just want the list of "which tiles".
+
+			We do most of the work in a function called "expand search"; it takes a list of parent tiles (we're able to start with a list of just one; our source tile), and each parent tile lists "how many moves we have left" for the path that it took to get to them.  In each phase of this, we step over every single tile, and grab every "open" tile next to it.  For interior tiles, this obviously gives no results, but for exterior ones, there's a lot of overlap between adjacent border tiles (two adjacent ones in a 'triangle' will always grab the same third member of the triangle) - because of this we do a big "uniq" pass to eliminate all over the overlap.
+
+			Each pass of this function should basically return a new, 1-tile wide "shell" around the edge.
+
+			Naturally; this blob needs to stop growing on a tile-by-tile basis as we run out of movement.  Because we have tile move costs that are more complex than "one", it's easier to "red flag" this stuff by detecting when it dips below zero, rather than looking for zero itself.  Essentially, we filter after every "growth", and look for any newly added tiles where the remaining moves have dipped below zero, and remove them from the additions.   We don't prevent growth, so yeah; every further "iteration" of the list will eat the cost of re-calculating all the previously invalid growth source, and if that proves expensive, we might optimize by adding some memory of what's to be omitted.
+
+			We know that we're done when we attempt to `expand_search()` and nothing changes.  Once the results of a pass are identical to the previous one, we're done. 
+		*/
+
+		//initially, we're just going to cheat and do a numeric number of passes instead, though.
+
+
 	},
 
 	expand_search: (
