@@ -107,20 +107,25 @@ export const Map_Analysis_ƒ = {
 		//rather than using uniq, we need to grab the value that has the most move points left, since that would be the shortest path
 
 		const non_unique_open_possibilities: Array<Tile_And_Movement_Data> = flatten(
-				map(current_tiles, (parent_tile)=>{
-					const open_tiles = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
-						_TM,
-						parent_tile.pos,
-						map(current_tiles, (val)=>(val.pos)),
-					)
+			map(current_tiles, (parent_tile)=>{
+				const open_tiles = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
+					_TM,
+					parent_tile.pos,
+					map(current_tiles, (val)=>(val.pos)),
+				)
 
-					//return all of the points paired with the "moves left" their parent had, and subtract the new move cost from them.
-					return map(open_tiles, (val)=>({
-						pos: val,
-						remaining_moves: parent_tile.remaining_moves - Map_Analysis_ƒ.get_move_cost_for_pos(_TM, val, creature)
-					}))
-				})
-			);
+				//return all of the points paired with the "moves left" their parent had, and subtract the new move cost from them.
+				return map(open_tiles, (val)=>({
+					pos: val,
+					remaining_moves: parent_tile.remaining_moves - Map_Analysis_ƒ.get_move_cost_for_pos(_TM, val, creature)
+				}))
+			})
+		);
+
+		const filtered_open_possibilities: Array<Tile_And_Movement_Data> = filter(
+			(val)=>( val.remaining_moves > 0 ),
+			non_unique_open_possibilities
+		)
 
 		/*
 			In an ideal world, we'd like to be able to run some kind of "uniq" function that detects "matching items", and then uses a secondary criterion to discard one of the two; essentially saying that "hey, consider the position field to be the 'identifier'/'primary' value for this, and then use the remaining moves as a secondary value to decide which one to keep".
@@ -131,7 +136,7 @@ export const Map_Analysis_ƒ = {
 		*/
 		const sorted_non_unique_open_possibilities = sortWith( [descend(
 			(val: Tile_And_Movement_Data) => ( val.remaining_moves )
-		)], non_unique_open_possibilities)
+		)], filtered_open_possibilities)
 
 		const unique_open_possibilities = uniqWith(
 			(a: Tile_And_Movement_Data, b: Tile_And_Movement_Data): boolean => (

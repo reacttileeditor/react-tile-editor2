@@ -134,8 +134,6 @@ export const Game_Manager_ƒ_State_Management = {
 				_TM,
 				new_pos
 			);
-
-			console.log(newly_selected_object_possible_moves);
 		}
 
 		let new_turn_list = cloneDeep(me.game_state.turn_list);
