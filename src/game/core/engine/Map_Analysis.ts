@@ -69,14 +69,30 @@ export const Map_Analysis_ƒ = {
 
 		//initially, we're just going to cheat and do a numeric number of passes instead, though.
 
+		const initial_tile: Tile_And_Movement_Data = {
+			pos: location,
+			remaining_moves: Creature_ƒ.get_delegate(creature.type_name).yield_moves_per_turn(),
+		}
 
+		let current_tiles: Array<Tile_And_Movement_Data> = [initial_tile];
+
+		let iter = 0;
+		while(iter < 3){
+			current_tiles = concat(
+				Map_Analysis_ƒ.expand_search(_TM, creature, current_tiles),
+				current_tiles
+			)
+
+			iter++;
+		}
+
+		return map(current_tiles, (val)=>(val.pos));
 	},
 
 	expand_search: (
 		_TM: Tilemap_Manager_Data,
 		creature: Creature_Data,
 		current_tiles: Array<Tile_And_Movement_Data>,
-		claimed_tile_accumulator: Array<Tile_And_Movement_Data>,  //from other blobs
 	): Array<Tile_And_Movement_Data> => {
 
 		/*
@@ -95,7 +111,7 @@ export const Map_Analysis_ƒ = {
 					const open_tiles = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
 						_TM,
 						parent_tile.pos,
-						map(claimed_tile_accumulator, (val)=>(val.pos)),
+						map(current_tiles, (val)=>(val.pos)),
 					)
 
 					//return all of the points paired with the "moves left" their parent had, and subtract the new move cost from them.
