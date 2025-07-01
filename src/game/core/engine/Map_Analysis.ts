@@ -22,13 +22,6 @@ export const Map_Analysis_ƒ = {
 		location: Point2D,
 	): Array<Point2D> => {
 
-		// const open_tiles: Array<Point2D> = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
-		// 	_TM,
-		// 	location,
-		// 	[]
-		// )
-
-		// return concat(open_tiles, [location]);
 
 		/*
 			WARNING:  this entire system bakes in a cardinal assumption that our a-star pathfinding doesn't, which is that moving from tile A to tile B is purely determined by the cost of tile B.  This algorithm should be easily adaptable to a differential system (relying on A->B rather than just B), but it's important for future reference.   A differential system would be desirable for e.g. Civ-style "embarkation", or any similar things where it's more expensive to step "up" than it is to step "down".
@@ -59,12 +52,15 @@ export const Map_Analysis_ƒ = {
 		let current_tiles: Array<Tile_And_Movement_Data> = [initial_tile];
 
 		let terminate_iter = false;
-		while( !terminate_iter ){
+		let iter = 0;
+		while( !terminate_iter && iter < 100 ){
 			let new_tiles = Map_Analysis_ƒ.expand_search(_TM, creature, current_tiles);
 
-			if( size(current_tiles) == size(new_tiles) ){
+			if( size(new_tiles) == 0 ){
 				terminate_iter = true;
 			}
+
+			iter++;
 
 			current_tiles = concat(
 				new_tiles,
