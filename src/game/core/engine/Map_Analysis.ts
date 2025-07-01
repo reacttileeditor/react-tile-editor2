@@ -15,24 +15,6 @@ type Tile_And_Movement_Data = {
 export const Map_Analysis_ƒ = {
 
 
-	// yield_move_cost_for_tile_type: (me: Creature_Data, tile_type: string): number|null => (
-	// 	Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type)
-	// ),
-
-	// calculate_accessible_tiles_for_remaining_movement: (
-	// 	creature: Creature_Data,
-	// 	_TM: Tilemap_Manager_Data,
-	// 	location: Point2D,
-	// ): Array<Point2D> => {
-
-	// 	const open_tiles: Array<Point2D> = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
-	// 		_TM,
-	// 		location,
-	// 		[]
-	// 	)
-
-	// 	return concat(open_tiles, [location]);
-	// },
 
 	calculate_accessible_tiles_for_remaining_movement: (
 		creature: Creature_Data,
@@ -114,10 +96,20 @@ export const Map_Analysis_ƒ = {
 					map(current_tiles, (val)=>(val.pos)),
 				)
 
-				//return all of the points paired with the "moves left" their parent had, and subtract the new move cost from them.
-				return map(open_tiles, (val)=>({
+				/*
+					True blocking tiles have a `null` movecost, so omit them:
+				*/
+				const accessible_open_tiles = filter(
+					(tile) => ( Map_Analysis_ƒ.get_move_cost_for_pos(_TM, tile, creature) !== null ),
+					open_tiles
+				)
+
+				/*
+					Return all of the points paired with the "moves left" their parent had, and subtract the new move cost from them.
+				*/
+				return map(accessible_open_tiles, (val)=>({
 					pos: val,
-					remaining_moves: parent_tile.remaining_moves - Map_Analysis_ƒ.get_move_cost_for_pos(_TM, val, creature)
+					remaining_moves: parent_tile.remaining_moves - (Map_Analysis_ƒ.get_move_cost_for_pos(_TM, val, creature) as number)
 				}))
 			})
 		);
@@ -157,7 +149,7 @@ export const Map_Analysis_ƒ = {
 		pos: Point2D,
 		creature: Creature_Data,
 
-	): number => {
+	): number|null => {
 
 		const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
 			_TM,
@@ -165,7 +157,7 @@ export const Map_Analysis_ƒ = {
 			'terrain',
 		)	
 
-		return Creature_ƒ.get_delegate(creature.type_name).yield_move_cost_for_tile_type(tile_type) as number;
+		return Creature_ƒ.get_delegate(creature.type_name).yield_move_cost_for_tile_type(tile_type);
 	}
 
 	/*----------------------- blob-related code -----------------------*/
