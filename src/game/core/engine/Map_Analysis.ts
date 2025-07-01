@@ -1,9 +1,16 @@
+import { map } from "lodash";
 import { Point2D } from "../../interfaces";
 import { Creature_Data, Creature_ƒ } from "../../objects_core/Creature/Creature";
 import { Map_Generation_ƒ } from "./Map_Generation";
 import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager/Tilemap_Manager";
-import { concat, filter, flatten, includes, keys, slice, uniq } from "ramda";
+import { ascend, concat, descend, equals, filter, flatten, includes, keys, Ord, slice, sortBy, sortWith, uniq, uniqWith } from "ramda";
 
+
+
+type Tile_And_Movement_Data = {
+	pos: Point2D,
+	remaining_moves: number,
+}
 
 export const Map_Analysis_ƒ = {
 
@@ -12,8 +19,23 @@ export const Map_Analysis_ƒ = {
 	// 	Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type)
 	// ),
 
+	// calculate_accessible_tiles_for_remaining_movement: (
+	// 	creature: Creature_Data,
+	// 	_TM: Tilemap_Manager_Data,
+	// 	location: Point2D,
+	// ): Array<Point2D> => {
+
+	// 	const open_tiles: Array<Point2D> = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
+	// 		_TM,
+	// 		location,
+	// 		[]
+	// 	)
+
+	// 	return concat(open_tiles, [location]);
+	// },
+
 	calculate_accessible_tiles_for_remaining_movement: (
-		me: Creature_Data,
+		creature: Creature_Data,
 		_TM: Tilemap_Manager_Data,
 		location: Point2D,
 	): Array<Point2D> => {
@@ -25,6 +47,81 @@ export const Map_Analysis_ƒ = {
 		)
 
 		return concat(open_tiles, [location]);
+	},
+
+	expand_search: (
+		_TM: Tilemap_Manager_Data,
+		creature: Creature_Data,
+		current_tiles: Array<Tile_And_Movement_Data>,
+		claimed_tile_accumulator: Array<Tile_And_Movement_Data>,  //from other blobs
+	): Array<Tile_And_Movement_Data> => {
+
+		/*
+			This is really similar to the code for map blob generation.
+
+
+			First we build a list of all potential tiles we can pick.  We do this by stepping through all members of the existing blob, and calculating all tiles that are adjacent to them.  This would include a bunch of bad tiles, so we filter that out in two steps; the first being that we forbid any tile that's already been picked by either this blob or any prior blob.
+
+			The second is that this would produce a ton of duplicates, so we run a uniq pass to get rid of all of those.
+		*/
+
+		//rather than using uniq, we need to grab the value that has the most move points left, since that would be the shortest path
+
+		const non_unique_open_possibilities: Array<Tile_And_Movement_Data> = flatten(
+				map(current_tiles, (parent_tile)=>{
+					const open_tiles = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
+						_TM,
+						parent_tile.pos,
+						map(claimed_tile_accumulator, (val)=>(val.pos)),
+					)
+
+					//return all of the points paired with the "moves left" their parent had, and subtract the new move cost from them.
+					return map(open_tiles, (val)=>({
+						pos: val,
+						remaining_moves: parent_tile.remaining_moves - Map_Analysis_ƒ.get_move_cost_for_pos(_TM, val, creature)
+					}))
+				})
+			);
+
+		/*
+			In an ideal world, we'd like to be able to run some kind of "uniq" function that detects "matching items", and then uses a secondary criterion to discard one of the two; essentially saying that "hey, consider the position field to be the 'identifier'/'primary' value for this, and then use the remaining moves as a secondary value to decide which one to keep".
+
+			However, we're not given such an all-in-one function in Ramda, so we'd either have to recreate the basic functionality of `uniq` using some other function, or rely on what they do provide.
+
+			What they do provide is a `uniqWith` function which relies on prior sorting of our list to decide what stays/goes - it "prefers the first item" if our test function considers them equal.
+		*/
+		const sorted_non_unique_open_possibilities = sortWith( [descend(
+			(val: Tile_And_Movement_Data) => ( val.remaining_moves )
+		)], non_unique_open_possibilities)
+
+		const unique_open_possibilities = uniqWith(
+			(a: Tile_And_Movement_Data, b: Tile_And_Movement_Data): boolean => (
+				equals(a.pos, b.pos)
+			),
+			sorted_non_unique_open_possibilities
+		)
+
+		return unique_open_possibilities;
+
+
+	},
+	
+
+
+	get_move_cost_for_pos: (
+		_TM: Tilemap_Manager_Data,
+		pos: Point2D,
+		creature: Creature_Data,
+
+	): number => {
+
+		const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
+			_TM,
+			pos as Point2D,
+			'terrain',
+		)	
+
+		return Creature_ƒ.get_delegate(creature.type_name).yield_move_cost_for_tile_type(tile_type) as number;
 	}
 
 	/*----------------------- blob-related code -----------------------*/
