@@ -181,13 +181,13 @@ export const Game_Manager_ƒ_State_Management = {
 				// creature: ${creature.tile_pos.x}, ${creature.tile_pos.y}
 				// on_path?: ${includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn )}`)
 
-				if(
+				/*if(
 					isEqual({x: x_idx, y: y_idx}, creature.tile_pos)
 					&&
 					!size(creature.path_data.path_this_turn)
 				){
-					return 'cursor_green';
-				} else if (
+					return x_val;//'cursor_green';
+				} else*/ if (
 					!size(creature.path_data.path_this_turn)
 					&&
 					includes({x: x_idx, y: y_idx}, me.game_state.selected_object_possible_moves)

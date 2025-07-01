@@ -187,7 +187,22 @@ export const Game_Manager_ƒ_Drawing = {
 					vertically_flipped:			false,
 					palette:					`team${val.team}` as Palette_Names
 				});
-			}				
+			} else if (me.game_state.selected_object_index && me.game_state.selected_object_index == idx) {
+				Asset_Manager_ƒ.draw_image_for_asset_name({
+					_AM:						_AM,
+					asset_name:					'cursor_green',
+					_BM:						_BM,
+					pos:						val.pixel_pos, 
+					zorder:						zorder.map_cursor_low,
+					current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
+					opacity:					1.0,
+					rotate:						0.0,
+					brightness:					1.0,
+					horizontally_flipped:		false,
+					vertically_flipped:			false,
+					palette:					`team${val.team}` as Palette_Names
+				});
+			}		
 		})
 
 
