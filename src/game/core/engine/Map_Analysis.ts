@@ -1,4 +1,4 @@
-import { map } from "lodash";
+import { map, size } from "lodash";
 import { Point2D } from "../../interfaces";
 import { Creature_Data, Creature_ƒ } from "../../objects_core/Creature/Creature";
 import { Map_Generation_ƒ } from "./Map_Generation";
@@ -58,14 +58,18 @@ export const Map_Analysis_ƒ = {
 
 		let current_tiles: Array<Tile_And_Movement_Data> = [initial_tile];
 
-		let iter = 0;
-		while(iter < 3){
+		let terminate_iter = false;
+		while( !terminate_iter ){
+			let new_tiles = Map_Analysis_ƒ.expand_search(_TM, creature, current_tiles);
+
+			if( size(current_tiles) == size(new_tiles) ){
+				terminate_iter = true;
+			}
+
 			current_tiles = concat(
-				Map_Analysis_ƒ.expand_search(_TM, creature, current_tiles),
+				new_tiles,
 				current_tiles
 			)
-
-			iter++;
 		}
 
 		return map(current_tiles, (val)=>(val.pos));
