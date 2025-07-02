@@ -56,6 +56,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 				initialized: me.initialized,
 				asset_blit_list_cache_by_tilemap: {
 					terrain: tilemap_name == 'terrain' ? [[[]]] : me.asset_blit_list_cache_by_tilemap.terrain,
+					movemap: tilemap_name == 'movemap' ? [[[]]] : me.asset_blit_list_cache_by_tilemap.movemap,
 					ui: tilemap_name == 'ui' ? [[[]]] : me.asset_blit_list_cache_by_tilemap.ui,
 				}
 			}
@@ -185,6 +186,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 
 		const new_tilemaps: Tilemaps = {
 			terrain: expand_tilemap(me.tile_maps['terrain']),
+			movemap: expand_tilemap(me.tile_maps['movemap']),
 			ui: expand_tilemap(me.tile_maps['ui']),
 		}
 

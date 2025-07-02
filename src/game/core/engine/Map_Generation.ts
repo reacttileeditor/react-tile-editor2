@@ -60,6 +60,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			metadata: _.cloneDeep(me.metadata),
 			tile_maps: {
 				terrain: fresh_terrain_tilemap,
+				movemap: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
 				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
 			},
 			tile_RNGs: Tilemap_Manager_ƒ.initialize_tileRNGs(),
@@ -332,6 +333,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			metadata: _.cloneDeep(me.metadata),
 			tile_maps: {
 				terrain: fresh_terrain_tilemap,
+				movemap: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
 				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
 			},
 			tile_RNGs: Tilemap_Manager_ƒ.initialize_tileRNGs(),

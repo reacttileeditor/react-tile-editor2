@@ -224,6 +224,7 @@ export const Game_Manager_ƒ_State_Management = {
 				...Tilemap_Manager_ƒ.cleared_cache(),
 				asset_blit_list_cache_by_tilemap: {
 					terrain: _TM.asset_blit_list_cache_by_tilemap.terrain,
+					movemap: _TM.asset_blit_list_cache_by_tilemap.movemap,
 					ui: [[[]]],
 				}
 
