@@ -243,6 +243,65 @@ export const Game_Manager_ƒ_State_Management = {
 		}
 	},
 
+	adjust_tiles_to_display_possible_moves: (
+		me: Game_Manager_Data,
+		creature: Creature_Data|null,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		_TM: Tilemap_Manager_Data
+	): Game_and_Tilemap_Manager_Data => {
+
+		let new_movemap_tile_map: Tilemap_Single = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
+		
+		new_movemap_tile_map = map( _TM.tile_maps.ui, (y_val, y_idx) => {
+			return map (y_val, (x_val, x_idx)=>{
+				if(creature == null){
+					/*
+						If nobody's actually selected, we're just doing an empty tile map.
+					*/
+					return '';
+				} else {
+					/*
+						But if they are, we're isolating the open tiles and moving to them.
+					*/
+
+					if (
+						!size(creature.path_data.path_this_turn)
+						&&
+						includes({x: x_idx, y: y_idx}, me.game_state.selected_object_possible_moves)
+					){
+						return 'tile_boundary';
+					}
+
+
+					return '';
+				}
+			})
+		})	
+
+		return {
+			tm: {
+				level_name: _TM.level_name,
+				metadata: cloneDeep(_TM.metadata),
+				tile_maps: {
+					...cloneDeep(_TM.tile_maps),
+					movemap: new_movemap_tile_map,
+				},
+				tile_RNGs: cloneDeep(_TM.tile_RNGs),
+				creature_list: cloneDeep(_TM.creature_list),
+				initialized: true,
+				...Tilemap_Manager_ƒ.cleared_cache(),
+				asset_blit_list_cache_by_tilemap: {
+					terrain: _TM.asset_blit_list_cache_by_tilemap.terrain,
+					movemap: [[[]]],
+					ui: _TM.asset_blit_list_cache_by_tilemap.ui,
+				}
+
+			},
+			gm: me,
+		}
+	},
+
 	/*----------------------- turn management -----------------------*/
 
 	advance_turn_start: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_and_Tilemap_Manager_Data => {
