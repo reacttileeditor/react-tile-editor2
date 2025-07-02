@@ -28,9 +28,6 @@ export const Game_Manager_ƒ_Processing = {
 
 	
 do_one_frame_of_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_and_Tilemap_Manager_Data => {
-	if(_BM.time_tracker.current_tick == me.last_cursor_move_tick + 1){
-		Game_Manager_ƒ.do_mouse_position_updates(me, _TM, _AM, _BM);
-	}
 
 	if(me.animation_state.is_animating_live_game){
 		return Game_Manager_ƒ.do_live_game_processing(me, _TM, _AM, _BM);
@@ -44,16 +41,18 @@ do_mouse_position_updates: (
 	_TM: Tilemap_Manager_Data,
 	_AM: Asset_Manager_Data,
 	_BM: Blit_Manager_Data
-) => {
+): Game_and_Tilemap_Manager_Data => {
 	console.log(`mouse move @ ${_BM.time_tracker.current_tick}`)
 
-	const hightlit_creature = Game_Manager_ƒ.get_creature_at_tile(me, Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(
+	const highlit_creature = Game_Manager_ƒ.get_creature_at_tile(me, Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(
 		_TM,
 		_AM,
 		_BM,
 		me.cursor_pos
 	) );
-	console.log( hightlit_creature?.type_name);
+	console.log( highlit_creature?.type_name);
+
+	return Game_Manager_ƒ.adjust_tiles_to_display_possible_moves(me, highlit_creature, _AM, _BM, _TM);
 },
 
 
@@ -205,10 +204,14 @@ do_paused_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _A
 		val.should_remove !== true
 	) );
 
+	let new_tm = _TM;
+	if(_BM.time_tracker.current_tick == me.last_cursor_move_tick + 1){
+		new_tm = Game_Manager_ƒ.do_mouse_position_updates(me, _TM, _AM, _BM).tm;
+	}
 
 
 	return {
-		tm: _TM,
+		tm: new_tm,
 		gm: {
 			...cloneDeep(me),
 			animation_state: {

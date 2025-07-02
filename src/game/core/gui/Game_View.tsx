@@ -99,28 +99,31 @@ export const Game_View = (props: Game_View_Props) => {
 			
 		) {
 
+
+
+			let new_state: Game_and_Tilemap_Manager_Data = Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
+
+			props.set_Game_Manager_Data( new_state.gm );
+			props.set_Tilemap_Manager(new_state.tm);
+
 			Tilemap_Manager_ƒ.do_one_frame_of_rendering(
-				props._Tilemap_Manager(),
+				new_state.tm,
 				props._Asset_Manager(),
 				props._Blit_Manager(),
 				props.set_Blit_Manager,
 				props.set_Tilemap_Manager,
 				false,
-				props.get_Game_Manager_Data().cursor_pos
+				new_state.gm.cursor_pos
 			);
-
-			let new_state: Game_and_Tilemap_Manager_Data = Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
-
-			props.set_Game_Manager_Data( new_state.gm );
 
 			Standard_Input_ƒ.move_viewport_based_on_mouse_position(
 				new_state.gm.cursor_pos,
 				props._Blit_Manager(),
 				props.set_Blit_Manager,
-				props._Tilemap_Manager(),
+				new_state.tm,
 				props._Asset_Manager(),
 			);			
-			Game_Manager_ƒ.do_one_frame_of_rendering( new_state.gm,  props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());			
+			Game_Manager_ƒ.do_one_frame_of_rendering( new_state.gm,  new_state.tm, props._Asset_Manager(), props._Blit_Manager());			
 
 		}
 	}

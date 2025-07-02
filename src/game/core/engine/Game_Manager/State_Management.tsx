@@ -245,17 +245,28 @@ export const Game_Manager_ƒ_State_Management = {
 
 	adjust_tiles_to_display_possible_moves: (
 		me: Game_Manager_Data,
-		creature: Creature_Data|null,
+		creature: Creature_Data|undefined,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 		_TM: Tilemap_Manager_Data
 	): Game_and_Tilemap_Manager_Data => {
-
+		console.log(`adjust_tiles_to_display_possible_moves ${creature?.type_name}`)
 		let new_movemap_tile_map: Tilemap_Single = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
 		
+		let newly_selected_object_possible_moves: Array<Point2D> = [];
+		
+		if( creature != undefined ){
+			newly_selected_object_possible_moves = Map_Analysis_ƒ.calculate_accessible_tiles_for_remaining_movement(
+				creature,
+				_TM,
+				creature.tile_pos
+			);
+		}
+
+
 		new_movemap_tile_map = map( _TM.tile_maps.ui, (y_val, y_idx) => {
 			return map (y_val, (x_val, x_idx)=>{
-				if(creature == null){
+				if(creature == undefined){
 					/*
 						If nobody's actually selected, we're just doing an empty tile map.
 					*/
@@ -268,7 +279,7 @@ export const Game_Manager_ƒ_State_Management = {
 					if (
 						!size(creature.path_data.path_this_turn)
 						&&
-						includes({x: x_idx, y: y_idx}, me.game_state.selected_object_possible_moves)
+						includes({x: x_idx, y: y_idx}, newly_selected_object_possible_moves)
 					){
 						return 'tile_boundary';
 					}
@@ -278,6 +289,10 @@ export const Game_Manager_ƒ_State_Management = {
 				}
 			})
 		})	
+
+		// if(creature){
+		// 	debugger;
+		// }
 
 		return {
 			tm: {
