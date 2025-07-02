@@ -27,7 +27,7 @@ export const Game_Manager_ƒ_Processing = {
 
 
 	
-do_one_frame_of_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_Manager_Data => {
+do_one_frame_of_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_and_Tilemap_Manager_Data => {
 	if(_BM.time_tracker.current_tick == me.last_cursor_move_tick + 1){
 		Game_Manager_ƒ.do_mouse_position_updates(me, _TM, _AM, _BM);
 	}
@@ -57,7 +57,7 @@ do_mouse_position_updates: (
 },
 
 
-do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_Manager_Data => {
+do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_and_Tilemap_Manager_Data => {
 	/*
 		Process all of the existing creatures.
 		
@@ -68,8 +68,10 @@ do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM:
 
 	if( Game_Manager_ƒ.is_turn_finished(me) ){
 
-		return Game_Manager_ƒ.advance_turn_finish(me, _BM);
-
+		return {
+			tm: _TM,
+			gm: Game_Manager_ƒ.advance_turn_finish(me, _BM),
+		};
 
 	} else {		
 		let spawnees: Array<Custom_Object_Data<unknown>> = [];
@@ -149,23 +151,26 @@ do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM:
 		
 		
 		return {
-			...cloneDeep(me),
-			animation_state: {
-				...cloneDeep(me.animation_state),
-				processing_tick: tick + 1,
-			},
-			game_state: {
-				...cloneDeep(me.game_state),
-				current_frame_state: {
-					creature_list: all_creatures_processed_and_culled,
+			tm: _TM,
+			gm: {
+				...cloneDeep(me),
+				animation_state: {
+					...cloneDeep(me.animation_state),
+					processing_tick: tick + 1,
 				},
-				custom_object_list: all_objects_processed_and_culled,
+				game_state: {
+					...cloneDeep(me.game_state),
+					current_frame_state: {
+						creature_list: all_creatures_processed_and_culled,
+					},
+					custom_object_list: all_objects_processed_and_culled,
+				}
 			}
 		}
 	}
 },
 
-do_paused_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_Manager_Data => {
+do_paused_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_and_Tilemap_Manager_Data => {
 	/*
 		This is considerably simpler; we just run existing custom objects through their processing.
 	*/
@@ -203,14 +208,17 @@ do_paused_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _A
 
 
 	return {
-		...cloneDeep(me),
-		animation_state: {
-			...cloneDeep(me.animation_state),
-			processing_tick: tick + 1,
-		},
-		game_state: {
-			...cloneDeep(me.game_state),
-			custom_object_list: all_objects_processed_and_culled,
+		tm: _TM,
+		gm: {
+			...cloneDeep(me),
+			animation_state: {
+				...cloneDeep(me.animation_state),
+				processing_tick: tick + 1,
+			},
+			game_state: {
+				...cloneDeep(me.game_state),
+				custom_object_list: all_objects_processed_and_culled,
+			}
 		}
 	}
 },

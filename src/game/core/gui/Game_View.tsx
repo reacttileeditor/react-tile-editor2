@@ -10,7 +10,7 @@ import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/T
 
 
 import { Point2D, Rectangle } from '../../interfaces';
-import { Game_Manager_Data, Game_Manager_ƒ } from "../engine/Game_Manager/Game_Manager";
+import { Game_and_Tilemap_Manager_Data, Game_Manager_Data, Game_Manager_ƒ } from "../engine/Game_Manager/Game_Manager";
 import { Standard_Input_ƒ } from "./Standard_Input_Handling";
 import { Button } from "rsuite";
 import { Game_Tooltip_Manager } from "./Game_Components/Game_Tooltip_Manager";
@@ -109,18 +109,18 @@ export const Game_View = (props: Game_View_Props) => {
 				props.get_Game_Manager_Data().cursor_pos
 			);
 
-			let new_state: Game_Manager_Data = Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
+			let new_state: Game_and_Tilemap_Manager_Data = Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
 
-			props.set_Game_Manager_Data( new_state );
+			props.set_Game_Manager_Data( new_state.gm );
 
 			Standard_Input_ƒ.move_viewport_based_on_mouse_position(
-				new_state.cursor_pos,
+				new_state.gm.cursor_pos,
 				props._Blit_Manager(),
 				props.set_Blit_Manager,
 				props._Tilemap_Manager(),
 				props._Asset_Manager(),
 			);			
-			Game_Manager_ƒ.do_one_frame_of_rendering( new_state,  props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());			
+			Game_Manager_ƒ.do_one_frame_of_rendering( new_state.gm,  props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());			
 
 		}
 	}
