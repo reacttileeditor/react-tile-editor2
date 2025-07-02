@@ -166,20 +166,13 @@ export const Game_Manager_ƒ_State_Management = {
 
 		//let tilemap_mgr_data: Tilemap_Manager_Data = Tilemap_Manager_ƒ.clear_tile_map(_TM, 'ui', _AM);
 
-		let new_tile_map: Tilemap_Single = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
+		let new_ui_tile_map: Tilemap_Single = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
 
-		new_tile_map = map( _TM.tile_maps.ui, (y_val, y_idx) => {
+		new_ui_tile_map = map( _TM.tile_maps.ui, (y_val, y_idx) => {
 			return map (y_val, (x_val, x_idx)=>{
-
 				/*
-					iterate over each of the path values.
-
 					Here we build a brand new tilemap for the unit path, from scratch.
 				*/
-
-				// console.log(`tile choice for ${x_idx}, ${y_idx}
-				// creature: ${creature.tile_pos.x}, ${creature.tile_pos.y}
-				// on_path?: ${includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn )}`)
 
 				/*if(
 					isEqual({x: x_idx, y: y_idx}, creature.tile_pos)
@@ -187,13 +180,7 @@ export const Game_Manager_ƒ_State_Management = {
 					!size(creature.path_data.path_this_turn)
 				){
 					return x_val;//'cursor_green';
-				} else*/ if (
-					!size(creature.path_data.path_this_turn)
-					&&
-					includes({x: x_idx, y: y_idx}, me.game_state.selected_object_possible_moves)
-				){
-					return 'tile_boundary';
-				}
+				} */
 
 
 				return ƒ.if(  includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn ),
@@ -210,13 +197,35 @@ export const Game_Manager_ƒ_State_Management = {
 			})
 		})
 
+		let new_movemap_tile_map: Tilemap_Single = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
+
+		new_movemap_tile_map = map( _TM.tile_maps.ui, (y_val, y_idx) => {
+			return map (y_val, (x_val, x_idx)=>{
+				/*
+					Step over each tile, and if something is in the list of possible moves, spit out a tile marker.
+				*/
+
+				if (
+					!size(creature.path_data.path_this_turn)
+					&&
+					includes({x: x_idx, y: y_idx}, me.game_state.selected_object_possible_moves)
+				){
+					return 'tile_boundary';
+				}
+
+
+				return '';
+			})
+		})		
+
 		return {
 			tm: {
 				level_name: _TM.level_name,
 				metadata: cloneDeep(_TM.metadata),
 				tile_maps: {
 					...cloneDeep(_TM.tile_maps),
-					ui: new_tile_map,
+					movemap: new_movemap_tile_map,
+					ui: new_ui_tile_map,
 				},
 				tile_RNGs: cloneDeep(_TM.tile_RNGs),
 				creature_list: cloneDeep(_TM.creature_list),
@@ -224,7 +233,7 @@ export const Game_Manager_ƒ_State_Management = {
 				...Tilemap_Manager_ƒ.cleared_cache(),
 				asset_blit_list_cache_by_tilemap: {
 					terrain: _TM.asset_blit_list_cache_by_tilemap.terrain,
-					movemap: _TM.asset_blit_list_cache_by_tilemap.movemap,
+					movemap: [[[]]],
 					ui: [[[]]],
 				}
 
