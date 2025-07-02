@@ -25,10 +25,11 @@ import { Map_Analysis_ƒ } from "../Map_Analysis";
 
 export const Game_Manager_ƒ_State_Management = {
 	/*----------------------- core ui interaction -----------------------*/
-	set_cursor_pos: (me: Game_Manager_Data, coords: Point2D): Game_Manager_Data => {
+	set_cursor_pos: (me: Game_Manager_Data, _BM: Blit_Manager_Data, coords: Point2D): Game_Manager_Data => {
 		return {
 			...cloneDeep(me),
 			cursor_pos: coords,
+			last_cursor_move_tick: _BM.time_tracker.current_tick,
 		}
 	},
 

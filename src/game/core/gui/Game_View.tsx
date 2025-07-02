@@ -131,7 +131,7 @@ export const Game_View = (props: Game_View_Props) => {
 	/*----------------------- IO routines -----------------------*/
 	const update_mouse_pos = (pos: Point2D) => {
 		if( props.get_Game_Manager_Data() != null ){
-			props.set_Game_Manager_Data( Game_Manager_ƒ.set_cursor_pos(props.get_Game_Manager_Data(), pos));
+			props.set_Game_Manager_Data( Game_Manager_ƒ.set_cursor_pos(props.get_Game_Manager_Data(), props._Blit_Manager(), pos));
 		}
 	}
 
