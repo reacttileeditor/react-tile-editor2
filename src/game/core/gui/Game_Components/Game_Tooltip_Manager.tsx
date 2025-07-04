@@ -55,7 +55,11 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 		if(props.selected_unit !== undefined){
 			if(props.hovered_unit ){
 				if( equals(props.tile_pos, props.unit_pos) ){
-					return 'Move (Cancel)'
+					if( size(props.path_data?.path_this_turn) ){
+						return 'Cancel Move'
+					} else {
+						return 'n/a'
+					}
 				} else {
 					//tile_pos implicitly is the currently selected unit, so this is a different one.
 					return 'Select Unit'
