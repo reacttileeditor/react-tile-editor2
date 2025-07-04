@@ -58,7 +58,7 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 					if( size(props.path_data?.path_this_turn) ){
 						return 'Cancel Move'
 					} else {
-						return 'n/a'
+						return 'Deselect Unit'
 					}
 				} else {
 					//tile_pos implicitly is the currently selected unit, so this is a different one.
@@ -78,12 +78,12 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 	const get_right_click_text = (): string => {
 		if(props.selected_unit !== undefined){
 			if( equals(props.tile_pos, props.unit_pos) ){
-				return 'Deselect';
+				return 'Deselect Unit';
 			} else {
 				if( size(props.path_data?.path_this_turn) ){
 					return 'Cancel Move'
 				} else {
-					return 'n/a'
+					return 'Deselect Unit'
 				}
 			}
 		} else {

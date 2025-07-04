@@ -80,21 +80,22 @@ export const Game_Manager_ƒ_State_Management = {
 
 		if(newly_selected_creature_index === -1){
 			/*
-				The player didn't click on any unit; they clicked on terrain, so this is a move command.
+				The player didn't click on any unit; they clicked on terrain.
+
+				We only do anything if they've got a unit selected, so first of all, we check for that:
 			*/
 			if( me.game_state.selected_object_index != undefined ){
-				/*
-					That said; it's not a move command if nobody's selected.
-				*/
-
-
 				const creature = Game_Manager_ƒ.get_current_turn_state(me).creature_list[ me.game_state.selected_object_index ];
 				/*
-					If it's a regular click, we're setting the path.
-					If it's a right click, we're clearing the path.
+					First we get the info on what unit is currently selected.
 				*/
 
+
 				if( buttons_pressed.left == true ){
+					/*
+						If a unit is selected, a left click on open terrain is a move command.
+					*/
+
 					new_creature = {
 						...cloneDeep(creature),
 						path_data: Creature_ƒ.set_path(
@@ -108,29 +109,53 @@ export const Game_Manager_ƒ_State_Management = {
 					new_creature_array[me.game_state.selected_object_index] = new_creature;
 
 				} else if ( buttons_pressed.right == true ){
-					new_creature = {
-						...cloneDeep(creature),
-						path_data: Creature_ƒ.clear_path(creature),
-					}
+					/*
+						If it's a right click, then we're basically issuing one of two "stack pop/clear" operations (i.e. the vibe of hitting the "esc" button); either we're clearing the path, or if there is no path, we're deselectingthe unit.
+					*/
+					if( size(creature.path_data.path_this_turn) ){
+						new_creature = {
+							...cloneDeep(creature),
+							path_data: Creature_ƒ.clear_path(creature),
+						}
 
-					new_creature_array[me.game_state.selected_object_index] = new_creature;
+						new_creature_array[me.game_state.selected_object_index] = new_creature;
+					} else {
+						newly_selected_creature_index = undefined;
+					}
 				}
 			}
 		} else if(newly_selected_creature_index === me.game_state.selected_object_index ) {
 			/*
-				We just clicked, a second time, on the current unit.  Once a unit is selected, we're understood to be in "path creation" mode, so any left clicks alter the path (and clicking on the unit itself, merely alters the path by setting it to empty).
+				We just clicked, a second time, on the current unit.
+				
+				I don't know if this is the right approach for the UI, but the needs of our game are sufficiently weird that I'm having to "wing it" with entirely new UI behavior.   We have two totally different things that happen if you left-click on a unit.   One of them follows the traditionalist "selecting files in the file manager" expectation, where if something is selected, and you click on it, it deselects.  This is what happens if you've got no path.
 
+				However, there's also this competing expectation that oncence a unit is selected, we're understood to be in "path creation" mode.  When you're in this mode, all of your left clicks "set the path" - so it makes perfect sense that the easiest way to "clear/cancel" having a path would be to click right back on the unit, again.
+				
+				So it's a little odd; two different behaviors for left-clicking on the unit.  The first one empties the path, the second deselects the unit.
+
+
+				Note:
 				We don't need to update `newly_selected_object_possible_moves` because it's not changing.
 			*/
 			if( buttons_pressed.left == true ){
 				const creature = Game_Manager_ƒ.get_current_turn_state(me).creature_list[ me.game_state.selected_object_index as number];
 
-				new_creature = {
-					...cloneDeep(creature),
-					path_data: Creature_ƒ.clear_path(creature),
+				if( size(creature.path_data.path_this_turn) ){
+					//since we have a path, clear it.
+
+					new_creature = {
+						...cloneDeep(creature),
+						path_data: Creature_ƒ.clear_path(creature),
+					}
+	
+					new_creature_array[me.game_state.selected_object_index as number] = new_creature;
+				} else {
+					//since we don't have a path, deselect the creature
+
+					newly_selected_creature_index = undefined;
 				}
 
-				new_creature_array[me.game_state.selected_object_index as number] = new_creature;
 			} else {
 				/*
 					Right clicking acts as our "mode pop/escape" operation, so in this context, it deselects the creature. 
