@@ -196,102 +196,79 @@ export const Game_Manager_ƒ_State_Management = {
 	},
 
 
-	adjust_tiles_to_display_unit_path: (
-		me: Game_Manager_Data,
-		creature: Creature_Data,
-		_AM: Asset_Manager_Data,
-		_BM: Blit_Manager_Data,
-		_TM: Tilemap_Manager_Data
-	): Game_and_Tilemap_Manager_Data => {
-
-		
-
-		//let tilemap_mgr_data: Tilemap_Manager_Data = Tilemap_Manager_ƒ.clear_tile_map(_TM, 'ui', _AM);
-
-		let new_ui_tile_map: Tilemap_Single = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
-
-		new_ui_tile_map = map( _TM.tile_maps.ui, (y_val, y_idx) => {
-			return map (y_val, (x_val, x_idx)=>{
-				/*
-					Here we build a brand new tilemap for the unit path, from scratch.
-				*/
-
-				/*if(
-					isEqual({x: x_idx, y: y_idx}, creature.tile_pos)
-					&&
-					!size(creature.path_data.path_this_turn)
-				){
-					return x_val;//'cursor_green';
-				} */
 
 
-				return ƒ.if(  includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn ),
-						ƒ.if( includes({x: x_idx, y: y_idx}, creature.path_data.path_reachable_this_turn),
-							ƒ.if( isEqual({x: x_idx, y: y_idx}, last(creature.path_data.path_reachable_this_turn)),
-								'arrowhead-green',
-								'arrow-green'
-							),
-							'red-path-unreachable-dot'
-						),
-						''
-					)
-				
-			})
-		})
-
-		let new_movemap_tile_map: Tilemap_Single = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
-
-		new_movemap_tile_map = map( _TM.tile_maps.ui, (y_val, y_idx) => {
-			return map (y_val, (x_val, x_idx)=>{
-				/*
-					Step over each tile, and if something is in the list of possible moves, spit out a tile marker.
-				*/
-
-				if (
-					!size(creature.path_data.path_this_turn)
-					&&
-					includes({x: x_idx, y: y_idx}, me.game_state.selected_object_possible_moves)
-				){
-					return 'tile_boundary';
-				}
-
-
-				return '';
-			})
-		})		
-
-		return {
-			tm: {
-				level_name: _TM.level_name,
-				metadata: cloneDeep(_TM.metadata),
-				tile_maps: {
-					...cloneDeep(_TM.tile_maps),
-					movemap: new_movemap_tile_map,
-					ui: new_ui_tile_map,
-				},
-				tile_RNGs: cloneDeep(_TM.tile_RNGs),
-				creature_list: cloneDeep(_TM.creature_list),
-				initialized: true,
-				...Tilemap_Manager_ƒ.cleared_cache(),
-				asset_blit_list_cache_by_tilemap: {
-					terrain: _TM.asset_blit_list_cache_by_tilemap.terrain,
-					movemap: [[[]]],
-					ui: [[[]]],
-				}
-
-			},
-			gm: me,
-		}
-	},
-
-	adjust_tiles_to_display_possible_moves: (
+	generate_unit_path_tilemap: (
 		me: Game_Manager_Data,
 		creature: Creature_Data|undefined,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 		_TM: Tilemap_Manager_Data
-	): Game_and_Tilemap_Manager_Data => {
-		console.log(`adjust_tiles_to_display_possible_moves ${creature?.type_name}`)
+	): Tilemap_Single => {
+		let new_ui_tile_map: Tilemap_Single = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
+
+		if(creature != undefined){
+			new_ui_tile_map = map( _TM.tile_maps.ui, (y_val, y_idx) => {
+				return map (y_val, (x_val, x_idx)=>{
+					/*
+						Here we build a brand new tilemap for the unit path, from scratch.
+					*/
+
+					/*if(
+						isEqual({x: x_idx, y: y_idx}, creature.tile_pos)
+						&&
+						!size(creature.path_data.path_this_turn)
+					){
+						return x_val;//'cursor_green';
+					} */
+
+
+					return ƒ.if(  includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn ),
+							ƒ.if( includes({x: x_idx, y: y_idx}, creature.path_data.path_reachable_this_turn),
+								ƒ.if( isEqual({x: x_idx, y: y_idx}, last(creature.path_data.path_reachable_this_turn)),
+									'arrowhead-green',
+									'arrow-green'
+								),
+								'red-path-unreachable-dot'
+							),
+							''
+						)
+					
+				})
+			})
+
+			let new_movemap_tile_map: Tilemap_Single = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
+
+			new_movemap_tile_map = map( _TM.tile_maps.ui, (y_val, y_idx) => {
+				return map (y_val, (x_val, x_idx)=>{
+					/*
+						Step over each tile, and if something is in the list of possible moves, spit out a tile marker.
+					*/
+
+					if (
+						!size(creature.path_data.path_this_turn)
+						&&
+						includes({x: x_idx, y: y_idx}, me.game_state.selected_object_possible_moves)
+					){
+						return 'tile_boundary';
+					}
+
+
+					return '';
+				})
+			})
+		}
+
+		return new_ui_tile_map;
+	},
+
+	generate_possible_moves_tilemap: (
+		me: Game_Manager_Data,
+		creature: Creature_Data|undefined,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		_TM: Tilemap_Manager_Data
+	): Tilemap_Single => {
 		let new_movemap_tile_map: Tilemap_Single = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
 		
 		let newly_selected_object_possible_moves: Array<Point2D> = [];
@@ -331,9 +308,121 @@ export const Game_Manager_ƒ_State_Management = {
 			})
 		})	
 
-		// if(creature){
-		// 	debugger;
-		// }
+		return new_movemap_tile_map;
+	},
+
+	adjust_tiles_to_display_unit_path_and_possible_moves: (
+		me: Game_Manager_Data,
+		creature: Creature_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		_TM: Tilemap_Manager_Data
+	): Game_and_Tilemap_Manager_Data => {
+
+		const new_ui_tile_map = Game_Manager_ƒ.generate_unit_path_tilemap(
+			me,
+			creature,
+			_AM,
+			_BM,
+			_TM
+		);	
+
+		const new_movemap_tile_map = Game_Manager_ƒ.generate_possible_moves_tilemap(
+			me,
+			creature,
+			_AM,
+			_BM,
+			_TM
+		);
+
+
+		return {
+			tm: {
+				level_name: _TM.level_name,
+				metadata: cloneDeep(_TM.metadata),
+				tile_maps: {
+					...cloneDeep(_TM.tile_maps),
+					movemap: new_movemap_tile_map,
+					ui: new_ui_tile_map,
+				},
+				tile_RNGs: cloneDeep(_TM.tile_RNGs),
+				creature_list: cloneDeep(_TM.creature_list),
+				initialized: true,
+				...Tilemap_Manager_ƒ.cleared_cache(),
+				asset_blit_list_cache_by_tilemap: {
+					terrain: _TM.asset_blit_list_cache_by_tilemap.terrain,
+					movemap: [[[]]],
+					ui: [[[]]],
+				}
+
+			},
+			gm: me,
+		}
+	},
+
+	adjust_tiles_to_display_unit_path: (
+		me: Game_Manager_Data,
+		creature: Creature_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		_TM: Tilemap_Manager_Data
+	): Game_and_Tilemap_Manager_Data => {
+
+		const new_ui_tile_map = Game_Manager_ƒ.generate_unit_path_tilemap(
+			me,
+			creature,
+			_AM,
+			_BM,
+			_TM
+		);	
+
+		const new_movemap_tile_map = Game_Manager_ƒ.generate_possible_moves_tilemap(
+			me,
+			creature,
+			_AM,
+			_BM,
+			_TM
+		);
+
+
+		return {
+			tm: {
+				level_name: _TM.level_name,
+				metadata: cloneDeep(_TM.metadata),
+				tile_maps: {
+					...cloneDeep(_TM.tile_maps),
+					ui: new_ui_tile_map,
+				},
+				tile_RNGs: cloneDeep(_TM.tile_RNGs),
+				creature_list: cloneDeep(_TM.creature_list),
+				initialized: true,
+				...Tilemap_Manager_ƒ.cleared_cache(),
+				asset_blit_list_cache_by_tilemap: {
+					terrain: _TM.asset_blit_list_cache_by_tilemap.terrain,
+					movemap: _TM.asset_blit_list_cache_by_tilemap.movemap,
+					ui: [[[]]],
+				}
+
+			},
+			gm: me,
+		}
+	},
+
+	adjust_tiles_to_display_possible_moves: (
+		me: Game_Manager_Data,
+		creature: Creature_Data|undefined,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		_TM: Tilemap_Manager_Data
+	): Game_and_Tilemap_Manager_Data => {
+
+		const new_movemap_tile_map = Game_Manager_ƒ.generate_possible_moves_tilemap(
+			me,
+			creature,
+			_AM,
+			_BM,
+			_TM
+		);
 
 		return {
 			tm: {
