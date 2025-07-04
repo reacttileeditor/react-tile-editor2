@@ -50,9 +50,12 @@ do_mouse_position_updates: (
 		_BM,
 		me.cursor_pos
 	) );
-	console.log( highlit_creature?.type_name);
+	
+	const selected_creature = Game_Manager_ƒ.get_selected_creature(me);
 
-	return Game_Manager_ƒ.adjust_tiles_to_display_possible_moves(me, highlit_creature, _AM, _BM, _TM);
+	const displayed_creature = selected_creature ?? highlit_creature;
+
+	return Game_Manager_ƒ.adjust_tiles_to_display_possible_moves(me, displayed_creature, _AM, _BM, _TM);
 },
 
 
