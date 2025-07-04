@@ -22,7 +22,8 @@ import * as builtin_levels from "../../../levels";
 import { Map_Generation_ƒ } from "../Map_Generation";
 import { boolean } from "yargs";
 import { MTP_Anchor_Data } from "../../data/Multi_Tile_Patterns";
-import { Asset_Blit_Tilemap, Cache_Data, Direction, Tilemap_Single, Tilemap_Manager_Data, Tilemap_Manager_ƒ, Tilemap_Keys, Tilemap_Persist_Data, Tilemaps } from "./Tilemap_Manager";
+import { Asset_Blit_Tilemap, Cache_Data, Direction, Tilemap_Single, Tilemap_Manager_Data, Tilemap_Manager_ƒ, Tilemap_Keys, Tilemap_Persist_Data, Tilemaps, Asset_Blit_Tilemaps } from "./Tilemap_Manager";
+import { tile_maps_init } from "./Initialization";
 
 
 
@@ -106,23 +107,36 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		});
 	},
 
-	clear_tile_map: (me: Tilemap_Manager_Data, tilemap_name: Tilemap_Keys, _AM: Asset_Manager_Data ): Tilemap_Manager_Data => {
+	clear_tile_maps: (me: Tilemap_Manager_Data, tilemap_names: Array<Tilemap_Keys>, _AM: Asset_Manager_Data ): Tilemap_Manager_Data => {
 
+		let new_tile_maps: Tilemaps = cloneDeep( tile_maps_init );
+		
+		map(me.tile_maps, (tilemap, name) => {
+			if( !includes(name, tilemap_names) ){
+				new_tile_maps[name as Tilemap_Keys] = tilemap;
+			} else {
+				new_tile_maps[name as Tilemap_Keys] = Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM);
+			}
+		})
+
+		let new_blit_cache = Tilemap_Manager_ƒ.cleared_cache().asset_blit_list_cache_by_tilemap;
+
+		map(me.asset_blit_list_cache_by_tilemap, (blit_cache: Asset_Blit_Tilemap, name: keyof Asset_Blit_Tilemaps) => {
+			if( !includes(name, tilemap_names) ){
+				new_blit_cache[name] = blit_cache;
+			} else {
+				new_blit_cache[name] = [[[]]];
+			}
+		})		
 
 		return {
 			level_name: me.level_name,
 			metadata: me.metadata,
-			tile_maps: {
-				...me.tile_maps,
-				[tilemap_name]: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
-			},
+			tile_maps: new_tile_maps,
 			tile_RNGs: me.tile_RNGs,
 			creature_list: me.creature_list,
 			initialized: me.initialized,
-			asset_blit_list_cache_by_tilemap: {
-				...me.asset_blit_list_cache_by_tilemap,
-				[tilemap_name]: [[[]]],
-			}			
+			asset_blit_list_cache_by_tilemap: new_blit_cache,			
 		}
 	},
 
