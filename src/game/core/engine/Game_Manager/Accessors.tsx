@@ -131,6 +131,20 @@ get_selected_creature: (me: Game_Manager_Data):Creature_Data|undefined => {
 	return Game_Manager_ƒ.get_creature_data_for_index(me, idx);
 },
 
+get_highlit_creature: (
+	me: Game_Manager_Data,
+	_TM: Tilemap_Manager_Data,
+	_AM: Asset_Manager_Data,
+	_BM: Blit_Manager_Data	
+):Creature_Data|undefined => {
+	return Game_Manager_ƒ.get_creature_at_tile(me, Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(
+		_TM,
+		_AM,
+		_BM,
+		me.cursor_pos
+	) );
+},
+
 get_creature_by_uuid: (me: Game_Manager_Data, uuid: string): Creature_Data => {
 	let creature = find( Game_Manager_ƒ.get_game_state(me).current_frame_state.creature_list, (val) => (
 		val.unique_id === uuid

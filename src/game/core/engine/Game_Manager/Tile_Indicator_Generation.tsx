@@ -126,8 +126,6 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 					*/
 
 					if (
-						!size(creature.path_data.path_this_turn)
-						&&
 						includes({x: x_idx, y: y_idx}, newly_selected_object_possible_moves)
 					){
 						return 'tile_boundary';

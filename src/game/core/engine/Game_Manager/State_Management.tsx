@@ -45,12 +45,18 @@ export const Game_Manager_ƒ_State_Management = {
 		if( !get_game_state().animation_state.is_animating_live_game ){
 
 			let new_game_data = Game_Manager_ƒ.select_object_based_on_tile_click(get_game_state, _TM, _AM, _BM, pos, buttons_pressed)
+
+
 			const selected_creature = Game_Manager_ƒ.get_selected_creature(new_game_data);
 
+			const highlit_creature = Game_Manager_ƒ.get_highlit_creature(new_game_data, _TM, _AM, _BM);
+		
+			const displayed_creature = selected_creature ?? highlit_creature;			
+
 			return {
-				tm:	selected_creature != undefined
+				tm:	displayed_creature != undefined
 					?
-					Game_Manager_ƒ.adjust_tiles_to_display_unit_path_and_possible_moves(new_game_data, selected_creature, _AM, _BM, _TM).tm
+					Game_Manager_ƒ.adjust_tiles_to_display_unit_path_and_possible_moves(new_game_data, displayed_creature, _AM, _BM, _TM).tm
 					:
 					Tilemap_Manager_ƒ.clear_tile_maps(_TM, ['ui','movemap'], _AM),
 				gm: new_game_data
