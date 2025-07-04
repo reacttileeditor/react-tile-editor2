@@ -23,6 +23,7 @@ import { Game_Manager_ƒ_State_Management } from "./State_Management";
 import { Game_Manager_ƒ_Accessors } from "./Accessors";
 import { Game_Manager_ƒ_Processing } from "./Processing";
 import { Game_Tooltip_Data } from "../../gui/Game_Components/Game_Tooltip_Manager";
+import { Game_Manager_ƒ_Tile_Indicator_Generation } from "./Tile_Indicator_Generation";
 
 interface Game_View_Props {
 	_Asset_Manager: () => Asset_Manager_Data,
@@ -160,6 +161,7 @@ export const Game_Manager_ƒ = {
 	...Game_Manager_ƒ_Accessors,
 	...Game_Manager_ƒ_State_Management,
 	...Game_Manager_ƒ_Processing,
+	...Game_Manager_ƒ_Tile_Indicator_Generation,
 
 	get_game_state: (me: Game_Manager_Data) => (
 		me.game_state
