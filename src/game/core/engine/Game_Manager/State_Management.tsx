@@ -118,27 +118,11 @@ export const Game_Manager_ƒ_State_Management = {
 			}
 		} else if(newly_selected_creature_index === me.game_state.selected_object_index ) {
 			/*
-				We just clicked, a second time, on the current unit.  Once a unit is selected, we're understood to be in "path creation" mode, so any left clicks alter the path (and clicking on the unit itself, merely alters the path by setting it to empty).
+				We just clicked, a second time, on the current unit, so instead of selecting it, we actually want to toggle; to de-select it.
 
-				We don't need to update `newly_selected_object_possible_moves` because it's not changing.
+				We also don't need to clear `newly_selected_object_possible_moves` because it's already empty.
 			*/
-			if( buttons_pressed.left == true ){
-				const creature = Game_Manager_ƒ.get_current_turn_state(me).creature_list[ me.game_state.selected_object_index as number];
-
-				new_creature = {
-					...cloneDeep(creature),
-					path_data: Creature_ƒ.clear_path(creature),
-				}
-
-				new_creature_array[me.game_state.selected_object_index as number] = new_creature;
-			} else {
-				/*
-					Right clicking acts as our "mode pop/escape" operation, so in this context, it deselects the creature. 
-
-					We also don't need to clear `newly_selected_object_possible_moves` because it's already empty.
-				*/
-				newly_selected_creature_index = undefined;
-			}
+			newly_selected_creature_index = undefined;
 		} else {
 			/*
 				We've clicked on a new creature, so we want to pass along the index to the return statement, which means we don't need to do anything.
