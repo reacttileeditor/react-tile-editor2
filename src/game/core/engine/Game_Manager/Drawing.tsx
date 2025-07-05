@@ -187,7 +187,7 @@ export const Game_Manager_ƒ_Drawing = {
 					vertically_flipped:			false,
 					palette:					`team${val.team}` as Palette_Names
 				});
-			} else if (me.game_state.selected_object_index && me.game_state.selected_object_index == idx) {
+			} else if ((me.game_state.selected_object_index !== undefined) && me.game_state.selected_object_index == idx) {
 				Asset_Manager_ƒ.draw_image_for_asset_name({
 					_AM:						_AM,
 					asset_name:					'cursor_green',
