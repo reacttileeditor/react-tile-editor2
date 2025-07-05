@@ -163,6 +163,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			current_milliseconds:		0,
 			opacity:					1.0,
 			rotate:						0,
+			scale:						1.0,
 			brightness:					1.0,
 			horizontally_flipped:		false,
 			vertically_flipped:			false,

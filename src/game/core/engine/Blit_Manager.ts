@@ -16,6 +16,7 @@ interface Draw_Entity {
 	opacity: number,
 	brightness: number,
 	rotate: number, // degrees; native canvas is radians, we're using degrees everywhere besides the blitting function.
+	scale: number,
 	horizontally_flipped: boolean,
 	vertically_flipped: boolean,
 	drawing_data: Draw_Data_Types,
@@ -275,6 +276,7 @@ export const Blit_Manager_ƒ = {
 		z_index:				number,
 		opacity:				number,
 		rotate: 				number,
+		scale:					number,
 		brightness: 			number,
 		horizontally_flipped: 	boolean,
 		vertically_flipped: 	boolean,
@@ -296,6 +298,7 @@ export const Blit_Manager_ƒ = {
 				z_index:				p.z_index,
 				opacity:				p.opacity,
 				rotate: 				p.rotate,
+				scale:					p.scale,
 				brightness: 			p.brightness,
 				horizontally_flipped:	p.horizontally_flipped,
 				vertically_flipped:		p.vertically_flipped,
