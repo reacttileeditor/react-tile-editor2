@@ -330,6 +330,7 @@ export const Blit_Manager_ƒ = {
 							(val_z)=>( val_z.z_index )
 						);
 
+		me.osb_ctx.imageSmoothingEnabled = false;						
 		//then blit it
 		_.map( sortedBlits, (value,index) => {
 			if( Blit_Manager_ƒ.isDraw_Data_Image_With_BoundsForText(value.drawing_data) ){
@@ -416,8 +417,8 @@ export const Blit_Manager_ƒ = {
 
 
 				me.osb_ctx.translate(
-					value.pos.x + viewport_pos.x + scale_margin_horizontal/2,
-					value.pos.y + viewport_pos.y + scale_margin_vertical/2
+					value.pos.x + viewport_pos.x,
+					value.pos.y + viewport_pos.y 
 				);
 				me.osb_ctx.globalAlpha = value.opacity;
 
@@ -432,8 +433,8 @@ export const Blit_Manager_ƒ = {
 				me.osb_ctx.rotate(value.rotate * Math.PI / 180);
 
 				me.osb_ctx.scale(
-					ƒ.if(value.horizontally_flipped, -1, 1),
-					ƒ.if(value.vertically_flipped, -1, 1),
+					ƒ.if(value.horizontally_flipped, -value.scale, value.scale),
+					ƒ.if(value.vertically_flipped, -value.scale, value.scale),
 				);
 				
 
@@ -447,10 +448,10 @@ export const Blit_Manager_ƒ = {
 										value.drawing_data.src_rect.h,
 
 									
-					/* dst xy */		value.drawing_data.dst_rect.x - scale_margin_horizontal,
-										value.drawing_data.dst_rect.y - scale_margin_vertical,
-					/* dst wh */		value.drawing_data.dst_rect.w + scale_margin_horizontal,
-										value.drawing_data.dst_rect.h + scale_margin_vertical,
+					/* dst xy */		value.drawing_data.dst_rect.x,
+										value.drawing_data.dst_rect.y,
+					/* dst wh */		value.drawing_data.dst_rect.w,
+										value.drawing_data.dst_rect.h,
 									);
 				me.osb_ctx.restore();
 			} else {

@@ -203,7 +203,7 @@ export const Game_Manager_ƒ_Drawing = {
 					current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 					opacity:					1.0,
 					rotate:						0.0,
-					scale:						2.0,
+					scale:						1.0,
 					brightness:					1.0,
 					horizontally_flipped:		false,
 					vertically_flipped:			false,
