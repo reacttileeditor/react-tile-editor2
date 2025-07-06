@@ -459,8 +459,8 @@ export const Blit_Manager_ƒ = {
 				me.osb_ctx.save();
 
 				me.osb_ctx.translate(
-					value.pos.x + viewport_pos.x + value.drawing_data.dest_point.x,
-					value.pos.y + viewport_pos.y + value.drawing_data.dest_point.y
+					value.pos.x + viewport_pos.x,
+					value.pos.y + viewport_pos.y
 				);
 				me.osb_ctx.globalAlpha = value.opacity;
 
@@ -479,20 +479,11 @@ export const Blit_Manager_ƒ = {
 					ƒ.if(value.vertically_flipped, -value.scale, value.scale),
 				);
 
-				/*
-					The following transforms essentially exist so that flipped images will draw in their intended position, rather than a full image size increment in the opposite cardinal direction.
-				*/
 
 				me.osb_ctx.drawImage	(
 					/* file */				value.drawing_data.image_ref,
-					/* dst upper-left x */	ƒ.if(value.horizontally_flipped,
-												-value.drawing_data.src_rect.w,
-												0
-											),
-					/* dst upper-left y */	ƒ.if(value.vertically_flipped,
-												-value.drawing_data.src_rect.h,
-												0
-											),
+					/* dst upper-left x */	value.drawing_data.dest_point.x,
+					/* dst upper-left y */	value.drawing_data.dest_point.y,
 									);
 				me.osb_ctx.restore();
 			}
