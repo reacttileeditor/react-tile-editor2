@@ -407,9 +407,17 @@ export const Blit_Manager_ƒ = {
 
 				me.osb_ctx.save();
 
+				/*
+					Calculate how much we're supposed to add in order to scale the image.  If `value.scale` is less than 1.0, this will end up being a negative number, and thus, being subtraction.
+				*/
+				const scale_margin_horizontal = ((value.scale * value.drawing_data.dst_rect.w) - value.drawing_data.dst_rect.w) / 2.0;
+				const scale_margin_vertical = ((value.scale * value.drawing_data.dst_rect.h) - value.drawing_data.dst_rect.h) / 2.0;
+
+
+
 				me.osb_ctx.translate(
-					value.pos.x + viewport_pos.x,
-					value.pos.y + viewport_pos.y
+					value.pos.x + viewport_pos.x + scale_margin_horizontal/2,
+					value.pos.y + viewport_pos.y + scale_margin_vertical/2
 				);
 				me.osb_ctx.globalAlpha = value.opacity;
 
@@ -428,6 +436,7 @@ export const Blit_Manager_ƒ = {
 					ƒ.if(value.vertically_flipped, -1, 1),
 				);
 				
+
 				me.osb_ctx.drawImage	(
 					/* file */			value.drawing_data.image_ref,
 
@@ -438,10 +447,10 @@ export const Blit_Manager_ƒ = {
 										value.drawing_data.src_rect.h,
 
 									
-					/* dst xy */		value.drawing_data.dst_rect.x,
-										value.drawing_data.dst_rect.y,
-					/* dst wh */		value.drawing_data.dst_rect.w,
-										value.drawing_data.dst_rect.h,
+					/* dst xy */		value.drawing_data.dst_rect.x - scale_margin_horizontal,
+										value.drawing_data.dst_rect.y - scale_margin_vertical,
+					/* dst wh */		value.drawing_data.dst_rect.w + scale_margin_horizontal,
+										value.drawing_data.dst_rect.h + scale_margin_vertical,
 									);
 				me.osb_ctx.restore();
 			} else {
@@ -465,8 +474,8 @@ export const Blit_Manager_ƒ = {
 				me.osb_ctx.rotate(value.rotate * Math.PI / 180);
 
 				me.osb_ctx.scale(
-					ƒ.if(value.horizontally_flipped, -1, 1),
-					ƒ.if(value.vertically_flipped, -1, 1),
+					ƒ.if(value.horizontally_flipped, -value.scale, value.scale),
+					ƒ.if(value.vertically_flipped, -value.scale, value.scale),
 				);
 
 				/*
