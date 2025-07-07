@@ -115,7 +115,7 @@ export const Map_Analysis_ƒ = {
 		);
 
 		const filtered_open_possibilities: Array<Tile_And_Movement_Data> = filter(
-			(val)=>( val.remaining_moves > 0 ),
+			(val)=>( val.remaining_moves >= 0 ),
 			non_unique_open_possibilities
 		)
 

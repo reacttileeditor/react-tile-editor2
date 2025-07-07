@@ -45,17 +45,17 @@ export const Creature_ƒ_Path_Management = {
 		let moves_remaining = cloneDeep(me.remaining_move_points);
 		let final_path: Array<Point2D> = [];
 	
-		_.map( new_path, (val) => {
+		_.map( new_path, (val, idx) => {
 			const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
 				_TM,
 				val,
 				'terrain',
 			);
-			const move_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type) ?? 100000000000000;
+			const move_cost = idx == 0 ? 0 : (Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type) ?? 100000000000000);
 
-			moves_remaining = Math.max(moves_remaining - move_cost,0);
+			moves_remaining = (moves_remaining - move_cost);
 			
-			if(moves_remaining > 0){
+			if(moves_remaining >= 0){
 				final_path.push(val);
 			}
 		})
