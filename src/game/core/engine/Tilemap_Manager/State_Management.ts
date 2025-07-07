@@ -37,7 +37,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		_AM: Asset_Manager_Data,
 		pos: Point2D,
 		selected_tile_type: string,
-		tilemap_name: Tilemap_Keys,
+		targeted_tilemap_name: Tilemap_Keys,
 	): Tilemap_Manager_Data => {
 
 		
@@ -46,7 +46,19 @@ export const Tilemap_Manager_ƒ_State_Management = {
 			&&
 			selected_tile_type && selected_tile_type != ''
 		){
-			me.tile_maps[tilemap_name][pos.y][pos.x] = selected_tile_type;
+			me.tile_maps[targeted_tilemap_name][pos.y][pos.x] = selected_tile_type;
+
+
+			
+			let new_blit_cache = Tilemap_Manager_ƒ.cleared_cache().asset_blit_list_cache_by_tilemap;
+
+			map(me.asset_blit_list_cache_by_tilemap, (blit_cache: Asset_Blit_Tilemap, name: keyof Asset_Blit_Tilemaps) => {
+				if( !includes(name, [targeted_tilemap_name]) ){
+					new_blit_cache[name] = blit_cache;
+				} else {
+					new_blit_cache[name] = [[[]]];
+				}
+			})		
 
 			return {
 				level_name: me.level_name,
@@ -55,11 +67,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 				tile_RNGs: me.tile_RNGs,
 				creature_list: me.creature_list,
 				initialized: me.initialized,
-				asset_blit_list_cache_by_tilemap: {
-					terrain: tilemap_name == 'terrain' ? [[[]]] : me.asset_blit_list_cache_by_tilemap.terrain,
-					movemap: tilemap_name == 'movemap' ? [[[]]] : me.asset_blit_list_cache_by_tilemap.movemap,
-					ui: tilemap_name == 'ui' ? [[[]]] : me.asset_blit_list_cache_by_tilemap.ui,
-				}
+				asset_blit_list_cache_by_tilemap: new_blit_cache
 			}
 		} else {
 			return me;
