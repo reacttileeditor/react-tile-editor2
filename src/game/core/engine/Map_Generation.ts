@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
-import _, { Dictionary, cloneDeep, countBy, isArray, isEmpty, isEqual, map, range, size, sortBy } from "lodash";
+import _, { Dictionary, clone, cloneDeep, countBy, isArray, isEmpty, isEqual, map, range, size, sortBy } from "lodash";
 
 import { Asset_Manager_Data, Asset_Manager_ƒ, Image_List_Cache } from "./Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "./Blit_Manager";
@@ -11,9 +11,10 @@ import { cubic } from '@juliendargelos/easings'
 import { Tile_Comparator_Sample, Tile_Position_Comparator_Sample } from "./Asset_Manager/Asset_Manager";
 import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import { concat, filter, flatten, includes, keys, slice, uniq } from "ramda";
-import { Tilemap_Single, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager/Tilemap_Manager";
+import { Tilemap_Single, Tilemap_Manager_Data, Tilemap_Manager_ƒ, Tilemaps } from "./Tilemap_Manager/Tilemap_Manager";
 import { Blob_Profile_Name, Mapgen_Profile_ƒ } from "../data/Mapgen_Data";
 import { Tile_Name } from "../data/Tile_Types";
+import { tile_maps_init } from "./Tilemap_Manager/Initialization";
 
 
 type Tile_Blob = {
@@ -328,14 +329,23 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			})
 		})
 
+
+
+		let new_tile_maps: Tilemaps = cloneDeep(tile_maps_init);
+		
+		map(keys(me.tile_maps), (name)=>{
+			if(name !== 'terrain'){
+				new_tile_maps[name] = Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM);
+			} else {
+				new_tile_maps[name] = fresh_terrain_tilemap
+			}
+		});
+
+
 		return {
 			level_name: me.level_name,
 			metadata: _.cloneDeep(me.metadata),
-			tile_maps: {
-				terrain: fresh_terrain_tilemap,
-				movemap: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
-				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
-			},
+			tile_maps: new_tile_maps,
 			tile_RNGs: Tilemap_Manager_ƒ.initialize_tileRNGs(),
 			creature_list: _.cloneDeep(me.creature_list),
 			...Tilemap_Manager_ƒ.cleared_cache(),
