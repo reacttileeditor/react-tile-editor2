@@ -55,15 +55,21 @@ get_random_tile_name: (_AM: Asset_Manager_Data): string => (
 			'THING', thing
 		)
 
+		let new_tile_maps: Tilemaps = cloneDeep(tile_maps_init);
+		
+		map(keys(me.tile_maps), (name)=>{
+			if(name !== 'terrain'){
+				new_tile_maps[name] = Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM);
+			} else {
+				new_tile_maps[name] = fresh_terrain_tilemap
+			}
+		});
+
 
 		return {
 			level_name: me.level_name,
 			metadata: _.cloneDeep(me.metadata),
-			tile_maps: {
-				terrain: fresh_terrain_tilemap,
-				movemap: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
-				ui: Tilemap_Manager_ƒ.create_empty_tile_map(me, _AM),
-			},
+			tile_maps: new_tile_maps,
 			tile_RNGs: Tilemap_Manager_ƒ.initialize_tileRNGs(),
 			creature_list: _.cloneDeep(me.creature_list),
 			...Tilemap_Manager_ƒ.cleared_cache(),
