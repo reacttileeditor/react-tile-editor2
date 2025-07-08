@@ -206,15 +206,15 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		);
 
 
-		const new_tilemaps: Tilemaps = {
-			terrain: expand_tilemap(me.tile_maps['terrain']),
-			movemap: expand_tilemap(me.tile_maps['movemap']),
-			ui: expand_tilemap(me.tile_maps['ui']),
-		}
+		let new_tile_maps: Tilemaps = cloneDeep(tile_maps_init);
+		
+		map(keys(me.tile_maps), (name)=>{
+			new_tile_maps[name] = expand_tilemap(me.tile_maps[name]);
+		});
 
 		return {
 			...me,
-			tile_maps: _.cloneDeep(new_tilemaps)
+			tile_maps: _.cloneDeep(new_tile_maps)
 		}
 	},
 /*----------------------- creature modification -----------------------*/
