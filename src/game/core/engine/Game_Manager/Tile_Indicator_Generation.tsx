@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { cloneDeep, concat, filter, find, findIndex, isEmpty, isEqual, isNil, isNumber, last, map, reduce, size, toArray, uniq } from "lodash";
-import { includes } from "ramda"
+import { includes, keys } from "ramda"
 
 import { constrain_point_within_rect, ƒ } from "../Utils";
 
@@ -9,7 +9,7 @@ import { Canvas_View, Mouse_Button_State } from "../../gui/Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, ticks_to_ms } from "../Blit_Manager";
 import { Tile_Palette_Element } from "../../gui/Tile_Palette_Element";
-import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ, Tilemap_Single } from "../Tilemap_Manager/Tilemap_Manager";
+import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ, Tilemap_Single, Tilemaps, Asset_Blit_Tilemaps } from "../Tilemap_Manager/Tilemap_Manager";
 import { Pathfinder_ƒ } from "../Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Creature_Type_Name } from "../../../objects_core/Creature/Creature";
@@ -20,6 +20,7 @@ import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
 import { Game_Manager_Data, Game_Manager_ƒ, Game_and_Tilemap_Manager_Data } from "./Game_Manager";
 import { Map_Analysis_ƒ } from "../Map_Analysis";
+import { tile_maps_init } from "../Tilemap_Manager/Initialization";
 
 
 
@@ -253,24 +254,38 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 			_TM
 		);
 
+
+		let new_tile_maps: Tilemaps = cloneDeep(tile_maps_init);
+		
+		map(keys(_TM.tile_maps), (name)=>{
+			if(name !== 'movemap'){
+				new_tile_maps[name] = _TM.tile_maps[name];
+			} else {
+				new_tile_maps[name] = new_movemap_tile_map
+			}
+		});
+
+		let new_asset_blit_cache: Asset_Blit_Tilemaps = cloneDeep(tile_maps_init);
+		
+		map(keys(_TM.asset_blit_list_cache_by_tilemap), (name)=>{
+			if(name !== 'movemap'){
+				new_asset_blit_cache[name] = _TM.asset_blit_list_cache_by_tilemap[name];
+			} else {
+				new_asset_blit_cache[name] = [[[]]];
+			}
+		});		
+
+		
 		return {
 			tm: {
 				level_name: _TM.level_name,
 				metadata: cloneDeep(_TM.metadata),
-				tile_maps: {
-					...cloneDeep(_TM.tile_maps),
-					movemap: new_movemap_tile_map,
-				},
+				tile_maps: new_tile_maps,
 				tile_RNGs: cloneDeep(_TM.tile_RNGs),
 				creature_list: cloneDeep(_TM.creature_list),
 				initialized: true,
 				...Tilemap_Manager_ƒ.cleared_cache(),
-				asset_blit_list_cache_by_tilemap: {
-					terrain: _TM.asset_blit_list_cache_by_tilemap.terrain,
-					movemap: [[[]]],
-					ui: _TM.asset_blit_list_cache_by_tilemap.ui,
-				}
-
+				asset_blit_list_cache_by_tilemap: new_asset_blit_cache,
 			},
 			gm: me,
 		}
