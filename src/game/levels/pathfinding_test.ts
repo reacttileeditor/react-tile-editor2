@@ -328,7 +328,7 @@ export const pathfinding_test = {
 			"sand"
 		]
 		],
-		"ui": [
+		"real_path": [
 		[
 			"",
 			"",
@@ -650,7 +650,7 @@ export const pathfinding_test = {
 			""
 		]
 		],
-		"movemap": [
+		"move_map": [
 		[
 			"",
 			"",

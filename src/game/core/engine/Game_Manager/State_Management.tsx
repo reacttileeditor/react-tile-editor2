@@ -58,7 +58,7 @@ export const Game_Manager_ƒ_State_Management = {
 					?
 					Game_Manager_ƒ.adjust_tiles_to_display_unit_path_and_possible_moves(new_game_data, displayed_creature, _AM, _BM, _TM).tm
 					:
-					Tilemap_Manager_ƒ.clear_tile_maps(_TM, ['ui','movemap'], _AM),
+					Tilemap_Manager_ƒ.clear_tile_maps(_TM, ['real_path', 'prospective_path','move_map'], _AM),
 				gm: new_game_data
 			}
 		} else {
@@ -209,7 +209,7 @@ export const Game_Manager_ƒ_State_Management = {
 		console.log(`beginning turn #${me.game_state.current_turn}`)
 
 		return {
-			tm: Tilemap_Manager_ƒ.clear_tile_maps(_TM, ['ui','movemap'], _AM),
+			tm: Tilemap_Manager_ƒ.clear_tile_maps(_TM, ['real_path', 'prospective_path', 'move_map'], _AM),
 			gm: {
 				...cloneDeep(me),
 				animation_state: {

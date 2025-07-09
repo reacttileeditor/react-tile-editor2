@@ -52,8 +52,9 @@ export const metadata_init = {
 
 export const tile_maps_init = {
 	terrain: [[]],
-	movemap: [[]],
-	ui: [[]],
+	move_map: [[]],
+	real_path: [[]],
+	prospective_path: [[]],
 };
 
 
@@ -73,16 +74,18 @@ export const Tilemap_Manager_ƒ_Initialization = {
 		{
 			//Prando allows seeding with a string, so on a lark we're using the tilemap name. 
 			terrain: new Prando('terrain'),
-			movemap: new Prando('movemap'),
-			ui: new Prando('ui'),
+			move_map: new Prando('move_map'),
+			real_path: new Prando('real_path'),
+			prospective_path: new Prando('prospective_path'),
 		}
 	),
 
 	cleared_cache: () : Cache_Data => ({
 		asset_blit_list_cache_by_tilemap: {
 			terrain: [[[]]],
-			movemap: [[[]]],
-			ui: [[[]]],
+			move_map: [[[]]],
+			real_path: [[[]]],
+			prospective_path: [[[]]],
 		}
 	}),
 

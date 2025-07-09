@@ -127,9 +127,9 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				map(tile_assets, (individual_asset)=>{
 
 					let opacity = 1.0;
-					if(includes(individual_asset.id, arrow_tiles)){
-						opacity = 0.5;
-					}
+					// if(includes(individual_asset.id, arrow_tiles)){
+					// 	opacity = 0.5;
+					// }
 
 					Asset_Manager_ƒ.draw_image_for_asset_name({
 						_AM:						_AM,
@@ -163,7 +163,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 
 		const mtp_results = Tilemap_Manager_ƒ.mtp_scan(me, _AM);
 
-		//step over all of the various "tile maps", like 'ui' or 'terrain', and collate all the tiles.
+		//step over all of the various "tile maps", like 'real_path' or 'terrain', and collate all the tiles.
 		let asset_maps = _.map(me.tile_maps as unknown as Dictionary<Tilemap_Single>, (tile_map, tilemap_name) => {
 
 			return Tilemap_Manager_ƒ.calculate_assets_used_for_individual_tilemap(

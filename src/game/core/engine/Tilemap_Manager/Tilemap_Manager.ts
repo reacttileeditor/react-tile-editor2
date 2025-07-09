@@ -35,8 +35,9 @@ export type Tile_View_State = {
 	tile_maps: Tilemaps,
 	tile_RNGs: {
 		terrain: Prando,
-		movemap: Prando,
-		ui: Prando,
+		move_map: Prando,
+		real_path: Prando,
+		prospective_path: Prando,
 	},
 	creature_list: Array<Creature_Map_Instance>,
 	initialized: boolean,
@@ -48,8 +49,9 @@ export type Cache_Data = {
 
 export type Asset_Blit_Tilemaps = {
 	terrain: Asset_Blit_Tilemap,
-	movemap: Asset_Blit_Tilemap,
-	ui: Asset_Blit_Tilemap,
+	move_map: Asset_Blit_Tilemap,
+	real_path: Asset_Blit_Tilemap,
+	prospective_path: Asset_Blit_Tilemap,
 }
 
 export type Asset_Blit_Tilemap = Array<Array<Asset_Blit_List>>;
@@ -77,8 +79,9 @@ type TileComparatorMap = Array<Array<Tile_Comparator_Sample|undefined>>;
 
 interface _Tilemaps<T> {
 	terrain: T,
-	movemap: T,
-	ui: T,
+	move_map: T,
+	real_path: T,
+	prospective_path: T,
 }
 
 export type Tilemaps =  _Tilemaps<Tilemap_Single>;
@@ -120,8 +123,9 @@ export const New_Tilemap_Manager = (): Tilemap_Manager_Data => {
 		tile_RNGs: {
 			//Prando allows seeding with a string, so on a lark we're using the tilemap name. 
 			terrain: new Prando('terrain'),
-			movemap: new Prando('movemap'),
-			ui: new Prando('ui'),
+			move_map: new Prando('move_map'),
+			real_path: new Prando('real_path'),
+			prospective_path: new Prando('prospective_path'),
 		},
 		creature_list: [],
 		...Tilemap_Manager_ƒ.cleared_cache(),

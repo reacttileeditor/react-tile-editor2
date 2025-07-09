@@ -328,7 +328,7 @@ export const second_level = {
 				"sand"
 			]
 		],
-		"ui": [
+		"real_path": [
 			[
 				"",
 				"",
