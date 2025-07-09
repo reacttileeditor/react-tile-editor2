@@ -116,12 +116,21 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		_BM: Blit_Manager_Data,
 		tilemap_of_assets: Asset_Blit_Tilemap
 	) => {
+
+		const arrow_tiles = Asset_Manager_ƒ.get_all_assets_associated_with_tile_type('arrow-green', _AM);
+
 		tilemap_of_assets.map( (row_value, row_index) => {
 			return row_value.map( (tile_assets, col_index) => {
 
 				let pos = {x: col_index, y: row_index};
 
 				map(tile_assets, (individual_asset)=>{
+
+					let opacity = 1.0;
+					if(includes(individual_asset.id, arrow_tiles)){
+						opacity = 0.5;
+					}
+
 					Asset_Manager_ƒ.draw_image_for_asset_name({
 						_AM:						_AM,
 						asset_name:					individual_asset.id,
@@ -133,7 +142,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 						),
 						zorder:						individual_asset.zorder,
 						current_milliseconds:		ticks_to_ms(_BM.time_tracker.current_tick) + Tilemap_Manager_ƒ.deterministic_random_time_offset_for_tile(pos),
-						opacity:					1.0,
+						opacity:					opacity,
 						rotate:						0,
 						scale:						1.0,
 						brightness:					1.0,

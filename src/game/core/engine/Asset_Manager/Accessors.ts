@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Asset_Manager_Data, Asset_Manager_ƒ, Assets_Metadata_Single_Image_Item, Assets_Metadata_Spritesheet_Item, Autotile_Restriction_Sample, Graphic_Item_Basic, Graphic_Item_Autotiled, Graphic_Item_Generic, Image_Data, Tile_Comparator_Sample, Asset_Data_Record } from "./Asset_Manager";
 import { filter, find, flatten, isString, map, size, sortBy, sortedUniq } from "lodash";
 import { is_all_true, ƒ } from "../Utils";
-import { concat, uniq, filter as r_filter, keys, includes } from "ramda";
+import { concat, uniq, filter as r_filter, keys, includes, reduce } from "ramda";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../Blit_Manager";
 import { Point2D } from "../../../interfaces";
 import * as Utils from "../Utils";
@@ -12,6 +12,7 @@ import { MTP_Graphic_Item } from "../../data/Multi_Tile_Patterns";
 import Prando from "prando";
 import { Image_And_Image_Sequence_Data_Names, Image_Data_Names } from "../../data/Image_Data";
 import { Palette_Names } from "../../data/Palette_List";
+import { Tile_Name } from "../../data/Tile_Types";
 
 
 
@@ -219,6 +220,18 @@ export const Accessors = {
 			zorder: graphic_item.zorder,
 		}
 	},
+
+
+
+
+	get_all_assets_associated_with_tile_type: (tile_name: Tile_Name, me: Asset_Manager_Data): Array<Image_And_Image_Sequence_Data_Names> => {
+		const graphics_items = Asset_Manager_ƒ.get_tile_graphics_data(me, tile_name);
+		const just_assets = map(graphics_items, (val)=>val.asset_variants);
+
+		const asset_names = uniq(flatten(just_assets));
+
+		return asset_names;
+	}
 
 
 }
