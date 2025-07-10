@@ -46,7 +46,7 @@ export const Mapgen_Profile_ƒ = {
 		return tile_array;
 	},
 
-	get_random_tile_name_from_profile: (profile_name: Blob_Profile_Name): string => {
+	get_random_tile_name_from_profile: (profile_name: Blob_Profile_Name): Tile_Name => {
 		const random_tile_possibilities: Array<Tile_Name> = Mapgen_Profile_ƒ.produce_array_of_tiles_for_profile(profile_name);
 
 		return random_tile_possibilities[

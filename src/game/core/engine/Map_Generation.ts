@@ -13,7 +13,7 @@ import { Point2D, Rectangle, PointCubic } from '../../interfaces';
 import { concat, filter, flatten, includes, keys, slice, uniq } from "ramda";
 import { Tilemap_Single, Tilemap_Manager_Data, Tilemap_Manager_ƒ, Tilemaps } from "./Tilemap_Manager/Tilemap_Manager";
 import { Blob_Profile_Name, Mapgen_Profile_ƒ } from "../data/Mapgen_Data";
-import { Tile_Name } from "../data/Tile_Types";
+import { Tile_Name, Tile_Name_including_Empty } from "../data/Tile_Types";
 import { tile_maps_init } from "./Tilemap_Manager/Initialization";
 
 
@@ -32,7 +32,7 @@ type Tile_Blob_Plan = {
 
 export const Map_Generation_ƒ = {
 /*----------------------- utility functions -----------------------*/
-get_random_tile_name: (_AM: Asset_Manager_Data): string => (
+get_random_tile_name: (_AM: Asset_Manager_Data): Tile_Name_including_Empty => (
 	Asset_Manager_ƒ.yield_tile_name_list(_AM)[
 		Utils.dice( _.size( Asset_Manager_ƒ.yield_tile_name_list(_AM) ) ) -1 
 	]

@@ -27,6 +27,7 @@ import { Tilemap_Manager_ƒ_State_Management } from "./State_Management";
 import { Tilemap_Manager_ƒ_Initialization, metadata_init, tile_maps_init } from "./Initialization";
 import Prando from "prando";
 import { Image_And_Image_Sequence_Data_Names, Image_Data_Names } from "../../data/Image_Data";
+import { Tile_Name_including_Empty } from "../../data/Tile_Types";
 
 
 export type Tile_View_State = {
@@ -88,7 +89,7 @@ export type Tilemaps =  _Tilemaps<Tilemap_Single>;
 
 export type Tilemap_Keys = keyof Tilemaps;
 
-export type Tilemap_Single = Array<Array<string>>;
+export type Tilemap_Single = Array<Array<Tile_Name_including_Empty>>;
 
 export type Direction = 
 	'north_east' |

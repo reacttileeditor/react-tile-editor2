@@ -24,6 +24,7 @@ import { boolean } from "yargs";
 import { MTP_Anchor_Data } from "../../data/Multi_Tile_Patterns";
 import { Asset_Blit_Tilemap, Cache_Data, Direction, Tilemap_Single, Tilemap_Manager_Data, Tilemap_Manager_ƒ, Tilemap_Keys, Tilemap_Persist_Data, Tilemaps, Asset_Blit_Tilemaps } from "./Tilemap_Manager";
 import { tile_maps_init } from "./Initialization";
+import { Tile_Name_including_Empty } from "../../data/Tile_Types";
 
 
 
@@ -36,7 +37,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		me: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		pos: Point2D,
-		selected_tile_type: string,
+		selected_tile_type: Tile_Name_including_Empty,
 		targeted_tilemap_name: Tilemap_Keys,
 	): Tilemap_Manager_Data => {
 
@@ -44,7 +45,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		if(
 			Tilemap_Manager_ƒ.is_within_map_bounds( me, pos )
 			&&
-			selected_tile_type && selected_tile_type != ''
+			selected_tile_type != ''
 		){
 			me.tile_maps[targeted_tilemap_name][pos.y][pos.x] = selected_tile_type;
 
@@ -184,24 +185,24 @@ export const Tilemap_Manager_ƒ_State_Management = {
 				)
 		);
 		
-		const new_row = ( tilemap_val: Tilemap_Single ): Array<string> => (
-			map( range( bounds.grow_x + bounds.grow_x2 + size(tilemap_val[0]) ), ()=>(''))
+		const new_row = ( tilemap_val: Tilemap_Single ): Array<Tile_Name_including_Empty> => (
+			map( range( bounds.grow_x + bounds.grow_x2 + size(tilemap_val[0]) ), ()=>('' as Tile_Name_including_Empty))
 		)
 
-		const expand_row = (row_val: Array<string>): Array<string> => (
+		const expand_row = (row_val: Array<Tile_Name_including_Empty>): Array<Tile_Name_including_Empty> => (
 			/*
 				The following code expands rows if they're too short.
 			*/
 			concat(
 				concat(
-					map( range( Math.max(0, bounds.grow_x) ), ()=>('') ),
+					map( range( Math.max(0, bounds.grow_x) ), ()=>('' as Tile_Name_including_Empty) ),
 					slice(
 						Math.abs(Math.min( bounds.grow_x, 0)),
 						row_val.length + Math.min( bounds.grow_x2, 0),
 						row_val
 					)
 				),
-				map( range( Math.max(0, bounds.grow_x2) ), ()=>('') ),
+				map( range( Math.max(0, bounds.grow_x2) ), ()=>('' as Tile_Name_including_Empty) ),
 			)
 		);
 

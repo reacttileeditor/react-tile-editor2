@@ -9,7 +9,7 @@ import { Static_Values, Tile_Item } from "../engine/Asset_Manager/Asset_Manager"
 
 
 export type Tile_Name = Tile_Name__Excluding_Virtual_Tiles | Tile_Name__Virtual_Tiles_Only;
-
+export type Tile_Name_including_Empty = '' | Tile_Name;
 
 export type Tile_Name__Excluding_Virtual_Tiles = 
 "grass" |
