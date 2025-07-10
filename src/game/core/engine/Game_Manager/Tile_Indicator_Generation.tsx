@@ -55,17 +55,21 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 					} */
 
 
-					return ƒ.if(  includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn ),
-							ƒ.if( includes({x: x_idx, y: y_idx}, creature.path_data.path_reachable_this_turn),
-								ƒ.if( isEqual({x: x_idx, y: y_idx}, last(creature.path_data.path_reachable_this_turn)),
-									'arrowhead-green',
-									'arrow-green'
-								),
-								'red-path-unreachable-dot'
-							),
-							''
-						)
-					
+
+						
+					return	includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn )
+					?
+						includes({x: x_idx, y: y_idx}, creature.path_data.path_reachable_this_turn)
+						?
+							isEqual({x: x_idx, y: y_idx}, last(creature.path_data.path_reachable_this_turn))
+							?
+							'arrowhead-green'
+							:
+							'arrow-green'
+						:
+						'red-path-unreachable-dot'
+					:	
+					''						
 				})
 			})
 
@@ -110,26 +114,21 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 						Here we build a brand new tilemap for the unit path, from scratch.
 					*/
 
-					/*if(
-						isEqual({x: x_idx, y: y_idx}, creature.tile_pos)
-						&&
-						!size(creature.path_data.path_this_turn)
-					){
-						return x_val;//'cursor_green';
-					} */
 
 
-					return ƒ.if(  includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn ),
-							ƒ.if( includes({x: x_idx, y: y_idx}, creature.path_data.path_reachable_this_turn),
-								ƒ.if( isEqual({x: x_idx, y: y_idx}, last(creature.path_data.path_reachable_this_turn)),
-									'arrowhead-skinny-green',
+					return	includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn )
+							?
+								includes({x: x_idx, y: y_idx}, creature.path_data.path_reachable_this_turn)
+								?
+									isEqual({x: x_idx, y: y_idx}, last(creature.path_data.path_reachable_this_turn))
+									?
+									'arrowhead-skinny-green'
+									:
 									'arrow-skinny-green'
-								),
+								:
 								''
-							),
+							:	
 							''
-						)
-					
 				})
 			})
 		}
