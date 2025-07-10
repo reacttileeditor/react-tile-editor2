@@ -48,6 +48,10 @@ const water_tiles = /(^water$|water-placid)/;
 const not_any_arrow = /^((?!(arrow_green|arrowhead_green)).)*$/
 const arrow_or_head = /arrow_green|arrowhead_green/
 
+const not_any_skinny_arrow = /^((?!(arrow_skinny_green|arrowhead_skinny_green)).)*$/
+const skinny_arrow_or_head = /arrow_skinny_green|arrowhead_skinny_green/
+
+
 
 export const tile_types: Array<Tile_Item> = [
 	{
@@ -792,7 +796,7 @@ export const tile_types: Array<Tile_Item> = [
 			zorder: zorder.rocks,
 			restrictions:	[
 										[/.*/, /.*/],
-									[/arrow_skinny_green/, /arrow_skinny_green/, /arrow_skinny_green/],
+									[skinny_arrow_or_head, /arrow_skinny_green/, skinny_arrow_or_head],
 										[/.*/, /.*/]
 							]
 		},{
@@ -801,9 +805,9 @@ export const tile_types: Array<Tile_Item> = [
 			],
 			zorder: zorder.rocks,
 			restrictions:	[
-										[/arrow_skinny_green/, /.*/],
+										[skinny_arrow_or_head, /.*/],
 									[/.*/, /arrow_skinny_green/, /.*/],
-										[/.*/, /arrow_skinny_green/]
+										[/.*/, skinny_arrow_or_head]
 							]
 		},{
 			asset_variants: [
@@ -811,9 +815,9 @@ export const tile_types: Array<Tile_Item> = [
 			],
 			zorder: zorder.rocks,
 			restrictions:	[
-										[/.*/, /arrow_skinny_green/],
+										[/.*/, skinny_arrow_or_head],
 									[/.*/, /arrow_skinny_green/, /.*/],
-										[/arrow_skinny_green/, /.*/]
+										[skinny_arrow_or_head, /.*/]
 							]
 		},{
 			asset_variants: [
@@ -822,8 +826,8 @@ export const tile_types: Array<Tile_Item> = [
 			zorder: zorder.rocks,
 			restrictions:	[
 										[/.*/, /.*/],
-									[/arrow_skinny_green/, /arrow_skinny_green/, /.*/],
-										[/.*/, /arrow_skinny_green/]
+									[skinny_arrow_or_head, /arrow_skinny_green/, /.*/],
+										[/.*/, skinny_arrow_or_head]
 							]
 		},{
 			asset_variants: [
@@ -831,8 +835,8 @@ export const tile_types: Array<Tile_Item> = [
 			],
 			zorder: zorder.rocks,
 			restrictions:	[
-										[/arrow_skinny_green/, /.*/],
-									[/.*/, /arrow_skinny_green/, /arrow_skinny_green/],
+										[skinny_arrow_or_head, /.*/],
+									[/.*/, /arrow_skinny_green/, skinny_arrow_or_head],
 										[/.*/, /.*/]
 							]
 		},{
@@ -842,8 +846,8 @@ export const tile_types: Array<Tile_Item> = [
 			zorder: zorder.rocks,
 			restrictions:	[
 										[/.*/, /.*/],
-									[/.*/, /arrow_skinny_green/, /arrow_skinny_green/],
-										[/arrow_skinny_green/, /.*/]
+									[/.*/, /arrow_skinny_green/, skinny_arrow_or_head],
+										[skinny_arrow_or_head, /.*/]
 							]
 		},{
 			asset_variants: [
@@ -851,8 +855,8 @@ export const tile_types: Array<Tile_Item> = [
 			],
 			zorder: zorder.rocks,
 			restrictions:	[
-										[/.*/, /arrow_skinny_green/],
-									[/arrow_skinny_green/, /arrow_skinny_green/, /.*/],
+										[/.*/, skinny_arrow_or_head],
+									[skinny_arrow_or_head, /arrow_skinny_green/, /.*/],
 										[/.*/, /.*/]
 							]
 		},{
@@ -861,9 +865,9 @@ export const tile_types: Array<Tile_Item> = [
 			],
 			zorder: zorder.rocks,
 			restrictions:	[
-										[/arrow_skinny_green/, /.*/],
+										[skinny_arrow_or_head, /.*/],
 									[/.*/, /arrow_skinny_green/, /.*/],
-										[/arrow_skinny_green/, /.*/]
+										[skinny_arrow_or_head, /.*/]
 							]
 		},{
 			asset_variants: [
@@ -871,9 +875,9 @@ export const tile_types: Array<Tile_Item> = [
 			],
 			zorder: zorder.rocks,
 			restrictions:	[
-										[/.*/, /arrow_skinny_green/],
+										[/.*/, skinny_arrow_or_head],
 									[/.*/, /arrow_skinny_green/, /.*/],
-										[/.*/, /arrow_skinny_green/]
+										[/.*/, skinny_arrow_or_head]
 							]
 		},{
 			asset_variants: [
@@ -881,9 +885,9 @@ export const tile_types: Array<Tile_Item> = [
 			],
 			zorder: zorder.rocks,
 			restrictions:	[
-										[/^((?!(arrow_skinny_green)).)*$/, /^((?!(arrow_skinny_green)).)*$/],
-									[/^((?!(arrow_skinny_green)).)*$/, /arrow_skinny_green/, /^((?!(arrow_skinny_green)).)*$/],
-										[/^((?!(arrow_skinny_green)).)*$/, /arrow_skinny_green/]
+										[not_any_skinny_arrow, not_any_skinny_arrow],
+									[not_any_skinny_arrow, /arrow_skinny_green/, not_any_skinny_arrow],
+										[not_any_skinny_arrow, /arrow_skinny_green/]
 							]
 		},{
 			asset_variants: [
@@ -891,9 +895,9 @@ export const tile_types: Array<Tile_Item> = [
 			],
 			zorder: zorder.rocks,
 			restrictions:	[
-										[/^((?!(arrow_skinny_green)).)*$/, /^((?!(arrow_skinny_green)).)*$/],
-									[/^((?!(arrow_skinny_green)).)*$/, /arrow_skinny_green/, /^((?!(arrow_skinny_green)).)*$/],
-										[/arrow_skinny_green/, /^((?!(arrow_skinny_green)).)*$/]
+										[not_any_skinny_arrow, not_any_skinny_arrow],
+									[not_any_skinny_arrow, /arrow_skinny_green/, not_any_skinny_arrow],
+										[/arrow_skinny_green/, not_any_skinny_arrow]
 							]
 		},{
 			asset_variants: [
@@ -901,9 +905,9 @@ export const tile_types: Array<Tile_Item> = [
 			],
 			zorder: zorder.rocks,
 			restrictions:	[
-										[/arrow_skinny_green/, /^((?!(arrow_skinny_green)).)*$/],
-									[/^((?!(arrow_skinny_green)).)*$/, /arrow_skinny_green/, /^((?!(arrow_skinny_green)).)*$/],
-										[/^((?!(arrow_skinny_green)).)*$/, /^((?!(arrow_skinny_green)).)*$/]
+										[/arrow_skinny_green/, not_any_skinny_arrow],
+									[not_any_skinny_arrow, /arrow_skinny_green/, not_any_skinny_arrow],
+										[not_any_skinny_arrow, not_any_skinny_arrow]
 							]
 		},{
 			asset_variants: [
@@ -911,9 +915,9 @@ export const tile_types: Array<Tile_Item> = [
 			],
 			zorder: zorder.rocks,
 			restrictions:	[
-										[/^((?!(arrow_skinny_green)).)*$/, /arrow_skinny_green/],
-									[/^((?!(arrow_skinny_green)).)*$/, /arrow_skinny_green/, /^((?!(arrow_skinny_green)).)*$/],
-										[/^((?!(arrow_skinny_green)).)*$/, /^((?!(arrow_skinny_green)).)*$/]
+										[not_any_skinny_arrow, /arrow_skinny_green/],
+									[not_any_skinny_arrow, /arrow_skinny_green/, not_any_skinny_arrow],
+										[not_any_skinny_arrow, not_any_skinny_arrow]
 							]
 		},{
 			asset_variants: [
@@ -921,9 +925,9 @@ export const tile_types: Array<Tile_Item> = [
 			],
 			zorder: zorder.rocks,
 			restrictions:	[
-										[/^((?!(arrow_skinny_green)).)*$/, /^((?!(arrow_skinny_green)).)*$/],
-									[/arrow_skinny_green/, /arrow_skinny_green/, /^((?!(arrow_skinny_green)).)*$/],
-										[/^((?!(arrow_skinny_green)).)*$/, /^((?!(arrow_skinny_green)).)*$/]
+										[not_any_skinny_arrow, not_any_skinny_arrow],
+									[/arrow_skinny_green/, /arrow_skinny_green/, not_any_skinny_arrow],
+										[not_any_skinny_arrow, not_any_skinny_arrow]
 							]
 		},{
 			asset_variants: [
@@ -931,9 +935,9 @@ export const tile_types: Array<Tile_Item> = [
 			],
 			zorder: zorder.rocks,
 			restrictions:	[
-										[/^((?!(arrow_skinny_green)).)*$/, /^((?!(arrow_skinny_green)).)*$/],
-									[/^((?!(arrow_skinny_green)).)*$/, /arrow_skinny_green/, /arrow_skinny_green/],
-										[/^((?!(arrow_skinny_green)).)*$/, /^((?!(arrow_skinny_green)).)*$/]
+										[not_any_skinny_arrow, not_any_skinny_arrow],
+									[not_any_skinny_arrow, /arrow_skinny_green/, /arrow_skinny_green/],
+										[not_any_skinny_arrow, not_any_skinny_arrow]
 							]
 		}],
 	},
