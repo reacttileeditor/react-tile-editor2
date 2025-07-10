@@ -94,6 +94,49 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 		return new_real_path_tile_map;
 	},
 
+	generate_prospective_unit_path_tilemap: (
+		me: Game_Manager_Data,
+		creature: Creature_Data|undefined,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		_TM: Tilemap_Manager_Data
+	): Tilemap_Single => {
+		let new_prospective_path_tile_map: Tilemap_Single = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
+
+		if(creature != undefined){
+			new_prospective_path_tile_map = map( _TM.tile_maps.real_path, (y_val, y_idx) => {
+				return map (y_val, (x_val, x_idx)=>{
+					/*
+						Here we build a brand new tilemap for the unit path, from scratch.
+					*/
+
+					/*if(
+						isEqual({x: x_idx, y: y_idx}, creature.tile_pos)
+						&&
+						!size(creature.path_data.path_this_turn)
+					){
+						return x_val;//'cursor_green';
+					} */
+
+
+					return ƒ.if(  includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn ),
+							ƒ.if( includes({x: x_idx, y: y_idx}, creature.path_data.path_reachable_this_turn),
+								ƒ.if( isEqual({x: x_idx, y: y_idx}, last(creature.path_data.path_reachable_this_turn)),
+									'arrowhead-skinny-green',
+									'arrow-skinny-green'
+								),
+								''
+							),
+							''
+						)
+					
+				})
+			})
+		}
+
+		return new_prospective_path_tile_map;
+	},
+
 	generate_possible_moves_tilemap: (
 		me: Game_Manager_Data,
 		creature: Creature_Data|undefined,
