@@ -32,7 +32,10 @@ export class ErrorBoundary extends React.Component<
   
 	render() {
 		if (this.state.hasError) {
-			return <p className="error-boundary">{this.state.errorText}</p>;
+			return <div className="error-boundary">
+				<h4>Error:</h4>
+				<p>{this.state.errorText}</p>
+			</div>;
 		}
 
 		return this.props.children; 
