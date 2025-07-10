@@ -117,7 +117,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		tilemap_of_assets: Asset_Blit_Tilemap
 	) => {
 
-		const arrow_tiles = Asset_Manager_ƒ.get_all_assets_associated_with_tile_type('arrow-green', _AM);
+		const arrow_tiles = Asset_Manager_ƒ.get_all_assets_associated_with_tile_type('arrow_green', _AM);
 
 		tilemap_of_assets.map( (row_value, row_index) => {
 			return row_value.map( (tile_assets, col_index) => {

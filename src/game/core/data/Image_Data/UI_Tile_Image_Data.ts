@@ -9,6 +9,8 @@ type _UI_Tile_Image_Data_Type = (keyof typeof UI_Tile_Image_Data)
 
 
 export const UI_Tile_Image_Data = {
+
+/*----------------------- green arrow tiles -----------------------*/
 	"arrow-horizontal-bar": {
 		url: "arrow-tiles.png",
 		bounds: {
@@ -144,15 +146,8 @@ export const UI_Tile_Image_Data = {
 			h: 34,
 		},
 	},
-	"red-path-unreachable-dot": {
-		url: "map-cursor-red-tiny.png",
-		bounds: {
-			x: 0,
-			y: 0,
-			w: 54,
-			h: 34,
-		},
-	},
+
+
 	"arrowhead-ne": {
 		url: "arrow-tiles.png",
 		bounds: {
@@ -208,7 +203,209 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 
+/*----------------------- green arrow tiles -----------------------*/
+	arrow_skinny_horizontal_bar: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 57,
+			y: 1,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrow_skinny_se_bar: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 113,
+			y: 1,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrow_skinny_ne_bar: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrow_skinny_w_to_se_bar: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 57,
+			y: 37,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrow_skinny_nw_to_e_bar: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 113,
+			y: 37,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrow_skinny_sw_to_e_bar: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 57,
+			y: 73,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrow_skinny_w_to_ne_bar: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 113,
+			y: 73,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrow_skinny_se_to_ne_bar: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 1,
+			y: 37,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrow_skinny_sw_to_nw_bar: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 1,
+			y: 73,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrow_skinny_se_endcap: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 113,
+			y: 145,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrow_skinny_ne_endcap: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 1,
+			y: 109,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrow_skinny_sw_endcap: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 1,
+			y: 145,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrow_skinny_nw_endcap: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 113,
+			y: 109,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrow_skinny_e_endcap: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 57,
+			y: 145,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrow_skinny_w_endcap: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 57,
+			y: 109,
+			w: 54,
+			h: 34,
+		},
+	},
 
+
+	arrowhead_skinny_ne: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 1,
+			y: 181,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrowhead_skinny_w: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 57,
+			y: 181,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrowhead_skinny_nw: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 113,
+			y: 181,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrowhead_skinny_sw: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 1,
+			y: 217,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrowhead_skinny_e: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 57,
+			y: 217,
+			w: 54,
+			h: 34,
+		},
+	},
+	arrowhead_skinny_se: {
+		url: "arrow-tiles.png",
+		bounds: {
+			x: 113,
+			y: 217,
+			w: 54,
+			h: 34,
+		},
+	},
+
+/*----------------------- utility graphics -----------------------*/
+	"red-path-unreachable-dot": {
+		url: "map-cursor-red-tiny.png",
+		bounds: {
+			x: 0,
+			y: 0,
+			w: 54,
+			h: 34,
+		},
+	},
 	pedestal: {
 		url: "pedestal.png",
 		bounds: {
@@ -223,6 +420,7 @@ export const UI_Tile_Image_Data = {
 		uses_palette_swap: true,
 	},
 
+/*----------------------- tile boundaries (for prospective moves) -----------------------*/
 
 	tile_boundary_fill: {
 		url: "tile_boundary_transitions.png",

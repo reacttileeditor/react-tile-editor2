@@ -63,9 +63,9 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 						?
 							isEqual({x: x_idx, y: y_idx}, last(creature.path_data.path_reachable_this_turn))
 							?
-							'arrowhead-green'
+							'arrowhead_green'
 							:
-							'arrow-green'
+							'arrow_green'
 						:
 						'red-path-unreachable-dot'
 					:	
@@ -122,9 +122,9 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 								?
 									isEqual({x: x_idx, y: y_idx}, last(creature.path_data.path_reachable_this_turn))
 									?
-									'arrowhead-skinny-green'
+									'arrowhead_skinny_green'
 									:
-									'arrow-skinny-green'
+									'arrow_skinny_green'
 								:
 								''
 							:	
