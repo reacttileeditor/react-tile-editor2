@@ -716,6 +716,72 @@ export const tile_types: Array<Tile_Item> = [
 	},
 
 
+
+	{
+		name: "arrowhead_skinny_green",
+		omit_from_random_map_generation: true,
+		graphics: [{
+			asset_variants: [
+				'arrowhead_skinny_e',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /.*/],
+									[/arrow_skinny_green/, /arrowhead_skinny_green/, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			asset_variants: [
+				'arrowhead_skinny_w',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, /arrowhead_skinny_green/, /arrow_skinny_green/],
+										[/.*/, /.*/]
+							]
+		},{
+			asset_variants: [
+				'arrowhead_skinny_sw',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /arrow_skinny_green/],
+									[/.*/, /arrowhead_skinny_green/, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			asset_variants: [
+				'arrowhead_skinny_se',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/arrow_skinny_green/, /.*/],
+									[/.*/, /arrowhead_skinny_green/, /.*/],
+										[/.*/, /.*/]
+							]
+		},{
+			asset_variants: [
+				'arrowhead_skinny_nw',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, /arrowhead_skinny_green/, /.*/],
+										[/.*/, /arrow_skinny_green/]
+							]
+		},{
+			asset_variants: [
+				'arrowhead_skinny_ne',
+			],
+			zorder: zorder.rocks,
+			restrictions:	[
+										[/.*/, /.*/],
+									[/.*/, /arrowhead_skinny_green/, /.*/],
+										[/arrow_skinny_green/, /.*/]
+							]
+		}]
+	},	
 	{
 		name: "arrow_skinny_green",
 		omit_from_random_map_generation: true,

@@ -203,9 +203,9 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 
-/*----------------------- green arrow tiles -----------------------*/
+/*----------------------- green skinny arrow tiles -----------------------*/
 	arrow_skinny_horizontal_bar: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 57,
 			y: 1,
@@ -214,7 +214,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrow_skinny_se_bar: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 113,
 			y: 1,
@@ -223,7 +223,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrow_skinny_ne_bar: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 1,
 			y: 1,
@@ -232,7 +232,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrow_skinny_w_to_se_bar: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 57,
 			y: 37,
@@ -241,7 +241,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrow_skinny_nw_to_e_bar: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 113,
 			y: 37,
@@ -250,7 +250,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrow_skinny_sw_to_e_bar: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 57,
 			y: 73,
@@ -259,7 +259,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrow_skinny_w_to_ne_bar: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 113,
 			y: 73,
@@ -268,7 +268,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrow_skinny_se_to_ne_bar: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 1,
 			y: 37,
@@ -277,7 +277,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrow_skinny_sw_to_nw_bar: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 1,
 			y: 73,
@@ -286,7 +286,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrow_skinny_se_endcap: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 113,
 			y: 145,
@@ -295,7 +295,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrow_skinny_ne_endcap: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 1,
 			y: 109,
@@ -304,7 +304,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrow_skinny_sw_endcap: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 1,
 			y: 145,
@@ -313,7 +313,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrow_skinny_nw_endcap: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 113,
 			y: 109,
@@ -322,7 +322,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrow_skinny_e_endcap: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 57,
 			y: 145,
@@ -331,7 +331,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrow_skinny_w_endcap: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 57,
 			y: 109,
@@ -342,7 +342,7 @@ export const UI_Tile_Image_Data = {
 
 
 	arrowhead_skinny_ne: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 1,
 			y: 181,
@@ -351,7 +351,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrowhead_skinny_w: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 57,
 			y: 181,
@@ -360,7 +360,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrowhead_skinny_nw: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 113,
 			y: 181,
@@ -369,7 +369,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrowhead_skinny_sw: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 1,
 			y: 217,
@@ -378,7 +378,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrowhead_skinny_e: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 57,
 			y: 217,
@@ -387,7 +387,7 @@ export const UI_Tile_Image_Data = {
 		},
 	},
 	arrowhead_skinny_se: {
-		url: "arrow-tiles.png",
+		url: "arrow-tiles-skinny.png",
 		bounds: {
 			x: 113,
 			y: 217,
