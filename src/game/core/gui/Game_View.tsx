@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 import { useInterval, ƒ } from "../engine/Utils";
 
@@ -12,11 +12,12 @@ import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/T
 import { Point2D, Rectangle } from '../../interfaces';
 import { Game_and_Tilemap_Manager_Data, Game_Manager_Data, Game_Manager_ƒ } from "../engine/Game_Manager/Game_Manager";
 import { Standard_Input_ƒ } from "./Standard_Input_Handling";
-import { Button } from "rsuite";
+import { Button, IconButton } from "rsuite";
 import { Game_Tooltip_Manager } from "./Game_Components/Game_Tooltip_Manager";
 import { Game_Status_Display, New_Turn_Controls } from "./Game_Components/Game_Status_Display";
 import { Announcement_Modal } from "./Game_Components/Announcement_Modal";
-
+import ZoominIcon from '@rsuite/icons/Zoomin';
+import { Icon } from "@rsuite/icons";
 
 
 interface Game_View_Props {
@@ -174,6 +175,18 @@ export const Game_View = (props: Game_View_Props) => {
 		);
 	}	
 
+	const fullscreenRef = useRef<HTMLDivElement>(null);
+
+	const toggleFullscreen = () => {
+        if (fullscreenRef.current) {
+			if(!document.fullscreenElement ){
+				fullscreenRef.current.requestFullscreen();
+			} else {
+				document.exitFullscreen();
+			}
+		}
+	}
+
 	return <div className="game_screen">
 		<div className="toolbar">
 			<Button
@@ -182,7 +195,13 @@ export const Game_View = (props: Game_View_Props) => {
 				{'Toggle to Editor'}
 			</Button>
 		</div>
-		<div className="game_node">
+		<div className="game_node" ref={fullscreenRef}>
+			<IconButton
+				icon={<Icon as={ZoominIcon as React.ElementType} />}
+				onClick={()=>{
+					toggleFullscreen();
+				}}
+			/>			
 			<div className="game_screen">
 				<Canvas_View
 					assets_loaded={props.assets_loaded}
