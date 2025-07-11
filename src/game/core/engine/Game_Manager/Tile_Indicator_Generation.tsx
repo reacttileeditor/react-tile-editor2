@@ -101,6 +101,7 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 	generate_prospective_unit_path_tilemap: (
 		me: Game_Manager_Data,
 		creature: Creature_Data|undefined,
+		path: Array<Point2D>,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 		_TM: Tilemap_Manager_Data
@@ -116,11 +117,11 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 
 
 
-					return	includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn )
+					return	includes({x: x_idx, y: y_idx}, path )
 							?
-								includes({x: x_idx, y: y_idx}, creature.path_data.path_reachable_this_turn)
+								includes({x: x_idx, y: y_idx}, path)
 								?
-									isEqual({x: x_idx, y: y_idx}, last(creature.path_data.path_reachable_this_turn))
+									isEqual({x: x_idx, y: y_idx}, last(path))
 									?
 									'arrowhead_skinny_green'
 									:
@@ -335,6 +336,75 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 			gm: me,
 		}
 	},
+
+
+	adjust_tiles_to_display_possible_moves_and_prospective_path: (
+		me: Game_Manager_Data,
+		creature: Creature_Data|undefined,
+		path: Array<Point2D>,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		_TM: Tilemap_Manager_Data
+	): Game_and_Tilemap_Manager_Data => {
+
+		const new_movemap_tile_map = Game_Manager_ƒ.generate_possible_moves_tilemap(
+			me,
+			creature,
+			_AM,
+			_BM,
+			_TM
+		);
+
+		const new_prospective_path_tile_map = Game_Manager_ƒ.generate_prospective_unit_path_tilemap(
+			me,
+			creature,
+			path,
+			_AM,
+			_BM,
+			_TM
+		);	
+
+
+		let new_tile_maps: Tilemaps = cloneDeep(tile_maps_init);
+		
+		map(keys(_TM.tile_maps), (name)=>{
+			if( !includes(name, ['move_map','prospective_path']) ){
+				new_tile_maps[name] = _TM.tile_maps[name];
+			} else {
+				if( name == 'move_map'){
+					new_tile_maps[name] = new_movemap_tile_map
+				} else {
+					new_tile_maps[name] = new_prospective_path_tile_map
+				}
+			}
+		});
+
+		let new_asset_blit_cache: Asset_Blit_Tilemaps = cloneDeep(tile_maps_init);
+		
+		map(keys(_TM.asset_blit_list_cache_by_tilemap), (name)=>{
+			if( !includes(name, ['move_map','prospective_path']) ){
+				new_asset_blit_cache[name] = _TM.asset_blit_list_cache_by_tilemap[name];
+			} else {
+				new_asset_blit_cache[name] = [[[]]];
+			}
+		});		
+
+		
+		return {
+			tm: {
+				level_name: _TM.level_name,
+				metadata: cloneDeep(_TM.metadata),
+				tile_maps: new_tile_maps,
+				tile_RNGs: cloneDeep(_TM.tile_RNGs),
+				creature_list: cloneDeep(_TM.creature_list),
+				initialized: true,
+				...Tilemap_Manager_ƒ.cleared_cache(),
+				asset_blit_list_cache_by_tilemap: new_asset_blit_cache,
+			},
+			gm: me,
+		}
+	},
+
 
 
 }

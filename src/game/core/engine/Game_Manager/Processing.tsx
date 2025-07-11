@@ -50,8 +50,23 @@ do_mouse_position_updates: (
 
 	const displayed_creature = selected_creature ?? highlit_creature;
 
-	return Game_Manager_ƒ.adjust_tiles_to_display_possible_moves(me, displayed_creature, _AM, _BM, _TM);
+	/*
+		If we're just mousing over a unit, and nobody's selected, then we just show prospective moves.
+		If someone's selected, though, we want to show both prospective moves, AND highlight the possible path our mouse's position would allow.
+	*/
+	if(selected_creature){
+		const new_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos );
+		const new_path = Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, selected_creature.tile_pos, new_pos, selected_creature ).successful_path;
+		const new_path_reachable = Creature_ƒ.yield_path_reachable_this_turn(selected_creature, _TM, new_path);
+
+		return Game_Manager_ƒ.adjust_tiles_to_display_possible_moves_and_prospective_path(me, selected_creature, new_path_reachable, _AM, _BM, _TM);
+
+	} else {
+		return Game_Manager_ƒ.adjust_tiles_to_display_possible_moves(me, displayed_creature, _AM, _BM, _TM);
+	}
 },
+
+//get_prospective_path
 
 
 do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_and_Tilemap_Manager_Data => {
