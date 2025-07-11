@@ -117,7 +117,10 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		tilemap_of_assets: Asset_Blit_Tilemap
 	) => {
 
-		const arrow_tiles = Asset_Manager_ƒ.get_all_assets_associated_with_tile_type('arrow_green', _AM);
+		const arrow_tiles = concat(
+			Asset_Manager_ƒ.get_all_assets_associated_with_tile_type('arrowhead_skinny_green', _AM),
+			Asset_Manager_ƒ.get_all_assets_associated_with_tile_type('arrow_skinny_green', _AM)
+		);
 
 		tilemap_of_assets.map( (row_value, row_index) => {
 			return row_value.map( (tile_assets, col_index) => {
@@ -127,9 +130,9 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				map(tile_assets, (individual_asset)=>{
 
 					let opacity = 1.0;
-					// if(includes(individual_asset.id, arrow_tiles)){
-					// 	opacity = 0.5;
-					// }
+					if(includes(individual_asset.id, arrow_tiles)){
+						opacity = 0.5;
+					}
 
 					Asset_Manager_ƒ.draw_image_for_asset_name({
 						_AM:						_AM,

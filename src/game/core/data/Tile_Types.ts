@@ -728,7 +728,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrowhead_skinny_e',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[/.*/, /.*/],
 									[/arrow_skinny_green/, /arrowhead_skinny_green/, /.*/],
@@ -738,7 +738,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrowhead_skinny_w',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[/.*/, /.*/],
 									[/.*/, /arrowhead_skinny_green/, /arrow_skinny_green/],
@@ -748,7 +748,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrowhead_skinny_sw',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[/.*/, /arrow_skinny_green/],
 									[/.*/, /arrowhead_skinny_green/, /.*/],
@@ -758,7 +758,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrowhead_skinny_se',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[/arrow_skinny_green/, /.*/],
 									[/.*/, /arrowhead_skinny_green/, /.*/],
@@ -768,7 +768,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrowhead_skinny_nw',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[/.*/, /.*/],
 									[/.*/, /arrowhead_skinny_green/, /.*/],
@@ -778,7 +778,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrowhead_skinny_ne',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[/.*/, /.*/],
 									[/.*/, /arrowhead_skinny_green/, /.*/],
@@ -793,7 +793,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_horizontal_bar',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[/.*/, /.*/],
 									[skinny_arrow_or_head, /arrow_skinny_green/, skinny_arrow_or_head],
@@ -803,7 +803,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_se_bar',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[skinny_arrow_or_head, /.*/],
 									[/.*/, /arrow_skinny_green/, /.*/],
@@ -813,7 +813,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_ne_bar',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[/.*/, skinny_arrow_or_head],
 									[/.*/, /arrow_skinny_green/, /.*/],
@@ -823,7 +823,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_w_to_se_bar',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[/.*/, /.*/],
 									[skinny_arrow_or_head, /arrow_skinny_green/, /.*/],
@@ -833,7 +833,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_nw_to_e_bar',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[skinny_arrow_or_head, /.*/],
 									[/.*/, /arrow_skinny_green/, skinny_arrow_or_head],
@@ -843,7 +843,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_sw_to_e_bar',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[/.*/, /.*/],
 									[/.*/, /arrow_skinny_green/, skinny_arrow_or_head],
@@ -853,7 +853,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_w_to_ne_bar',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[/.*/, skinny_arrow_or_head],
 									[skinny_arrow_or_head, /arrow_skinny_green/, /.*/],
@@ -863,7 +863,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_sw_to_nw_bar',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[skinny_arrow_or_head, /.*/],
 									[/.*/, /arrow_skinny_green/, /.*/],
@@ -873,7 +873,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_se_to_ne_bar',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[/.*/, skinny_arrow_or_head],
 									[/.*/, /arrow_skinny_green/, /.*/],
@@ -883,7 +883,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_nw_endcap',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[not_any_skinny_arrow, not_any_skinny_arrow],
 									[not_any_skinny_arrow, /arrow_skinny_green/, not_any_skinny_arrow],
@@ -893,7 +893,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_ne_endcap',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[not_any_skinny_arrow, not_any_skinny_arrow],
 									[not_any_skinny_arrow, /arrow_skinny_green/, not_any_skinny_arrow],
@@ -903,7 +903,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_se_endcap',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[/arrow_skinny_green/, not_any_skinny_arrow],
 									[not_any_skinny_arrow, /arrow_skinny_green/, not_any_skinny_arrow],
@@ -913,7 +913,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_sw_endcap',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[not_any_skinny_arrow, /arrow_skinny_green/],
 									[not_any_skinny_arrow, /arrow_skinny_green/, not_any_skinny_arrow],
@@ -923,7 +923,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_e_endcap',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[not_any_skinny_arrow, not_any_skinny_arrow],
 									[/arrow_skinny_green/, /arrow_skinny_green/, not_any_skinny_arrow],
@@ -933,7 +933,7 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'arrow_skinny_w_endcap',
 			],
-			zorder: zorder.rocks,
+			zorder: zorder.map_arrows_low,
 			restrictions:	[
 										[not_any_skinny_arrow, not_any_skinny_arrow],
 									[not_any_skinny_arrow, /arrow_skinny_green/, /arrow_skinny_green/],

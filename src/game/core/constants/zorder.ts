@@ -9,13 +9,18 @@ export const zorder = {
 	water_surface_protrusions: 0,
 	water_edge: 1,
 	grass: 3,
-	rocks: 22,
 
 	map_boundary_low: 9,
 	map_boundary: 10,
 
-	map_cursor_low: 11,
-	map_cursor: 12,
+	map_arrows_low: 11,
+	map_arrows: 12,
+
+	map_cursor_low: 14,
+	map_cursor: 15,
+
+
+	rocks: 22,
 	characters: 23,
 	fx: 30,
 	text: 40,
