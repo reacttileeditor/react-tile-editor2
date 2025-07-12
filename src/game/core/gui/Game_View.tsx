@@ -187,7 +187,7 @@ export const Game_View = (props: Game_View_Props) => {
 		}
 	}
 
-	return <div className="game_screen">
+	return <div className="game_screen" ref={fullscreenRef}>
 		<div className="toolbar">
 			<Button
 				onClick={ () => { props.set_is_edit_mode( !props.is_edit_mode ); } }
@@ -201,9 +201,9 @@ export const Game_View = (props: Game_View_Props) => {
 				}}
 			/>
 		</div>
-		<div className="game_node" ref={fullscreenRef}>
+		<div className="game_node">
 	
-			<div className="game_screen">
+			<>
 				<Canvas_View
 					assets_loaded={props.assets_loaded}
 					connect_context_to_blit_manager={props.connect_context_to_blit_manager}
@@ -243,7 +243,7 @@ export const Game_View = (props: Game_View_Props) => {
 					render_ticktock={render_ticktock}
 				/>
 
-			</div>			
+			</>			
 			<Announcement_Modal
 				announcement_modal_hidden={announcement_modal_hidden}
 				set_announcement_modal_hidden={set_announcement_modal_hidden}

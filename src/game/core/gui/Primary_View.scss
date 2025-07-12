@@ -54,7 +54,6 @@ body {
 		position: absolute;
 		width: 100%;
 		height: 100%;
-		border: 1px solid red;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -72,17 +71,17 @@ body {
 		}
 
 		.editor_screen, .game_screen, .loading_screen {
-			border: 1px solid lime;
 
 			aspect-ratio: 567 / 325;
 			max-width: 95%;
 			max-height: 100%;
 			width: 95%;
+			position: relative;
 			
 			.toolbar {
 				position: absolute;
 				z-index: 10;
-				left: 5%;
+				left: 0rem;
 				@include smoke-glass-border-small;
 				@include smoke-glass-bg;
 
@@ -112,8 +111,8 @@ body {
 			.game_status_display {
 				position: absolute;
 				z-index: 10;
-				right: 1rem;
-				top: 1rem;			
+				right: 0rem;
+				top: 0rem;			
 			}
 		}
 
@@ -170,8 +169,8 @@ body {
 				top: 0;
 				left: 0;
 
-				width: calc(567px * 2);
-				height: calc(325px * 2);
+				width: 100%;
+				height: 100%;
 				
 				.map-tooltip {
 					font-family: 'pixel';

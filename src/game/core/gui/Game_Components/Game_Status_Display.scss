@@ -39,7 +39,7 @@
 	}
 
 	.game_status_display {
-		height: 2 * 325px;
+		height: fit-content;
 		width: calc(200px + 1.5rem);
 		margin-left: 50px;
 
