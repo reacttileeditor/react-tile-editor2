@@ -194,14 +194,15 @@ export const Game_View = (props: Game_View_Props) => {
 			>
 				{'Toggle to Editor'}
 			</Button>
-		</div>
-		<div className="game_node" ref={fullscreenRef}>
 			<IconButton
 				icon={<Icon as={ZoominIcon as React.ElementType} />}
 				onClick={()=>{
 					toggleFullscreen();
 				}}
-			/>			
+			/>
+		</div>
+		<div className="game_node" ref={fullscreenRef}>
+	
 			<div className="game_screen">
 				<Canvas_View
 					assets_loaded={props.assets_loaded}
@@ -230,22 +231,25 @@ export const Game_View = (props: Game_View_Props) => {
 					set_Tilemap_Manager={props.set_Tilemap_Manager}
 					render_ticktock={render_ticktock}
 				/>
+
+				<Game_Status_Display
+					set_announcement_modal_hidden={set_announcement_modal_hidden}
+					get_Game_Manager_Data={props.get_Game_Manager_Data}
+					set_Game_Manager_Data={props.set_Game_Manager_Data}
+					_Asset_Manager={props._Asset_Manager}
+					_Blit_Manager={props._Blit_Manager}
+					_Tilemap_Manager={props._Tilemap_Manager}
+					set_Tilemap_Manager={props.set_Tilemap_Manager}
+					render_ticktock={render_ticktock}
+				/>
+
 			</div>			
 			<Announcement_Modal
 				announcement_modal_hidden={announcement_modal_hidden}
 				set_announcement_modal_hidden={set_announcement_modal_hidden}
 				get_Game_Manager_Data={props.get_Game_Manager_Data}
 			/>
-			<Game_Status_Display
-				set_announcement_modal_hidden={set_announcement_modal_hidden}
-				get_Game_Manager_Data={props.get_Game_Manager_Data}
-				set_Game_Manager_Data={props.set_Game_Manager_Data}
-				_Asset_Manager={props._Asset_Manager}
-				_Blit_Manager={props._Blit_Manager}
-				_Tilemap_Manager={props._Tilemap_Manager}
-				set_Tilemap_Manager={props.set_Tilemap_Manager}
-				render_ticktock={render_ticktock}
-			/>
+
 		</div>
 	</div>;
 
