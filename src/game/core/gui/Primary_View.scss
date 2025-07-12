@@ -30,30 +30,59 @@ body {
 }
 
 
-#root {
-	display: flex;
-	justify-content: center;
-	min-height: 100vh;
-	align-items: flex-start;
-}
+// #root {
+// 	display: flex;
+// 	justify-content: center;
+// 	min-height: 100vh;
+// 	align-items: flex-start;
+// }
 
 .master_node {
 	//font-family: 'pixel';
 	font-family: Gill Sans, sans-serif;
-	padding: 3em;
-	padding-top: 10rem;
-    min-width: 1420px;
-    min-height: 900px;
+	//padding: 3em;
+	//padding-top: 10rem;
+    // min-width: 1420px;
+    // min-height: 900px;
 
 	* {
 		box-sizing: border-box;
 	}
 
 	.master_flex_wrapper {
-		padding-top: 2rem;
-		
+		//padding-top: 2rem;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		border: 1px solid red;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		.width_wrapper {
+			max-width: 100%;
+			max-height: 100%;
+			height: 100%;
+			aspect-ratio: 567 / 325;
+			position: relative;
+
+			align-items: center;
+			justify-content: center;
+			display: flex;
+		}
+
 		.editor_screen, .game_screen, .loading_screen {
+			border: 1px solid lime;
+
+			aspect-ratio: 567 / 325;
+			max-width: 95%;
+			max-height: 100%;
+			width: 95%;
+			
 			.toolbar {
+				position: absolute;
+				z-index: 10;
+				left: 5%;
 				@include smoke-glass-border-small;
 				@include smoke-glass-bg;
 
@@ -69,14 +98,18 @@ body {
 				button {
 					margin-right: 0.5rem;
 				}
-			}			
+			}
+
+			.editor_node, .game_node, .loading_node {
+				display: flex;
+				flex-flow: row nowrap;
+				justify-content: space-between;
+				width: 100%;
+				height: 100%;
+			}
 		}
 
-		.editor_node, .game_node, .loading_node {
-			display: flex;
-			flex-flow: row nowrap;
-			justify-content: space-between;
-		}
+
 
 		.loading_node {
 			.canvas_holder {
@@ -198,6 +231,8 @@ body {
 
 		.canvas_holder {
 			position: relative;
+			width: 100%;
+			height: 100%;
 
 			&:after {
 				pointer-events: none;
@@ -219,9 +254,10 @@ body {
 				box-shadow: darkslategrey 0px 4px 8px;
 				image-rendering: pixelated;
 				image-rendering: crisp-edges;
-				width: calc(567px * 2);
-				height: calc(325px * 2);
-
+				// width: calc(567px * 2);
+				// height: calc(325px * 2);
+				width: 100%;
+				height: 100%;
 
 
 			}

@@ -136,6 +136,7 @@ export const Primary_View = () => {
 							<div
 								className="master_flex_wrapper"
 							>
+								<div className="width_wrapper">
 								{
 									is_edit_mode
 									?
@@ -171,7 +172,7 @@ export const Primary_View = () => {
 										connect_context_to_blit_manager={connect_context_to_blit_manager}
 									/>
 								}
-								<div className="instructional_text">
+								{/* <div className="instructional_text">
 									{
 										is_edit_mode
 										?
@@ -182,6 +183,7 @@ export const Primary_View = () => {
 										Select units by clicking on them.<br/>Select a destination for those units by clicking on the destination tile, or click back on the original tile to cancel a move.<br/>
 										Once all units have orders, click <strong>Next Turn</strong>.</>
 									}
+								</div> */}
 								</div>
 							</div>
 							:
