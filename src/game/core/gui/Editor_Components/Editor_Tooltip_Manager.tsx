@@ -64,8 +64,8 @@ const Map_Tooltip = (props: EditorTooltip_Data) => {
 	return <div
 		className="map-tooltip"
 		style={{
-			left: `${props.pos.x * 2}px`,
-			top: `${props.pos.y * 2}px`
+			left: `${ 100.0 * (props.pos.x / Vals.default_canvas_size.x) }%`,
+			top: `${ 100.0 * (props.pos.y / Vals.default_canvas_size.y) }%`
 		}}
 	>
 		<div className="data-row">{`${props.tile_pos.x}, ${props.tile_pos.y}`}</div>

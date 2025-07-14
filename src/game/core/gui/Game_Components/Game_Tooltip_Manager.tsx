@@ -10,6 +10,7 @@ import { Asset_Manager_Data } from '../../engine/Asset_Manager/Asset_Manager';
 import { Blit_Manager_Data } from '../../engine/Blit_Manager';
 import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from '../../engine/Tilemap_Manager/Tilemap_Manager';
 import { isEmpty, isNil, size } from 'lodash';
+import { Vals } from '../../constants/Constants';
 
 
 
@@ -94,11 +95,12 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 			}
 		}
 	}
+
 	return <div
 		className="map-tooltip"
 		style={{
-			left: `${props.pos.x * 2}px`,
-			top: `${props.pos.y * 2}px`
+			left: `${ 100.0 * (props.pos.x / Vals.default_canvas_size.x) }%`,
+			top: `${ 100.0 * (props.pos.y / Vals.default_canvas_size.y) }%`
 		}}
 	>
 		<div className={`data-row ${get_left_click_text() == 'n/a' ? 'disabled' : '' }`}><img src={Left_Click_Icon}/> {`${get_left_click_text()}`}</div>
