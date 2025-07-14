@@ -8,6 +8,9 @@
     font-style: normal;
 }
 
+html {
+	font-size: min(calc(1.10vw), calc(1.9vh));
+}
 
 body {
 	background: #201c20 !important;

@@ -184,8 +184,8 @@ export const Tile_Palette_Element = (props: Props) => {
 			width={props.canvas_size.x}
 			height={props.canvas_size.y}
 			style={ {
-				width: props.canvas_size.x * 2,
-				height: props.canvas_size.y * 2,
+//				width: props.canvas_size.x * 2,
+//				height: props.canvas_size.y * 2,
 				imageRendering: 'pixelated',
 			} }
 		

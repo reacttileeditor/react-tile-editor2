@@ -22,11 +22,11 @@
 		@include smoke-glass-border-small-upper-left;
 
 		button {
-			border: 3px #777;
+			border: 0.2rem #777;
 			border-style: outset;
 			border-radius: 0;
 			font-family: "pixel";
-			font-size: 32px;
+			font-size: 2rem;
 		}
 
 		.annotations {
@@ -40,11 +40,10 @@
 
 	.game_status_display {
 		height: fit-content;
-		width: calc(200px + 1.5rem);
-		margin-left: 50px;
+		width: calc(12rem + 1.5rem);
 
-		border: 3px solid black;
-		border-radius: 3px;
+		border: 0.25rem solid black;
+		border-radius: 0.5rem;
 	
 		
 		flex-shrink: 0;
@@ -65,12 +64,18 @@
 		@include smoke-glass-bg;
 
 		.tile_cell {
-			width: 200px;
-			height: 200px;
+			width: 12rem;
+			height: 12rem;
 			flex-shrink: 0;
-			margin: 12px;
+			margin: 2rem 0rem;
 			position: relative;
 			align-self: center;
+
+			canvas {
+				width: 12rem;
+				height: 12rem;
+	
+			}
 
 			/*
 			&:after {
@@ -101,11 +106,11 @@
 			.label {
 				font-weight: 600;
 				margin-right: 0.3em;
-				font-size: 14px;
+				font-size: 0.9rem;
 			}
 			.data {
 				color: #fff1f1;
-				font-size: 16px;
+				font-size: 1.1rem;
 			}
 		}
 	}
