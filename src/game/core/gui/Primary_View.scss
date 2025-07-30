@@ -126,7 +126,7 @@ body {
 				.loading_screen {
 					background: black;
 					color: white;
-					font-size: 1.5rem;
+					font-size: 1.8rem;
 					font-weight: bold;
 					display: flex;
 					flex-flow: column nowrap;
@@ -136,14 +136,14 @@ body {
 					box-shadow: darkslategrey 0px 4px 8px;
 					image-rendering: pixelated;
 					image-rendering: crisp-edges;
-					width: calc(567px * 2);
-					height: calc(325px * 2);
+					width: 100%;
+					height: 100%;
 					
 					.loading_bar {
-						margin-top: 0.5rem;
-						border: 4px solid white;
-						height: 1.5rem;
-						width: 10rem;
+						margin-top: 0.75rem;
+						border: 0.4rem solid white;
+						height: 2.1rem;
+						width: 12rem;
 
 						.loading_bar_fill {
 							background: #eee;
