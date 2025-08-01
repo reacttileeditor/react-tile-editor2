@@ -1,6 +1,6 @@
 import React, { Dispatch, KeyboardEventHandler, SetStateAction, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import _, { isNil, isString, toNumber } from "lodash";
+import _, { cloneDeep, isNil, isString, toNumber } from "lodash";
 
 import { Canvas_View, Mouse_Button_State } from "./Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager/Asset_Manager";
@@ -51,6 +51,10 @@ interface Editor_View_Props {
 type Editor_Tool_Types = 'tiles' | 'unitAdd' | 'unitDelete';
 
 
+export type Named_Mouse_Exclusion_Rects = {
+	[index: string]: Rectangle
+}
+
 
 export const Editor_View = (props: Editor_View_Props) => {
 
@@ -75,6 +79,18 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [show_tile_palette_drawer, set_show_tile_palette_drawer] = useState<boolean>(false);
 	const [selected_tile_type, set_selected_tile_type] = useState<Tile_Name>('grass');
 
+	const [exclusion_rectangles, set_exclusion_rectangles] = useState<Named_Mouse_Exclusion_Rects>({});
+
+
+	const register_new_exclusion_rectangle = (name: string, new_rect: Rectangle) => {
+		const current_rects = cloneDeep(exclusion_rectangles);
+
+		current_rects[name] = new_rect;
+
+		set_exclusion_rectangles(current_rects);
+	} 
+
+	const toolbarRef = useRef<HTMLDivElement>(null);
 
 	/*----------------------- draw interval routines -----------------------*/
 
@@ -122,6 +138,12 @@ export const Editor_View = (props: Editor_View_Props) => {
 		};
 	}, [render_loop_interval]);
 
+	useEffect(() => {
+		if (toolbarRef.current) {
+			const rect = toolbarRef.current.getBoundingClientRect();
+			register_new_exclusion_rectangle('toolbar', {x: rect.left, y: rect.top, w: rect.width, h: rect.height});
+		}
+	  }, []);
 
 
 	/*----------------------- core drawing routines -----------------------*/
@@ -144,6 +166,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			true,
 			tile_cursor_pos
 		);
+		console.log(exclusion_rectangles);
 		draw_cursor();
 		}
 	}
@@ -242,7 +265,10 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 
 	return <div className="editor_screen">
-		<div className="toolbar">
+		<div
+			className="toolbar"
+			ref={toolbarRef}
+		>
 			<Button
 				onClick={ () => { props.set_is_edit_mode( !props.is_edit_mode ); } }
 			>
