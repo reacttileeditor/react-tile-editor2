@@ -131,9 +131,10 @@ export const Primary_View = () => {
 				{
 					<>
 						<>{
-							false //assets_loaded
+							assets_loaded
 							?
 							<div
+
 								className="master_flex_wrapper"
 							>
 								<div className="width_wrapper">
@@ -192,10 +193,9 @@ export const Primary_View = () => {
 							>
 								<div className="width_wrapper">
 									<div className="loading_screen">
-										<div className="toolbar" />
 										<div className="loading_node">
 											<div className="canvas_holder">
-												<div className="loading_screen">
+												<div className="loading_screen_internal">
 													<div>{`Loading...  ${Math.round(loaded_fraction * 100)}%`}</div>
 													<div className="loading_bar">
 														<div className="loading_bar_fill" style={{width: `${Math.min(Math.round(loaded_fraction * 100), 100)}%`}} />
