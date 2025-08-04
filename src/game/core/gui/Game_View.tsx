@@ -119,6 +119,7 @@ export const Game_View = (props: Game_View_Props) => {
 
 			Standard_Input_ƒ.move_viewport_based_on_mouse_position(
 				new_state.gm.cursor_pos,
+				{},
 				props._Blit_Manager(),
 				props.set_Blit_Manager,
 				new_state.tm,

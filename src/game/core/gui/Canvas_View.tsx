@@ -32,6 +32,28 @@ export type Mouse_Button_State = {
 	right: boolean,
 }
 
+export const get_mouse_pos_relative_to_canvas_rect = ( absolute_pos: Point2D, should_constrain: boolean, canvas_client_pos_rect: Rectangle, dimensions: Point2D ): Point2D => {
+
+	/*
+		This exists to enable having a canvas that's got different bounds than its native pixel size (generally something like 2x, but this should be general enough to handle wacky alternatives, including situations where it's being vertically stretched or w/e.
+	*/
+	const scaleCoeff = {
+		x: canvas_client_pos_rect.w / dimensions.x,
+		y: canvas_client_pos_rect.h / dimensions.y
+	}
+
+	const relative_pos = {
+		x: absolute_pos.x - canvas_client_pos_rect.x,
+		y: absolute_pos.y - canvas_client_pos_rect.y
+	};
+
+	return {
+		x: Math.round(relative_pos.x / scaleCoeff.x),
+		y: Math.round(relative_pos.y / scaleCoeff.y)
+	};
+}
+
+
 
 export const Canvas_View = (props: Props) => {
 
@@ -144,31 +166,16 @@ export const Canvas_View = (props: Props) => {
 		props.handle_canvas_click( mousePos, buttons_pressed );
 	}
 
-	const get_mouse_pos_relative_to_canvas = ( absolute_pos: Point2D, should_constrain: boolean ) => {
+
+
+	const get_mouse_pos_relative_to_canvas = ( absolute_pos: Point2D, should_constrain: boolean ): Point2D => {
 		const canvas = getCanvas();
 
 		if( canvas ){
 			const bgRectSrc = (canvas as HTMLElement).getBoundingClientRect();
-			const bgRect = { x: bgRectSrc.left, y: bgRectSrc.top, w: bgRectSrc.right - bgRectSrc.left, h: bgRectSrc.bottom - bgRectSrc.top };
+			const bgRect = Utils.DOMRect_to_Rectangle(bgRectSrc);
 
-
-				/*
-					This exists to enable having a canvas that's got different bounds than its native pixel size (generally something like 2x, but this should be general enough to handle wacky alternatives, including situations where it's being vertically stretched or w/e.
-				*/
-			const scaleCoeff = {
-				x: bgRect.w / props.dimensions.x,
-				y: bgRect.h / props.dimensions.y
-			}
-
-			const relative_pos = {
-				x: absolute_pos.x - bgRect.x,
-				y: absolute_pos.y - bgRect.y
-			};
-
-			return {
-				x: Math.round(relative_pos.x / scaleCoeff.x),
-				y: Math.round(relative_pos.y / scaleCoeff.y)
-			};
+			return get_mouse_pos_relative_to_canvas_rect( absolute_pos, should_constrain, bgRect, props.dimensions)
 
 		} else {
 			return {x: 0, y: 0};

@@ -2,7 +2,7 @@ import React, { Dispatch, KeyboardEventHandler, SetStateAction, useEffect, useRe
 import ReactDOM from "react-dom";
 import _, { cloneDeep, isNil, isString, toNumber } from "lodash";
 
-import { Canvas_View, Mouse_Button_State } from "./Canvas_View";
+import { Canvas_View, get_mouse_pos_relative_to_canvas_rect, Mouse_Button_State } from "./Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
@@ -10,7 +10,7 @@ import { Tilemap_Metadata, Tilemap_Manager_Data, Tilemap_Manager_ƒ, Directions,
 
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
-import { constrain_point_within_rect, is_within_rectangle, useInterval } from "../engine/Utils";
+import { constrain_point_within_rect, DOMRect_to_Rectangle, is_within_rectangle, useInterval } from "../engine/Utils";
 import { Button, Divider, Drawer, Dropdown, IconButton, Input, List, Modal, RadioTile, RadioTileGroup, Slider, Tooltip, Whisper } from "rsuite";
 import { Icon, Page, Trash, Global, PeoplesCostomize, Copy } from "@rsuite/icons";
 import { BsFileEarmarkLock2, BsFileEarmark, BsClipboard2Plus } from "react-icons/bs";
@@ -32,6 +32,7 @@ import { Generate_Map_Modal } from "./Editor_Components/Generate_Map_Modal";
 import { Tile_Palette_Drawer } from "./Editor_Components/Tile_Palette_Drawer";
 import { Unit_Palette_Drawer } from "./Editor_Components/Unit_Palette_Drawer";
 import { Editor_Tooltip_Manager } from "./Editor_Components/Editor_Tooltip_Manager";
+import { ReactElement } from "rsuite/esm/internals/types";
 
 
 interface Editor_View_Props {
@@ -90,7 +91,8 @@ export const Editor_View = (props: Editor_View_Props) => {
 		set_exclusion_rectangles(current_rects);
 	} 
 
-	const toolbarRef = useRef<HTMLDivElement>(null);
+	const Toolbar_Ref = useRef<HTMLDivElement>(null);
+	const Canvas_View_Ref = useRef<HTMLDivElement>(null);
 
 	/*----------------------- draw interval routines -----------------------*/
 
@@ -112,6 +114,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			//console.log('EDITOR RENDER TICK')
 			Standard_Input_ƒ.move_viewport_based_on_mouse_position(
 				screen_pixel_cursor_pos,
+				exclusion_rectangles,
 				props._Blit_Manager(),
 				props.set_Blit_Manager,
 				props._Tilemap_Manager(),
@@ -139,9 +142,14 @@ export const Editor_View = (props: Editor_View_Props) => {
 	}, [render_loop_interval]);
 
 	useEffect(() => {
-		if (toolbarRef.current) {
-			const rect = toolbarRef.current.getBoundingClientRect();
-			register_new_exclusion_rectangle('toolbar', {x: rect.left, y: rect.top, w: rect.width, h: rect.height});
+		if (Toolbar_Ref.current && Canvas_View_Ref.current) {
+			const rect = Toolbar_Ref.current.getBoundingClientRect();
+			const canvas_rect = Canvas_View_Ref.current.getBoundingClientRect();
+
+			const adjusted_pos = get_mouse_pos_relative_to_canvas_rect({x: rect.left, y:rect.top}, false, DOMRect_to_Rectangle(canvas_rect), props.dimensions )
+
+			console.log(rect, canvas_rect, adjusted_pos)
+			register_new_exclusion_rectangle('toolbar', {x: adjusted_pos.x, y: adjusted_pos.y, w: rect.width, h: rect.height});
 		}
 	  }, []);
 
@@ -166,7 +174,6 @@ export const Editor_View = (props: Editor_View_Props) => {
 			true,
 			tile_cursor_pos
 		);
-		console.log(exclusion_rectangles);
 		draw_cursor();
 		}
 	}
@@ -267,7 +274,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 	return <div className="editor_screen">
 		<div
 			className="toolbar"
-			ref={toolbarRef}
+			ref={Toolbar_Ref}
 		>
 			<Button
 				onClick={ () => { props.set_is_edit_mode( !props.is_edit_mode ); } }
@@ -365,7 +372,10 @@ export const Editor_View = (props: Editor_View_Props) => {
 				appearance={ selected_tool == 'unitDelete' ? 'primary' : 'default'} 
 			>Remove Units</IconButton>
 		</div>
-		<div className="editor_node">
+		<div
+			className="editor_node"
+			ref={Canvas_View_Ref}
+		>
 			<Load_File_Modal
 				show_load_dialog={show_load_dialog}
 				set_show_load_dialog={set_show_load_dialog}

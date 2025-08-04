@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import _, { isNil, isString, toNumber } from "lodash";
+import _, { isNil, isString, map, reduce, size, toNumber } from "lodash";
 
 import { Canvas_View, Mouse_Button_State } from "./Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager/Asset_Manager";
@@ -13,6 +13,7 @@ import { Point2D, Rectangle } from '../../interfaces';
 import { equals } from "ramda";
 import { Vals } from "../constants/Constants";
 import { is_within_rectangle, ƒ } from "../engine/Utils";
+import { Named_Mouse_Exclusion_Rects } from "./Editor_View";
 
 
 
@@ -36,8 +37,31 @@ export const Standard_Input_ƒ = {
 	},
 
 
+	is_within_exclusion_rectangles: (
+		pos: Point2D,
+		exclusion_rectangles: Named_Mouse_Exclusion_Rects,
+	): boolean => {
+
+		const only_rects: Array<Rectangle> = map(exclusion_rectangles, (val)=>val);
+
+		if( size(only_rects) > 0){
+			return reduce(
+				map(
+					only_rects,
+					(val) => ( is_within_rectangle(pos, val) )
+				),
+				(left, right) => ( left && right )
+			) as boolean;
+		} else {
+			return false;
+		}
+
+	},
+
+
 	move_viewport_based_on_mouse_position: (
 		pos: Point2D,
+		exclusion_rectangles: Named_Mouse_Exclusion_Rects,
 		_BM: Blit_Manager_Data,
 		set_Blit_Manager: (newVal: Blit_Manager_Data) => void,
 		_TM: Tilemap_Manager_Data,
@@ -66,8 +90,10 @@ export const Standard_Input_ƒ = {
 		const scale_movement_depth = (val: number):number  => (
 			Math.round( (val / move_trigger_buffer_size) * 2.0) 
 		);
-	
-		if( is_within_rectangle(pos, Vals.default_canvas_rect) ) {
+
+		console.log(Standard_Input_ƒ.is_within_exclusion_rectangles(pos,exclusion_rectangles))
+
+		if( is_within_rectangle(pos, Vals.default_canvas_rect) && !Standard_Input_ƒ.is_within_exclusion_rectangles(pos,exclusion_rectangles) ) {
 
 			if( pos.x <=  move_trigger_buffer_size ){
 				if((viewport_pos.x < map_bound_rectangle.x)){

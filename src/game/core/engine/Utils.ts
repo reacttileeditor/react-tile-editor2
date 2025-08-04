@@ -213,3 +213,7 @@ export const log_image_from_canvas = (
 	].join(' ');
 	console.log('%c ', style);
 }
+
+export const DOMRect_to_Rectangle = (src_domrect: DOMRect): Rectangle => (
+	{ x: src_domrect.left, y: src_domrect.top, w: src_domrect.right - src_domrect.left, h: src_domrect.bottom - src_domrect.top }
+)
