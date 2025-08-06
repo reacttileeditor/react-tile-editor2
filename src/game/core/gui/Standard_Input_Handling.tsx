@@ -91,6 +91,7 @@ export const Standard_Input_ƒ = {
 			Math.round( (val / move_trigger_buffer_size) * 2.0) 
 		);
 
+		console.log(exclusion_rectangles)
 		console.log(Standard_Input_ƒ.is_within_exclusion_rectangles(pos,exclusion_rectangles))
 
 		if( is_within_rectangle(pos, Vals.default_canvas_rect) && !Standard_Input_ƒ.is_within_exclusion_rectangles(pos,exclusion_rectangles) ) {

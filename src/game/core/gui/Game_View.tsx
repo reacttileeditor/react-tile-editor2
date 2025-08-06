@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
-import { useInterval, ƒ } from "../engine/Utils";
+import { DOMRect_to_Rectangle, useInterval, ƒ } from "../engine/Utils";
 
-import { Canvas_View, Mouse_Button_State } from "./Canvas_View";
+import { Canvas_View, convert_rectangle_to_canvas_coords, Mouse_Button_State } from "./Canvas_View";
 import { Asset_Manager_Data } from "../engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ, ticks_to_ms } from "../engine/Blit_Manager";
 import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager/Tilemap_Manager";
@@ -18,6 +18,8 @@ import { Game_Status_Display, New_Turn_Controls } from "./Game_Components/Game_S
 import { Announcement_Modal } from "./Game_Components/Announcement_Modal";
 import ZoominIcon from '@rsuite/icons/Zoomin';
 import { Icon } from "@rsuite/icons";
+import { Named_Mouse_Exclusion_Rects } from "./Editor_View";
+import { cloneDeep } from "lodash";
 
 
 interface Game_View_Props {
@@ -48,6 +50,20 @@ export const Game_View = (props: Game_View_Props) => {
 	const [render_tick, set_render_tick] = useState<number>(0);
 
 
+	const [exclusion_rectangles, set_exclusion_rectangles] = useState<Named_Mouse_Exclusion_Rects>({});
+
+
+	const register_new_exclusion_rectangle = (name: string, new_rect: Rectangle) => {
+		const current_rects = cloneDeep(exclusion_rectangles);
+
+		current_rects[name] = new_rect;
+
+		set_exclusion_rectangles(current_rects);
+	} 
+
+	const Toolbar_Ref = useRef<HTMLDivElement>(null);
+	const Canvas_View_Ref = useRef<HTMLDivElement>(null);
+	const New_Turn_Controls_Ref = useRef<HTMLDivElement>(null);
 
 
 
@@ -88,6 +104,20 @@ export const Game_View = (props: Game_View_Props) => {
 	}, [render_loop_interval]);
 
 
+	useEffect(() => {
+		if (Toolbar_Ref.current && New_Turn_Controls_Ref.current && Canvas_View_Ref.current) {
+			const toolbar_rect = Toolbar_Ref.current.getBoundingClientRect();
+			const new_turn_controls_rect = New_Turn_Controls_Ref.current.getBoundingClientRect();
+			const canvas_rect = Canvas_View_Ref.current.getBoundingClientRect();
+
+			const adjusted_toolbar_rect = convert_rectangle_to_canvas_coords(DOMRect_to_Rectangle(toolbar_rect), false, DOMRect_to_Rectangle(canvas_rect), props.dimensions )
+			register_new_exclusion_rectangle('toolbar', {x: adjusted_toolbar_rect.x, y: adjusted_toolbar_rect.y, w: adjusted_toolbar_rect.w, h: adjusted_toolbar_rect.h});
+
+			const adjusted_new_turn_controls_rect = convert_rectangle_to_canvas_coords(DOMRect_to_Rectangle(new_turn_controls_rect), false, DOMRect_to_Rectangle(canvas_rect), props.dimensions )
+			register_new_exclusion_rectangle('new_turn_controls', {x: adjusted_new_turn_controls_rect.x, y: adjusted_new_turn_controls_rect.y, w: adjusted_new_turn_controls_rect.w, h: adjusted_new_turn_controls_rect.h});
+		}
+	  }, []);
+
 	/*----------------------- core drawing routines -----------------------*/
 
 	const render_canvas = () => {
@@ -119,7 +149,7 @@ export const Game_View = (props: Game_View_Props) => {
 
 			Standard_Input_ƒ.move_viewport_based_on_mouse_position(
 				new_state.gm.cursor_pos,
-				{},
+				exclusion_rectangles,
 				props._Blit_Manager(),
 				props.set_Blit_Manager,
 				new_state.tm,
@@ -189,7 +219,10 @@ export const Game_View = (props: Game_View_Props) => {
 	}
 
 	return <div className="game_screen" ref={fullscreenRef}>
-		<div className="toolbar">
+		<div
+			className="toolbar"
+			ref={Toolbar_Ref}
+		>
 			<Button
 				onClick={ () => { props.set_is_edit_mode( !props.is_edit_mode ); } }
 			>
@@ -202,8 +235,10 @@ export const Game_View = (props: Game_View_Props) => {
 				}}
 			/>
 		</div>
-		<div className="game_node">
-	
+		<div
+			className="game_node"
+			ref={Canvas_View_Ref}
+		>
 			<>
 				<Canvas_View
 					assets_loaded={props.assets_loaded}
@@ -222,16 +257,20 @@ export const Game_View = (props: Game_View_Props) => {
 					_Tilemap_Manager={props._Tilemap_Manager}
 					render_ticktock={render_ticktock}
 				/>
-				<New_Turn_Controls
-					set_announcement_modal_hidden={set_announcement_modal_hidden}
-					get_Game_Manager_Data={props.get_Game_Manager_Data}
-					set_Game_Manager_Data={props.set_Game_Manager_Data}
-					_Asset_Manager={props._Asset_Manager}
-					_Blit_Manager={props._Blit_Manager}
-					_Tilemap_Manager={props._Tilemap_Manager}
-					set_Tilemap_Manager={props.set_Tilemap_Manager}
-					render_ticktock={render_ticktock}
-				/>
+				<div
+					ref={New_Turn_Controls_Ref}
+				>
+					<New_Turn_Controls
+						set_announcement_modal_hidden={set_announcement_modal_hidden}
+						get_Game_Manager_Data={props.get_Game_Manager_Data}
+						set_Game_Manager_Data={props.set_Game_Manager_Data}
+						_Asset_Manager={props._Asset_Manager}
+						_Blit_Manager={props._Blit_Manager}
+						_Tilemap_Manager={props._Tilemap_Manager}
+						set_Tilemap_Manager={props.set_Tilemap_Manager}
+						render_ticktock={render_ticktock}
+					/>
+				</div>
 
 				<Game_Status_Display
 					set_announcement_modal_hidden={set_announcement_modal_hidden}

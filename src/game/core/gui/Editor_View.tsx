@@ -148,7 +148,6 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 			const adjusted_rect = convert_rectangle_to_canvas_coords(DOMRect_to_Rectangle(rect), false, DOMRect_to_Rectangle(canvas_rect), props.dimensions )
 
-			console.log(rect, canvas_rect, adjusted_rect)
 			register_new_exclusion_rectangle('toolbar', {x: adjusted_rect.x, y: adjusted_rect.y, w: adjusted_rect.w, h: adjusted_rect.h});
 		}
 	  }, []);
