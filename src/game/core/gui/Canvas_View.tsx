@@ -53,7 +53,28 @@ export const get_mouse_pos_relative_to_canvas_rect = ( absolute_pos: Point2D, sh
 	};
 }
 
+export const convert_rectangle_to_canvas_coords = ( compartive_rect: Rectangle, should_constrain: boolean, canvas_client_pos_rect: Rectangle, dimensions: Point2D ): Rectangle => {
 
+	/*
+		This exists to enable having a canvas that's got different bounds than its native pixel size (generally something like 2x, but this should be general enough to handle wacky alternatives, including situations where it's being vertically stretched or w/e.
+	*/
+	const scaleCoeff = {
+		x: canvas_client_pos_rect.w / dimensions.x,
+		y: canvas_client_pos_rect.h / dimensions.y
+	}
+
+	const relative_pos = {
+		x: compartive_rect.x - canvas_client_pos_rect.x,
+		y: compartive_rect.y - canvas_client_pos_rect.y
+	};
+
+	return {
+		x: Math.round(relative_pos.x / scaleCoeff.x),
+		y: Math.round(relative_pos.y / scaleCoeff.y),
+		w: Math.round(compartive_rect.w / scaleCoeff.x),
+		h: Math.round(compartive_rect.h / scaleCoeff.y),
+	};
+}
 
 export const Canvas_View = (props: Props) => {
 

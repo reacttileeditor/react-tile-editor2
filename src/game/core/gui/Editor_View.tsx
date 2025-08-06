@@ -2,7 +2,7 @@ import React, { Dispatch, KeyboardEventHandler, SetStateAction, useEffect, useRe
 import ReactDOM from "react-dom";
 import _, { cloneDeep, isNil, isString, toNumber } from "lodash";
 
-import { Canvas_View, get_mouse_pos_relative_to_canvas_rect, Mouse_Button_State } from "./Canvas_View";
+import { Canvas_View, convert_rectangle_to_canvas_coords, get_mouse_pos_relative_to_canvas_rect, Mouse_Button_State } from "./Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
@@ -146,10 +146,10 @@ export const Editor_View = (props: Editor_View_Props) => {
 			const rect = Toolbar_Ref.current.getBoundingClientRect();
 			const canvas_rect = Canvas_View_Ref.current.getBoundingClientRect();
 
-			const adjusted_pos = get_mouse_pos_relative_to_canvas_rect({x: rect.left, y:rect.top}, false, DOMRect_to_Rectangle(canvas_rect), props.dimensions )
+			const adjusted_rect = convert_rectangle_to_canvas_coords(DOMRect_to_Rectangle(rect), false, DOMRect_to_Rectangle(canvas_rect), props.dimensions )
 
-			console.log(rect, canvas_rect, adjusted_pos)
-			register_new_exclusion_rectangle('toolbar', {x: adjusted_pos.x, y: adjusted_pos.y, w: rect.width, h: rect.height});
+			console.log(rect, canvas_rect, adjusted_rect)
+			register_new_exclusion_rectangle('toolbar', {x: adjusted_rect.x, y: adjusted_rect.y, w: adjusted_rect.w, h: adjusted_rect.h});
 		}
 	  }, []);
 
