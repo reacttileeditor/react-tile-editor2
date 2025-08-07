@@ -64,6 +64,7 @@ export const Game_View = (props: Game_View_Props) => {
 	const Toolbar_Ref = useRef<HTMLDivElement>(null);
 	const Canvas_View_Ref = useRef<HTMLDivElement>(null);
 	const New_Turn_Controls_Ref = useRef<HTMLDivElement>(null);
+	const Game_Status_Display_Ref = useRef<HTMLDivElement>(null);
 
 
 
@@ -105,16 +106,25 @@ export const Game_View = (props: Game_View_Props) => {
 
 
 	useEffect(() => {
-		if (Toolbar_Ref.current && New_Turn_Controls_Ref.current && Canvas_View_Ref.current) {
+		if (Toolbar_Ref.current && New_Turn_Controls_Ref.current && Game_Status_Display_Ref.current && Canvas_View_Ref.current) {
 			const toolbar_rect = Toolbar_Ref.current.getBoundingClientRect();
 			const new_turn_controls_rect = New_Turn_Controls_Ref.current.getBoundingClientRect();
+			const game_status_display_rect = Game_Status_Display_Ref.current.getBoundingClientRect();
 			const canvas_rect = Canvas_View_Ref.current.getBoundingClientRect();
 
 			const adjusted_toolbar_rect = convert_rectangle_to_canvas_coords(DOMRect_to_Rectangle(toolbar_rect), false, DOMRect_to_Rectangle(canvas_rect), props.dimensions )
-			register_new_exclusion_rectangle('toolbar', {x: adjusted_toolbar_rect.x, y: adjusted_toolbar_rect.y, w: adjusted_toolbar_rect.w, h: adjusted_toolbar_rect.h});
-
 			const adjusted_new_turn_controls_rect = convert_rectangle_to_canvas_coords(DOMRect_to_Rectangle(new_turn_controls_rect), false, DOMRect_to_Rectangle(canvas_rect), props.dimensions )
-			register_new_exclusion_rectangle('new_turn_controls', {x: adjusted_new_turn_controls_rect.x, y: adjusted_new_turn_controls_rect.y, w: adjusted_new_turn_controls_rect.w, h: adjusted_new_turn_controls_rect.h});
+			const adjusted_game_status_display_rect = convert_rectangle_to_canvas_coords(DOMRect_to_Rectangle(game_status_display_rect), false, DOMRect_to_Rectangle(canvas_rect), props.dimensions )
+
+
+
+			const current_rects = cloneDeep(exclusion_rectangles);
+			current_rects['toolbar'] = {x: adjusted_toolbar_rect.x, y: adjusted_toolbar_rect.y, w: adjusted_toolbar_rect.w, h: adjusted_toolbar_rect.h};
+			current_rects['new_turn_controls'] = {x: adjusted_new_turn_controls_rect.x, y: adjusted_new_turn_controls_rect.y, w: adjusted_new_turn_controls_rect.w, h: adjusted_new_turn_controls_rect.h};
+			current_rects['game_status_display'] = {x: adjusted_game_status_display_rect.x, y: adjusted_game_status_display_rect.y, w: adjusted_game_status_display_rect.w, h: adjusted_game_status_display_rect.h};
+
+			set_exclusion_rectangles(current_rects);
+
 		}
 	  }, []);
 
@@ -257,22 +267,21 @@ export const Game_View = (props: Game_View_Props) => {
 					_Tilemap_Manager={props._Tilemap_Manager}
 					render_ticktock={render_ticktock}
 				/>
-				<div
+
+				<New_Turn_Controls
 					ref={New_Turn_Controls_Ref}
-				>
-					<New_Turn_Controls
-						set_announcement_modal_hidden={set_announcement_modal_hidden}
-						get_Game_Manager_Data={props.get_Game_Manager_Data}
-						set_Game_Manager_Data={props.set_Game_Manager_Data}
-						_Asset_Manager={props._Asset_Manager}
-						_Blit_Manager={props._Blit_Manager}
-						_Tilemap_Manager={props._Tilemap_Manager}
-						set_Tilemap_Manager={props.set_Tilemap_Manager}
-						render_ticktock={render_ticktock}
-					/>
-				</div>
+					set_announcement_modal_hidden={set_announcement_modal_hidden}
+					get_Game_Manager_Data={props.get_Game_Manager_Data}
+					set_Game_Manager_Data={props.set_Game_Manager_Data}
+					_Asset_Manager={props._Asset_Manager}
+					_Blit_Manager={props._Blit_Manager}
+					_Tilemap_Manager={props._Tilemap_Manager}
+					set_Tilemap_Manager={props.set_Tilemap_Manager}
+					render_ticktock={render_ticktock}
+				/>
 
 				<Game_Status_Display
+					ref={Game_Status_Display_Ref}
 					set_announcement_modal_hidden={set_announcement_modal_hidden}
 					get_Game_Manager_Data={props.get_Game_Manager_Data}
 					set_Game_Manager_Data={props.set_Game_Manager_Data}

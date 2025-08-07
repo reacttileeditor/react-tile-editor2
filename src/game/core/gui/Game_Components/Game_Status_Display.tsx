@@ -24,6 +24,7 @@ import { Image_And_Image_Sequence_Data_Names } from "../../data/Image_Data";
 
 
 interface Game_Status_Display_Props {
+	ref: React.RefObject<HTMLDivElement | null>	
 	get_Game_Manager_Data: () => Game_Manager_Data,
 	set_Game_Manager_Data: (newVal: Game_Manager_Data) => void;
 	_Asset_Manager: () => Asset_Manager_Data,
@@ -36,12 +37,13 @@ interface Game_Status_Display_Props {
 
 
 
-export const New_Turn_Controls = (props: Game_Status_Display_Props) => {
+export const New_Turn_Controls = (props: Game_Status_Display_Props ) => {
 	const _GS = props.get_Game_Manager_Data()?.game_state;
 	const _GM = props.get_Game_Manager_Data();
 
 	return <div
 		className="next_turn_control centered_text"
+		ref={props.ref}
 	>
 		<Button
 			disabled={ _GM.animation_state.is_animating_live_game }
@@ -96,10 +98,11 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 	return (
 		<>{
 			_GS
-			&&
+			?
 			<>
 			<div
 				className="game_status_display"
+				ref={props.ref}
 			>
 				<div className="centered_text">
 				{
@@ -200,6 +203,11 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 				}</>
 			</div>
 			</>
+			:
+			<div
+				className="game_status_display"
+				ref={props.ref}
+			/>
 		}</>
 	)
 }
