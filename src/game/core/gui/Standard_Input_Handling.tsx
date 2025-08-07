@@ -88,7 +88,7 @@ export const Standard_Input_ƒ = {
 
 		// Set up a scaling function to control acceleration globally, and give more acceleration as you closer to the edge of the screen.
 		const scale_movement_depth = (val: number):number  => (
-			Math.round( (val / move_trigger_buffer_size) * 2.0) 
+			( (val / move_trigger_buffer_size) * 0.7) 
 		);
 
 		//console.log(exclusion_rectangles, pos, Standard_Input_ƒ.is_within_exclusion_rectangles(pos,exclusion_rectangles))
