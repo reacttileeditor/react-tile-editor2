@@ -42,7 +42,7 @@ do_mouse_position_updates: (
 	_AM: Asset_Manager_Data,
 	_BM: Blit_Manager_Data
 ): Game_and_Tilemap_Manager_Data => {
-	console.log(`mouse move @ ${_BM.time_tracker.current_tick}`)
+	//console.log(`mouse move @ ${_BM.time_tracker.current_tick}`)
 
 	const highlit_creature = Game_Manager_ƒ.get_highlit_creature(me, _TM, _AM, _BM);
 

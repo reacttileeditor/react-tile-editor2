@@ -144,7 +144,6 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 		_BM: Blit_Manager_Data,
 		_TM: Tilemap_Manager_Data
 	): Tilemap_Single => {
-		console.log('generate_possible_moves_tilemap')
 		let new_movemap_tile_map: Tilemap_Single = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
 		
 		let newly_selected_object_possible_moves: Array<Point2D> = [];
