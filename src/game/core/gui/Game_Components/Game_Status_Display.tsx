@@ -12,7 +12,7 @@ import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Cha
 
 import Foot_Icon from '../../../assets/feet-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game_Manager } from "../../engine/Game_Manager/Game_Manager";
-import { Button } from "rsuite";
+import { Button, Tooltip, Whisper } from "rsuite";
 import { zorder } from "../../constants/zorder";
 
 
@@ -157,8 +157,9 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 							label={'Hitpoints:'}
 							data={`${selected_creature.current_hitpoints} / ${Creature_ƒ.get_delegate(selected_creature.type_name).yield_max_hitpoints()}`}
 						/>
-						<Label_and_Data_Pair
-							label={'Moves:'}
+						<Icon_and_Data_Pair
+							label={'Moves'}
+							icon={Foot_Icon}
 							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_moves_per_turn()}`}
 						/>
 						<Label_and_Data_Pair
@@ -212,6 +213,18 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 	)
 }
 
+const Icon_and_Data_Pair = (props: {
+	label: string,
+	icon:  string,
+	data: string,
+}) => (
+	<div className="icon_and_data_pair">
+		<Whisper placement='top' speaker={<Tooltip><div className="label">{props.label}</div></Tooltip>}>
+			<div className="icon_cell"><img src={props.icon}/></div> 
+		</Whisper>		
+		<div className="data">{props.data}</div>
+	</div>	
+)
 
 const Label_and_Data_Pair = (props: {label: string, data: string}) => (
 		<div className="label_and_data_pair">

@@ -96,6 +96,40 @@
 	}
 
 	.game_status_display, .next_turn_control {
+		.icon_and_data_pair {
+			display: flex;
+			flex-flow: row;
+			justify-content: flex-start;
+			align-items: center;
+			line-height: 1.5;
+			margin: 0.3rem 0rem;
+
+			.icon_cell {
+				border: 0.15rem solid #aaa;
+				background: #aaa;
+				border-radius: 0.25rem;
+				margin-right: 0.5rem;
+
+				img {
+					border: 0.15rem solid black;
+					border-radius: 0.25rem;
+					padding: 0.25rem;
+					background: black;
+					width: 1.75rem;
+					height: 1.75rem;
+				}
+			}
+
+			.label {
+				font-weight: 600;
+				font-size: 0.9rem;
+			}
+			.data {
+				color: #fff1f1;
+				font-size: 1.0rem;
+			}			
+		}
+
 		.label_and_data_pair {
 			display: flex;
 			flex-flow: row;
@@ -110,7 +144,7 @@
 			}
 			.data {
 				color: #fff1f1;
-				font-size: 1.1rem;
+				font-size: 1.0rem;
 			}
 		}
 	}
