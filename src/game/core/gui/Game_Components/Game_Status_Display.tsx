@@ -10,7 +10,6 @@ import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../../engin
 import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance } from "../../../objects_core/Creature/Creature";
 
 
-import Foot_Icon from '../../../assets/feet-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, New_Game_Manager } from "../../engine/Game_Manager/Game_Manager";
 import { Button, Tooltip, Whisper } from "rsuite";
 import { zorder } from "../../constants/zorder";
@@ -20,7 +19,8 @@ import "./Game_Status_Display.scss";
 import { Image_And_Image_Sequence_Data_Names } from "../../data/Image_Data";
 
 
-
+import Foot_Icon from '../../../assets/feet-icon.png';
+import Damage_Icon from '../../../assets/icons/damage.png';
 
 
 interface Game_Status_Display_Props {
@@ -162,12 +162,12 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 							icon={Foot_Icon}
 							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_moves_per_turn()}`}
 						/>
-						<Label_and_Data_Pair
-							label={'Damage:'}
+						<Icon_and_Data_Pair
+							label={'Damage'}
+							icon={Damage_Icon}
 							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_damage()}`}
 						/>
 					</>
-
 					:
 					<>
 						<Tile_Palette_Element
