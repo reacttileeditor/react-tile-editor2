@@ -21,7 +21,8 @@ import { Image_And_Image_Sequence_Data_Names } from "../../data/Image_Data";
 
 import Foot_Icon from '../../../assets/feet-icon.png';
 import Damage_Icon from '../../../assets/icons/damage.png';
-
+import Heart_Icon from '../../../assets/icons/heart.png';
+import Flag_Icon from '../../../assets/icons/flag.png';
 
 interface Game_Status_Display_Props {
 	ref: React.RefObject<HTMLDivElement | null>	
@@ -148,13 +149,14 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 							centering_offset={ {x: 0, y: -0.6} }
 						/>
 
-						<Label_and_Data_Pair
-							label={'Team:'}
+						<Icon_and_Data_Pair
+							label={'Team'}
+							icon={Flag_Icon}
 							data={`${selected_creature.team}`}
 						/>
-
-						<Label_and_Data_Pair
-							label={'Hitpoints:'}
+						<Icon_and_Data_Pair
+							label={'Hitpoints'}
+							icon={Heart_Icon}
 							data={`${selected_creature.current_hitpoints} / ${Creature_ƒ.get_delegate(selected_creature.type_name).yield_max_hitpoints()}`}
 						/>
 						<Icon_and_Data_Pair
