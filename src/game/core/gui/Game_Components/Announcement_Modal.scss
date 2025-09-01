@@ -31,28 +31,28 @@
 					.core-bg {
 						z-index: -1;
 						position: absolute;
-						width: 90px;
+						width: 9.0rem;
 						height: 100%;
 
 						border-image-source: url('~/src/game/assets/modal-border.png');
 						border-image-slice: 39 0 39 0 fill;
-						border-image-width: 78px 0px;
-						border-image-outset: 78px 0px;
+						border-image-width: 7.8rem 0rem;
+						border-image-outset: 7.8rem 0rem;
 						image-rendering: pixelated;
 						top: 0%;
-						left: calc(50% - 45px);	
+						left: calc(50% - 4.5rem);	
 					}
 
 					.left-bg {
 						z-index: -1;
 						position: absolute;
-						width: calc(50% - 45px);
+						width: calc(50% - 4.5rem);
 						height: 100%;
 
 						border-image-source: url('~/src/game/assets/modal-left-border.png');
 						border-image-slice: 30 0 30 34 fill;
-						border-image-width: 60px 0px 60px 68px;
-						border-image-outset: 60px 0px 60px 68px;
+						border-image-width: 6.0rem 0rem 6.0rem 6.8rem;
+						border-image-outset: 6.0rem 0rem 6.0rem 6.8rem;
 						image-rendering: pixelated;
 						top: 0%;
 						left: 0;	
@@ -61,13 +61,13 @@
 					.right-bg {
 						z-index: -1;
 						position: absolute;
-						width: calc(50% - 45px);
+						width: calc(50% - 4.5rem);
 						height: 100%;
 
 						border-image-source: url('~/src/game/assets/modal-right-border.png');
 						border-image-slice: 30 34 30 0 fill;
-						border-image-width: 60px 68px 60px 0px;
-						border-image-outset: 60px 68px 60px 0px;
+						border-image-width: 6.0rem 6.8rem 6.0rem 0rem;
+						border-image-outset: 6.0rem 6.8rem 6.0rem 0rem;
 						image-rendering: pixelated;
 						top: 0%;
 						right: 0;	
