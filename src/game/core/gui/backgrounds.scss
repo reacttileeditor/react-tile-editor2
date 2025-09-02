@@ -13,6 +13,10 @@
 }
 
 
+
+$mult: 0.75;
+
+
 @mixin smoke-glass-bg {
 	background: url('~/src/game/assets/gui/ui-bg-texture.png');
 	background-size: 80px 80px;
@@ -22,24 +26,24 @@
 @mixin smoke-glass-border-tall {
 	border-image: url('~/src/game/assets/gui/smoke-glass-border-tall.png') round;
 	border-image-slice: 20 24 16 24 fill;
-	border-image-width: 4.0rem 4.8rem 3.2rem 4.8rem;
-	border-image-outset: 0.9rem;
+	border-image-width: calc(4.0rem * $mult) calc(4.8rem * $mult) calc(3.2rem * $mult) calc(4.8rem * $mult);
+	border-image-outset: calc(0.9rem * $mult);
 	image-rendering: pixelated;
 }
 
 @mixin smoke-glass-border-small {
 	border-image: url('~/src/game/assets/gui/smoke-glass-border-small.png') round;
 	border-image-slice: 15 17 15 17 fill;
-	border-image-width: 3.0rem 3.4rem 3.0rem 3.4rem;
-	border-image-outset: 0.8rem;
+	border-image-width: calc(3.0rem * $mult) calc(3.4rem * $mult) calc(3.0rem * $mult) calc(3.4rem * $mult);
+	border-image-outset: calc(0.8rem * $mult);
 	image-rendering: pixelated;
 }
 
 @mixin smoke-glass-border-outset {
 	border-image: url('~/src/game/assets/gui/smoke-glass-border-outset.png') round;
 	border-image-slice: 34 24 20 24 fill;
-	border-image-width: 6.8rem 4.8rem 4.0rem 4.8rem;
-	border-image-outset: 2.8rem;
+	border-image-width: calc(6.8rem * $mult) calc(4.8rem * $mult) calc(4.0rem * $mult) calc(4.8rem * $mult);
+	border-image-outset: calc(2.8rem * $mult);
 	image-rendering: pixelated;
 }
 
@@ -48,7 +52,7 @@
 @mixin smoke-glass-border-small-upper-left {
 	border-image: url('~/src/game/assets/gui/smoke-glass-border-small.png') round;
 	border-image-slice: 15 17 15 17 fill;
-	border-image-width:  3.0rem 0rem 0rem 3.4rem;
-	border-image-outset: 0.9rem 0rem 0rem 0.9rem;
+	border-image-width:  calc(3.0rem * $mult) calc(0rem * $mult) calc(0rem * $mult) calc(3.4rem * $mult);
+	border-image-outset: calc(0.9rem * $mult) calc(0rem * $mult) calc(0rem * $mult) calc(0.9rem * $mult);
 	image-rendering: pixelated;
 }

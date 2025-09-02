@@ -1,3 +1,6 @@
+$mult: 0.75;
+
+
 
 .master_node {
 
@@ -31,28 +34,28 @@
 					.core-bg {
 						z-index: -1;
 						position: absolute;
-						width: 9.0rem;
+						width: calc(9.0rem * $mult);
 						height: 100%;
 
 						border-image-source: url('~/src/game/assets/modal-border.png');
 						border-image-slice: 39 0 39 0 fill;
-						border-image-width: 7.8rem 0rem;
-						border-image-outset: 7.8rem 0rem;
+						border-image-width: calc(7.8rem * $mult) calc(0rem * $mult);
+						border-image-outset: calc(7.8rem * $mult) calc(0rem * $mult);
 						image-rendering: pixelated;
 						top: 0%;
-						left: calc(50% - 4.5rem);	
+						left: calc(50% - 4.5rem * $mult);	
 					}
 
 					.left-bg {
 						z-index: -1;
 						position: absolute;
-						width: calc(50% - 4.5rem);
+						width: calc(50% - 4.5rem * $mult);
 						height: 100%;
 
 						border-image-source: url('~/src/game/assets/modal-left-border.png');
 						border-image-slice: 30 0 30 34 fill;
-						border-image-width: 6.0rem 0rem 6.0rem 6.8rem;
-						border-image-outset: 6.0rem 0rem 6.0rem 6.8rem;
+						border-image-width: calc(6.0rem * $mult) calc(0rem * $mult) calc(6.0rem * $mult) calc(6.8rem * $mult);
+						border-image-outset: calc(6.0rem * $mult) calc(0rem * $mult) calc(6.0rem * $mult) calc(6.8rem * $mult);
 						image-rendering: pixelated;
 						top: 0%;
 						left: 0;	
@@ -61,13 +64,13 @@
 					.right-bg {
 						z-index: -1;
 						position: absolute;
-						width: calc(50% - 4.5rem);
+						width: calc(50% - 4.5rem * $mult);
 						height: 100%;
 
 						border-image-source: url('~/src/game/assets/modal-right-border.png');
 						border-image-slice: 30 34 30 0 fill;
-						border-image-width: 6.0rem 6.8rem 6.0rem 0rem;
-						border-image-outset: 6.0rem 6.8rem 6.0rem 0rem;
+						border-image-width: calc(6.0rem * $mult) calc(6.8rem * $mult) calc(6.0rem * $mult) calc(0rem * $mult);
+						border-image-outset: calc(6.0rem * $mult) calc(6.8rem * $mult) calc(6.0rem * $mult) calc(0rem * $mult);
 						image-rendering: pixelated;
 						top: 0%;
 						right: 0;	
