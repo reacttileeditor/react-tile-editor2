@@ -210,29 +210,74 @@ export const Tile_Image_Data = {
 		},
 	},
 	bush1: {
-		url: "hex-tile-experiment-tiles.png",
+		url: "bushes.png",
 		bounds: {
 			x: 1,
-			y: 363,
-			w: 54,
+			y: 1,
+			w: 62,
 			h: 74,
 		},
 	},
 	bush2: {
-		url: "hex-tile-experiment-tiles.png",
+		url: "bushes.png",
 		bounds: {
-			x: 57,
-			y: 363,
-			w: 54,
+			x: 1,
+			y: 77,
+			w: 62,
 			h: 74,
 		},
 	},
 	bush3: {
-		url: "hex-tile-experiment-tiles.png",
+		url: "bushes.png",
 		bounds: {
-			x: 113,
-			y: 363,
-			w: 54,
+			x: 1,
+			y: 153,
+			w: 62,
+			h: 74,
+		},
+	},
+	bush4: {
+		url: "bushes.png",
+		bounds: {
+			x: 1,
+			y: 229,
+			w: 62,
+			h: 74,
+		},
+	},
+	bush5: {
+		url: "bushes.png",
+		bounds: {
+			x: 1,
+			y: 305,
+			w: 62,
+			h: 74,
+		},
+	},
+	bush6: {
+		url: "bushes.png",
+		bounds: {
+			x: 1,
+			y: 381,
+			w: 62,
+			h: 74,
+		},
+	},
+	bush7: {
+		url: "bushes.png",
+		bounds: {
+			x: 1,
+			y: 457,
+			w: 62,
+			h: 74,
+		},
+	},
+	bush8: {
+		url: "bushes.png",
+		bounds: {
+			x: 1,
+			y: 533,
+			w: 62,
 			h: 74,
 		},
 	},

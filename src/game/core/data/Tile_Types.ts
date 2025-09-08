@@ -126,6 +126,9 @@ export const tile_types: Array<Tile_Item> = [
 				'bush1',
 				'bush2',
 				'bush3',
+				'bush4',
+				'bush5',
+				'bush6',
 			],
 		},{
 			zorder: zorder.grass,
