@@ -11,7 +11,7 @@ import * as Utils from "../engine/Utils";
 */
 
 
-export type Blob_Profile_Name = 'stone' | 'prairie' | 'water' | 'lawn' | 'highlands' | 'crags' | 'sandpatch';
+export type Blob_Profile_Name = 'stone' | 'prairie' | 'water' | 'water_shoals' | 'lawn' | 'highlands' | 'crags' | 'sand_patch' | 'briar_patch' | 'scrub_patch';
 
 export const Mapgen_Profile_ƒ = {
 	yield_blob_profile_name_list: (): Array<Blob_Profile_Name> => {
@@ -68,8 +68,15 @@ export const Blob_Profile_Data: Blob_Profiles = {
 		'menhir-big': 1,
 	},
 	water: {
-		'water': 2,
-		'water-placid': 5,
+		'water': 6,
+		'water-placid': 10,
+		'water_shallow': 1,
+	}, 
+	water_shoals: {
+		'water': 4,
+		'water-placid': 3,
+		'water_reeds': 6,
+		'water_shallow': 7,
 	}, 
 	lawn: {
 		'grass': 11,
@@ -93,7 +100,7 @@ export const Blob_Profile_Data: Blob_Profiles = {
 		"dirt": 1,
 		"scrub-dirt": 2,
 	},
-	sandpatch: {
+	sand_patch: {
 		'sand': 3,
 		"grass-and-scree": 3,
 		'wideleaf_scrub': 2,
@@ -112,7 +119,28 @@ export const Blob_Profile_Data: Blob_Profiles = {
 		"scrub-dirt": 5,
 		"scrub-dirt-tall": 3,
 		"menhir-small": 3,
-	}
+	},
+	scrub_patch: {
+		'wideleaf_scrub': 2,
+		"grass-and-scree": 5,
+		"dirt": 4,
+		"bush": 8,
+		"sandy-dirt": 1,
+		"scrub-dirt": 5,
+		"scrub-dirt-tall": 3,
+		"menhir-small": 3,
+	},
+	briar_patch: {
+		'wideleaf_scrub': 1,
+		"grass-and-scree": 5,
+		"dirt": 1,
+		"bush": 18,
+		"sandy-dirt": 1,
+		"scrub-dirt": 5,
+		"scrub-dirt-tall": 3,
+		"menhir-small": 3,
+	},
+
 };
 
 
