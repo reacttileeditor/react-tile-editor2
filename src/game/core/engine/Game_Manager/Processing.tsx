@@ -162,6 +162,12 @@ do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM:
 		) );
 		
 		
+		const creature_tile_positions: Array<Point2D> = map(all_creatures_processed_and_culled, (val)=>(
+			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, val.pixel_pos)
+		))
+
+		console.log( `creature tile positions: ${JSON.stringify(creature_tile_positions)}` );
+
 		return {
 			tm: _TM,
 			gm: {
