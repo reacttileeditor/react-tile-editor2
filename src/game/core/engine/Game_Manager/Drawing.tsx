@@ -93,7 +93,33 @@ export const Game_Manager_ƒ_Drawing = {
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
 			});
+
+
+			Asset_Manager_ƒ.draw_image_for_asset_name({
+				_AM:						_AM,
+				asset_name:					'white_tile',
+				_BM:						_BM,
+				pos:					Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM,
+											Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, val.pixel_pos)
+				), 
+				zorder:						zorder.map_boundary,
+				current_milliseconds:		timestamp_according_to_creature,
+				opacity:					1.0,
+				rotate:						0.0,
+				scale:						1.0,
+				brightness:					1.0,
+				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
+				vertically_flipped:			false,
+			});
+
 		})
+
+		// const creature_tile_positions: Array<Point2D> = map(all_creatures_processed_and_culled, (val)=>(
+		// 	Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, val.pixel_pos)
+		// ))
+
+		// console.log( `creature tile positions: ${JSON.stringify(creature_tile_positions)}` );
+
 
 		map( me.game_state.custom_object_list, (val,idx) => {
 			Asset_Manager_ƒ.draw_image_for_asset_name({
@@ -172,8 +198,25 @@ export const Game_Manager_ƒ_Drawing = {
 				zorder:						zorder.rocks,
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
-			})			
+			})
 
+			
+			Asset_Manager_ƒ.draw_image_for_asset_name({
+				_AM:						_AM,
+				asset_name:					'white_tile',
+				_BM:						_BM,
+				pos:					Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM,
+											Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, val.pixel_pos)
+				), 
+				zorder:						zorder.map_boundary,
+				current_milliseconds:		0,
+				opacity:					1.0,
+				rotate:						0.0,
+				scale:						1.0,
+				brightness:					1.0,
+				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
+				vertically_flipped:			false,
+			});
 			/*
 				If there's a creature selected, then draw an indicator under every -other- creature to indicate the team.
 			*/
