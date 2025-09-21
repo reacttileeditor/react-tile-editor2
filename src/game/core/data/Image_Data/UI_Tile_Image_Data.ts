@@ -487,12 +487,6 @@ export const UI_Tile_Image_Data = {
 	},
 	white_tile: {
 		url: "white_tile.png",
-		bounds: {
-			x: 1,
-			y: 1,
-			w: 54,
-			h: 34,
-		},
 	}
 };
 	
