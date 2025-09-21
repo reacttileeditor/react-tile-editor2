@@ -8,7 +8,7 @@ import { Blit_Manager_Data, Blit_Manager_ƒ } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Tilemap_Metadata, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/Tilemap_Manager/Tilemap_Manager";
 
-import { Point2D, Rectangle } from '../../interfaces';
+import { Point2D, Rectangle, Screenspace_Pixel_Point, Tile_Pos_Point } from '../../interfaces';
 
 import { equals } from "ramda";
 import { Vals } from "../constants/Constants";
@@ -20,14 +20,14 @@ import { Named_Mouse_Exclusion_Rects } from "./Editor_View";
 
 export const Standard_Input_ƒ = {
 	handle_canvas_mouse_move: (
-		pos: Point2D,
+		pos: Screenspace_Pixel_Point,
 		buttons_pressed: Mouse_Button_State,
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
-		update_mouse_pos: (pos: Point2D) => void,
+		update_mouse_pos: (pos: Screenspace_Pixel_Point) => void,
 		set_Blit_Manager: (newVal: Blit_Manager_Data) => void,
-		handle_canvas_click: (pos: Point2D, buttons_pressed: Mouse_Button_State) => void,
+		handle_canvas_click: (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => void,
 	) => {
 		update_mouse_pos(pos);
 
@@ -60,7 +60,7 @@ export const Standard_Input_ƒ = {
 
 
 	move_viewport_based_on_mouse_position: (
-		pos: Point2D,
+		pos: Screenspace_Pixel_Point,
 		exclusion_rectangles: Named_Mouse_Exclusion_Rects,
 		_BM: Blit_Manager_Data,
 		set_Blit_Manager: (newVal: Blit_Manager_Data) => void,
@@ -74,7 +74,7 @@ export const Standard_Input_ƒ = {
 
 		//calculate the map bounds, so that if we're sufficiently past them, we can choose not to scroll.
 		const map_bounds = Tilemap_Manager_ƒ.get_map_bounds(_TM);
-		const map_bounds_in_pixels = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, { x: map_bounds.w, y: map_bounds.h});
+		const map_bounds_in_pixels = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, { x: map_bounds.w, y: map_bounds.h} as Tile_Pos_Point);
 
 		const map_bound_rectangle = {
 			x: 70,
@@ -146,7 +146,7 @@ export const Standard_Input_ƒ = {
 
 		//calculate the map bounds, so that if we're sufficiently past them, we can choose not to scroll.
 		const map_bounds = Tilemap_Manager_ƒ.get_map_bounds(_TM);
-		const map_bounds_in_pixels = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, { x: map_bounds.w, y: map_bounds.h});
+		const map_bounds_in_pixels = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, { x: map_bounds.w, y: map_bounds.h} as Tile_Pos_Point);
 
 		const map_bound_rectangle = {
 			x: 70,

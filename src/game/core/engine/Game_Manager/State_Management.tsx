@@ -14,7 +14,7 @@ import { Pathfinder_ƒ } from "../Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Creature_Type_Name } from "../../../objects_core/Creature/Creature";
 
-import { Point2D, Rectangle } from '../../../interfaces';
+import { Point2D, Rectangle, Screenspace_Pixel_Point } from '../../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
@@ -25,7 +25,7 @@ import { Map_Analysis_ƒ } from "../Map_Analysis";
 
 export const Game_Manager_ƒ_State_Management = {
 	/*----------------------- core ui interaction -----------------------*/
-	set_cursor_pos: (me: Game_Manager_Data, _BM: Blit_Manager_Data, coords: Point2D): Game_Manager_Data => {
+	set_cursor_pos: (me: Game_Manager_Data, _BM: Blit_Manager_Data, coords: Screenspace_Pixel_Point): Game_Manager_Data => {
 		return {
 			...cloneDeep(me),
 			cursor_pos: coords,
@@ -39,7 +39,7 @@ export const Game_Manager_ƒ_State_Management = {
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
-		pos: Point2D,
+		pos: Screenspace_Pixel_Point,
 		buttons_pressed: Mouse_Button_State
 	): Game_and_Tilemap_Manager_Data => {
 		if( !get_game_state().animation_state.is_animating_live_game ){
@@ -71,11 +71,11 @@ export const Game_Manager_ƒ_State_Management = {
 
 	/*----------------------- ui interaction subroutines -----------------------*/
 
-	select_object_based_on_tile_click: (get_game_state: () => Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, buttons_pressed: Mouse_Button_State): Game_Manager_Data => {
+	select_object_based_on_tile_click: (get_game_state: () => Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State): Game_Manager_Data => {
 		/*
 			This handles two "modes" simultaneously.  If we click on an object, then we change the current selected object to be the one we clicked on (its position is occupied, and ostensibly can't be moved into - this might need to change with our game rules being what they are, but we'll cross that bridge later).  If we click on the ground, then we're intending to move the current object to that location.
 		*/
-		const new_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, pos );
+		const new_pos = Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords( _TM, _AM, _BM, pos );
 		const me = get_game_state();
 		
 		let newly_selected_creature_index: number|undefined = Game_Manager_ƒ.get_creature_index_for_pos(me, new_pos);

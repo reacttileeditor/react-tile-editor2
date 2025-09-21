@@ -14,7 +14,7 @@ import { Pathfinder_ƒ } from "../Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Creature_Type_Name } from "../../../objects_core/Creature/Creature";
 
-import { Point2D, Rectangle } from '../../../interfaces';
+import { Gamespace_Pixel_Point, Point2D, Rectangle } from '../../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
@@ -40,7 +40,7 @@ export const Game_Manager_ƒ_Drawing = {
 			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
 				_TM,
 				_AM,
-				Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(
+				Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords(
 					_TM,
 					_AM,
 					_BM,
@@ -100,7 +100,7 @@ export const Game_Manager_ƒ_Drawing = {
 				asset_name:					'white_tile',
 				_BM:						_BM,
 				pos:					Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM,
-											Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, val.pixel_pos)
+											Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, val.pixel_pos as Gamespace_Pixel_Point)
 				), 
 				zorder:						zorder.map_boundary,
 				current_milliseconds:		timestamp_according_to_creature,
@@ -166,7 +166,7 @@ export const Game_Manager_ƒ_Drawing = {
 		/*
 			This particularly means "paused at end of turn".
 		*/
-		const cursor_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(
+		const cursor_pos = Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords(
 			_TM,
 			_AM,
 			_BM,
@@ -206,7 +206,7 @@ export const Game_Manager_ƒ_Drawing = {
 				asset_name:					'white_tile',
 				_BM:						_BM,
 				pos:					Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM,
-											Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, val.pixel_pos)
+											Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, val.pixel_pos as Gamespace_Pixel_Point)
 				), 
 				zorder:						zorder.map_boundary,
 				current_milliseconds:		0,

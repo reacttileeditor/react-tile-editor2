@@ -14,7 +14,7 @@ import { Pathfinder_ƒ } from "../Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Creature_Type_Name } from "../../../objects_core/Creature/Creature";
 
-import { Point2D, Rectangle } from '../../../interfaces';
+import { Point2D, Rectangle, Screenspace_Pixel_Point } from '../../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
@@ -85,7 +85,7 @@ export type Game_Manager_Data = {
 	game_state: Game_State;
 	update_game_state_for_ui: Function;
 	update_tooltip_state: (p: Game_Tooltip_Data) => void;
-	cursor_pos: Point2D;
+	cursor_pos: Screenspace_Pixel_Point;
 	last_cursor_move_tick: number,
 }
 
@@ -109,7 +109,7 @@ export const New_Game_Manager = (p: {
 	const game_manager: Game_Manager_Data = {
 		update_game_state_for_ui: ()=>{},
 		update_tooltip_state: ()=>{},
-		cursor_pos: {x: 0, y: 0},
+		cursor_pos: {x: 0, y: 0} as Screenspace_Pixel_Point,
 		last_cursor_move_tick: 0,
 
 		animation_state: {

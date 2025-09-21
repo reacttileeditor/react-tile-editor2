@@ -5,7 +5,7 @@ import { ƒ } from "../../core/engine/Utils";
 
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 
-import { Point2D, Rectangle } from '../../interfaces';
+import { Gamespace_Pixel_Point, Point2D, Rectangle, Tile_Pos_Point } from '../../interfaces';
 import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";
 import { Creature_ƒ_Behavior } from "./Behavior";
 import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manager";
@@ -20,7 +20,7 @@ import { Image_Data_Names } from "../../core/data/Image_Data";
 
 
 export type Path_Node_With_Direction = {
-	position: Point2D,
+	position: Tile_Pos_Point,
 	direction: Direction,
 }
 
@@ -63,14 +63,14 @@ export type Anim_Schedule_Element = {
 	direction: Direction,
 	duration: number,
 	start_time: number,
-	start_pos: Point2D,
-	end_pos: Point2D,
+	start_pos: Tile_Pos_Point,
+	end_pos: Tile_Pos_Point,
 }
 
 export type Path_Data = {
-	path_this_turn: Array<Point2D>;
+	path_this_turn: Array<Tile_Pos_Point>;
 	path_this_turn_with_directions: Array<Path_Node_With_Direction>;
-	path_reachable_this_turn: Array<Point2D>;
+	path_reachable_this_turn: Array<Tile_Pos_Point>;
 	path_reachable_this_turn_with_directions: Array<Path_Node_With_Direction>;
 }
 
@@ -87,7 +87,7 @@ export type Creature_Data = {
 	team: number;
 
 	//state	
-	tile_pos: Point2D;
+	tile_pos: Tile_Pos_Point;
 	facing_direction: Direction;
 	remaining_action_points: number,
 	remaining_move_points: number,
@@ -99,7 +99,7 @@ export type Creature_Data = {
 	behavior_mode: Behavior_Mode,
 
 	//intended moves
-	planned_tile_pos: Point2D;
+	planned_tile_pos: Tile_Pos_Point;
 	walk_segment_start_time: number,
 	path_data: Path_Data;
 	target?: Creature_Data;
@@ -117,7 +117,7 @@ export type Core_Statics = {
 }
 
 export type Core_State = {
-	pixel_pos: Point2D;
+	pixel_pos: Gamespace_Pixel_Point;
 	// rotate: number,
 	should_remove: boolean,
 	is_done_with_turn: boolean,
@@ -150,7 +150,7 @@ export const New_Creature = (
 		_Blit_Manager: () => Blit_Manager_Data,
 		_Tilemap_Manager: () => Tilemap_Manager_Data,
 
-		tile_pos: Point2D,
+		tile_pos: Tile_Pos_Point,
 		direction?: Direction,
 		remaining_action_points?: number,
 		remaining_move_points?: number,
@@ -160,7 +160,7 @@ export const New_Creature = (
 		next_behavior_reconsideration_timestamp?: number,
 		is_done_with_turn: boolean,
 		behavior_mode: Behavior_Mode,
-		planned_tile_pos: Point2D,
+		planned_tile_pos: Tile_Pos_Point,
 		target?: Creature_Data
 		type_name: Creature_Type_Name,
 		team: number,

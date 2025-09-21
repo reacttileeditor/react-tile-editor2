@@ -5,7 +5,7 @@ import { angle_between, ƒ } from "../../core/engine/Utils";
 
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 
-import { Point2D, Rectangle } from '../../interfaces';
+import { Point2D, Rectangle, Tile_Pos_Point } from '../../interfaces';
 import { Anim_Schedule_Element, Behavior_Mode, Change_Instance, Creature_Data, Creature_ƒ, Path_Node_With_Direction, Path_Data } from "./Creature";
 
 
@@ -14,7 +14,7 @@ import { Anim_Schedule_Element, Behavior_Mode, Change_Instance, Creature_Data, C
 export const Creature_ƒ_Path_Management = {
 /*----------------------- state management -----------------------*/
 
-	set_path: (me: Creature_Data, new_path: Array<Point2D>, _TM: Tilemap_Manager_Data): Path_Data => {
+	set_path: (me: Creature_Data, new_path: Array<Tile_Pos_Point>, _TM: Tilemap_Manager_Data): Path_Data => {
 		const path_this_turn_with_directions = Creature_ƒ.build_directional_path_from_path(
 			me,
 			new_path,
@@ -41,9 +41,9 @@ export const Creature_ƒ_Path_Management = {
 
 
 /*----------------------- pathfinding calculations -----------------------*/
-	yield_path_reachable_this_turn: (me: Creature_Data, _TM: Tilemap_Manager_Data, new_path: Array<Point2D>):Array<Point2D> => {
+	yield_path_reachable_this_turn: (me: Creature_Data, _TM: Tilemap_Manager_Data, new_path: Array<Tile_Pos_Point>):Array<Tile_Pos_Point> => {
 		let moves_remaining = cloneDeep(me.remaining_move_points);
-		let final_path: Array<Point2D> = [];
+		let final_path: Array<Tile_Pos_Point> = [];
 	
 		_.map( new_path, (val, idx) => {
 			const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
@@ -88,7 +88,7 @@ export const Creature_ƒ_Path_Management = {
 
 	build_directional_path_from_path: (
 		me: Creature_Data,
-		raw_path: Array<Point2D>,
+		raw_path: Array<Tile_Pos_Point>,
 		_TM: Tilemap_Manager_Data
 	): Array<Path_Node_With_Direction> => {
 		if( size(raw_path) > 1 ){
@@ -129,8 +129,8 @@ export const Creature_ƒ_Path_Management = {
 
 	extract_direction_from_map_vector: (
 		me: Creature_Data,
-		start_pos: Point2D,
-		end_pos: Point2D,
+		start_pos: Tile_Pos_Point,
+		end_pos: Tile_Pos_Point,
 		_TM: Tilemap_Manager_Data
 	):Direction => {
 		const pixel_start_pos = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), start_pos);

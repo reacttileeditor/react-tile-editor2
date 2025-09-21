@@ -6,7 +6,7 @@ import { angle_between, ƒ } from "../../core/engine/Utils";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 import { Pathfinder_ƒ } from "../../core/engine/Pathfinding";
 
-import { Point2D, Rectangle } from '../../interfaces';
+import { Point2D, Rectangle, Tile_Pos_Point } from '../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../Custom_Object/Custom_Object";
 import { Anim_Schedule_Element, Behavior_Mode, Change_Instance, Creature_Data, Creature_ƒ, Path_Node_With_Direction, Path_Data } from "./Creature";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../../core/engine/Asset_Manager/Asset_Manager";
@@ -47,7 +47,7 @@ export const Creature_ƒ_Behavior = {
 		);
 	},
 
-	guess_anim_pos_at_time_offset: (me: Creature_Data, _TM: Tilemap_Manager_Data, path_data: Path_Data, time_so_far: number): Point2D|undefined => {
+	guess_anim_pos_at_time_offset: (me: Creature_Data, _TM: Tilemap_Manager_Data, path_data: Path_Data, time_so_far: number): Tile_Pos_Point|undefined => {
 
 		const duration_per_tile_walked = 300;
 		const tile_offset = Math.floor( time_so_far / duration_per_tile_walked);

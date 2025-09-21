@@ -9,7 +9,7 @@ import { is_all_true, ƒ } from "../Utils";
 
 
 import { Tile_Comparator_Sample, Tile_Position_Comparator_Sample } from "../Asset_Manager/Asset_Manager";
-import { Point2D, Rectangle, PointCubic } from '../../../interfaces';
+import { Point2D, Rectangle, PointCubic, Gamespace_Pixel_Point, Tile_Pos_Point, Screenspace_Pixel_Point } from '../../../interfaces';
 import localforage from "localforage";
 import { concat, equals, filter, find, includes, keys, propEq, reduce, slice, uniq } from "ramda";
 import { Page } from '@rsuite/icons';
@@ -291,23 +291,27 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		}
 	},
 	
+	convert_screenspace_pixel_coords_to_tile_coords: ( me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Screenspace_Pixel_Point) => {
+		let position = Blit_Manager_ƒ.yield_gamespace_coords_for_absolute_coords(_BM, pos);
 
+		return Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(me, _AM, _BM, position);
+	},
 
-	convert_pixel_coords_to_tile_coords: ( me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D) => {
+	convert_pixel_coords_to_tile_coords: ( me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Gamespace_Pixel_Point) => {
 		let { consts } = _AM;
-		let position = Blit_Manager_ƒ.yield_world_coords_for_absolute_coords(_BM, {x: pos.x, y: pos.y});
+
 
 		let odd_row_offset = Utils.modulo(
 			Math.floor((
-				position.y +
+				pos.y +
 				Math.floor(consts.tile_height / 2)
 			) / consts.tile_height),
 		2) == 1;
 
-		let tile_coords_revised = {
+		let tile_coords_revised = <Tile_Pos_Point>{
 			x:	Math.floor(
 					(
-						position.x +
+						pos.x +
 						ƒ.if(odd_row_offset,
 							Math.floor(-consts.tile_width / 2),
 							0,
@@ -317,7 +321,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 				),
 			y: Math.floor(
 					(
-						position.y +
+						pos.y +
 						Math.floor(consts.tile_height / 2)
 					)  / consts.tile_height 
 				),
@@ -326,7 +330,7 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		return tile_coords_revised;
 	},
 	
-	convert_tile_coords_to_pixel_coords: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, pos : Point2D) => ({
+	convert_tile_coords_to_pixel_coords: (me: Tilemap_Manager_Data, _AM: Asset_Manager_Data, pos : Tile_Pos_Point) => (<Gamespace_Pixel_Point>{
 		x:	pos.x * _AM.consts.tile_width +
 			(( Utils.modulo(pos.y, 2) == 1) ? Math.floor(_AM.consts.tile_width / 2) : 0),
 		y:	pos.y * _AM.consts.tile_height

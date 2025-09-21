@@ -9,7 +9,7 @@ import { dice_anchored_on_specific_random_seed, is_all_true, ƒ } from "../Utils
 
 
 import { Tile_Comparator_Sample, Tile_Position_Comparator_Sample } from "../Asset_Manager/Asset_Manager";
-import { Point2D, Rectangle, PointCubic } from '../../../interfaces';
+import { Point2D, Rectangle, PointCubic, Tile_Pos_Point } from '../../../interfaces';
 import localforage from "localforage";
 import { concat, equals, filter, find, includes, keys, propEq, reduce, slice, uniq, zipWith } from "ramda";
 import { Page } from '@rsuite/icons';
@@ -125,7 +125,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		tilemap_of_assets.map( (row_value, row_index) => {
 			return row_value.map( (tile_assets, col_index) => {
 
-				let pos = {x: col_index, y: row_index};
+				let pos = {x: col_index, y: row_index} as Tile_Pos_Point;
 
 				map(tile_assets, (individual_asset)=>{
 
