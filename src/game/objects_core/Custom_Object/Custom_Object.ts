@@ -7,7 +7,7 @@ import { ƒ } from "../../core/engine/Utils";
 
 import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 
-import { Point2D, Rectangle } from '../../interfaces';
+import { Gamespace_Pixel_Point, Point2D, Rectangle } from '../../interfaces';
 import { Change_Instance, Creature_Type_Name } from "../Creature/Creature";
 import { Custom_Object_Delegate, Custom_Object_Delegate_States} from "./Custom_Object_Delegate";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";
@@ -62,7 +62,7 @@ export type Base_Object_Statics = {
 }
 
 export type Base_Object_State = {
-	pixel_pos: Point2D;
+	pixel_pos: Gamespace_Pixel_Point;
 	rotate: number,
 	should_remove: boolean,
 	is_done_with_turn: boolean,
@@ -89,7 +89,7 @@ export const New_Custom_Object = <Delegate_State_Type>(
 		parent_id?: string,
 
 		//base object state
-		pixel_pos?: Point2D,
+		pixel_pos?: Gamespace_Pixel_Point,
 		should_remove?: boolean,
 		is_done_with_turn?: boolean,
 		rotate?: number,
@@ -122,7 +122,7 @@ export const New_Custom_Object = <Delegate_State_Type>(
 		animation_length: animation_length,
 
 		//state	
-		pixel_pos: cloneDeep(p.pixel_pos) ?? {x:0, y: 0},  //TODO use TM
+		pixel_pos: cloneDeep(p.pixel_pos) ?? {x:0, y: 0} as Gamespace_Pixel_Point,  //TODO use TM
 		should_remove: p.should_remove ?? false,
 		is_done_with_turn: p.is_done_with_turn ?? false,	
 		rotate: p.rotate ?? 0,

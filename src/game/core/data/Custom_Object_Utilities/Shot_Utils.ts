@@ -1,4 +1,4 @@
-import { Point2D } from "../../../interfaces";
+import { Gamespace_Pixel_Point, Point2D } from "../../../interfaces";
 import { Creature_Data, Creature_ƒ } from "../../../objects_core/Creature/Creature";
 import { Custom_Object_Data } from "../../../objects_core/Custom_Object/Custom_Object";
 import { Vals } from "../../constants/Constants";
@@ -12,19 +12,19 @@ export const CO_Shot_Utils_ƒ = {
 
 	calculate_arcing_shot_trajectory: (
 		me: Custom_Object_Data<unknown>,
-		original_pos: Point2D,
+		original_pos: Gamespace_Pixel_Point,
 		lifetime_tick: number,
 		target: Creature_Data,
 		source: Creature_Data,
 	): {
-		pixel_pos: Point2D,
+		pixel_pos: Gamespace_Pixel_Point,
 		rotate: number,
 	} => {
 		const prior_pos = me.pixel_pos;
 		let next_pos = cloneDeep(original_pos);
 
 		let visual_rotate_angle = me.rotate;
-		let probable_target_pos: Point2D | undefined = undefined;
+		let probable_target_pos: Gamespace_Pixel_Point | undefined = undefined;
 
 		if(target){
 			const target_pos = CO_Shot_Utils_ƒ.calculate_probable_target_pos(target);
@@ -56,7 +56,7 @@ export const CO_Shot_Utils_ƒ = {
 
 			const addend: Point2D = { x: lifetime_tick * magnitude * Math.cos(angle_to_target), y: lifetime_tick * magnitude * Math.sin(angle_to_target) + arcing_height }
 
-			next_pos = {x: original_pos.x + addend.x, y: original_pos.y + addend.y}
+			next_pos = {x: original_pos.x + addend.x, y: original_pos.y + addend.y} as Gamespace_Pixel_Point
 
 
 /*----------------------- graphical logic -----------------------*/
@@ -77,19 +77,19 @@ export const CO_Shot_Utils_ƒ = {
 
 	calculate_serpentine_shot_trajectory: (
 		me: Custom_Object_Data<unknown>,
-		original_pos: Point2D,
+		original_pos: Gamespace_Pixel_Point,
 		lifetime_tick: number,
 		target: Creature_Data,
 		source: Creature_Data,
 	): {
-		pixel_pos: Point2D,
+		pixel_pos: Gamespace_Pixel_Point,
 		rotate: number,
 	} => {
 		const prior_pos = me.pixel_pos;
 		let next_pos = cloneDeep(original_pos);
 
 		let visual_rotate_angle = me.rotate;
-		let probable_target_pos: Point2D | undefined = undefined;
+		let probable_target_pos: Gamespace_Pixel_Point | undefined = undefined;
 
 		if(target){
 			const target_pos = CO_Shot_Utils_ƒ.calculate_probable_target_pos(target);
@@ -121,7 +121,7 @@ export const CO_Shot_Utils_ƒ = {
 
 			const addend: Point2D = { x: lifetime_tick * magnitude * Math.cos(angle_to_target), y: lifetime_tick * magnitude * Math.sin(angle_to_target) + arcing_height }
 
-			next_pos = {x: original_pos.x + addend.x, y: original_pos.y + addend.y}
+			next_pos = {x: original_pos.x + addend.x, y: original_pos.y + addend.y} as Gamespace_Pixel_Point
 
 
 /*----------------------- graphical logic -----------------------*/
@@ -144,7 +144,7 @@ export const CO_Shot_Utils_ƒ = {
 
 	calculate_probable_target_pos: (
 		target: Creature_Data,
-	): Point2D => {
+	): Gamespace_Pixel_Point => {
 
 		const accessors = Creature_ƒ.get_accessors(target);
 		const probable_target_pos_tile = Creature_ƒ.guess_anim_pos_at_time_offset(target, accessors._Tilemap_Manager(), target.path_data, Vals.shot_flight_duration);

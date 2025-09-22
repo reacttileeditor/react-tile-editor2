@@ -4,7 +4,7 @@ import { zorder } from "../../constants/zorder";
 import { Change_Instance, Creature_ƒ } from "../../../objects_core/Creature/Creature";
 import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../../../objects_core/Custom_Object/Custom_Object";
 import { Custom_Object_Delegate, Custom_Object_Delegate_Base_ƒ, Custom_Object_Update } from "../../../objects_core/Custom_Object/Custom_Object_Delegate";
-import { Point2D } from "../../../interfaces";
+import { Gamespace_Pixel_Point, Point2D } from "../../../interfaces";
 import { cloneDeep } from "lodash";
 import { angle_between, ƒ } from "../../engine/Utils";
 import { Vals } from "../../constants/Constants";
@@ -18,7 +18,7 @@ import { CO_Shot_Utils_ƒ } from "../Custom_Object_Utilities/Shot_Utils";
 export type CO_Shot_State = {
 	target_obj: string, //uuid
 	source_obj: string,
-	original_pos: Point2D,
+	original_pos: Gamespace_Pixel_Point,
 }
 
 export const CO_Shot_Magic_Missile_ƒ: Custom_Object_Delegate<CO_Shot_State> = {

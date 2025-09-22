@@ -5,7 +5,7 @@ import { add_points, ƒ } from "../../core/engine/Utils";
 
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 
-import { Point2D, Rectangle } from '../../interfaces';
+import { Gamespace_Pixel_Point, Point2D, Rectangle } from '../../interfaces';
 import { add, filter, includes, reduce } from "ramda";
 import { Change_Instance, Change_Value, Creature_Data, Creature_Keys, Creature_ƒ, Path_Data, ValueOf, Variable_Specific_Change_Instance } from "./Creature";
 
@@ -13,9 +13,9 @@ import { Change_Instance, Change_Value, Creature_Data, Creature_Keys, Creature_�
 
 export const Creature_ƒ_State_Management = {
 /*----------------------- run time type guards -----------------------*/
-
-	isPoint2D: (value: ValueOf<Creature_Data>): value is Point2D => {
-		return _.isObject(value) && (value as Point2D).x !== undefined && (value as Point2D).y !== undefined;
+	
+	isPoint2D: (value: ValueOf<Creature_Data>): value is Gamespace_Pixel_Point => {
+		return _.isObject(value) && (value as Gamespace_Pixel_Point).x !== undefined && (value as Gamespace_Pixel_Point).y !== undefined;
 	},
 
 	isPathData: (value: ValueOf<Creature_Data>): value is Path_Data => {
@@ -161,7 +161,7 @@ export const Creature_ƒ_State_Management = {
 					string: (a as unknown as string) + (b as unknown as string),
 					number: (a as unknown as number) + (b as unknown as number),
 					Direction: (b as unknown as Direction), //no coherent way to add Directions, so we treat it as 'set'
-					Point2D: guard(value_type=='Point2D', ()=> add_points( (a as unknown as Point2D), (b as unknown as Point2D) )),
+					Point2D: guard(value_type=='Point2D', ()=> add_points( (a as unknown as Gamespace_Pixel_Point), (b as unknown as Gamespace_Pixel_Point) )),
 					boolean: (a as unknown as boolean) && (b as unknown as boolean),
 					Path_Data: (b as unknown as Path_Data), //no coherent way to add Paths, so we treat it as 'set'
 					Creature_Data: (b as unknown as Creature_Data),  //no coherent way to add Creatures, so we treat it as 'set'
@@ -180,7 +180,7 @@ export const Creature_ƒ_State_Management = {
 					string: (b as unknown as string),
 					number: (b as unknown as number),
 					Direction: (b as unknown as Direction),
-					Point2D: (b as unknown as Point2D),
+					Point2D: (b as unknown as Gamespace_Pixel_Point),
 					boolean: (b as unknown as boolean),
 					Path_Data: (b as unknown as Path_Data),
 					Creature_Data: (b as unknown as Creature_Data),

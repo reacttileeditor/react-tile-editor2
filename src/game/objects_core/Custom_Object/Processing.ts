@@ -1,7 +1,7 @@
 
 import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 
-import { Point2D, Rectangle } from '../../interfaces';
+import { Gamespace_Pixel_Point, Point2D, Rectangle } from '../../interfaces';
 import { Change_Instance, Creature_Type_Name } from "../Creature/Creature";
 import { Custom_Object_Delegate, Custom_Object_Delegate_States} from "./Custom_Object_Delegate";
 import { Game_Manager_Data, Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";
@@ -111,7 +111,7 @@ export const Custom_Object_ƒ_Processing = {
 
 		return {
 			...me,
-			pixel_pos: add_points(me.pixel_pos, new_velocity),
+			pixel_pos: add_points(me.pixel_pos, new_velocity) as Gamespace_Pixel_Point,
 			velocity: new_velocity,
 		}
 	},

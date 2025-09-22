@@ -6,7 +6,7 @@ import { angle_between, ƒ } from "../../core/engine/Utils";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 import { Pathfinder_ƒ } from "../../core/engine/Pathfinding";
 
-import { Point2D, Rectangle, Tile_Pos_Point } from '../../interfaces';
+import { Gamespace_Pixel_Point, Point2D, Rectangle, Tile_Pos_Point } from '../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../Custom_Object/Custom_Object";
 import { Anim_Schedule_Element, Behavior_Mode, Change_Instance, Creature_Data, Creature_ƒ, Path_Node_With_Direction, Path_Data } from "./Creature";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../../core/engine/Asset_Manager/Asset_Manager";
@@ -273,7 +273,7 @@ export const Creature_ƒ_Behavior = {
 
 						spawnees_.push(New_Custom_Object({
 							accessors: Creature_ƒ.get_accessors(me),
-							pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
+							pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2} as Gamespace_Pixel_Point,
 							type_name: 'text_label',
 							creation_timestamp: tick,
 							text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
@@ -282,7 +282,7 @@ export const Creature_ƒ_Behavior = {
 				
 						spawnees_.push(New_Custom_Object({
 							accessors: Creature_ƒ.get_accessors(me),
-							pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
+							pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20} as Gamespace_Pixel_Point,
 							type_name: 'hit_star_bg',
 							creation_timestamp: tick,
 							delegate_state: {
@@ -299,7 +299,7 @@ export const Creature_ƒ_Behavior = {
 
 			spawnees.push(New_Custom_Object({
 				accessors: Creature_ƒ.get_accessors(me),
-				pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
+				pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2} as Gamespace_Pixel_Point,
 				type_name: 'text_label',
 				creation_timestamp: tick,
 				text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
@@ -308,7 +308,7 @@ export const Creature_ƒ_Behavior = {
 	
 			spawnees.push(New_Custom_Object({
 				accessors: Creature_ƒ.get_accessors(me),
-				pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
+				pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20} as Gamespace_Pixel_Point,
 				type_name: 'hit_star_bg',
 				creation_timestamp: tick,
 				delegate_state: {

@@ -14,7 +14,7 @@ import { Pathfinder_ƒ } from "../Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Creature_Type_Name } from "../../../objects_core/Creature/Creature";
 
-import { Point2D, Rectangle, Screenspace_Pixel_Point } from '../../../interfaces';
+import { Point2D, Rectangle, Screenspace_Pixel_Point, Tile_Pos_Point } from '../../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
@@ -90,7 +90,7 @@ export type Game_Manager_Data = {
 }
 
 export type Creature_Map_Instance = {
-	pos: Point2D,
+	pos: Tile_Pos_Point,
 	type_name: Creature_Type_Name,
 	team: number,
 	direction: Direction,
@@ -181,7 +181,7 @@ export const Game_Manager_ƒ = {
 		get_AM: () => Asset_Manager_Data,
 		get_BM: () => Blit_Manager_Data,
 		get_TM: () => Tilemap_Manager_Data,
-		pos: Point2D,
+		pos: Tile_Pos_Point,
 		type_name: Creature_Type_Name,
 		team: number,
 		direction: Direction
