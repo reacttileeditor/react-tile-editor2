@@ -622,7 +622,7 @@ export const Blit_Manager_ƒ = {
 	    //me.osb_ctx.shadowBlur = 3;
 	    me.osb_ctx.fillStyle = "#ffffff";
 		me.osb_ctx.textBaseline = 'middle';
-		me.osb_ctx.fillText(`FPS: ${me.time_tracker.prior_frame_count.toString()}`, (me.osb_ctx.canvas.width - 40), 10);
+		me.osb_ctx.fillText(`FPS: ${me.time_tracker.prior_frame_count.toString()}`, 10, (me.osb_ctx.canvas.height - 14));
 		me.osb_ctx.restore();
 	},
 
