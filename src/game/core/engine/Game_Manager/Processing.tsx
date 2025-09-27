@@ -56,7 +56,7 @@ do_mouse_position_updates: (
 	*/
 	if(selected_creature){
 		const new_pos = Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos );
-		const new_path = Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, selected_creature.tile_pos, new_pos, selected_creature ).successful_path;
+		const new_path = Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me, selected_creature.tile_pos, new_pos, selected_creature ).successful_path;
 		const new_path_reachable = Creature_ƒ.yield_path_reachable_this_turn(selected_creature, _TM, new_path);
 
 		return Game_Manager_ƒ.adjust_tiles_to_display_possible_moves_and_prospective_path(me, selected_creature, new_path_reachable, _AM, _BM, _TM);

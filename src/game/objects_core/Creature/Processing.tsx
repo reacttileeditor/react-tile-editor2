@@ -197,7 +197,7 @@ export const Creature_ƒ_Processing = {
 
 
 		if( tick >= me.next_behavior_reconsideration_timestamp ) {
-			AI_Core_ƒ.reconsider_behavior(me, _TM, _AM, _BM, offset_in_ms, tick, change_list, spawnees);
+			AI_Core_ƒ.reconsider_behavior(me, _TM, _AM, _BM, _GM, offset_in_ms, tick, change_list, spawnees);
 		}
 
 		if(me.behavior_mode == 'walk'){

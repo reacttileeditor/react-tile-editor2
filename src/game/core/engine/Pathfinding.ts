@@ -10,6 +10,7 @@ import { Asset_Manager_Data, Tile_Comparator_Sample, Tile_Position_Comparator_Sa
 import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager/Tilemap_Manager";
 import { Creature_Data, Creature_ƒ } from "../../objects_core/Creature/Creature";
 import { Rectangle, Tile_Pos_Point } from '../../interfaces';
+import { Game_Manager_Data } from "./Game_Manager/Game_Manager";
 
 interface Tile_View_State {
 	tileStatus: Tile_Grid,
@@ -230,7 +231,7 @@ const a_star_search = ( _graph: Node_Graph, _start_coords: Tile_Pos_Point, _end_
 
 
 export const Pathfinder_ƒ = {
-	find_path_between_map_tiles: (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _start_coords: Tile_Pos_Point, _end_coords: Tile_Pos_Point, _Creature: Creature_Data) => {
+	find_path_between_map_tiles: (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _GM: Game_Manager_Data, _start_coords: Tile_Pos_Point, _end_coords: Tile_Pos_Point, _Creature: Creature_Data) => {
 		/*
 			We're going to go ahead and pass in the creature as a constructor argument; the idea here is that we can't really "reuse" an existing node graph generator and just pass in a new creature type; the moment anything changes about the creature we're using, we need to completely rebuild the node graph from scratch.  So there's no sense in pipelining it into the whole function tree inside the class - we have to nuke and rebuild anyways, so why not make the interface a bit simpler?
 		*/
