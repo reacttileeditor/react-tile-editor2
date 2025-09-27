@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _, { map } from "lodash";
+import _, { isEqual, map } from "lodash";
 
 import { PriorityQueue } from 'ts-pq';
 
@@ -11,7 +11,8 @@ import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager/Tile
 import { Creature_Data, Creature_ƒ } from "../../objects_core/Creature/Creature";
 import { Rectangle, Tile_Pos_Point } from '../../interfaces';
 import { Game_Manager_Data } from "./Game_Manager/Game_Manager";
-import { includes } from "ramda";
+import { filter, includes } from "ramda";
+import { Blit_Manager_Data } from "./Blit_Manager";
 
 interface Tile_View_State {
 	tileStatus: Tile_Grid,
@@ -228,8 +229,19 @@ const a_star_search = ( _graph: Node_Graph, _start_coords: Tile_Pos_Point, _end_
 	
 }
 
-const block_occupied_tiles = ( tilemap: Tile_Grid, _GM: Game_Manager_Data ): Tile_Grid => {
-	const occupied_tiles = _GM.game_state.current_frame_state.tiles_blocked_by_creatures;
+const block_occupied_tiles = (
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_GM: Game_Manager_Data,
+		_BM: Blit_Manager_Data,
+		tilemap: Tile_Grid,
+		excluded_creature: Creature_Data
+	): Tile_Grid => {
+	
+	const creature_tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, excluded_creature.pixel_pos)
+
+	const occupied_tiles = filter((val)=>(isEqual(val, creature_tile_pos)), _GM.game_state.current_frame_state.tiles_blocked_by_creatures);
+
 
 	return map( tilemap, (row_val, row_idx)=>(
 		map( row_val, (col_val, col_idx)=>(
@@ -241,7 +253,7 @@ const block_occupied_tiles = ( tilemap: Tile_Grid, _GM: Game_Manager_Data ): Til
 
 
 export const Pathfinder_ƒ = {
-	find_path_between_map_tiles: (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _GM: Game_Manager_Data, _start_coords: Tile_Pos_Point, _end_coords: Tile_Pos_Point, _Creature: Creature_Data) => {
+	find_path_between_map_tiles: (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _GM: Game_Manager_Data, _BM: Blit_Manager_Data, _start_coords: Tile_Pos_Point, _end_coords: Tile_Pos_Point, _Creature: Creature_Data) => {
 		/*
 			We're going to go ahead and pass in the creature as a constructor argument; the idea here is that we can't really "reuse" an existing node graph generator and just pass in a new creature type; the moment anything changes about the creature we're using, we need to completely rebuild the node graph from scratch.  So there's no sense in pipelining it into the whole function tree inside the class - we have to nuke and rebuild anyways, so why not make the interface a bit simpler?
 		*/
@@ -250,7 +262,7 @@ export const Pathfinder_ƒ = {
 	
 		//const _graph = _Node_Graph_Generator.build_node_graph_from_grid( _TM.tile_maps.terrain );
 
-		const tilemap_with_tiles_blocked_by_creatures = block_occupied_tiles(_TM.tile_maps.terrain, _GM);
+		const tilemap_with_tiles_blocked_by_creatures = block_occupied_tiles(_TM, _AM, _GM, _BM, _TM.tile_maps.terrain, _Creature);
 
 		const _graph = Node_Graph_Generate(_TM, _AM, _Creature, tilemap_with_tiles_blocked_by_creatures);
 

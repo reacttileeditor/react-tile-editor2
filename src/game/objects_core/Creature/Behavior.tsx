@@ -12,6 +12,7 @@ import { Anim_Schedule_Element, Behavior_Mode, Change_Instance, Creature_Data, C
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../../core/engine/Asset_Manager/Asset_Manager";
 import { Vals } from "../../core/constants/Constants";
 import { Game_Manager_Data } from "../../core/engine/Game_Manager/Game_Manager";
+import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
 
 
 
@@ -89,11 +90,12 @@ export const Creature_ƒ_Behavior = {
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		_GM: Game_Manager_Data,
+		_BM: Blit_Manager_Data,
 		change_list: Array<Change_Instance>,
 	): Path_Data => {
 		const new_path_data = cloneDeep(Creature_ƒ.set_path(
 			me,
-			Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, _GM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
+			Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, _GM, _BM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
 			_TM
 		));
 

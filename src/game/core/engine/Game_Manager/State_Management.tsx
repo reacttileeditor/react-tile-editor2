@@ -106,7 +106,7 @@ export const Game_Manager_ƒ_State_Management = {
 						...cloneDeep(creature),
 						path_data: Creature_ƒ.set_path(
 							creature,
-							Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me, creature.tile_pos, new_pos, creature ).successful_path,
+							Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me, _BM, creature.tile_pos, new_pos, creature ).successful_path,
 							_TM
 						),
 						planned_tile_pos: new_pos,

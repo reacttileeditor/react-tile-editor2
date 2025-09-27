@@ -148,7 +148,7 @@ export const AI_Core_ƒ = {
 			if( target ){
 				const new_path_data = cloneDeep(Creature_ƒ.set_path(
 					me,
-					Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, _GM, me.tile_pos, target.tile_pos, me ).successful_path,
+					Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, _GM, _BM, me.tile_pos, target.tile_pos, me ).successful_path,
 					_TM
 				));
 
@@ -177,7 +177,7 @@ export const AI_Core_ƒ = {
 		if( target ){
 			return cloneDeep(Creature_ƒ.set_path(
 				me,
-				Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, _GM, me.tile_pos, target.tile_pos, me ).successful_path,
+				Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, _GM, _BM, me.tile_pos, target.tile_pos, me ).successful_path,
 				_TM
 			));
 		} else {
@@ -257,7 +257,7 @@ export const AI_Core_ƒ = {
 						?
 						AI_Core_ƒ.construct_path_for_AI_enemies(me, _TM, _AM, _BM, _GM)
 						:
-						Creature_ƒ.reassess_current_intended_path(me,_TM, _AM, _GM, change_list);
+						Creature_ƒ.reassess_current_intended_path(me,_TM, _AM, _GM, _BM, change_list);
 
 
 					Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
