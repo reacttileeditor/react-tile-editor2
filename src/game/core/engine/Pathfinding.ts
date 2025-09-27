@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _ from "lodash";
+import _, { map } from "lodash";
 
 import { PriorityQueue } from 'ts-pq';
 
@@ -11,6 +11,7 @@ import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager/Tile
 import { Creature_Data, Creature_ƒ } from "../../objects_core/Creature/Creature";
 import { Rectangle, Tile_Pos_Point } from '../../interfaces';
 import { Game_Manager_Data } from "./Game_Manager/Game_Manager";
+import { includes } from "ramda";
 
 interface Tile_View_State {
 	tileStatus: Tile_Grid,
@@ -42,7 +43,7 @@ export type Pathfinding_Result = {
 }
 
 
-export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _Creature: Creature_Data, grid: Tile_Grid ): Node_Graph => {
+const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _Creature: Creature_Data, grid: Tile_Grid ): Node_Graph => {
 
 	
 /*----------------------- core functionality -----------------------*/
@@ -227,6 +228,15 @@ const a_star_search = ( _graph: Node_Graph, _start_coords: Tile_Pos_Point, _end_
 	
 }
 
+const block_occupied_tiles = ( tilemap: Tile_Grid, _GM: Game_Manager_Data ): Tile_Grid => {
+	const occupied_tiles = _GM.game_state.current_frame_state.tiles_blocked_by_creatures;
+
+	return map( tilemap, (row_val, row_idx)=>(
+		map( row_val, (col_val, col_idx)=>(
+			includes( <Tile_Pos_Point>{x: col_idx, y: row_idx}, occupied_tiles ) ? 'blocked' : col_val
+		))
+	))
+}
 
 
 
@@ -240,7 +250,9 @@ export const Pathfinder_ƒ = {
 	
 		//const _graph = _Node_Graph_Generator.build_node_graph_from_grid( _TM.tile_maps.terrain );
 
-		const _graph = Node_Graph_Generate(_TM, _AM, _Creature, _TM.tile_maps.terrain);
+		const tilemap_with_tiles_blocked_by_creatures = block_occupied_tiles(_TM.tile_maps.terrain, _GM);
+
+		const _graph = Node_Graph_Generate(_TM, _AM, _Creature, tilemap_with_tiles_blocked_by_creatures);
 
 		return a_star_search( _graph, _start_coords, _end_coords, _Creature );
 	}

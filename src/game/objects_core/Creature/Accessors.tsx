@@ -33,6 +33,10 @@ export const Creature_ƒ_Accessors = {
 	/*----------------------- getters -----------------------*/
 
 	yield_move_cost_for_tile_type: (me: Creature_Data, tile_type: string): number|null => (
+		tile_type == 'blocked'
+		?
+		null
+		:
 		Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type)
 	),
 
