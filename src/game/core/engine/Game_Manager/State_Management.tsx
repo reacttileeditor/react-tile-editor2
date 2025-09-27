@@ -192,7 +192,8 @@ export const Game_Manager_ƒ_State_Management = {
 			game_state: {
 				...cloneDeep(me.game_state),
 				current_frame_state: {
-					creature_list: new_creature_array
+					creature_list: new_creature_array,
+					tiles_blocked_by_creatures: me.game_state.current_frame_state.tiles_blocked_by_creatures
 				},
 				selected_object_index: newly_selected_creature_index == -1 ? me.game_state.selected_object_index : newly_selected_creature_index,
 				selected_object_possible_moves: newly_selected_object_possible_moves,
@@ -236,6 +237,7 @@ export const Game_Manager_ƒ_State_Management = {
 		let new_turn_state = cloneDeep(me.game_state.current_frame_state);
 		new_turn_state = {
 			creature_list: map(new_turn_state.creature_list, (val)=>( Creature_ƒ.copy_for_new_turn(val) )),
+			tiles_blocked_by_creatures: cloneDeep(me.game_state.current_frame_state.tiles_blocked_by_creatures),
 		};
 
 		console.log(`finishing turn #${me.game_state.current_turn}`)

@@ -90,7 +90,7 @@ do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM:
 		let master_change_list: Array<Change_Instance> = [];
 
 		map( me.game_state.current_frame_state.creature_list, (val,idx) => {
-			const processed_results = Creature_ƒ.process_single_frame(val, _TM, _AM, _BM, Game_Manager_ƒ.get_time_offset(me, _BM), tick);
+			const processed_results = Creature_ƒ.process_single_frame(val, _TM, _AM, _BM, me, Game_Manager_ƒ.get_time_offset(me, _BM), tick);
 
 			map(processed_results.spawnees, (val)=>{ spawnees.push(val) });
 			map(processed_results.change_list, (val)=>{ master_change_list.push(val) });
@@ -160,7 +160,8 @@ do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM:
 		let all_creatures_processed_and_culled = filter( all_creatures_processed, (val)=>(
 			val.should_remove !== true
 		) );
-		
+
+		const occupied_tiles = Game_Manager_ƒ.get_list_of_occupied_tiles(me, _AM, _BM, _TM);
 		
 		return {
 			tm: _TM,
@@ -174,6 +175,7 @@ do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM:
 					...cloneDeep(me.game_state),
 					current_frame_state: {
 						creature_list: all_creatures_processed_and_culled,
+						tiles_blocked_by_creatures: occupied_tiles,
 					},
 					custom_object_list: all_objects_processed_and_culled,
 				}

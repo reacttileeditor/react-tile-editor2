@@ -13,6 +13,7 @@ import { Asset_Manager_Data, Asset_Manager_ƒ } from "../../core/engine/Asset_Ma
 import { Blit_Manager_Data, Blit_Manager_ƒ, ms_to_ticks, ticks_to_ms } from "../../core/engine/Blit_Manager";
 import { Vals } from "../../core/constants/Constants";
 import { Image_Data_Names } from "../../core/data/Image_Data";
+import { Game_Manager_Data } from "../../core/engine/Game_Manager/Game_Manager";
 
 
 
@@ -184,6 +185,7 @@ export const Creature_ƒ_Processing = {
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
+		_GM: Game_Manager_Data,
 		offset_in_ms: number,
 		tick: number,
 	): {

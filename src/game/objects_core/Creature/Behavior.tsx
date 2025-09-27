@@ -66,22 +66,22 @@ export const Creature_ƒ_Behavior = {
 
 /*----------------------- mid-turn path management -----------------------*/
 
-	renegotiate_path: (
-		me: Creature_Data,
-		_TM: Tilemap_Manager_Data,
-		_AM: Asset_Manager_Data,
-		offset_in_ms: number,
-		tick: number,
-		change_list: Array<Change_Instance>,
-	) => {
+	// renegotiate_path: (
+	// 	me: Creature_Data,
+	// 	_TM: Tilemap_Manager_Data,
+	// 	_AM: Asset_Manager_Data,
+	// 	offset_in_ms: number,
+	// 	tick: number,
+	// 	change_list: Array<Change_Instance>,
+	// ) => {
 
-		const new_path_data = Creature_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
+	// 	const new_path_data = Creature_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
 
-		Creature_ƒ.deduct_cost_from_last_move(me,_TM, _AM, change_list);
+	// 	Creature_ƒ.deduct_cost_from_last_move(me,_TM, _AM, change_list);
 
-		Creature_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
+	// 	Creature_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
 
-	},
+	// },
 
 	reassess_current_intended_path: (
 		me: Creature_Data,

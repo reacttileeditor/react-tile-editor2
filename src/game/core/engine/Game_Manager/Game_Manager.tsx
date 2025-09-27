@@ -47,10 +47,12 @@ export interface Game_State {
 
 export interface Individual_Game_Turn_State {
 	creature_list: Array<Creature_Data>,
+	tiles_blocked_by_creatures: Array<Tile_Pos_Point>,
 }
 
-export const Individual_Game_Turn_State_Init = {
+export const Individual_Game_Turn_State_Init: Individual_Game_Turn_State = {
 	creature_list: [],
+	tiles_blocked_by_creatures: [],
 }
 
 export const GameStateInit: Game_State = {
@@ -140,7 +142,7 @@ export const New_Game_Manager = (p: {
 
 	const first_turn_state_init = {
 		creature_list: map( p._Tilemap_Manager().creature_list, (val)=>( creature_from_setup_data(val) ) ),
-		custom_object_list: [],
+		tiles_blocked_by_creatures: [],
 	};
 
 	game_manager.game_state = {

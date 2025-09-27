@@ -14,7 +14,7 @@ import { Pathfinder_ƒ } from "../Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Creature_Type_Name } from "../../../objects_core/Creature/Creature";
 
-import { Point2D, Rectangle, Screenspace_Pixel_Point } from '../../../interfaces';
+import { Gamespace_Pixel_Point, Point2D, Rectangle, Screenspace_Pixel_Point, Tile_Pos_Point } from '../../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
@@ -190,6 +190,14 @@ get_creature_at_tile: (me: Game_Manager_Data, pos: Point2D): Creature_Data|undef
 	)
 ),
 
+get_list_of_occupied_tiles: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data): Array<Tile_Pos_Point> => {
+	return map( me.game_state.current_frame_state.creature_list, (creature) => {
+
+		//return Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM,
+			return Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, creature.pixel_pos as Gamespace_Pixel_Point)
+		//);
+	});
+},
 
 get_current_creatures_move_cost: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): string => {
 	const selected_creature = Game_Manager_ƒ.get_selected_creature(me);
