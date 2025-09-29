@@ -240,7 +240,7 @@ const block_occupied_tiles = (
 	
 	const creature_tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, excluded_creature.pixel_pos)
 
-	const occupied_tiles = filter((val)=>(isEqual(val, creature_tile_pos)), _GM.game_state.current_frame_state.tiles_blocked_by_creatures);
+	const occupied_tiles = filter((val)=>(!isEqual(val, creature_tile_pos)), _GM.game_state.current_frame_state.tiles_blocked_by_creatures);
 
 
 	return map( tilemap, (row_val, row_idx)=>(
