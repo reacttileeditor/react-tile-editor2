@@ -94,25 +94,24 @@ export const Game_Manager_ƒ_Drawing = {
 				opacity:					1.0,
 			});
 
+		})
 
+		map( me.game_state.current_frame_state.tiles_blocked_by_creatures, (pos,idx) => {
 			Asset_Manager_ƒ.draw_image_for_asset_name({
 				_AM:						_AM,
 				asset_name:					'white_tile',
 				_BM:						_BM,
-				pos:					Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM,
-											Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, val.pixel_pos as Gamespace_Pixel_Point)
-				), 
+				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, pos), 
 				zorder:						zorder.map_boundary,
-				current_milliseconds:		timestamp_according_to_creature,
+				current_milliseconds:		0.0,
 				opacity:					1.0,
 				rotate:						0.0,
 				scale:						1.0,
 				brightness:					1.0,
-				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
+				horizontally_flipped:		false,
 				vertically_flipped:			false,
 			});
-
-		})
+		});	
 
 		// const creature_tile_positions: Array<Point2D> = map(all_creatures_processed_and_culled, (val)=>(
 		// 	Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, val.pixel_pos)
@@ -201,22 +200,6 @@ export const Game_Manager_ƒ_Drawing = {
 			})
 
 			
-			Asset_Manager_ƒ.draw_image_for_asset_name({
-				_AM:						_AM,
-				asset_name:					'white_tile',
-				_BM:						_BM,
-				pos:					Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM,
-											Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, val.pixel_pos as Gamespace_Pixel_Point)
-				), 
-				zorder:						zorder.map_boundary,
-				current_milliseconds:		0,
-				opacity:					1.0,
-				rotate:						0.0,
-				scale:						1.0,
-				brightness:					1.0,
-				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
-				vertically_flipped:			false,
-			});
 			/*
 				If there's a creature selected, then draw an indicator under every -other- creature to indicate the team.
 			*/
@@ -254,6 +237,25 @@ export const Game_Manager_ƒ_Drawing = {
 				});
 			}		
 		})
+
+		
+
+		map( me.game_state.current_frame_state.tiles_blocked_by_creatures, (pos,idx) => {
+			Asset_Manager_ƒ.draw_image_for_asset_name({
+				_AM:						_AM,
+				asset_name:					'white_tile',
+				_BM:						_BM,
+				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, pos), 
+				zorder:						zorder.map_boundary,
+				current_milliseconds:		0.0,
+				opacity:					1.0,
+				rotate:						0.0,
+				scale:						1.0,
+				brightness:					1.0,
+				horizontally_flipped:		false,
+				vertically_flipped:			false,
+			});
+		});	
 
 
 		map( me.game_state.custom_object_list, (val,idx) => {
