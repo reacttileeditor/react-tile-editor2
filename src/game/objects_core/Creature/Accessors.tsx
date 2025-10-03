@@ -5,7 +5,7 @@ import { ƒ } from "../../core/engine/Utils";
 
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 
-import { Point2D, Rectangle } from '../../interfaces';
+import { Point2D, Rectangle, Tile_Pos_Point } from '../../interfaces';
 import { Creature_Delegate} from "./Creature_Delegate";
 import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
@@ -63,7 +63,7 @@ export const Creature_ƒ_Accessors = {
 
 
 
-	get_current_tile_pos_from_pixel_pos: (me: Creature_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Point2D => (
+	get_current_tile_pos_from_pixel_pos: (me: Creature_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Tile_Pos_Point => (
 		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)
 	),
 

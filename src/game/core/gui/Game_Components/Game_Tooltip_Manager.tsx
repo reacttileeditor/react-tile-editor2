@@ -5,7 +5,7 @@ import Right_Click_Icon from '../../../assets/right-click-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, Game_and_Tilemap_Manager_Data, New_Game_Manager } from "../../engine/Game_Manager/Game_Manager";
 import { equals } from "ramda";
 import { Creature_Data, Path_Data } from '../../../objects_core/Creature/Creature';
-import { Point2D } from '../../../interfaces';
+import { Point2D, Tile_Pos_Point } from '../../../interfaces';
 import { Asset_Manager_Data } from '../../engine/Asset_Manager/Asset_Manager';
 import { Blit_Manager_Data } from '../../engine/Blit_Manager';
 import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from '../../engine/Tilemap_Manager/Tilemap_Manager';
@@ -50,7 +50,7 @@ export const Game_Tooltip_Manager = (props: {
 
 
 const Map_Tooltip = (props: Game_Tooltip_Data) => {
-	let distance = !isNil(props.unit_pos) ? Tilemap_Manager_ƒ.get_tile_coord_distance_between(props.tile_pos, props.unit_pos) : 0;
+	let distance = !isNil(props.unit_pos) ? Tilemap_Manager_ƒ.get_tile_coord_distance_between(props.tile_pos as Tile_Pos_Point, props.unit_pos as Tile_Pos_Point) : 0;
 
 	const get_left_click_text = (): string => {
 		if(props.selected_unit !== undefined){

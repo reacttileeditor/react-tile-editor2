@@ -1,4 +1,4 @@
-import { Point2D } from "../../interfaces";
+import { Point2D, Tile_Pos_Point } from "../../interfaces";
 import { zorder } from "../constants/zorder";
 import { Static_Values, Tile_Item } from "../engine/Asset_Manager/Asset_Manager";
 import { Image_Data_Names } from "./Image_Data";
@@ -27,7 +27,7 @@ export type MTP_Graphic_Item = {
 };
 
 export type MTP_Anchor_Data = {
-	location: Point2D,
+	location: Tile_Pos_Point,
 	graphic: Image_Data_Names,
 	zorder: number,
 }

@@ -147,12 +147,17 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 		let new_movemap_tile_map: Tilemap_Single = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
 		
 		let newly_selected_object_possible_moves: Array<Point2D> = [];
-		
+
 		if( creature != undefined ){
+
+			const terrain_plus_blocking = Pathfinder_ƒ.block_tiles_occupied_by_other_creatures(_TM, _AM, me, _BM, _TM.tile_maps.terrain, creature) as Tilemap_Single;
+
+
 			newly_selected_object_possible_moves = Map_Analysis_ƒ.calculate_accessible_tiles_for_remaining_movement(
 				creature,
 				_TM,
-				creature.tile_pos
+				creature.tile_pos,
+				terrain_plus_blocking
 			);
 		}
 

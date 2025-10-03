@@ -9,7 +9,7 @@ import { dice_weighted, modulo, ƒ } from "./Utils";
 import { cubic } from '@juliendargelos/easings'
 
 import { Tile_Comparator_Sample, Tile_Position_Comparator_Sample } from "./Asset_Manager/Asset_Manager";
-import { Point2D, Rectangle, PointCubic } from '../../interfaces';
+import { Point2D, Rectangle, PointCubic, Tile_Pos_Point } from '../../interfaces';
 import { concat, filter, flatten, includes, keys, slice, uniq } from "ramda";
 import { Tilemap_Single, Tilemap_Manager_Data, Tilemap_Manager_ƒ, Tilemaps } from "./Tilemap_Manager/Tilemap_Manager";
 import { Blob_Profile_Name, Mapgen_Profile_ƒ } from "../data/Mapgen_Data";
@@ -18,13 +18,13 @@ import { tile_maps_init } from "./Tilemap_Manager/Initialization";
 
 
 type Tile_Blob = {
-	seed_location: Point2D,
+	seed_location: Tile_Pos_Point,
 	profile_name: Blob_Profile_Name,
-	tiles: Array<Point2D>,
+	tiles: Array<Tile_Pos_Point>,
 }
 
 type Tile_Blob_Plan = {
-	seed_location: Point2D,
+	seed_location: Tile_Pos_Point,
 	profile_name: Blob_Profile_Name,
 }
 
@@ -50,7 +50,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): Tile_Name_including_Empty => (
 			});
 		});
 
-		const thing = Tilemap_Manager_ƒ.get_adjacent_tile_in_direction( {x:2,y:3}, 'south_east');
+		const thing = Tilemap_Manager_ƒ.get_adjacent_tile_in_direction( {x:2, y:3} as Tile_Pos_Point, 'south_east');
 		console.error(
 			'THING', thing
 		)
@@ -81,10 +81,10 @@ get_random_tile_name: (_AM: Asset_Manager_Data): Tile_Name_including_Empty => (
 /*----------------------- blob-related code -----------------------*/
 	get_all_open_tiles_adjacent_to: (
 		_TM: Tilemap_Manager_Data,
-		location: Point2D,
+		location: Tile_Pos_Point,
 		forbidden_tiles: Array<Point2D>,
-	): Array<Point2D> => {
-		const adjacent_tiles: Array<Point2D> = [
+	): Array<Tile_Pos_Point> => {
+		const adjacent_tiles: Array<Tile_Pos_Point> = [
 			Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'east'),
 			Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'north_east'),
 			Tilemap_Manager_ƒ.get_adjacent_tile_in_direction(location, 'north_west'),
@@ -108,12 +108,12 @@ get_random_tile_name: (_AM: Asset_Manager_Data): Tile_Name_including_Empty => (
 
 	create_tile_blob_at_location: (
 		_TM: Tilemap_Manager_Data,
-		seed_location: Point2D,
-		reserved_tiles: Array<Point2D>,
+		seed_location: Tile_Pos_Point,
+		reserved_tiles: Array<Tile_Pos_Point>,
 		max_blob_size: number,
 	): Array<Point2D> => {
-		let claimed_tiles: Array<Point2D> = [seed_location];
-		let open_possibilities: Array<Point2D> = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
+		let claimed_tiles: Array<Tile_Pos_Point> = [seed_location];
+		let open_possibilities: Array<Tile_Pos_Point> = Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
 			_TM,
 			seed_location,
 			[seed_location],
@@ -160,10 +160,10 @@ get_random_tile_name: (_AM: Asset_Manager_Data): Tile_Name_including_Empty => (
 
 	expand_tile_blob_by_one: (
 		_TM: Tilemap_Manager_Data,
-		current_tiles: Array<Point2D>,
-		claimed_tile_accumulator: Array<Point2D>,  //from other blobs
-		seed_tile: Point2D,
-	): Array<Point2D> => {
+		current_tiles: Array<Tile_Pos_Point>,
+		claimed_tile_accumulator: Array<Tile_Pos_Point>,  //from other blobs
+		seed_tile: Tile_Pos_Point,
+	): Array<Tile_Pos_Point> => {
 		/*
 			Adds one single tile to a blob.
 
@@ -173,7 +173,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): Tile_Name_including_Empty => (
 			The second is that this would produce a ton of duplicates, so we run a uniq pass to get rid of all of those.
 		*/
 
-		const open_possibilities: Array<Point2D> = uniq(
+		const open_possibilities: Array<Tile_Pos_Point> = uniq(
 			flatten(
 				map(current_tiles, (tile)=>(
 					Map_Generation_ƒ.get_all_open_tiles_adjacent_to(
@@ -270,7 +270,7 @@ get_random_tile_name: (_AM: Asset_Manager_Data): Tile_Name_including_Empty => (
 				seed_location: {
 					x: Math.floor(blob_spacing/2) + blob_spacing * blob.x,
 					y: Math.floor(blob_spacing/2) + blob_spacing * blob.y,
-				},
+				} as Tile_Pos_Point,
 				profile_name: Mapgen_Profile_ƒ.get_random_profile_name(),
 			})
 		)

@@ -120,7 +120,7 @@ export const Creature_ƒ_Behavior = {
 		if( prior_tile_pos != undefined) {
 			current_tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
 				_TM,
-				prior_tile_pos as Point2D,
+				prior_tile_pos,
 				'terrain',
 			)
 		}
@@ -227,8 +227,8 @@ export const Creature_ƒ_Behavior = {
 
 
 		const attack_direction = Tilemap_Manager_ƒ.extract_direction_from_map_vector(
-			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), me.tile_pos ),
-			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), target.tile_pos ),
+			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), me.tile_pos ) as unknown as Tile_Pos_Point,
+			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), target.tile_pos ) as unknown as Tile_Pos_Point,
 		)		
 		Creature_ƒ.set(change_list, me, 'facing_direction', attack_direction);
 

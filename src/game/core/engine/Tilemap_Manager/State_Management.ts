@@ -275,19 +275,23 @@ export const Tilemap_Manager_ƒ_State_Management = {
 	),
 
 	
-	get_tile_name_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: Tilemap_Keys ) => {
+	get_tile_name_for_pos: ( me: Tilemap_Manager_Data, pos: Tile_Pos_Point, tilemap_name: Tilemap_Keys ) => {
+		return Tilemap_Manager_ƒ.get_tile_name_for_pos_in_tilemap( pos, me.tile_maps[tilemap_name])
+	},
+
+	get_tile_name_for_pos_in_tilemap: ( pos: Tile_Pos_Point, tile_map: Tilemap_Single) => {
 		/*
 			This enforces "safe access", and will always return a string.  If it's outside the bounds of the tile map, we return an empty string.
 		*/
 		if(
-			pos.y > (_.size(me.tile_maps[tilemap_name]) - 1) ||
+			pos.y > (_.size(tile_map) - 1) ||
 			pos.y < 0 ||
-			pos.x > (_.size(me.tile_maps[tilemap_name][pos.y]) - 1) ||
+			pos.x > (_.size(tile_map[pos.y]) - 1) ||
 			pos.x < 0
 		){
 			return '';
 		} else {
-			return me.tile_maps[tilemap_name][pos.y][pos.x];
+			return tile_map[pos.y][pos.x];
 		}
 	},
 	
@@ -411,28 +415,28 @@ export const Tilemap_Manager_ƒ_State_Management = {
 		}[vector_to_string] as Direction;
 	},
 
-	get_tile_coord_distance_between: ( startPos: Point2D, endPos: Point2D ) => Number (
+	get_tile_coord_distance_between: ( startPos: Tile_Pos_Point, endPos: Tile_Pos_Point ) => Number (
 		Tilemap_Manager_ƒ.cubic_distance( Tilemap_Manager_ƒ.cartesian_to_cubic(startPos), Tilemap_Manager_ƒ.cartesian_to_cubic(endPos) )
 	),
 
-	get_adjacent_tile_in_direction: ( startPos: Point2D, direction: Direction ): Point2D =>  {
+	get_adjacent_tile_in_direction: ( startPos: Tile_Pos_Point, direction: Direction ): Tile_Pos_Point =>  {
 		return Tilemap_Manager_ƒ.cubic_to_cartesian(
 			Tilemap_Manager_ƒ.cubic_addition(
 				Tilemap_Manager_ƒ.cartesian_to_cubic(startPos),
 				Tilemap_Manager_ƒ.cubic_direction_as_normalized_vector(direction)
 			)
-		);
+		) as Tile_Pos_Point;
 	},
 
 /*----------------------- direction handling -----------------------*/
-	extract_direction_from_map_vectorCubic: (start_pos: Point2D, end_pos: Point2D):Direction => {
+	extract_direction_from_map_vectorCubic: (start_pos: Tile_Pos_Point, end_pos: Tile_Pos_Point):Direction => {
 		return Tilemap_Manager_ƒ.cubic_direction(
 			Tilemap_Manager_ƒ.cartesian_to_cubic(start_pos),
 			Tilemap_Manager_ƒ.cartesian_to_cubic(end_pos)
 		);
 	},
 
-	extract_direction_from_map_vector: (start_pos: Point2D, end_pos: Point2D):Direction => {
+	extract_direction_from_map_vector: (start_pos: Tile_Pos_Point, end_pos: Tile_Pos_Point):Direction => {
 		if( start_pos.y == end_pos.y ){
 			if(start_pos.x < end_pos.x){
 				return 'east';

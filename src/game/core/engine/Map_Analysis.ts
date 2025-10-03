@@ -1,14 +1,14 @@
 import { map, size } from "lodash";
-import { Point2D } from "../../interfaces";
+import { Point2D, Tile_Pos_Point } from "../../interfaces";
 import { Creature_Data, Creature_ƒ } from "../../objects_core/Creature/Creature";
 import { Map_Generation_ƒ } from "./Map_Generation";
-import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager/Tilemap_Manager";
+import { Tilemap_Manager_Data, Tilemap_Manager_ƒ, Tilemap_Single } from "./Tilemap_Manager/Tilemap_Manager";
 import { ascend, concat, descend, equals, filter, flatten, includes, keys, Ord, slice, sortBy, sortWith, uniq, uniqWith } from "ramda";
 
 
 
 type Tile_And_Movement_Data = {
-	pos: Point2D,
+	pos: Tile_Pos_Point,
 	remaining_moves: number,
 }
 
@@ -19,8 +19,9 @@ export const Map_Analysis_ƒ = {
 	calculate_accessible_tiles_for_remaining_movement: (
 		creature: Creature_Data,
 		_TM: Tilemap_Manager_Data,
-		location: Point2D,
-	): Array<Point2D> => {
+		location: Tile_Pos_Point,
+		tile_map: Tilemap_Single,
+	): Array<Tile_Pos_Point> => {
 
 
 		/*
@@ -54,7 +55,7 @@ export const Map_Analysis_ƒ = {
 		let terminate_iter = false;
 		let iter = 0;
 		while( !terminate_iter && iter < 100 ){
-			let new_tiles = Map_Analysis_ƒ.expand_search(_TM, creature, current_tiles);
+			let new_tiles = Map_Analysis_ƒ.expand_search(_TM, creature, current_tiles, tile_map);
 
 			if( size(new_tiles) == 0 ){
 				terminate_iter = true;
@@ -75,6 +76,7 @@ export const Map_Analysis_ƒ = {
 		_TM: Tilemap_Manager_Data,
 		creature: Creature_Data,
 		current_tiles: Array<Tile_And_Movement_Data>,
+		tile_map: Tilemap_Single,
 	): Array<Tile_And_Movement_Data> => {
 
 		/*
@@ -100,7 +102,7 @@ export const Map_Analysis_ƒ = {
 					True blocking tiles have a `null` movecost, so omit them:
 				*/
 				const accessible_open_tiles = filter(
-					(tile) => ( Map_Analysis_ƒ.get_move_cost_for_pos(_TM, tile, creature) !== null ),
+					(tile) => ( Map_Analysis_ƒ.get_move_cost_for_pos(_TM, tile, creature, tile_map) !== null ),
 					open_tiles
 				)
 
@@ -109,7 +111,7 @@ export const Map_Analysis_ƒ = {
 				*/
 				return map(accessible_open_tiles, (val)=>({
 					pos: val,
-					remaining_moves: parent_tile.remaining_moves - (Map_Analysis_ƒ.get_move_cost_for_pos(_TM, val, creature) as number)
+					remaining_moves: parent_tile.remaining_moves - (Map_Analysis_ƒ.get_move_cost_for_pos(_TM, val, creature, tile_map) as number)
 				}))
 			})
 		);
@@ -146,15 +148,14 @@ export const Map_Analysis_ƒ = {
 
 	get_move_cost_for_pos: (
 		_TM: Tilemap_Manager_Data,
-		pos: Point2D,
+		pos: Tile_Pos_Point,
 		creature: Creature_Data,
-
+		tile_map: Tilemap_Single,
 	): number|null => {
 
-		const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
-			_TM,
-			pos as Point2D,
-			'terrain',
+		const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos_in_tilemap(
+			pos,
+			tile_map
 		)	
 
 		return Creature_ƒ.get_delegate(creature.type_name).yield_move_cost_for_tile_type(tile_type);
