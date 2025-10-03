@@ -23,7 +23,6 @@ export const Map_Analysis_ƒ = {
 		tile_map: Tilemap_Single,
 	): Array<Tile_Pos_Point> => {
 
-
 		/*
 			WARNING:  this entire system bakes in a cardinal assumption that our a-star pathfinding doesn't, which is that moving from tile A to tile B is purely determined by the cost of tile B.  This algorithm should be easily adaptable to a differential system (relying on A->B rather than just B), but it's important for future reference.   A differential system would be desirable for e.g. Civ-style "embarkation", or any similar things where it's more expensive to step "up" than it is to step "down".
 		*/
@@ -156,9 +155,9 @@ export const Map_Analysis_ƒ = {
 		const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos_in_tilemap(
 			pos,
 			tile_map
-		)	
+		)
 
-		return Creature_ƒ.get_delegate(creature.type_name).yield_move_cost_for_tile_type(tile_type);
+		return Creature_ƒ.yield_move_cost_for_tile_type(creature, tile_type);
 	}
 
 	/*----------------------- blob-related code -----------------------*/
