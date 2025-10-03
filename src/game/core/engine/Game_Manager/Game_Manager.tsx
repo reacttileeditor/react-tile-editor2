@@ -152,6 +152,16 @@ export const New_Game_Manager = (p: {
 		objective_text: Game_Manager_ƒ.write_full_objective_text(game_manager, Game_Manager_ƒ.get_game_state(game_manager).objective_type, Game_Manager_ƒ.get_game_state(game_manager)),
 	}
 
+	const revised_first_turn_state_init = {
+		creature_list: first_turn_state_init.creature_list,
+		tiles_blocked_by_creatures: Game_Manager_ƒ.get_list_of_occupied_tiles(game_manager, p._Asset_Manager(), p._Blit_Manager(), p._Tilemap_Manager()),
+	}
+
+	game_manager.game_state = {
+		...game_manager.game_state,
+		turn_list: [revised_first_turn_state_init],
+		current_frame_state: revised_first_turn_state_init,
+	}	
 
 	return game_manager;
 }
