@@ -35,8 +35,14 @@ export const Tile_Image_Data = {
 	menhir_big_mtp_2: {
 		url: "menhir_big_mtp_2.png",
 	},
+	menhir_big_mtp_6: {
+		url: "menhir_big_mtp_6.png",
+	},
 	menhir_big_mtp_4: {
 		url: "menhir_big_mtp_4.png",
+	},
+	menhir_big_mtp_5: {
+		url: "menhir_big_mtp_5.png",
 	},
 	menhir_big_mtp_2b: {
 		url: "menhir_big_mtp_2b.png",

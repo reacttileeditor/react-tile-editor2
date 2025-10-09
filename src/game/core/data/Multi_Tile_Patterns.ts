@@ -61,6 +61,7 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 				asset_variants: [
 					'menhir_big_mtp_1',
 					'menhir_big_mtp_4',
+					'menhir_big_mtp_5',
 				],
 				zorder: zorder.rocks,
 				anchor: {x: 1, y: 2},
@@ -122,6 +123,7 @@ export const multi_tile_types: Array<Multi_Tile_Pattern> = [
 			graphics: [{
 				asset_variants: [
 					'menhir_big_mtp_2',
+					'menhir_big_mtp_6',
 				],
 				zorder: zorder.rocks,
 				anchor: {x: 1, y: 2},
