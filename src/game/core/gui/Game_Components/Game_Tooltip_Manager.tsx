@@ -12,7 +12,9 @@ import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from '../../engine/Tilemap_M
 import { isEmpty, isNil, size } from 'lodash';
 import { Vals } from '../../constants/Constants';
 
-
+import { BsCrop } from "react-icons/bs";
+import { Icon } from '@rsuite/icons';
+import { IconType } from 'react-icons';
 
 
 export type Game_Tooltip_Data = {
@@ -106,17 +108,29 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 		<div className={`data-row ${get_left_click_text() == 'n/a' ? 'disabled' : '' }`}><img src={Left_Click_Icon}/> {`${get_left_click_text()}`}</div>
 		<div className={`data-row ${get_right_click_text() == 'n/a' ? 'disabled' : '' }`}><img src={Right_Click_Icon}/> {`${get_right_click_text()}`}</div>
 		<hr />
-		<div className="data-row">{`${props.tile_pos.x}, ${props.tile_pos.y}`}</div>
+		<div className="data-row">
+			<Icon className="vector_icon" as={BsCrop as React.ElementType} />
+			{`${props.tile_pos.x}, ${props.tile_pos.y}`}
+			<span className='caption'>Position</span>
+		</div>
 		<div className="data-row">{`${props.tile_name}`}</div>
 		{
 			!isEmpty(props.tile_cost) && !isNil(props.tile_cost)
 			&&
-			<div className="data-row"> {`${props.tile_cost}`}<img src={Foot_Icon}/></div>
+			<div className="data-row">
+				{`${props.tile_cost}`}
+				<img src={Foot_Icon}/>
+				<span className='caption'>Move Cost of This Tile</span>
+			</div>
 		}
 		{
 			!isNil(props.unit_pos)
 			&&
-			<div className="data-row"> {`${distance}`}<img src={Distance_Icon}/></div>
+			<div className="data-row">
+				{`${distance}`}
+				<img src={Distance_Icon}/>
+				<span className='caption'>Tile Distance</span>
+			</div>
 		}
 
 	</div>

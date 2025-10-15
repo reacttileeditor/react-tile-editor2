@@ -202,8 +202,18 @@ body {
 //							padding-left: 0.25em;
 						}
 
+						.vector_icon {
+							height: 1rem;
+							width: 1rem;
+						}
+
 						&.disabled {
 							opacity: 0.6;
+						}
+
+						.caption {
+							font-size: 1.125rem;
+							color: #777;
 						}
 					}
 
