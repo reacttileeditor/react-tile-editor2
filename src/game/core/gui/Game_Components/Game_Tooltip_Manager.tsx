@@ -12,7 +12,7 @@ import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from '../../engine/Tilemap_M
 import { isEmpty, isNil, size } from 'lodash';
 import { Vals } from '../../constants/Constants';
 
-import { BsCrop } from "react-icons/bs";
+import { BsCrop, BsFillSignpostSplitFill, BsImage } from "react-icons/bs";
 import { Icon } from '@rsuite/icons';
 import { IconType } from 'react-icons';
 
@@ -114,13 +114,16 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 			{`${props.tile_pos.x}, ${props.tile_pos.y}`}
 			<span className='caption'>Position</span>
 		</div>
-		<div className="data-row">{`${props.tile_name}`}</div>
+		<div className="data-row">
+			<Icon className="vector_icon" as={BsImage as React.ElementType} />
+			{`${props.tile_name}`}
+		</div>
 		{
 			!isEmpty(props.tile_cost) && !isNil(props.tile_cost)
 			&&
 			<div className="data-row">
-				{`${props.tile_cost}`}
 				<img src={Foot_Icon}/>
+				{`${props.tile_cost}`}
 				<span className='caption'>Move Cost of This Tile</span>
 			</div>
 		}
@@ -128,8 +131,8 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 			!isEmpty(props.cumulative_move_cost) && !isNil(props.cumulative_move_cost)
 			&&
 			<div className="data-row">
+				<Icon className="vector_icon" as={BsFillSignpostSplitFill as React.ElementType} />
 				{`${props.cumulative_move_cost}`}
-				<img src={Foot_Icon}/>
 				<span className='caption'>Total Move Cost</span>
 			</div>
 		}
@@ -137,8 +140,8 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 			!isNil(props.unit_pos)
 			&&
 			<div className="data-row">
-				{`${distance}`}
 				<img src={Distance_Icon}/>
+				{`${distance}`}
 				<span className='caption'>Tile Distance</span>
 			</div>
 		}

@@ -198,13 +198,11 @@ body {
 						line-height: 1;
 						gap: 0.25em;
 
-						img {
-//							padding-left: 0.25em;
-						}
-
-						.vector_icon {
+						
+						.vector_icon, img {
 							height: 1rem;
 							width: 1rem;
+							margin-right: 0.25em;
 						}
 
 						&.disabled {
@@ -213,7 +211,7 @@ body {
 
 						.caption {
 							font-size: 1.125rem;
-							color: #777;
+							color: #999;
 						}
 					}
 
