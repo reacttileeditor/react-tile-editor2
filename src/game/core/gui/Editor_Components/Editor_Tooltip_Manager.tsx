@@ -1,4 +1,4 @@
-import { Point2D } from "../../../interfaces";
+import { Point2D, Screenspace_Pixel_Point, Tile_Pos_Point } from "../../../interfaces";
 import { Vals } from "../../constants/Constants";
 import { Asset_Manager_Data } from "../../engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../../engine/Blit_Manager";
@@ -14,7 +14,7 @@ export type EditorTooltip_Data = {
 };
 
 export const Editor_Tooltip_Manager = (props: {
-	cursor_pos: Point2D,
+	cursor_pos: Tile_Pos_Point,
 	_Asset_Manager: () => Asset_Manager_Data,
 	_Blit_Manager: () => Blit_Manager_Data,
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
@@ -24,7 +24,7 @@ export const Editor_Tooltip_Manager = (props: {
 
 	const show_tooltip = props.show_tooltip
 		&& is_within_rectangle (
-			Blit_Manager_ƒ.yield_absolute_coords_for_world_coords(
+			Blit_Manager_ƒ.yield_absolute_coords_for_gamespace_coords(
 				props._Blit_Manager(),
 				Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( props._Tilemap_Manager(), props._Asset_Manager(), props.cursor_pos)
 			),
@@ -33,7 +33,7 @@ export const Editor_Tooltip_Manager = (props: {
 
 	const get_tooltip_data = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): EditorTooltip_Data => ({
 		pos: constrain_point_within_rect(
-			Blit_Manager_ƒ.yield_absolute_coords_for_world_coords(
+			Blit_Manager_ƒ.yield_absolute_coords_for_gamespace_coords(
 				_BM,
 				Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( _TM, _AM, props.cursor_pos)
 			),

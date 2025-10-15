@@ -6,11 +6,13 @@ import { angle_between, ƒ } from "../../core/engine/Utils";
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 import { Pathfinder_ƒ } from "../../core/engine/Pathfinding";
 
-import { Point2D, Rectangle } from '../../interfaces';
+import { Gamespace_Pixel_Point, Point2D, Rectangle, Tile_Pos_Point } from '../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../Custom_Object/Custom_Object";
 import { Anim_Schedule_Element, Behavior_Mode, Change_Instance, Creature_Data, Creature_ƒ, Path_Node_With_Direction, Path_Data } from "./Creature";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../../core/engine/Asset_Manager/Asset_Manager";
 import { Vals } from "../../core/constants/Constants";
+import { Game_Manager_Data } from "../../core/engine/Game_Manager/Game_Manager";
+import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
 
 
 
@@ -47,7 +49,7 @@ export const Creature_ƒ_Behavior = {
 		);
 	},
 
-	guess_anim_pos_at_time_offset: (me: Creature_Data, _TM: Tilemap_Manager_Data, path_data: Path_Data, time_so_far: number): Point2D|undefined => {
+	guess_anim_pos_at_time_offset: (me: Creature_Data, _TM: Tilemap_Manager_Data, path_data: Path_Data, time_so_far: number): Tile_Pos_Point|undefined => {
 
 		const duration_per_tile_walked = 300;
 		const tile_offset = Math.floor( time_so_far / duration_per_tile_walked);
@@ -66,32 +68,34 @@ export const Creature_ƒ_Behavior = {
 
 /*----------------------- mid-turn path management -----------------------*/
 
-	renegotiate_path: (
-		me: Creature_Data,
-		_TM: Tilemap_Manager_Data,
-		_AM: Asset_Manager_Data,
-		offset_in_ms: number,
-		tick: number,
-		change_list: Array<Change_Instance>,
-	) => {
+	// renegotiate_path: (
+	// 	me: Creature_Data,
+	// 	_TM: Tilemap_Manager_Data,
+	// 	_AM: Asset_Manager_Data,
+	// 	offset_in_ms: number,
+	// 	tick: number,
+	// 	change_list: Array<Change_Instance>,
+	// ) => {
 
-		const new_path_data = Creature_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
+	// 	const new_path_data = Creature_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
 
-		Creature_ƒ.deduct_cost_from_last_move(me,_TM, _AM, change_list);
+	// 	Creature_ƒ.deduct_cost_from_last_move(me,_TM, _AM, change_list);
 
-		Creature_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
+	// 	Creature_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
 
-	},
+	// },
 
 	reassess_current_intended_path: (
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
+		_GM: Game_Manager_Data,
+		_BM: Blit_Manager_Data,
 		change_list: Array<Change_Instance>,
 	): Path_Data => {
 		const new_path_data = cloneDeep(Creature_ƒ.set_path(
 			me,
-			Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
+			Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, _GM, _BM, me.tile_pos, me.planned_tile_pos, me ).successful_path,
 			_TM
 		));
 
@@ -116,7 +120,7 @@ export const Creature_ƒ_Behavior = {
 		if( prior_tile_pos != undefined) {
 			current_tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
 				_TM,
-				prior_tile_pos as Point2D,
+				prior_tile_pos,
 				'terrain',
 			)
 		}
@@ -223,8 +227,8 @@ export const Creature_ƒ_Behavior = {
 
 
 		const attack_direction = Tilemap_Manager_ƒ.extract_direction_from_map_vector(
-			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), me.tile_pos ),
-			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), target.tile_pos ),
+			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), me.tile_pos ) as unknown as Tile_Pos_Point,
+			Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(me._Tilemap_Manager(), me._Asset_Manager(), target.tile_pos ) as unknown as Tile_Pos_Point,
 		)		
 		Creature_ƒ.set(change_list, me, 'facing_direction', attack_direction);
 
@@ -273,7 +277,7 @@ export const Creature_ƒ_Behavior = {
 
 						spawnees_.push(New_Custom_Object({
 							accessors: Creature_ƒ.get_accessors(me),
-							pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
+							pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2} as Gamespace_Pixel_Point,
 							type_name: 'text_label',
 							creation_timestamp: tick,
 							text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
@@ -282,7 +286,7 @@ export const Creature_ƒ_Behavior = {
 				
 						spawnees_.push(New_Custom_Object({
 							accessors: Creature_ƒ.get_accessors(me),
-							pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
+							pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20} as Gamespace_Pixel_Point,
 							type_name: 'hit_star_bg',
 							creation_timestamp: tick,
 							delegate_state: {
@@ -299,7 +303,7 @@ export const Creature_ƒ_Behavior = {
 
 			spawnees.push(New_Custom_Object({
 				accessors: Creature_ƒ.get_accessors(me),
-				pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2},
+				pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2} as Gamespace_Pixel_Point,
 				type_name: 'text_label',
 				creation_timestamp: tick,
 				text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
@@ -308,7 +312,7 @@ export const Creature_ƒ_Behavior = {
 	
 			spawnees.push(New_Custom_Object({
 				accessors: Creature_ƒ.get_accessors(me),
-				pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20},
+				pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20} as Gamespace_Pixel_Point,
 				type_name: 'hit_star_bg',
 				creation_timestamp: tick,
 				delegate_state: {

@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import _ from "lodash";
+import _, { isEqual, map } from "lodash";
 
 import { PriorityQueue } from 'ts-pq';
 
@@ -9,7 +9,10 @@ import { ƒ } from "./Utils";
 import { Asset_Manager_Data, Tile_Comparator_Sample, Tile_Position_Comparator_Sample } from "./Asset_Manager/Asset_Manager";
 import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "./Tilemap_Manager/Tilemap_Manager";
 import { Creature_Data, Creature_ƒ } from "../../objects_core/Creature/Creature";
-import { Point2D, Rectangle } from '../../interfaces';
+import { Rectangle, Tile_Pos_Point } from '../../interfaces';
+import { Game_Manager_Data } from "./Game_Manager/Game_Manager";
+import { filter, includes } from "ramda";
+import { Blit_Manager_Data } from "./Blit_Manager";
 
 interface Tile_View_State {
 	tileStatus: Tile_Grid,
@@ -36,16 +39,16 @@ interface Weighted_Node {
 type Tile_Grid = Array<Array<string>>;
 
 export type Pathfinding_Result = {
-	successful_path: Array<Point2D>,
+	successful_path: Array<Tile_Pos_Point>,
 	discarded_nodes: Array<string>,
 }
 
 
-export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _Creature: Creature_Data, grid: Tile_Grid ): Node_Graph => {
+const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _Creature: Creature_Data, grid: Tile_Grid ): Node_Graph => {
 
 	
 /*----------------------- core functionality -----------------------*/
-	const move_cost_for_coords = ( _grid: Tile_Grid, _coords: Point2D ): number|null => (
+	const move_cost_for_coords = ( _grid: Tile_Grid, _coords: Tile_Pos_Point ): number|null => (
 		Creature_ƒ.yield_move_cost_for_tile_type( _Creature, _grid[_coords.y][_coords.x] )
 	)
 	
@@ -56,7 +59,7 @@ export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manage
 		}
 	}
 	
-	const check_tile = ( _grid: Tile_Grid, _coords: Point2D ): Weighted_Node|null => {
+	const check_tile = ( _grid: Tile_Grid, _coords: Tile_Pos_Point ): Weighted_Node|null => {
 		/*
 			If the tile we're checking is out of bounds, then it's blocked.
 			If the tile we're checking is open, it's a valid node connection, so we return it (so we can add it to the graph).
@@ -78,7 +81,7 @@ export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manage
 	};
 
 
-	const check_adjacencies = ( _grid: Tile_Grid, _coords: Point2D ): Array<Weighted_Node> => {
+	const check_adjacencies = ( _grid: Tile_Grid, _coords: Tile_Pos_Point ): Array<Weighted_Node> => {
 		const tile_data: Tile_Position_Comparator_Sample = Tilemap_Manager_ƒ.get_tile_position_comparator_for_pos(_TM, _coords);
 		var adjacent_nodes: Array<Weighted_Node> = [];
 
@@ -86,12 +89,12 @@ export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manage
 			Check every adjacent tile in clockwise order, starting from the north.
 			Skip the very middle tile [1][1] in the comparator, because we're attempting to build a graph of "vectors" (i.e. directions we can move towards), and this will break the algorithm if we include it.  Probably. 
 		*/
-		push_if_not_null( adjacent_nodes, check_tile ( _grid, tile_data[0][0] ));
-		push_if_not_null( adjacent_nodes, check_tile ( _grid, tile_data[0][1] ));
-		push_if_not_null( adjacent_nodes, check_tile ( _grid, tile_data[1][0] ));
-		push_if_not_null( adjacent_nodes, check_tile ( _grid, tile_data[1][2] ));
-		push_if_not_null( adjacent_nodes, check_tile ( _grid, tile_data[2][0] ));
-		push_if_not_null( adjacent_nodes, check_tile ( _grid, tile_data[2][1] ));
+		push_if_not_null( adjacent_nodes, check_tile ( _grid, <Tile_Pos_Point>tile_data[0][0] ));
+		push_if_not_null( adjacent_nodes, check_tile ( _grid, <Tile_Pos_Point>tile_data[0][1] ));
+		push_if_not_null( adjacent_nodes, check_tile ( _grid, <Tile_Pos_Point>tile_data[1][0] ));
+		push_if_not_null( adjacent_nodes, check_tile ( _grid, <Tile_Pos_Point>tile_data[1][2] ));
+		push_if_not_null( adjacent_nodes, check_tile ( _grid, <Tile_Pos_Point>tile_data[2][0] ));
+		push_if_not_null( adjacent_nodes, check_tile ( _grid, <Tile_Pos_Point>tile_data[2][1] ));
 
 		return adjacent_nodes;
 	}
@@ -103,8 +106,8 @@ export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manage
 			_.map( row_value, (col_value, col_index) => {
 
 				//using this to skip solid tiles; we already handle tracking adjacencies *into* solid tile in the check_adjacencies function, but we need to skip looking *outwards* from solid tiles as well.
-				if( move_cost_for_coords( _grid, {x: col_index, y: row_index} ) !== null ){
-					(graph_as_adjacency_list[`${col_index},${row_index}` as any] as any) = check_adjacencies( _grid, { x: col_index, y: row_index } );
+				if( move_cost_for_coords( _grid, <Tile_Pos_Point>{x: col_index, y: row_index} ) !== null ){
+					(graph_as_adjacency_list[`${col_index},${row_index}` as any] as any) = check_adjacencies( _grid, <Tile_Pos_Point>{ x: col_index, y: row_index } );
 				}
 			})
 		});
@@ -115,28 +118,28 @@ export const Node_Graph_Generate = (_TM: Tilemap_Manager_Data, _AM: Asset_Manage
 	return build_node_graph_from_grid(grid);
 }
 
-const addr_to_tuple = (the_string: string): Point2D => {
-	return{ x: Number(the_string.split(',')[0]), y: Number(the_string.split(',')[1]) }
+const addr_to_tuple = (the_string: string): Tile_Pos_Point => {
+	return<Tile_Pos_Point>{ x: Number(the_string.split(',')[0]), y: Number(the_string.split(',')[1]) }
 }
 
-const tuple_to_addr = (the_tuple: Point2D): string => {
+const tuple_to_addr = (the_tuple: Tile_Pos_Point): string => {
 	return  the_tuple.x + ',' + the_tuple.y;
 }
 			
 
 
-const a_star_search = ( _graph: Node_Graph, _start_coords: Point2D, _end_coords: Point2D, _creature: Creature_Data ): Pathfinding_Result => {
+const a_star_search = ( _graph: Node_Graph, _start_coords: Tile_Pos_Point, _end_coords: Tile_Pos_Point, _creature: Creature_Data ): Pathfinding_Result => {
 	var discarded_nodes = [];
 	let search_was_aborted_early : boolean = false;
 	let search_has_succeeded : boolean = false;
 
 
-	var frontier = new PriorityQueue<Point2D>();
+	var frontier = new PriorityQueue<Tile_Pos_Point>();
 	var costs_so_far: Node_Address_To_Number_Dictionary = {};  //a map of node addresses (keys) to move cost (values)
 	var came_from: Node_Address_To_Node_Address_Dictionary = {}; //a map of node addresses (keys) to node addresses (values) 
 	
 	
-	const compute_node_heuristic = ( _node_coords: Point2D, _end_coords: Point2D ) => {
+	const compute_node_heuristic = ( _node_coords: Tile_Pos_Point, _end_coords: Tile_Pos_Point ) => {
 		return Math.hypot( _node_coords.x - _end_coords.x, _node_coords.y - _end_coords.y);
 	}
 	
@@ -162,7 +165,7 @@ const a_star_search = ( _graph: Node_Graph, _start_coords: Point2D, _end_coords:
 		costs_so_far[ tuple_to_addr(_start_coords) ] = 0;
 		while( (frontier.size() > 0) ){
 	
-			const _current_node = frontier.pop(false) as Point2D;
+			const _current_node = frontier.pop(false) as Tile_Pos_Point;
 			const current_node = tuple_to_addr(_current_node);
 	
 			if(current_node == tuple_to_addr(_end_coords)){
@@ -201,7 +204,7 @@ const a_star_search = ( _graph: Node_Graph, _start_coords: Point2D, _end_coords:
 	}
 	
 
-	const reconstruct_path = (came_from: Node_Address_To_Node_Address_Dictionary, start_node: string, goal_node: string): Array<Point2D> => {
+	const reconstruct_path = (came_from: Node_Address_To_Node_Address_Dictionary, start_node: string, goal_node: string): Array<Tile_Pos_Point> => {
 		let current_node = goal_node;
 		let path: Array<string>  = [];
 		while( current_node != start_node ){
@@ -230,7 +233,28 @@ const a_star_search = ( _graph: Node_Graph, _start_coords: Point2D, _end_coords:
 
 
 export const Pathfinder_ƒ = {
-	find_path_between_map_tiles: (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _start_coords: Point2D, _end_coords: Point2D, _Creature: Creature_Data) => {
+	block_tiles_occupied_by_other_creatures: (
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_GM: Game_Manager_Data,
+		_BM: Blit_Manager_Data,
+		tilemap: Tile_Grid,
+		excluded_creature: Creature_Data
+	): Tile_Grid => {
+	
+		const creature_tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, excluded_creature.pixel_pos)
+
+		const occupied_tiles = filter((val)=>(!isEqual(val, creature_tile_pos)), _GM.game_state.current_frame_state.tiles_blocked_by_creatures);
+
+
+		return map( tilemap, (row_val, row_idx)=>(
+			map( row_val, (col_val, col_idx)=>(
+				includes( <Tile_Pos_Point>{x: col_idx, y: row_idx}, occupied_tiles ) ? 'blocked' : col_val
+			))
+		))
+	},
+
+	find_path_between_map_tiles: (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _GM: Game_Manager_Data, _BM: Blit_Manager_Data, _start_coords: Tile_Pos_Point, _end_coords: Tile_Pos_Point, _Creature: Creature_Data) => {
 		/*
 			We're going to go ahead and pass in the creature as a constructor argument; the idea here is that we can't really "reuse" an existing node graph generator and just pass in a new creature type; the moment anything changes about the creature we're using, we need to completely rebuild the node graph from scratch.  So there's no sense in pipelining it into the whole function tree inside the class - we have to nuke and rebuild anyways, so why not make the interface a bit simpler?
 		*/
@@ -239,7 +263,9 @@ export const Pathfinder_ƒ = {
 	
 		//const _graph = _Node_Graph_Generator.build_node_graph_from_grid( _TM.tile_maps.terrain );
 
-		const _graph = Node_Graph_Generate(_TM, _AM, _Creature, _TM.tile_maps.terrain);
+		const tilemap_with_tiles_blocked_by_creatures = Pathfinder_ƒ.block_tiles_occupied_by_other_creatures(_TM, _AM, _GM, _BM, _TM.tile_maps.terrain, _Creature);
+
+		const _graph = Node_Graph_Generate(_TM, _AM, _Creature, tilemap_with_tiles_blocked_by_creatures);
 
 		return a_star_search( _graph, _start_coords, _end_coords, _Creature );
 	}

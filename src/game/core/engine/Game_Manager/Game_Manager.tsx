@@ -14,7 +14,7 @@ import { Pathfinder_ƒ } from "../Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Creature_Type_Name } from "../../../objects_core/Creature/Creature";
 
-import { Point2D, Rectangle } from '../../../interfaces';
+import { Point2D, Rectangle, Screenspace_Pixel_Point, Tile_Pos_Point } from '../../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
@@ -47,10 +47,12 @@ export interface Game_State {
 
 export interface Individual_Game_Turn_State {
 	creature_list: Array<Creature_Data>,
+	tiles_blocked_by_creatures: Array<Tile_Pos_Point>,
 }
 
-export const Individual_Game_Turn_State_Init = {
+export const Individual_Game_Turn_State_Init: Individual_Game_Turn_State = {
 	creature_list: [],
+	tiles_blocked_by_creatures: [],
 }
 
 export const GameStateInit: Game_State = {
@@ -85,12 +87,12 @@ export type Game_Manager_Data = {
 	game_state: Game_State;
 	update_game_state_for_ui: Function;
 	update_tooltip_state: (p: Game_Tooltip_Data) => void;
-	cursor_pos: Point2D;
+	cursor_pos: Screenspace_Pixel_Point;
 	last_cursor_move_tick: number,
 }
 
 export type Creature_Map_Instance = {
-	pos: Point2D,
+	pos: Tile_Pos_Point,
 	type_name: Creature_Type_Name,
 	team: number,
 	direction: Direction,
@@ -109,7 +111,7 @@ export const New_Game_Manager = (p: {
 	const game_manager: Game_Manager_Data = {
 		update_game_state_for_ui: ()=>{},
 		update_tooltip_state: ()=>{},
-		cursor_pos: {x: 0, y: 0},
+		cursor_pos: {x: 0, y: 0} as Screenspace_Pixel_Point,
 		last_cursor_move_tick: 0,
 
 		animation_state: {
@@ -140,7 +142,7 @@ export const New_Game_Manager = (p: {
 
 	const first_turn_state_init = {
 		creature_list: map( p._Tilemap_Manager().creature_list, (val)=>( creature_from_setup_data(val) ) ),
-		custom_object_list: [],
+		tiles_blocked_by_creatures: [],
 	};
 
 	game_manager.game_state = {
@@ -150,6 +152,16 @@ export const New_Game_Manager = (p: {
 		objective_text: Game_Manager_ƒ.write_full_objective_text(game_manager, Game_Manager_ƒ.get_game_state(game_manager).objective_type, Game_Manager_ƒ.get_game_state(game_manager)),
 	}
 
+	const revised_first_turn_state_init = {
+		creature_list: first_turn_state_init.creature_list,
+		tiles_blocked_by_creatures: Game_Manager_ƒ.get_list_of_occupied_tiles(game_manager, p._Asset_Manager(), p._Blit_Manager(), p._Tilemap_Manager()),
+	}
+
+	game_manager.game_state = {
+		...game_manager.game_state,
+		turn_list: [revised_first_turn_state_init],
+		current_frame_state: revised_first_turn_state_init,
+	}	
 
 	return game_manager;
 }
@@ -181,7 +193,7 @@ export const Game_Manager_ƒ = {
 		get_AM: () => Asset_Manager_Data,
 		get_BM: () => Blit_Manager_Data,
 		get_TM: () => Tilemap_Manager_Data,
-		pos: Point2D,
+		pos: Tile_Pos_Point,
 		type_name: Creature_Type_Name,
 		team: number,
 		direction: Direction

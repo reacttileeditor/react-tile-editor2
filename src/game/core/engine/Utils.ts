@@ -1,6 +1,6 @@
 import _ from "lodash";
 import Prando from 'prando';
-import { Point2D, Rectangle } from '../../interfaces';
+import { Gamespace_Pixel_Point, Point2D, Rectangle, Screenspace_Pixel_Point, Tile_Pos_Point } from '../../interfaces';
 import { useEffect, useRef } from "react";
 import { map, reduce } from "ramda";
 
@@ -123,7 +123,7 @@ export const angle_between = (p: {source: Point2D, dest: Point2D}): number => (
 )
 
 
-export const is_within_rectangle = (point: Point2D, rect: Rectangle): boolean => (
+export const is_within_rectangle = (point: Point2D|Screenspace_Pixel_Point|Gamespace_Pixel_Point|Tile_Pos_Point, rect: Rectangle): boolean => (
 	point.x > rect.x &&
 	point.x < rect.x + rect.w &&
 	point.y > rect.y &&

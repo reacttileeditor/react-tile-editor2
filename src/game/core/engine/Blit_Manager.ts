@@ -8,7 +8,7 @@ import { Asset_Manager_Data } from "./Asset_Manager/Asset_Manager";
 
 import { Tile_Comparator_Sample } from "./Asset_Manager/Asset_Manager";
 
-import { Point2D, Rectangle } from '../../interfaces';
+import { Gamespace_Pixel_Point, Point2D, Rectangle, Screenspace_Pixel_Point } from '../../interfaces';
 
 interface Draw_Entity {
 	pos: Point2D,
@@ -254,15 +254,15 @@ export const Blit_Manager_ƒ = {
 		}
 	},
 
-	yield_world_coords_for_absolute_coords: ( me: Blit_Manager_Data, pos: Point2D) => {
-		return {
+	yield_gamespace_coords_for_absolute_coords: ( me: Blit_Manager_Data, pos: Screenspace_Pixel_Point) => {
+		return <Gamespace_Pixel_Point>{
 			x: pos.x - me.state.intended_viewport_offset.x,
 			y: pos.y - me.state.intended_viewport_offset.y
 		}
 	},
 
-	yield_absolute_coords_for_world_coords: ( me: Blit_Manager_Data, pos: Point2D) => {
-		return {
+	yield_absolute_coords_for_gamespace_coords: ( me: Blit_Manager_Data, pos: Gamespace_Pixel_Point) => {
+		return <Screenspace_Pixel_Point>{
 			x: me.state.intended_viewport_offset.x + pos.x,
 			y: me.state.intended_viewport_offset.y + pos.y
 		}
@@ -622,7 +622,7 @@ export const Blit_Manager_ƒ = {
 	    //me.osb_ctx.shadowBlur = 3;
 	    me.osb_ctx.fillStyle = "#ffffff";
 		me.osb_ctx.textBaseline = 'middle';
-		me.osb_ctx.fillText(`FPS: ${me.time_tracker.prior_frame_count.toString()}`, (me.osb_ctx.canvas.width - 40), 10);
+		me.osb_ctx.fillText(`FPS: ${me.time_tracker.prior_frame_count.toString()}`, 10, (me.osb_ctx.canvas.height - 14));
 		me.osb_ctx.restore();
 	},
 

@@ -130,6 +130,7 @@ export const AI_Core_ƒ = {
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
+		_GM: Game_Manager_Data,
 		offset_in_ms: number,
 		tick: number,
 		change_list: Array<Change_Instance>,
@@ -147,7 +148,7 @@ export const AI_Core_ƒ = {
 			if( target ){
 				const new_path_data = cloneDeep(Creature_ƒ.set_path(
 					me,
-					Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, target.tile_pos, me ).successful_path,
+					Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, _GM, _BM, me.tile_pos, target.tile_pos, me ).successful_path,
 					_TM
 				));
 
@@ -166,6 +167,7 @@ export const AI_Core_ƒ = {
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
+		_GM: Game_Manager_Data,
 	): Path_Data => {
 		/*
 			AI units don't have paths assigned by the player, so they need to construct them, manually, at the start of the turn (and may also need to replace them later, if the situation changes — i.e. if their target dies, and they need a new one).
@@ -175,7 +177,7 @@ export const AI_Core_ƒ = {
 		if( target ){
 			return cloneDeep(Creature_ƒ.set_path(
 				me,
-				Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me.tile_pos, target.tile_pos, me ).successful_path,
+				Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, _GM, _BM, me.tile_pos, target.tile_pos, me ).successful_path,
 				_TM
 			));
 		} else {
@@ -213,6 +215,7 @@ export const AI_Core_ƒ = {
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
+		_GM: Game_Manager_Data,
 		offset_in_ms: number,
 		tick: number,
 		change_list: Array<Change_Instance>,
@@ -252,9 +255,9 @@ export const AI_Core_ƒ = {
 				if( (me.remaining_action_points > 0) ){
 					const new_path_data = ( AI_Core_ƒ.is_ai_controlled(me) )
 						?
-						AI_Core_ƒ.construct_path_for_AI_enemies(me, _TM, _AM, _BM)
+						AI_Core_ƒ.construct_path_for_AI_enemies(me, _TM, _AM, _BM, _GM)
 						:
-						Creature_ƒ.reassess_current_intended_path(me,_TM, _AM, change_list);
+						Creature_ƒ.reassess_current_intended_path(me,_TM, _AM, _GM, _BM, change_list);
 
 
 					Creature_ƒ.set(change_list, me, 'path_data', new_path_data);

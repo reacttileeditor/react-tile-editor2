@@ -1,7 +1,25 @@
+/*
+	Branded Type Implementation:
+	https://egghead.io/blog/using-branded-types-in-typescript
+	https://www.learningtypescript.com/articles/branded-types
+*/
+declare const __brand: unique symbol
+type Brand<B> = { [__brand]: B }
+
+export type Branded<T, B> = T & Brand<B>
+
+
+
 export interface Point2D {
 	x: number,
 	y: number
 }
+
+export type Screenspace_Pixel_Point = Branded<Point2D, "screenspace pixel">
+export type Tile_Pos_Point = Branded<Point2D, "tile position">
+export type Gamespace_Pixel_Point = Branded<Point2D, "gamespace pixel">
+
+
 
 export interface Rectangle {
 	x: number,

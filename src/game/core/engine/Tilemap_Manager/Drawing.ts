@@ -9,7 +9,7 @@ import { dice_anchored_on_specific_random_seed, is_all_true, ƒ } from "../Utils
 
 
 import { Tile_Comparator_Sample, Tile_Position_Comparator_Sample } from "../Asset_Manager/Asset_Manager";
-import { Point2D, Rectangle, PointCubic } from '../../../interfaces';
+import { Point2D, Rectangle, PointCubic, Tile_Pos_Point } from '../../../interfaces';
 import localforage from "localforage";
 import { concat, equals, filter, find, includes, keys, propEq, reduce, slice, uniq, zipWith } from "ramda";
 import { Page } from '@rsuite/icons';
@@ -125,7 +125,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		tilemap_of_assets.map( (row_value, row_index) => {
 			return row_value.map( (tile_assets, col_index) => {
 
-				let pos = {x: col_index, y: row_index};
+				let pos = {x: col_index, y: row_index} as Tile_Pos_Point;
 
 				map(tile_assets, (individual_asset)=>{
 
@@ -221,7 +221,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		return tile_map.map( (row_value, row_index) => {
 			return row_value.map( (tile_name, col_index) => {
 
-				let pos = {x: col_index, y: row_index};
+				let pos = {x: col_index, y: row_index} as Tile_Pos_Point;
 
 				let asset_list: Asset_Blit_List = [];
 				if( !includes( pos , mtp_results.reserved_tiles) ){
@@ -257,7 +257,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		me: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
-		pos: Point2D,
+		pos: Tile_Pos_Point,
 		tile_name: string,
 		tilemap_name: Tilemap_Keys
 	): Asset_Blit_List => {
@@ -350,7 +350,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 												let test_pos = {
 													x: map_tile_col_index + mtp_col_index + bump( map_tile_row_index, mtp_row_index),
 													y: map_tile_row_index + ({x: mtp_col_index, y: mtp_row_index}).y,
-												};
+												} as Tile_Pos_Point;
 
 												let tile_name = Tilemap_Manager_ƒ.get_tile_name_for_pos(me,
 													test_pos,
@@ -413,7 +413,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 											location: {
 												x: map_tile_col_index +  ({x: graphic_item.anchor.x, y: graphic_item.anchor.y}).x + bump( map_tile_row_index, graphic_item.anchor.y), 
 												y: map_tile_row_index + ({x: graphic_item.anchor.x, y: graphic_item.anchor.y}).y
-											},
+											} as Tile_Pos_Point,
 											zorder: graphic_item.zorder,
 											graphic: Asset_Manager_ƒ.convert_MTP_variants_to_single_assets(_AM, graphic_item, me.tile_RNGs['terrain']).id as Image_Data_Names
 
@@ -489,7 +489,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 	
 
 
-	get_tile_comparator_sample_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D, tilemap_name: Tilemap_Keys ): Tile_Comparator_Sample => {
+	get_tile_comparator_sample_for_pos: ( me: Tilemap_Manager_Data, pos: Tile_Pos_Point, tilemap_name: Tilemap_Keys ): Tile_Comparator_Sample => {
 			const tpc = Tilemap_Manager_ƒ.get_tile_position_comparator_for_pos(me, pos);
 			
 			const val = _.map(tpc, (row_val, row_idx) => {
@@ -502,7 +502,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 			//https://github.com/microsoft/TypeScript/issues/11312
 	},
 	
-	get_tile_position_comparator_for_pos: ( me: Tilemap_Manager_Data, pos: Point2D ): Tile_Position_Comparator_Sample => {
+	get_tile_position_comparator_for_pos: ( me: Tilemap_Manager_Data, pos: Tile_Pos_Point ): Tile_Position_Comparator_Sample => {
 		/*
 			This would simply grab all 8 adjacent tiles (and ourselves, for a total of 9 tiles) as a square sample.  The problem here is that, although our tiles are in fact stored as "square" data in an array, we're actually a hex grid.  Because we're a hex grid, we're actually just looking for 7 tiles, so we'll need to adjust the result.  Depending on whether we're on an even or odd row, we need to lop off the first (or last) member of the first and last rows. 	
 		*/

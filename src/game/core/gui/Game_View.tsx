@@ -9,7 +9,7 @@ import { Direction, Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../engine/T
 
 
 
-import { Point2D, Rectangle } from '../../interfaces';
+import { Point2D, Rectangle, Screenspace_Pixel_Point } from '../../interfaces';
 import { Game_and_Tilemap_Manager_Data, Game_Manager_Data, Game_Manager_ƒ } from "../engine/Game_Manager/Game_Manager";
 import { Standard_Input_ƒ } from "./Standard_Input_Handling";
 import { Button, IconButton } from "rsuite";
@@ -174,13 +174,13 @@ export const Game_View = (props: Game_View_Props) => {
 
 
 	/*----------------------- IO routines -----------------------*/
-	const update_mouse_pos = (pos: Point2D) => {
+	const update_mouse_pos = (pos: Screenspace_Pixel_Point) => {
 		if( props.get_Game_Manager_Data() != null ){
 			props.set_Game_Manager_Data( Game_Manager_ƒ.set_cursor_pos(props.get_Game_Manager_Data(), props._Blit_Manager(), pos));
 		}
 	}
 
-	const handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: Mouse_Button_State) => {
+	const handle_canvas_mouse_move = (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => {
 		Standard_Input_ƒ.handle_canvas_mouse_move(
 			pos,
 			buttons_pressed,
@@ -193,7 +193,7 @@ export const Game_View = (props: Game_View_Props) => {
 		)
 	}
 
-	const handle_canvas_mouse_click = (pos: Point2D, buttons_pressed: Mouse_Button_State) => {
+	const handle_canvas_mouse_click = (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => {
 		console.log('canvas click game')
 
 		if( !announcement_modal_hidden ){

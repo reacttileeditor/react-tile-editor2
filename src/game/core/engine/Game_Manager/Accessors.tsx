@@ -14,7 +14,7 @@ import { Pathfinder_ƒ } from "../Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Creature_Type_Name } from "../../../objects_core/Creature/Creature";
 
-import { Point2D, Rectangle } from '../../../interfaces';
+import { Gamespace_Pixel_Point, Point2D, Rectangle, Screenspace_Pixel_Point, Tile_Pos_Point } from '../../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
@@ -63,9 +63,9 @@ write_full_objective_text: (me: Game_Manager_Data, objective_type: Objective_Typ
 /*----------------------- GUI values -----------------------*/
 
 get_tooltip_data: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): Game_Tooltip_Data => {
-	const constrained_pos = constrain_point_within_rect(me.cursor_pos, Vals.default_canvas_rect);
+	const constrained_pos = constrain_point_within_rect(me.cursor_pos, Vals.default_canvas_rect) as Screenspace_Pixel_Point;
 
-	const tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, constrained_pos )
+	const tile_pos = Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords( _TM, _AM, _BM, constrained_pos )
 
 	return {
 		pos: constrained_pos,
@@ -76,7 +76,7 @@ get_tooltip_data: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_
 		unit_pos: !isNil(me.game_state.selected_object_index) ? me.game_state.current_frame_state.creature_list[me.game_state.selected_object_index].tile_pos : undefined,
 		tile_name: Tilemap_Manager_ƒ.get_tile_name_for_pos(
 			_TM,
-			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos ),
+			Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos ),
 			'terrain',
 		),
 		tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me, _TM, _AM, _BM)}`
@@ -137,7 +137,7 @@ get_highlit_creature: (
 	_AM: Asset_Manager_Data,
 	_BM: Blit_Manager_Data	
 ):Creature_Data|undefined => {
-	return Game_Manager_ƒ.get_creature_at_tile(me, Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(
+	return Game_Manager_ƒ.get_creature_at_tile(me, Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords(
 		_TM,
 		_AM,
 		_BM,
@@ -190,6 +190,14 @@ get_creature_at_tile: (me: Game_Manager_Data, pos: Point2D): Creature_Data|undef
 	)
 ),
 
+get_list_of_occupied_tiles: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data): Array<Tile_Pos_Point> => {
+	return map( me.game_state.current_frame_state.creature_list, (creature) => {
+
+		//return Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM,
+			return Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, creature.pixel_pos as Gamespace_Pixel_Point)
+		//);
+	});
+},
 
 get_current_creatures_move_cost: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): string => {
 	const selected_creature = Game_Manager_ƒ.get_selected_creature(me);
@@ -197,7 +205,7 @@ get_current_creatures_move_cost: (me: Game_Manager_Data, _TM: Tilemap_Manager_Da
 	if(selected_creature){
 		const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
 			_TM,
-			Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos ), //selected_creature.tile_pos,
+			Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos ), //selected_creature.tile_pos,
 			'terrain',
 		);
 

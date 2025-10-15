@@ -12,16 +12,16 @@ interface Props {
 	_Tilemap_Manager: Tilemap_Manager_Data,
 	dimensions: Point2D,
 	
-	handle_canvas_click: (pos: Point2D, buttons_pressed: Mouse_Button_State) => void,
+	handle_canvas_click: (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => void,
 	handle_canvas_keys_down: (keys: Array<string>) => void,
-	handle_canvas_mouse_move: (pos: Point2D, buttons_pressed: Mouse_Button_State) => void,
+	handle_canvas_mouse_move: (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => void,
 }
 
 interface State {
 	mousedown_pos?: Point2D,
 }
 
-import { Point2D, Rectangle } from '../../interfaces';
+import { Point2D, Rectangle, Screenspace_Pixel_Point } from '../../interfaces';
 import { constrain } from "../engine/Utils";
 
 export type Mouse_Button_State = {
@@ -184,22 +184,22 @@ export const Canvas_View = (props: Props) => {
 
 		var mousePos = get_mouse_pos_relative_to_canvas(mousePosRaw, false);
 
-		props.handle_canvas_click( mousePos, buttons_pressed );
+		props.handle_canvas_click( mousePos as Screenspace_Pixel_Point, buttons_pressed );
 	}
 
 
 
-	const get_mouse_pos_relative_to_canvas = ( absolute_pos: Point2D, should_constrain: boolean ): Point2D => {
+	const get_mouse_pos_relative_to_canvas = ( absolute_pos: Point2D, should_constrain: boolean ): Screenspace_Pixel_Point => {
 		const canvas = getCanvas();
 
 		if( canvas ){
 			const bgRectSrc = (canvas as HTMLElement).getBoundingClientRect();
 			const bgRect = Utils.DOMRect_to_Rectangle(bgRectSrc);
 
-			return get_mouse_pos_relative_to_canvas_rect( absolute_pos, should_constrain, bgRect, props.dimensions)
+			return get_mouse_pos_relative_to_canvas_rect( absolute_pos, should_constrain, bgRect, props.dimensions) as Screenspace_Pixel_Point
 
 		} else {
-			return {x: 0, y: 0};
+			return {x: 0, y: 0} as Screenspace_Pixel_Point;
 		}
 	}
 

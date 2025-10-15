@@ -14,7 +14,7 @@ import { Pathfinder_ƒ } from "../Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Creature_Type_Name } from "../../../objects_core/Creature/Creature";
 
-import { Point2D, Rectangle } from '../../../interfaces';
+import { Point2D, Rectangle, Tile_Pos_Point } from '../../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
@@ -57,9 +57,9 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 
 
 						
-					return	includes({x: x_idx, y: y_idx}, creature.path_data.path_this_turn )
+					return	includes({x: x_idx, y: y_idx} as Tile_Pos_Point, creature.path_data.path_this_turn )
 					?
-						includes({x: x_idx, y: y_idx}, creature.path_data.path_reachable_this_turn)
+						includes({x: x_idx, y: y_idx} as Tile_Pos_Point, creature.path_data.path_reachable_this_turn)
 						?
 							isEqual({x: x_idx, y: y_idx}, last(creature.path_data.path_reachable_this_turn))
 							?
@@ -101,7 +101,7 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 	generate_prospective_unit_path_tilemap: (
 		me: Game_Manager_Data,
 		creature: Creature_Data|undefined,
-		path: Array<Point2D>,
+		path: Array<Tile_Pos_Point>,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 		_TM: Tilemap_Manager_Data
@@ -117,9 +117,9 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 
 
 
-					return	includes({x: x_idx, y: y_idx}, path )
+					return	includes({x: x_idx, y: y_idx} as Tile_Pos_Point, path )
 							?
-								includes({x: x_idx, y: y_idx}, path)
+								includes({x: x_idx, y: y_idx} as Tile_Pos_Point, path)
 								?
 									isEqual({x: x_idx, y: y_idx}, last(path))
 									?
@@ -147,12 +147,17 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 		let new_movemap_tile_map: Tilemap_Single = Tilemap_Manager_ƒ.create_empty_tile_map(_TM, _AM);
 		
 		let newly_selected_object_possible_moves: Array<Point2D> = [];
-		
+
 		if( creature != undefined ){
+
+			const terrain_plus_blocking = Pathfinder_ƒ.block_tiles_occupied_by_other_creatures(_TM, _AM, me, _BM, _TM.tile_maps.terrain, creature) as Tilemap_Single;
+
+
 			newly_selected_object_possible_moves = Map_Analysis_ƒ.calculate_accessible_tiles_for_remaining_movement(
 				creature,
 				_TM,
-				creature.tile_pos
+				creature.tile_pos,
+				terrain_plus_blocking
 			);
 		}
 
@@ -340,7 +345,7 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 	adjust_tiles_to_display_possible_moves_and_prospective_path: (
 		me: Game_Manager_Data,
 		creature: Creature_Data|undefined,
-		path: Array<Point2D>,
+		path: Array<Tile_Pos_Point>,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 		_TM: Tilemap_Manager_Data

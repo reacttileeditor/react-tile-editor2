@@ -14,7 +14,7 @@ import { Pathfinder_ƒ } from "../Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Creature_Type_Name } from "../../../objects_core/Creature/Creature";
 
-import { Point2D, Rectangle } from '../../../interfaces';
+import { Gamespace_Pixel_Point, Point2D, Rectangle } from '../../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
@@ -40,7 +40,7 @@ export const Game_Manager_ƒ_Drawing = {
 			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
 				_TM,
 				_AM,
-				Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(
+				Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords(
 					_TM,
 					_AM,
 					_BM,
@@ -93,7 +93,32 @@ export const Game_Manager_ƒ_Drawing = {
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
 			});
+
 		})
+
+		map( me.game_state.current_frame_state.tiles_blocked_by_creatures, (pos,idx) => {
+			Asset_Manager_ƒ.draw_image_for_asset_name({
+				_AM:						_AM,
+				asset_name:					'white_tile',
+				_BM:						_BM,
+				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, pos), 
+				zorder:						zorder.map_boundary,
+				current_milliseconds:		0.0,
+				opacity:					1.0,
+				rotate:						0.0,
+				scale:						1.0,
+				brightness:					1.0,
+				horizontally_flipped:		false,
+				vertically_flipped:			false,
+			});
+		});	
+
+		// const creature_tile_positions: Array<Point2D> = map(all_creatures_processed_and_culled, (val)=>(
+		// 	Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, val.pixel_pos)
+		// ))
+
+		// console.log( `creature tile positions: ${JSON.stringify(creature_tile_positions)}` );
+
 
 		map( me.game_state.custom_object_list, (val,idx) => {
 			Asset_Manager_ƒ.draw_image_for_asset_name({
@@ -140,7 +165,7 @@ export const Game_Manager_ƒ_Drawing = {
 		/*
 			This particularly means "paused at end of turn".
 		*/
-		const cursor_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(
+		const cursor_pos = Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords(
 			_TM,
 			_AM,
 			_BM,
@@ -172,8 +197,9 @@ export const Game_Manager_ƒ_Drawing = {
 				zorder:						zorder.rocks,
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
-			})			
+			})
 
+			
 			/*
 				If there's a creature selected, then draw an indicator under every -other- creature to indicate the team.
 			*/
@@ -211,6 +237,25 @@ export const Game_Manager_ƒ_Drawing = {
 				});
 			}		
 		})
+
+		
+
+		map( me.game_state.current_frame_state.tiles_blocked_by_creatures, (pos,idx) => {
+			Asset_Manager_ƒ.draw_image_for_asset_name({
+				_AM:						_AM,
+				asset_name:					'white_tile',
+				_BM:						_BM,
+				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, pos), 
+				zorder:						zorder.map_boundary,
+				current_milliseconds:		0.0,
+				opacity:					1.0,
+				rotate:						0.0,
+				scale:						1.0,
+				brightness:					1.0,
+				horizontally_flipped:		false,
+				vertically_flipped:			false,
+			});
+		});	
 
 
 		map( me.game_state.custom_object_list, (val,idx) => {

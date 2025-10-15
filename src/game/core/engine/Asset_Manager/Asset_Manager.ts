@@ -2,7 +2,7 @@ import _, { isEmpty, isString, map, range, size } from "lodash";
 import Prando from 'prando';
 import { Blit_Manager_Data, Blit_Manager_ƒ } from "../Blit_Manager";
 import * as Utils from "../Utils";
-import { Point2D, Rectangle } from '../../../interfaces';
+import { Point2D, Rectangle, Tile_Pos_Point } from '../../../interfaces';
 import { asset_list } from "../../data/Asset_List";
 import { is_all_true, ƒ } from "../Utils";
 import { Dispatch, SetStateAction } from "react";
@@ -108,8 +108,8 @@ type Tile_Comparator_Row_Center = [string, string, string];
 export type Tile_Comparator_Sample = [Tile_Comparator_Row_Outer, Tile_Comparator_Row_Center, Tile_Comparator_Row_Outer];
 
 
-interface Tile_Position_Comparator_Row_Outer extends Array<Point2D> { 0: Point2D; 1: Point2D; }
-interface Tile_Position_Comparator_Row_Center extends Array<Point2D> { 0: Point2D; 1: Point2D; 2: Point2D; }
+interface Tile_Position_Comparator_Row_Outer extends Array<Tile_Pos_Point> { 0: Tile_Pos_Point; 1: Tile_Pos_Point; }
+interface Tile_Position_Comparator_Row_Center extends Array<Tile_Pos_Point> { 0: Tile_Pos_Point; 1: Tile_Pos_Point; 2: Tile_Pos_Point; }
 export interface Tile_Position_Comparator_Sample extends Array<Tile_Position_Comparator_Row_Outer|Tile_Position_Comparator_Row_Center> { 0: Tile_Position_Comparator_Row_Outer, 1: Tile_Position_Comparator_Row_Center, 2: Tile_Position_Comparator_Row_Outer };
 
 

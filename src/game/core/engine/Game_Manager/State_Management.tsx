@@ -14,7 +14,7 @@ import { Pathfinder_ƒ } from "../Pathfinding";
 
 import { Creature_ƒ, New_Creature, Creature_Data, Path_Node_With_Direction, Change_Instance, Creature_Type_Name } from "../../../objects_core/Creature/Creature";
 
-import { Point2D, Rectangle } from '../../../interfaces';
+import { Point2D, Rectangle, Screenspace_Pixel_Point } from '../../../interfaces';
 import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Custom_Object/Custom_Object";
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
@@ -25,7 +25,7 @@ import { Map_Analysis_ƒ } from "../Map_Analysis";
 
 export const Game_Manager_ƒ_State_Management = {
 	/*----------------------- core ui interaction -----------------------*/
-	set_cursor_pos: (me: Game_Manager_Data, _BM: Blit_Manager_Data, coords: Point2D): Game_Manager_Data => {
+	set_cursor_pos: (me: Game_Manager_Data, _BM: Blit_Manager_Data, coords: Screenspace_Pixel_Point): Game_Manager_Data => {
 		return {
 			...cloneDeep(me),
 			cursor_pos: coords,
@@ -39,7 +39,7 @@ export const Game_Manager_ƒ_State_Management = {
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
-		pos: Point2D,
+		pos: Screenspace_Pixel_Point,
 		buttons_pressed: Mouse_Button_State
 	): Game_and_Tilemap_Manager_Data => {
 		if( !get_game_state().animation_state.is_animating_live_game ){
@@ -71,11 +71,11 @@ export const Game_Manager_ƒ_State_Management = {
 
 	/*----------------------- ui interaction subroutines -----------------------*/
 
-	select_object_based_on_tile_click: (get_game_state: () => Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Point2D, buttons_pressed: Mouse_Button_State): Game_Manager_Data => {
+	select_object_based_on_tile_click: (get_game_state: () => Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State): Game_Manager_Data => {
 		/*
 			This handles two "modes" simultaneously.  If we click on an object, then we change the current selected object to be the one we clicked on (its position is occupied, and ostensibly can't be moved into - this might need to change with our game rules being what they are, but we'll cross that bridge later).  If we click on the ground, then we're intending to move the current object to that location.
 		*/
-		const new_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords( _TM, _AM, _BM, pos );
+		const new_pos = Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords( _TM, _AM, _BM, pos );
 		const me = get_game_state();
 		
 		let newly_selected_creature_index: number|undefined = Game_Manager_ƒ.get_creature_index_for_pos(me, new_pos);
@@ -106,7 +106,7 @@ export const Game_Manager_ƒ_State_Management = {
 						...cloneDeep(creature),
 						path_data: Creature_ƒ.set_path(
 							creature,
-							Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, creature.tile_pos, new_pos, creature ).successful_path,
+							Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me, _BM, creature.tile_pos, new_pos, creature ).successful_path,
 							_TM
 						),
 						planned_tile_pos: new_pos,
@@ -177,10 +177,13 @@ export const Game_Manager_ƒ_State_Management = {
 
 			const creature = Game_Manager_ƒ.get_current_turn_state(me).creature_list[ newly_selected_creature_index as number ]
 
+			const terrain_plus_blocking = Pathfinder_ƒ.block_tiles_occupied_by_other_creatures(_TM, _AM, me, _BM, _TM.tile_maps.terrain, creature) as Tilemap_Single;
+
 			newly_selected_object_possible_moves = Map_Analysis_ƒ.calculate_accessible_tiles_for_remaining_movement(
 				creature,
 				_TM,
-				new_pos
+				new_pos,
+				terrain_plus_blocking
 			);
 		}
 
@@ -192,7 +195,8 @@ export const Game_Manager_ƒ_State_Management = {
 			game_state: {
 				...cloneDeep(me.game_state),
 				current_frame_state: {
-					creature_list: new_creature_array
+					creature_list: new_creature_array,
+					tiles_blocked_by_creatures: me.game_state.current_frame_state.tiles_blocked_by_creatures
 				},
 				selected_object_index: newly_selected_creature_index == -1 ? me.game_state.selected_object_index : newly_selected_creature_index,
 				selected_object_possible_moves: newly_selected_object_possible_moves,
@@ -236,6 +240,7 @@ export const Game_Manager_ƒ_State_Management = {
 		let new_turn_state = cloneDeep(me.game_state.current_frame_state);
 		new_turn_state = {
 			creature_list: map(new_turn_state.creature_list, (val)=>( Creature_ƒ.copy_for_new_turn(val) )),
+			tiles_blocked_by_creatures: cloneDeep(me.game_state.current_frame_state.tiles_blocked_by_creatures),
 		};
 
 		console.log(`finishing turn #${me.game_state.current_turn}`)

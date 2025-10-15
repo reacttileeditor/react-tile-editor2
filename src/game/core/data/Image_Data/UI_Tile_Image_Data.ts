@@ -484,8 +484,10 @@ export const UI_Tile_Image_Data = {
 			w: 54,
 			h: 34,
 		},
+	},
+	white_tile: {
+		url: "white_tile.png",
 	}
-
 };
 	
 const Safety: Image_Data_Dictionary = UI_Tile_Image_Data;

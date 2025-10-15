@@ -8,7 +8,7 @@ import { Blit_Manager_Data, Blit_Manager_ƒ } from "../engine/Blit_Manager";
 import { Tile_Palette_Element } from "./Tile_Palette_Element";
 import { Tilemap_Metadata, Tilemap_Manager_Data, Tilemap_Manager_ƒ, Directions, Direction } from "../engine/Tilemap_Manager/Tilemap_Manager";
 
-import { Point2D, Rectangle } from '../../interfaces';
+import { Point2D, Rectangle, Screenspace_Pixel_Point, Tile_Pos_Point } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { constrain_point_within_rect, DOMRect_to_Rectangle, is_within_rectangle, useInterval } from "../engine/Utils";
 import { Button, Divider, Drawer, Dropdown, IconButton, Input, List, Modal, RadioTile, RadioTileGroup, Slider, Tooltip, Whisper } from "rsuite";
@@ -60,8 +60,8 @@ export type Named_Mouse_Exclusion_Rects = {
 export const Editor_View = (props: Editor_View_Props) => {
 
 	const [render_loop_interval, set_render_loop_interval] = useState<number|null>(null);
-	const [screen_pixel_cursor_pos, set_screen_pixel_cursor_pos] = useState<Point2D>({ x: 50, y: 50 });
-	const [tile_cursor_pos, set_tile_cursor_pos] = useState<Point2D>({ x: 0, y: 0 });
+	const [screen_pixel_cursor_pos, set_screen_pixel_cursor_pos] = useState<Screenspace_Pixel_Point>({ x: 50, y: 50 } as Screenspace_Pixel_Point);
+	const [tile_cursor_pos, set_tile_cursor_pos] = useState<Tile_Pos_Point>({ x: 0, y: 0 } as Tile_Pos_Point);
 	const [render_tick, set_render_tick] = useState<number>(0);
 
 	const [show_load_dialog, set_show_load_dialog] = useState<boolean>(false);
@@ -201,7 +201,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 	
 	
 	/*----------------------- I/O routines -----------------------*/
-	const handle_canvas_click = (pos: Point2D, buttons_pressed: Mouse_Button_State) => {
+	const handle_canvas_click = (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => {
 		console.log('canvas click editor')
 
 		if(selected_tool == 'tiles'){
@@ -209,7 +209,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 				Tilemap_Manager_ƒ.modify_tile_status(
 					props._Tilemap_Manager(),
 					props._Asset_Manager(),
-					Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
+					Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
 					selected_tile_type,
 					'terrain'
 				)
@@ -218,7 +218,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			props.set_Tilemap_Manager(
 				Tilemap_Manager_ƒ.add_creature_at_pos(props._Tilemap_Manager(), {
 					type_name: selected_creature_type,
-					pos: Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
+					pos: Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos),
 					direction: selected_creature_direction,
 					team: selected_creature_team,
 				})
@@ -227,13 +227,13 @@ export const Editor_View = (props: Editor_View_Props) => {
 			props.set_Tilemap_Manager(
 				Tilemap_Manager_ƒ.remove_creature_at_pos(
 					props._Tilemap_Manager(),
-					Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos)
+					Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos)
 				)
 			);
 		}
 	}
 
-	const editor_handle_canvas_mouse_move = (pos: Point2D, buttons_pressed: Mouse_Button_State) => {
+	const editor_handle_canvas_mouse_move = (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => {
 		Standard_Input_ƒ.handle_canvas_mouse_move(
 			pos,
 			buttons_pressed,
@@ -246,8 +246,8 @@ export const Editor_View = (props: Editor_View_Props) => {
 		)
 	}
 
-	const update_mouse_pos = (pos: Point2D): void => {
-		const new_tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos)
+	const update_mouse_pos = (pos: Screenspace_Pixel_Point): void => {
+		const new_tile_pos = Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords(props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager(), pos)
 
 		set_screen_pixel_cursor_pos(
 			pos
