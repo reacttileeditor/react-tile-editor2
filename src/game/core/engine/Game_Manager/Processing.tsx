@@ -219,14 +219,14 @@ do_paused_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _A
 		val.should_remove !== true
 	) );
 
-	let new_tm = _TM;
+	let new_data = { tm: _TM, gm: me};
 	if(_BM.time_tracker.current_tick == me.last_cursor_move_tick + 1){
-		new_tm = Game_Manager_ƒ.do_mouse_position_updates(me, _TM, _AM, _BM).tm;
+		new_data = Game_Manager_ƒ.do_mouse_position_updates(me, _TM, _AM, _BM);
 	}
 
 
 	return {
-		tm: new_tm,
+		tm: new_data.tm,
 		gm: {
 			...cloneDeep(me),
 			animation_state: {
@@ -235,6 +235,7 @@ do_paused_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _A
 			},
 			game_state: {
 				...cloneDeep(me.game_state),
+				selected_object_potential_move_cost: new_data.gm.game_state.selected_object_potential_move_cost,
 				custom_object_list: all_objects_processed_and_culled,
 			}
 		}

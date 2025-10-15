@@ -79,7 +79,8 @@ get_tooltip_data: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_
 			Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos ),
 			'terrain',
 		),
-		tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me, _TM, _AM, _BM)}`
+		tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me, _TM, _AM, _BM)}`,
+		cumulative_move_cost: `${me.game_state.selected_object_potential_move_cost}`
 	}
 },
 
@@ -239,7 +240,24 @@ get_tick_offset: (me: Game_Manager_Data, _BM: Blit_Manager_Data) => {
 	}
 },
 
+get_cost_of_path: (_TM: Tilemap_Manager_Data, me: Creature_Data|undefined, path: Array<Tile_Pos_Point>) => {
+	var cumulative_move_cost = 0;
 
+	if(me !== undefined){
+		map( path, (val) => {
+			const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
+				_TM,
+				val,
+				'terrain',
+			);
+			const move_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type) ?? 100000000000000;
+
+			cumulative_move_cost += move_cost;
+		})
+	};
+
+	return cumulative_move_cost;
+},
 
 }
 

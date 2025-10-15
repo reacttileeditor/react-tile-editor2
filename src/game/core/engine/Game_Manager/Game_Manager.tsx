@@ -43,6 +43,7 @@ export interface Game_State {
 	turn_list: Array<Individual_Game_Turn_State>,
 	current_frame_state: Individual_Game_Turn_State,
 	custom_object_list: Array<Custom_Object_Data<unknown>>,
+	selected_object_potential_move_cost: number,
 }
 
 export interface Individual_Game_Turn_State {
@@ -64,6 +65,7 @@ export const GameStateInit: Game_State = {
 	turn_list: [],
 	current_frame_state: Individual_Game_Turn_State_Init,
 	custom_object_list: [],
+	selected_object_potential_move_cost: 0,
 };
 
 interface Animation_State {

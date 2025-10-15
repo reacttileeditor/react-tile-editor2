@@ -26,6 +26,7 @@ export type Game_Tooltip_Data = {
 	unit_pos?: Point2D,
 	tile_name: string,
 	tile_cost: string,
+	cumulative_move_cost: string,
 };
 
 export const Game_Tooltip_Manager = (props: {
@@ -121,6 +122,15 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 				{`${props.tile_cost}`}
 				<img src={Foot_Icon}/>
 				<span className='caption'>Move Cost of This Tile</span>
+			</div>
+		}
+		{
+			!isEmpty(props.cumulative_move_cost) && !isNil(props.cumulative_move_cost)
+			&&
+			<div className="data-row">
+				{`${props.cumulative_move_cost}`}
+				<img src={Foot_Icon}/>
+				<span className='caption'>Total Move Cost</span>
 			</div>
 		}
 		{

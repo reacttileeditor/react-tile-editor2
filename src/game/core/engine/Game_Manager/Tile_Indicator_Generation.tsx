@@ -368,6 +368,7 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 			_TM
 		);	
 
+		const path_cost = Game_Manager_ƒ.get_cost_of_path(_TM, creature, path);
 
 		let new_tile_maps: Tilemaps = cloneDeep(tile_maps_init);
 		
@@ -405,7 +406,13 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 				...Tilemap_Manager_ƒ.cleared_cache(),
 				asset_blit_list_cache_by_tilemap: new_asset_blit_cache,
 			},
-			gm: me,
+			gm: {
+				...me,
+				game_state: {
+					...me.game_state,
+					selected_object_potential_move_cost: path_cost
+				}
+			}
 		}
 	},
 
