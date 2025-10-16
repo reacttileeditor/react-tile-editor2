@@ -151,9 +151,11 @@ export const Character_Image_Data = {
 	},
 	human_hermit_ne_stand: {
 		url: "characters/human_hermit_ne_stand.png",
+		uses_palette_swap: true,
 	},
 	human_hermit_se_stand: {
 		url: "characters/human_hermit_se_stand.png",
+		uses_palette_swap: true,
 	},
 	human_hermit_se_walk: {
 		url: "characters/human_hermit_se_walk.png",
@@ -167,6 +169,7 @@ export const Character_Image_Data = {
 			w: 68,
 			h: 116,
 		},
+		uses_palette_swap: true,
 	},
 	human_hermit_ne_walk: {
 		url: "characters/human_hermit_ne_walk.png",
@@ -180,6 +183,7 @@ export const Character_Image_Data = {
 			w: 68,
 			h: 116,
 		},
+		uses_palette_swap: true,
 	},
 	"peasant-se-walk": {
 		url: "char2-se-walk.png",
