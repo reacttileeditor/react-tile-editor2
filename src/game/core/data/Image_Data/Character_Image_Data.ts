@@ -152,6 +152,16 @@ export const Character_Image_Data = {
 	human_hermit_ne_stand: {
 		url: "characters/human_hermit_ne_stand.png",
 		uses_palette_swap: true,
+		frames: 5,
+		frame_duration: 180,
+		ping_pong: true,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 66,
+			h: 114,
+		},
 	},
 	human_hermit_se_stand: {
 		url: "characters/human_hermit_se_stand.png",
