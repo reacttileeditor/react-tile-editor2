@@ -415,6 +415,16 @@ export const UI_Tile_Image_Data = {
 			h: 67,
 		},
 	},
+	pedestal_banner: {
+		url: "pedestal_banner.png",
+		bounds: {
+			x: 0,
+			y: 0,
+			w: 64,
+			h: 67,
+		},
+		uses_palette_swap: true,
+	},
 	unit_team_indicator: {
 		url: "unit_team_indicator.png",
 		uses_palette_swap: true,

@@ -23,6 +23,7 @@ import Foot_Icon from '../../../assets/feet-icon.png';
 import Damage_Icon from '../../../assets/icons/damage.png';
 import Heart_Icon from '../../../assets/icons/heart.png';
 import Flag_Icon from '../../../assets/icons/flag.png';
+import { Palette_Names } from "../../data/Palette_List";
 
 interface Game_Status_Display_Props {
 	ref: React.RefObject<HTMLDivElement | null>	
@@ -133,6 +134,9 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 									id: asset_name,
 									zorder: zorder.rocks,
 								},{
+									id: 'pedestal_banner',
+									zorder: zorder.map_arrows,
+								},{
 									id: 'pedestal',
 									zorder: zorder.grass,
 								}]
@@ -147,6 +151,7 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 							handle_click={ ()=>{} }
 							canvas_size={ {x: 100, y: 100} }
 							centering_offset={ {x: 0, y: -0.6} }
+							palette={`team${selected_creature.team}` as Palette_Names}
 						/>
 
 						<Icon_and_Data_Pair

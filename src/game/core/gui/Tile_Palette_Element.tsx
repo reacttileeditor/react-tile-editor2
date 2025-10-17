@@ -8,6 +8,7 @@ import { Asset_Blit_List, New_Tilemap_Manager, Tilemap_Manager_Data } from "../e
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
 import { useInterval, ƒ } from "../engine/Utils";
+import { Palette_Names } from "../data/Palette_List";
 
 
 interface Props {
@@ -18,7 +19,8 @@ interface Props {
 	handle_click(): void,
 	canvas_size: Point2D,
 	use_black_background: boolean,
-	centering_offset?: Point2D, 
+	centering_offset?: Point2D,
+	palette?: Palette_Names,
 }
 
 
@@ -159,6 +161,7 @@ export const Tile_Palette_Element = (props: Props) => {
 					brightness:					1.0,
 					horizontally_flipped:		false,
 					vertically_flipped:			false,
+					palette: 					props.palette,
 				})
 			})
 
