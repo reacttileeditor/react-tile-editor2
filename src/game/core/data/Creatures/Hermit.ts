@@ -9,7 +9,7 @@ export const CT_Hermit_ƒ: Creature_Delegate = {
 	...Creature_Delegate_Base_ƒ,
 
 	yield_moves_per_turn: () =>  10,
-	yield_creature_image: () => 'hermit',
+	yield_creature_image: () => 'human_hermit_se_stand',
 	yield_prettyprint_name: () => 'Hermit',
 	yield_weapon_range: () => 14,
 
@@ -17,9 +17,9 @@ export const CT_Hermit_ƒ: Creature_Delegate = {
 		({
 			north_east:	'human_hermit_ne_stand',
 			north_west:	'human_hermit_ne_stand',
-			east:			'human_hermit_ne_stand',
+			east:		'human_hermit_ne_stand',
 			south_east:	'human_hermit_se_stand',
-			west:			'human_hermit_se_stand',
+			west:		'human_hermit_se_stand',
 			south_west:	'human_hermit_se_stand',	
 		} as Creature_Animation_Chart)[direction]
 	),
