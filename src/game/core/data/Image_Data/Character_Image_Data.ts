@@ -12,18 +12,48 @@ export const Character_Image_Data = {
 	hermit:	{
 		url: "char1.png",
 	},
+
+
+/*----------------------- human peasant -----------------------*/
 	"peasant-ne": {
 		url: "char2-ne.png",
 	},
 	"peasant-se": {
 		url: "char2.png",
 	},
+	"peasant-se-walk": {
+		url: "char2-se-walk.png",
+		frames: 8,
+		frame_duration: 100,
+		ping_pong: false,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 58,
+			h: 118,
+		},
+	},
+	"peasant-ne-walk": {
+		url: "char2-ne-walk.png",
+		frames: 8,
+		frame_duration: 100,
+		ping_pong: false,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 58,
+			h: 118,
+		},
+	},
+
+
+/*----------------------- skeleton warrior -----------------------*/
 	"skeleton-ne": {
 		url: "char3-ne.png",
 	},
-	"undead-javelineer-se": {
-		url: "characters/undead_javelineer.png",
-	},
+
 	"skeleton-se": {
 		url: "char3.png",
 	},
@@ -39,6 +69,50 @@ export const Character_Image_Data = {
 			w: 58,
 			h: 118,
 		},
+	},
+	"skeleton-ne-walk": {
+		url: "characters/skeleton_warrior_walk_ne.png",
+		frames: 8,
+		frame_duration: 100,
+		ping_pong: false,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 60,
+			h: 120,
+		},
+	},
+	"skeleton-se-walk": {
+		url: "char3-se-walk.png",
+		frames: 8,
+		frame_duration: 100,
+		ping_pong: false,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 60,
+			h: 120,
+		},
+	},
+	"skeleton-se-attack": {
+		url: "char3-se-attack.png",
+		frames: 10,
+		frame_duration: 100,
+		ping_pong: false,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 98,
+			h: 138,
+		},
+	},
+
+/*----------------------- undead javelineer -----------------------*/
+	"undead-javelineer-se": {
+		url: "characters/undead_javelineer.png",
 	},
 	undead_javelineer_se_stand: {
 		url: "characters/undead_javelineer_se_stand.png",
@@ -71,6 +145,9 @@ export const Character_Image_Data = {
 		},
 		uses_palette_swap: true,
 	},
+
+
+/*----------------------- human footman -----------------------*/
 	human_footman_se_stand: {
 		url: "characters/human_footman_stand_se.png",
 		frames: 5,
@@ -149,6 +226,10 @@ export const Character_Image_Data = {
 			h: 158,
 		},
 	},
+
+
+
+/*----------------------- human hermit -----------------------*/
 	human_hermit_ne_stand: {
 		url: "characters/human_hermit_ne_stand.png",
 		uses_palette_swap: true,
@@ -205,71 +286,8 @@ export const Character_Image_Data = {
 		},
 		uses_palette_swap: true,
 	},
-	"peasant-se-walk": {
-		url: "char2-se-walk.png",
-		frames: 8,
-		frame_duration: 100,
-		ping_pong: false,
-		pad: 2,
-		bounds: {
-			x: 1,
-			y: 1,
-			w: 58,
-			h: 118,
-		},
-	},
-	"peasant-ne-walk": {
-		url: "char2-ne-walk.png",
-		frames: 8,
-		frame_duration: 100,
-		ping_pong: false,
-		pad: 2,
-		bounds: {
-			x: 1,
-			y: 1,
-			w: 58,
-			h: 118,
-		},
-	},
-	"skeleton-ne-walk": {
-		url: "characters/skeleton_warrior_walk_ne.png",
-		frames: 8,
-		frame_duration: 100,
-		ping_pong: false,
-		pad: 2,
-		bounds: {
-			x: 1,
-			y: 1,
-			w: 60,
-			h: 120,
-		},
-	},
-	"skeleton-se-walk": {
-		url: "char3-se-walk.png",
-		frames: 8,
-		frame_duration: 100,
-		ping_pong: false,
-		pad: 2,
-		bounds: {
-			x: 1,
-			y: 1,
-			w: 60,
-			h: 120,
-		},
-	},
-	"skeleton-se-attack": {
-		url: "char3-se-attack.png",
-		frames: 10,
-		frame_duration: 100,
-		ping_pong: false,
-		pad: 2,
-		bounds: {
-			x: 1,
-			y: 1,
-			w: 98,
-			h: 138,
-		},
-	}
+
+
 };
 	
 const Safety: Image_Data_Dictionary = Character_Image_Data;
