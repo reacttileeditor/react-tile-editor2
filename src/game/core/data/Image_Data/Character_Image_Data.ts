@@ -52,6 +52,17 @@ export const Character_Image_Data = {
 /*----------------------- skeleton warrior -----------------------*/
 	skeleton_warrior_ne_stand: {
 		url: "characters/skeleton_warrior_ne_stand.png",
+		frames: 3,
+		frame_duration: 250,
+		ping_pong: true,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 58,
+			h: 118,
+		},
+		uses_palette_swap: true,
 	},
 
 
@@ -67,6 +78,7 @@ export const Character_Image_Data = {
 			w: 58,
 			h: 118,
 		},
+		uses_palette_swap: true,
 	},
 	skeleton_warrior_ne_walk: {
 		url: "characters/skeleton_warrior_ne_walk.png",
@@ -80,6 +92,7 @@ export const Character_Image_Data = {
 			w: 60,
 			h: 120,
 		},
+		uses_palette_swap: true,
 	},
 	skeleton_warrior_se_walk: {
 		url: "characters/skeleton_warrior_se_walk.png",
@@ -93,6 +106,7 @@ export const Character_Image_Data = {
 			w: 60,
 			h: 120,
 		},
+		uses_palette_swap: true,
 	},
 	skeleton_warrior_se_attack: {
 		url: "characters/skeleton_warrior_se_attack.png",
@@ -106,6 +120,7 @@ export const Character_Image_Data = {
 			w: 98,
 			h: 138,
 		},
+		uses_palette_swap: true,
 	},
 
 /*----------------------- undead javelineer -----------------------*/
