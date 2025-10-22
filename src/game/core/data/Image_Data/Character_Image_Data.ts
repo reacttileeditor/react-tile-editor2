@@ -50,15 +50,13 @@ export const Character_Image_Data = {
 
 
 /*----------------------- skeleton warrior -----------------------*/
-	"skeleton-ne": {
-		url: "char3-ne.png",
+	skeleton_warrior_ne_stand: {
+		url: "characters/skeleton_warrior_ne_stand.png",
 	},
 
-	"skeleton-se": {
-		url: "char3.png",
-	},
-	skeleton_warrior_stand_se: {
-		url: "characters/skeleton_warrior_stand_se.png",
+
+	skeleton_warrior_se_stand: {
+		url: "characters/skeleton_warrior_se_stand.png",
 		frames: 3,
 		frame_duration: 250,
 		ping_pong: true,
@@ -70,8 +68,8 @@ export const Character_Image_Data = {
 			h: 118,
 		},
 	},
-	"skeleton-ne-walk": {
-		url: "characters/skeleton_warrior_walk_ne.png",
+	skeleton_warrior_ne_walk: {
+		url: "characters/skeleton_warrior_ne_walk.png",
 		frames: 8,
 		frame_duration: 100,
 		ping_pong: false,
@@ -83,8 +81,8 @@ export const Character_Image_Data = {
 			h: 120,
 		},
 	},
-	"skeleton-se-walk": {
-		url: "char3-se-walk.png",
+	skeleton_warrior_se_walk: {
+		url: "characters/skeleton_warrior_se_walk.png",
 		frames: 8,
 		frame_duration: 100,
 		ping_pong: false,
@@ -96,8 +94,8 @@ export const Character_Image_Data = {
 			h: 120,
 		},
 	},
-	"skeleton-se-attack": {
-		url: "char3-se-attack.png",
+	skeleton_warrior_se_attack: {
+		url: "characters/skeleton_warrior_se_attack.png",
 		frames: 10,
 		frame_duration: 100,
 		ping_pong: false,
@@ -111,9 +109,6 @@ export const Character_Image_Data = {
 	},
 
 /*----------------------- undead javelineer -----------------------*/
-	"undead-javelineer-se": {
-		url: "characters/undead_javelineer.png",
-	},
 	undead_javelineer_se_stand: {
 		url: "characters/undead_javelineer_se_stand.png",
 		frames: 5,
