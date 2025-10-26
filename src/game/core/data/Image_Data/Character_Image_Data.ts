@@ -122,7 +122,22 @@ export const Character_Image_Data = {
 		},
 		uses_palette_swap: true,
 	},
+	skeleton_warrior_ne_attack: {
+		url: "characters/skeleton_warrior_ne_attack.png",
+		frames: 10,
+		frame_duration: 100,
+		ping_pong: false,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 98,
+			h: 138,
+		},
+		uses_palette_swap: true,
+	},
 
+	
 /*----------------------- undead javelineer -----------------------*/
 	undead_javelineer_se_stand: {
 		url: "characters/undead_javelineer_se_stand.png",

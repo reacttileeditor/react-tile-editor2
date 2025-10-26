@@ -36,9 +36,9 @@ export const CT_Skeleton_ƒ: Creature_Delegate = {
 	
 	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction: Direction): Image_Data_Names => (
 		({
-			'north_east':	'skeleton_warrior_se_attack',
-			'north_west':	'skeleton_warrior_se_attack',
-			'east':			'skeleton_warrior_se_attack',
+			'north_east':	'skeleton_warrior_ne_attack',
+			'north_west':	'skeleton_warrior_ne_attack',
+			'east':			'skeleton_warrior_ne_attack',
 			'south_east':	'skeleton_warrior_se_attack',
 			'west':			'skeleton_warrior_se_attack',
 			'south_west':	'skeleton_warrior_se_attack',	
