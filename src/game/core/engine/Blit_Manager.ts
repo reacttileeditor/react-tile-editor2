@@ -613,16 +613,28 @@ export const Blit_Manager_ƒ = {
 	draw_fps_text: ( me: Blit_Manager_Data) => {
 		me.osb_ctx.save();
 		me.osb_ctx.imageSmoothingEnabled = false;
-		me.osb_ctx.font = '16px pixel, sans-serif';
+		me.osb_ctx.font = 'bold 18px pixel, sans-serif';
 		me.osb_ctx.textAlign = 'left';
+		//me.osb_ctx.imageSmoothingEnabled = true;
+		//me.osb_ctx.letterSpacing = '1.5px';		//TODO:  this works but typescript or the build tool doesn't understand that it's legal, yet.
 
 		// for later reference:  https://stackoverflow.com/questions/4261090/html5-canvas-and-anti-aliasing/4261139
 		//me.osb_ctx.shadowColor = "rgba(255, 0, 0, 0.5)";
 	    //me.osb_ctx.shadowOffsetY = 2;
 	    //me.osb_ctx.shadowBlur = 3;
-	    me.osb_ctx.fillStyle = "#ffffff";
+
+		const text = `FPS: ${me.time_tracker.prior_frame_count.toString()}`;
+		const position: Point2D = {x: 10, y: Math.round(me.osb_ctx.canvas.height - 14)}
+
+		me.osb_ctx.strokeStyle = 'black';
+		//me.osb_ctx.miterLimit = 1;
+		me.osb_ctx.lineJoin = 'round';
+		me.osb_ctx.lineWidth = 3;
 		me.osb_ctx.textBaseline = 'middle';
-		me.osb_ctx.fillText(`FPS: ${me.time_tracker.prior_frame_count.toString()}`, 10, (me.osb_ctx.canvas.height - 14));
+		me.osb_ctx.strokeText(text, position.x, position.y);
+		
+	    me.osb_ctx.fillStyle = "#ffffff";
+		me.osb_ctx.fillText(text, position.x, position.y);
 		me.osb_ctx.restore();
 	},
 
