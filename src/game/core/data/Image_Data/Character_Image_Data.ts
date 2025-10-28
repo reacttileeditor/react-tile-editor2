@@ -137,7 +137,7 @@ export const Character_Image_Data = {
 		uses_palette_swap: true,
 	},
 
-	
+
 /*----------------------- undead javelineer -----------------------*/
 	undead_javelineer_se_stand: {
 		url: "characters/undead_javelineer_se_stand.png",
@@ -155,6 +155,7 @@ export const Character_Image_Data = {
 	},
 	undead_javelineer_ne_stand: {
 		url: "characters/undead_javelineer_ne_stand.png",
+		uses_palette_swap: true,
 	},
 	undead_javelineer_se_attack: {
 		url: "characters/undead_javelineer_se_attack.png",
