@@ -157,6 +157,20 @@ export const Character_Image_Data = {
 		url: "characters/undead_javelineer_ne_stand.png",
 		uses_palette_swap: true,
 	},
+	undead_javelineer_ne_attack: {
+		url: "characters/undead_javelineer_ne_attack.png",
+		frames: 12,
+		frame_duration: 100,
+		ping_pong: false,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 98,
+			h: 178,
+		},
+		uses_palette_swap: true,
+	},
 	undead_javelineer_se_attack: {
 		url: "characters/undead_javelineer_se_attack.png",
 		frames: 12,

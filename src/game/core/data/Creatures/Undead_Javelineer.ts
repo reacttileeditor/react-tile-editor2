@@ -36,9 +36,9 @@ export const CT_Undead_Javelineer_ƒ: Creature_Delegate = {
 	
 	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction: Direction): Image_Data_Names => (
 		({
-			'north_east':	'undead_javelineer_se_attack',
-			'north_west':	'undead_javelineer_se_attack',
-			'east':			'undead_javelineer_se_attack',
+			'north_east':	'undead_javelineer_ne_attack',
+			'north_west':	'undead_javelineer_ne_attack',
+			'east':			'undead_javelineer_ne_attack',
 			'south_east':	'undead_javelineer_se_attack',
 			'west':			'undead_javelineer_se_attack',
 			'south_west':	'undead_javelineer_se_attack',	
