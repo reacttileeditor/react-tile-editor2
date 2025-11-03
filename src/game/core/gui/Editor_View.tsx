@@ -33,6 +33,7 @@ import { Tile_Palette_Drawer } from "./Editor_Components/Tile_Palette_Drawer";
 import { Unit_Palette_Drawer } from "./Editor_Components/Unit_Palette_Drawer";
 import { Editor_Tooltip_Manager } from "./Editor_Components/Editor_Tooltip_Manager";
 import { ReactElement } from "rsuite/esm/internals/types";
+import { App_Modes } from "./Primary_View";
 
 
 interface Editor_View_Props {
@@ -45,8 +46,7 @@ interface Editor_View_Props {
 	context_connected:  boolean,
 	connect_context_to_blit_manager: (ctx: CanvasRenderingContext2D) => void,
 	dimensions: Point2D,
-	is_edit_mode: boolean,	
-	set_is_edit_mode: Dispatch<SetStateAction<boolean>>,
+	set_app_mode: Dispatch<SetStateAction<App_Modes>>,
 }
 
 type Editor_Tool_Types = 'tiles' | 'unitAdd' | 'unitDelete';
@@ -276,7 +276,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			ref={Toolbar_Ref}
 		>
 			<Button
-				onClick={ () => { props.set_is_edit_mode( !props.is_edit_mode ); } }
+				onClick={ () => { props.set_app_mode( 'game' ); } }
 			>
 				{'Toggle to Game'}
 			</Button>

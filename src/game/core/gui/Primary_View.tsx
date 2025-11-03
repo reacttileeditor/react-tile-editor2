@@ -17,6 +17,7 @@ import "./Primary_View.scss";
 import { Game_Manager_Data, New_Game_Manager } from "../engine/Game_Manager/Game_Manager";
 import { Vals } from "../constants/Constants";
 import { Loading_View } from "./Loading_View";
+import { ap } from "ramda";
 
 interface Props {
 }
@@ -40,40 +41,17 @@ const get_Game_Manager_Data = () => (_Game_Manager_Data as Game_Manager_Data);
 const set_Game_Manager_Data = (newVal: Game_Manager_Data) => { _Game_Manager_Data = cloneDeep(newVal);}
 
 
-// https://stackoverflow.com/a/62106602
-// define our parent property accessible via globalThis. Also apply the TypeScript type.
-// var app: globalAppVariables;
-
-// // define the child properties and their types. 
-// type globalAppVariables = {
-// 	set_Tilemap_Manager: Function;
-// 	get_Tilemap_Manager: Function;
-// };
-
-// // set the values.
-// //@ts-ignore
-// globalThis.app = {
-// 	set_Tilemap_Manager: set_Tilemap_Manager,
-// 	get_Tilemap_Manager: get_Tilemap_Manager,
-// };
-
+export type App_Modes = 'editor' | 'game' | 'titlescreen';
 
 
 
 export const Primary_View = () => {
 	const _Asset_Manager: Asset_Manager_Data = New_Asset_Manager();
 
-	//const [_Blit_Manager, set_Blit_Manager] = useState<Blit_Manager_Data|null>(null);
-
-
-	//const [_Tilemap_Manager, set_Tilemap_Manager] = useState<Tilemap_Manager_Data|null>(null);
-	const [is_edit_mode, set_is_edit_mode] = useState<boolean>(true);
+	const [app_mode, set_app_mode] = useState<App_Modes>('editor');
 	const [assets_loaded, set_assets_loaded] = useState<boolean>(false);
 	const [loaded_fraction, set_loaded_fraction] = useState<number>(0);
 	const [context_connected, set_context_connected] = useState<boolean>(false);
-
-
-	//let _Game_Manager_Data: Game_Manager_Data | undefined = undefined;
 	const [game_manager_loaded, set_game_manager_loaded] = useState<boolean>(false);
 
 
@@ -96,6 +74,7 @@ export const Primary_View = () => {
 			console.log('PRIMARY CLEANUP')
 		};		
 	}, []);
+
 	useEffect(() => {
 		console.log('considering loading game manager');
 
@@ -150,11 +129,10 @@ export const Primary_View = () => {
 							>
 								<div className="width_wrapper" ref={fullscreenRef}>
 								{
-									is_edit_mode
+									app_mode == 'editor'
 									?
 									<Editor_View
-										is_edit_mode={is_edit_mode}
-										set_is_edit_mode={set_is_edit_mode}
+										set_app_mode={set_app_mode}
 										assets_loaded={assets_loaded}
 										context_connected={context_connected}
 										dimensions={Vals.default_canvas_size}
@@ -167,8 +145,7 @@ export const Primary_View = () => {
 									/>
 									:
 									<Game_View
-										is_edit_mode={is_edit_mode}
-										set_is_edit_mode={set_is_edit_mode}
+										set_app_mode={set_app_mode}
 										assets_loaded={assets_loaded}
 										context_connected={context_connected}
 										dimensions={Vals.default_canvas_size}

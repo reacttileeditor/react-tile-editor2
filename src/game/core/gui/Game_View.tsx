@@ -20,6 +20,7 @@ import ZoominIcon from '@rsuite/icons/Zoomin';
 import { Icon } from "@rsuite/icons";
 import { Named_Mouse_Exclusion_Rects } from "./Editor_View";
 import { cloneDeep } from "lodash";
+import { App_Modes } from "./Primary_View";
 
 
 interface Game_View_Props {
@@ -35,8 +36,7 @@ interface Game_View_Props {
 	game_manager_loaded: boolean,
 	connect_context_to_blit_manager: (ctx: CanvasRenderingContext2D) => void,
 	dimensions: Point2D,
-	is_edit_mode: boolean,	
-	set_is_edit_mode: Dispatch<SetStateAction<boolean>>,
+	set_app_mode: Dispatch<SetStateAction<App_Modes>>,
 
 	toggle_fullscreen: () => void,
 }
@@ -227,7 +227,7 @@ export const Game_View = (props: Game_View_Props) => {
 		>
 			<Button
 				onClick={ () => {
-					props.set_is_edit_mode( !props.is_edit_mode ); 
+					props.set_app_mode( 'editor' ); 
 					props.toggle_fullscreen();
 				} }
 			>
