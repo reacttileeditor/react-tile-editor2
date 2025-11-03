@@ -18,6 +18,7 @@ import { Game_Manager_Data, New_Game_Manager } from "../engine/Game_Manager/Game
 import { Vals } from "../constants/Constants";
 import { Loading_View } from "./Loading_View";
 import { ap } from "ramda";
+import { Titlescreen_View } from "./Titlescreen_View";
 
 interface Props {
 }
@@ -129,38 +130,45 @@ export const Primary_View = () => {
 							>
 								<div className="width_wrapper" ref={fullscreenRef}>
 								{
-									app_mode == 'editor'
-									?
-									<Editor_View
-										set_app_mode={set_app_mode}
-										assets_loaded={assets_loaded}
-										context_connected={context_connected}
-										dimensions={Vals.default_canvas_size}
-										_Asset_Manager={() => (_Asset_Manager)}
-										_Blit_Manager={get_Blit_Manager}
-										set_Blit_Manager={set_Blit_Manager}
-										_Tilemap_Manager={get_Tilemap_Manager}
-										set_Tilemap_Manager={set_Tilemap_Manager}
-										connect_context_to_blit_manager={connect_context_to_blit_manager}
-									/>
-									:
-									<Game_View
-										set_app_mode={set_app_mode}
-										assets_loaded={assets_loaded}
-										context_connected={context_connected}
-										dimensions={Vals.default_canvas_size}
-										_Asset_Manager={() => (_Asset_Manager)}
-										_Blit_Manager={get_Blit_Manager}
-										set_Blit_Manager={set_Blit_Manager}
-										_Tilemap_Manager={get_Tilemap_Manager}
-										set_Tilemap_Manager={set_Tilemap_Manager}
-										get_Game_Manager_Data={get_Game_Manager_Data}
-										set_Game_Manager_Data={set_Game_Manager_Data}
-										game_manager_loaded={game_manager_loaded}
-									
-										toggle_fullscreen={toggle_fullscreen}
-										connect_context_to_blit_manager={connect_context_to_blit_manager}
-									/>
+									(()=>{
+										if(app_mode == 'titlescreen'){
+											return (<Titlescreen_View
+												set_app_mode={set_app_mode}
+												toggle_fullscreen={toggle_fullscreen}
+											/>);
+										} else if (app_mode == 'editor') {
+											return <Editor_View
+												set_app_mode={set_app_mode}
+												assets_loaded={assets_loaded}
+												context_connected={context_connected}
+												dimensions={Vals.default_canvas_size}
+												_Asset_Manager={() => (_Asset_Manager)}
+												_Blit_Manager={get_Blit_Manager}
+												set_Blit_Manager={set_Blit_Manager}
+												_Tilemap_Manager={get_Tilemap_Manager}
+												set_Tilemap_Manager={set_Tilemap_Manager}
+												connect_context_to_blit_manager={connect_context_to_blit_manager}
+											/>
+										} else if (app_mode == 'game') {
+											return <Game_View
+												set_app_mode={set_app_mode}
+												assets_loaded={assets_loaded}
+												context_connected={context_connected}
+												dimensions={Vals.default_canvas_size}
+												_Asset_Manager={() => (_Asset_Manager)}
+												_Blit_Manager={get_Blit_Manager}
+												set_Blit_Manager={set_Blit_Manager}
+												_Tilemap_Manager={get_Tilemap_Manager}
+												set_Tilemap_Manager={set_Tilemap_Manager}
+												get_Game_Manager_Data={get_Game_Manager_Data}
+												set_Game_Manager_Data={set_Game_Manager_Data}
+												game_manager_loaded={game_manager_loaded}
+											
+												toggle_fullscreen={toggle_fullscreen}
+												connect_context_to_blit_manager={connect_context_to_blit_manager}
+											/>
+										}
+									})()
 								}
 								</div>
 							</div>

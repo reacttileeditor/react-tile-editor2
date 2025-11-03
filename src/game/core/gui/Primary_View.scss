@@ -74,7 +74,7 @@ body {
 			overflow: hidden;
 		}
 
-		.editor_screen, .game_screen, .loading_screen {
+		.editor_screen, .game_screen, .loading_screen, .title_screen {
 
 			aspect-ratio: 567 / 325;
 			max-width: 95%;
@@ -120,6 +120,12 @@ body {
 			}
 		}
 
+		.title_screen_node {
+			.canvas_holder {
+				.title_screen_internal {
+				}
+			}
+		}
 
 
 		.loading_node {
