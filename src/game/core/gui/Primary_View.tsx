@@ -16,6 +16,7 @@ import { CustomProvider } from 'rsuite';
 import "./Primary_View.scss";
 import { Game_Manager_Data, New_Game_Manager } from "../engine/Game_Manager/Game_Manager";
 import { Vals } from "../constants/Constants";
+import { Loading_View } from "./Loading_View";
 
 interface Props {
 }
@@ -190,20 +191,9 @@ export const Primary_View = () => {
 							<div
 								className="master_flex_wrapper"
 							>
-								<div className="width_wrapper">
-									<div className="loading_screen">
-										<div className="loading_node">
-											<div className="canvas_holder">
-												<div className="loading_screen_internal">
-													<div>{`Loading...  ${Math.round(loaded_fraction * 100)}%`}</div>
-													<div className="loading_bar">
-														<div className="loading_bar_fill" style={{width: `${Math.min(Math.round(loaded_fraction * 100), 100)}%`}} />
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
+								<Loading_View
+									loaded_fraction={loaded_fraction}
+								/>
 							</div>
 						}</>
 					</>
