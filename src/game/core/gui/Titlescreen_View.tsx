@@ -5,7 +5,7 @@ import { App_Modes } from "./Primary_View";
 
 interface Props {
 	set_app_mode: Dispatch<SetStateAction<App_Modes>>,
-	toggle_fullscreen: () => void,
+	set_fullscreen: (status: boolean) => void,
 }
 
 

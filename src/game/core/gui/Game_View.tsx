@@ -38,6 +38,7 @@ interface Game_View_Props {
 	dimensions: Point2D,
 	set_app_mode: Dispatch<SetStateAction<App_Modes>>,
 
+	set_fullscreen: (status: boolean) => void,
 	toggle_fullscreen: () => void,
 }
 
@@ -228,7 +229,7 @@ export const Game_View = (props: Game_View_Props) => {
 			<Button
 				onClick={ () => {
 					props.set_app_mode( 'editor' ); 
-					props.toggle_fullscreen();
+					props.set_fullscreen(false);
 				} }
 			>
 				{'Toggle to Editor'}

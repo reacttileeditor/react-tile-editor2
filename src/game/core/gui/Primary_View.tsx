@@ -113,6 +113,20 @@ export const Primary_View = () => {
 		}
 	}
 
+	const set_fullscreen = (status: boolean) => {
+        if (fullscreenRef.current) {
+			if(status === true){
+				if(!document.fullscreenElement ){
+					fullscreenRef.current.requestFullscreen();
+				}
+			} else {
+				if(document.fullscreenElement ){
+					document.exitFullscreen();
+				}
+			}
+		}
+	}
+
 
 	return (
 		<CustomProvider theme="dark">
@@ -134,7 +148,7 @@ export const Primary_View = () => {
 										if(app_mode == 'titlescreen'){
 											return (<Titlescreen_View
 												set_app_mode={set_app_mode}
-												toggle_fullscreen={toggle_fullscreen}
+												set_fullscreen={set_fullscreen}
 											/>);
 										} else if (app_mode == 'editor') {
 											return <Editor_View
@@ -165,6 +179,7 @@ export const Primary_View = () => {
 												game_manager_loaded={game_manager_loaded}
 											
 												toggle_fullscreen={toggle_fullscreen}
+												set_fullscreen={set_fullscreen}
 												connect_context_to_blit_manager={connect_context_to_blit_manager}
 											/>
 										}
