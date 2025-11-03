@@ -16,10 +16,10 @@ export const Titlescreen_View = (props: Props) => {
 				<div className="title_screen_node">
 					<div className="canvas_holder">
 						<div className="title_screen_internal">
-							<h2>Wiergild</h2>
+							<h1>Wiergild</h1>
 							<Button
 								onClick={ () => { 
-									props.set_app_mode('game');
+									props.set_app_mode('editor');
 								} }
 							>
 								{'Click Here to Begin'}

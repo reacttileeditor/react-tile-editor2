@@ -103,7 +103,7 @@ body {
 				}
 			}
 
-			.editor_node, .game_node, .loading_node {
+			.editor_node, .game_node, .loading_node, .title_screen_node {
 				display: flex;
 				flex-flow: row nowrap;
 				align-items: center;
@@ -123,6 +123,16 @@ body {
 		.title_screen_node {
 			.canvas_holder {
 				.title_screen_internal {
+					width: 100%;
+					height: 100%;
+					display: flex;
+					flex-flow: column nowrap;
+					justify-content: center;
+					align-items: center;
+
+					h1 {
+						font-size: 4rem;
+					}
 				}
 			}
 		}

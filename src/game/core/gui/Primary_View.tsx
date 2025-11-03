@@ -49,7 +49,7 @@ export type App_Modes = 'editor' | 'game' | 'titlescreen';
 export const Primary_View = () => {
 	const _Asset_Manager: Asset_Manager_Data = New_Asset_Manager();
 
-	const [app_mode, set_app_mode] = useState<App_Modes>('editor');
+	const [app_mode, set_app_mode] = useState<App_Modes>('titlescreen');
 	const [assets_loaded, set_assets_loaded] = useState<boolean>(false);
 	const [loaded_fraction, set_loaded_fraction] = useState<number>(0);
 	const [context_connected, set_context_connected] = useState<boolean>(false);
