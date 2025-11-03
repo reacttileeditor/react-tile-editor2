@@ -226,7 +226,10 @@ export const Game_View = (props: Game_View_Props) => {
 			ref={Toolbar_Ref}
 		>
 			<Button
-				onClick={ () => { props.set_is_edit_mode( !props.is_edit_mode ); } }
+				onClick={ () => {
+					props.set_is_edit_mode( !props.is_edit_mode ); 
+					props.toggle_fullscreen();
+				} }
 			>
 				{'Toggle to Editor'}
 			</Button>
