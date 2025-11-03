@@ -37,6 +37,8 @@ interface Game_View_Props {
 	dimensions: Point2D,
 	is_edit_mode: boolean,	
 	set_is_edit_mode: Dispatch<SetStateAction<boolean>>,
+
+	toggle_fullscreen: () => void,
 }
 
 
@@ -216,19 +218,9 @@ export const Game_View = (props: Game_View_Props) => {
 		);
 	}	
 
-	const fullscreenRef = useRef<HTMLDivElement>(null);
 
-	const toggleFullscreen = () => {
-        if (fullscreenRef.current) {
-			if(!document.fullscreenElement ){
-				fullscreenRef.current.requestFullscreen();
-			} else {
-				document.exitFullscreen();
-			}
-		}
-	}
 
-	return <div className="game_screen" ref={fullscreenRef}>
+	return <div className="game_screen">
 		<div
 			className="toolbar"
 			ref={Toolbar_Ref}
@@ -241,7 +233,7 @@ export const Game_View = (props: Game_View_Props) => {
 			<IconButton
 				icon={<Icon as={ZoominIcon as React.ElementType} />}
 				onClick={()=>{
-					toggleFullscreen();
+					props.toggle_fullscreen();
 				}}
 			/>
 		</div>

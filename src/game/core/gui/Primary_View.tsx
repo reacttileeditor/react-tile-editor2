@@ -120,7 +120,17 @@ export const Primary_View = () => {
 		set_context_connected(true)
 	}
 		
+	const fullscreenRef = useRef<HTMLDivElement>(null);
 
+	const toggle_fullscreen = () => {
+        if (fullscreenRef.current) {
+			if(!document.fullscreenElement ){
+				fullscreenRef.current.requestFullscreen();
+			} else {
+				document.exitFullscreen();
+			}
+		}
+	}
 
 
 	return (
@@ -137,7 +147,7 @@ export const Primary_View = () => {
 
 								className="master_flex_wrapper"
 							>
-								<div className="width_wrapper">
+								<div className="width_wrapper" ref={fullscreenRef}>
 								{
 									is_edit_mode
 									?
@@ -170,21 +180,10 @@ export const Primary_View = () => {
 										set_Game_Manager_Data={set_Game_Manager_Data}
 										game_manager_loaded={game_manager_loaded}
 									
+										toggle_fullscreen={toggle_fullscreen}
 										connect_context_to_blit_manager={connect_context_to_blit_manager}
 									/>
 								}
-								{/* <div className="instructional_text">
-									{
-										is_edit_mode
-										?
-										<>Press <strong>Arrow Keys</strong> to scroll the map.<br/>
-										Select tiles from the sidebar to place them on the map.</>
-										:
-										<>Press <strong>Arrow Keys</strong> to scroll the map.<br/>
-										Select units by clicking on them.<br/>Select a destination for those units by clicking on the destination tile, or click back on the original tile to cancel a move.<br/>
-										Once all units have orders, click <strong>Next Turn</strong>.</>
-									}
-								</div> */}
 								</div>
 							</div>
 							:
