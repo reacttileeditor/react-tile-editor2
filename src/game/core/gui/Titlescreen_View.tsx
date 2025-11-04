@@ -2,6 +2,7 @@ import { Button } from "rsuite";
 import "./Primary_View.scss";
 import { Dispatch, SetStateAction } from "react";
 import { App_Modes } from "./Primary_View";
+import Foot_Icon from '../../assets/logo.png';
 
 interface Props {
 	set_app_mode: Dispatch<SetStateAction<App_Modes>>,
@@ -16,6 +17,7 @@ export const Titlescreen_View = (props: Props) => {
 				<div className="title_screen_node">
 					<div className="canvas_holder">
 						<div className="title_screen_internal">
+							<img className="logo" src={Foot_Icon}/>
 							<h1>Wiergild</h1>
 							<Button
 								onClick={ () => { 
