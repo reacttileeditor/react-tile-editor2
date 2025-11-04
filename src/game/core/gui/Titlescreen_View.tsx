@@ -19,10 +19,11 @@ export const Titlescreen_View = (props: Props) => {
 							<h1>Wiergild</h1>
 							<Button
 								onClick={ () => { 
-									props.set_app_mode('editor');
+									props.set_app_mode('game');
+									props.set_fullscreen(true);
 								} }
 							>
-								{'Click Here to Begin'}
+								{'Start Game...'}
 							</Button>
 						</div>
 					</div>
