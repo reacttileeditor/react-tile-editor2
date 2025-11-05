@@ -133,11 +133,24 @@ body {
 					.logo {
 						width: 10rem;
 						image-rendering: pixelated;
+						filter: contrast(0.65);
 					}
 
 					h1 {
-						font-size: 4rem;
 						margin: 1rem 0 2rem 0;
+
+						font-family: Breathe Fire II;
+						letter-spacing: 0.5rem;
+						font-size: 6.0rem;
+						line-height: 1.0;
+						color: #43444b;
+						text-shadow: 1px 2px 2px maroon;
+
+						span {
+							font-size: 160%;
+							line-height: 0.2;
+							padding-right: 0.4rem;
+						}
 					}
 				}
 			}

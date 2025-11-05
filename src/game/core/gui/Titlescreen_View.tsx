@@ -18,7 +18,7 @@ export const Titlescreen_View = (props: Props) => {
 					<div className="canvas_holder">
 						<div className="title_screen_internal">
 							<img className="logo" src={Foot_Icon}/>
-							<h1>Wiergild</h1>
+							<h1>{'\u291F '}<span>W</span>iergild {' \u2920'}</h1>
 							<Button
 								onClick={ () => { 
 									props.set_app_mode('game');
