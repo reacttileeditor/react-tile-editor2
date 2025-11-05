@@ -7,6 +7,14 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+	font-family: 'bf2';
+
+		src:	url('~/src/fonts/Chequered_Ink/Breathe Fire II.woff2') format('woff2'), 
+				url('~/src/fonts/Chequered_Ink/Breathe Fire II.otf')  format('opentype'); 
+		font-weight: normal;
+		font-style: normal;
+}
 
 html {
 	font-size: min(calc(1.10vw), calc(1.9vh));
@@ -139,7 +147,7 @@ body {
 					h1 {
 						margin: 1rem 0 2rem 0;
 
-						font-family: Breathe Fire II;
+						font-family: 'bf2';
 						letter-spacing: 0.5rem;
 						font-size: 6.0rem;
 						line-height: 1.0;
