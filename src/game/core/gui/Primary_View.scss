@@ -143,7 +143,7 @@ body {
 						letter-spacing: 0.5rem;
 						font-size: 6.0rem;
 						line-height: 1.0;
-						color: #43444b;
+						color: #43444bdd;
 						text-shadow: 1px 2px 2px maroon;
 
 						span {
@@ -151,6 +151,14 @@ body {
 							line-height: 0.2;
 							padding-right: 0.4rem;
 						}
+
+						background: #222 -webkit-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff)) 0 0 no-repeat;
+						background-size: 1500px;
+						background-clip: text;
+						animation-name: shine;
+						animation-duration: 4s;
+						animation-delay: 4s;
+						animation-iteration-count: infinite;
 					}
 				}
 			}
@@ -474,3 +482,13 @@ body {
 	}
 }
 
+
+@keyframes shine {
+	0% {
+		background-position: -300%;
+	}
+	100% {
+		background-position: 300%;
+	}
+
+}
