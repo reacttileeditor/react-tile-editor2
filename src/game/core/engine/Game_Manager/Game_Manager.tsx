@@ -90,6 +90,7 @@ export type Game_Manager_Data = {
 	update_game_state_for_ui: Function;
 	update_tooltip_state: (p: Game_Tooltip_Data) => void;
 	cursor_pos: Screenspace_Pixel_Point;
+	cursor_tile_pos: Tile_Pos_Point,
 	last_cursor_move_tick: number,
 }
 
@@ -114,6 +115,7 @@ export const New_Game_Manager = (p: {
 		update_game_state_for_ui: ()=>{},
 		update_tooltip_state: ()=>{},
 		cursor_pos: {x: 0, y: 0} as Screenspace_Pixel_Point,
+		cursor_tile_pos: {x: 0, y: 0} as Tile_Pos_Point,
 		last_cursor_move_tick: 0,
 
 		animation_state: {

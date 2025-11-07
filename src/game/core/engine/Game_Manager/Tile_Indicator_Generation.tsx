@@ -337,7 +337,10 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 				...Tilemap_Manager_ƒ.cleared_cache(),
 				asset_blit_list_cache_by_tilemap: new_asset_blit_cache,
 			},
-			gm: me,
+			gm: {
+				...me,
+				cursor_tile_pos: Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos ),
+			},
 		}
 	},
 
@@ -408,6 +411,7 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 			},
 			gm: {
 				...me,
+				cursor_tile_pos: Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos ),
 				game_state: {
 					...me.game_state,
 					selected_object_potential_move_cost: path_cost
