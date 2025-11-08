@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { cloneDeep, concat, filter, find, findIndex, isEmpty, isEqual, isNil, isNumber, last, map, reduce, size, toArray, uniq } from "lodash";
 import { includes } from "ramda"
 
-import { constrain_point_within_rect, ƒ } from "../Utils";
+import { constrain_point_within_rect, dice_anchored_on_specific_random_seed, ƒ } from "../Utils";
 
 import { Canvas_View, Mouse_Button_State } from "../../gui/Canvas_View";
 import { Asset_Manager_Data, Asset_Manager_ƒ } from "../Asset_Manager/Asset_Manager";
@@ -20,8 +20,22 @@ import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
 import { Game_Manager_Data, Game_Manager_ƒ } from "./Game_Manager";
 import { Palette_Names } from "../../data/Palette_List";
+import Prando from "prando";
 
 export const Game_Manager_ƒ_Drawing = {
+	deterministic_random_time_offset_for_creature: (creature: Creature_Data): number => {
+		/*
+			Basically this should always return the same number for a particular tile.  The number should seem wildly random, but be fixed on a per-tile basis.
+
+			This seeds an RNG with the passed-in tile value, and then uses it just once to get a random value.
+		*/
+
+		const RNG = new Prando(creature.unique_id);
+
+		return dice_anchored_on_specific_random_seed(10000000, RNG);
+	},
+
+
 	do_one_frame_of_rendering: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): void => {
 		if(me.animation_state.is_animating_live_game){
 			Game_Manager_ƒ.do_live_game_rendering(me, _BM, _AM, _TM);
@@ -179,7 +193,7 @@ export const Game_Manager_ƒ_Drawing = {
 				_BM:						_BM,
 				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, val.tile_pos),
 				zorder:						zorder.rocks,
-				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
+				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM) + Game_Manager_ƒ.deterministic_random_time_offset_for_creature(val),
 				opacity:					1.0,
 				rotate:						0.0,
 				scale:						1.0,
