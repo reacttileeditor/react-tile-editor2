@@ -14,7 +14,7 @@ import localforage from "localforage";
 import { concat, equals, filter, find, includes, keys, propEq, reduce, slice, uniq, zipWith } from "ramda";
 import { Page } from '@rsuite/icons';
 import { Vals } from "../../constants/Constants";
-import { Creature_Map_Instance, Game_Manager_ƒ } from "../Game_Manager/Game_Manager";
+import { Creature_Map_Instance, Game_Manager_Data, Game_Manager_ƒ } from "../Game_Manager/Game_Manager";
 import { Creature_ƒ } from "../../../objects_core/Creature/Creature";
 import { zorder } from "../../constants/zorder";
 
@@ -49,6 +49,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
+		_GM?: Game_Manager_Data,
 	) => {
 
 
@@ -71,6 +72,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		_BM: Blit_Manager_Data,
 		tilemap_name: Tilemap_Keys,
 		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
+		_GM?: Game_Manager_Data,
 	) => {
 
 		if( !isEqual( me.asset_blit_list_cache_by_tilemap[tilemap_name], [[[]]]) ){
@@ -78,7 +80,8 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				me,
 				_AM,
 				_BM,
-				me.asset_blit_list_cache_by_tilemap[tilemap_name]
+				me.asset_blit_list_cache_by_tilemap[tilemap_name],
+				_GM
 			);
 		} else {
 			const tilemap_of_assets: Asset_Blit_Tilemap = Tilemap_Manager_ƒ.calculate_assets_used_for_individual_tilemap(
@@ -95,7 +98,8 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				me,
 				_AM,
 				_BM,
-				tilemap_of_assets
+				tilemap_of_assets,
+				_GM
 			);
 
 			set_Tilemap_Manager(
@@ -114,7 +118,8 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		me: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
-		tilemap_of_assets: Asset_Blit_Tilemap
+		tilemap_of_assets: Asset_Blit_Tilemap,
+		_GM?: Game_Manager_Data,
 	) => {
 
 		const arrow_tiles = concat(
@@ -449,10 +454,11 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
 		draw_map_data_units: boolean,
 		cursor_pos: Point2D,
+		_GM?: Game_Manager_Data,
 	) => {
 		if(me.initialized){
 			Blit_Manager_ƒ.fill_canvas_with_solid_color(_BM, "#000000");
-			Tilemap_Manager_ƒ.draw_tiles(me, _AM, _BM, set_Tilemap_Manager);
+			Tilemap_Manager_ƒ.draw_tiles(me, _AM, _BM, set_Tilemap_Manager, _GM);
 
 			if(draw_map_data_units){
 				Tilemap_Manager_ƒ.draw_units(me, _AM, _BM, cursor_pos);

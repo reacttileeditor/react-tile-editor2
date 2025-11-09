@@ -157,7 +157,8 @@ export const Game_View = (props: Game_View_Props) => {
 				props.set_Blit_Manager,
 				props.set_Tilemap_Manager,
 				false,
-				new_state.gm.cursor_pos
+				new_state.gm.cursor_pos,
+				props.get_Game_Manager_Data(),
 			);
 
 			Standard_Input_ƒ.move_viewport_based_on_mouse_position(
