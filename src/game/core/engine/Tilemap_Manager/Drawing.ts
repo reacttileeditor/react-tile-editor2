@@ -27,6 +27,7 @@ import Prando from "prando";
 import { Image_Data_Names } from "../../data/Image_Data";
 import { Palette_Names } from "../../data/Palette_List";
 
+import { cubic } from '@juliendargelos/easings'
 
 
 export const Tilemap_Manager_ƒ_Drawing = {
@@ -147,11 +148,16 @@ export const Tilemap_Manager_ƒ_Drawing = {
 					}
 
 					let brightness = 1.0;
-					if( _GM !== undefined && (_BM.time_tracker.current_tick - _GM.last_path_change_tick < 100) ){
+					if( _GM !== undefined && (_BM.time_tracker.current_tick - _GM.last_path_change_tick < 10) ){
 						if(includes(individual_asset.id, thick_arrow_tiles)){
-							brightness = 3.0;
+
+							const fraction = 1.0 - cubic((_BM.time_tracker.current_tick - _GM.last_path_change_tick) / 10.0);
+
+							brightness = 1.0 + 2.0 * fraction;
 						}
 					}
+
+					
 
 					Asset_Manager_ƒ.draw_image_for_asset_name({
 						_AM:						_AM,
