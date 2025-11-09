@@ -61,6 +61,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				_BM,
 				tilemap_name as unknown as Tilemap_Keys,
 				set_Tilemap_Manager,
+				_GM
 			)
 			//}
 		});
@@ -122,10 +123,16 @@ export const Tilemap_Manager_ƒ_Drawing = {
 		_GM?: Game_Manager_Data,
 	) => {
 
-		const arrow_tiles = concat(
+		const skinny_arrow_tiles = concat(
 			Asset_Manager_ƒ.get_all_assets_associated_with_tile_type('arrowhead_skinny_green', _AM),
 			Asset_Manager_ƒ.get_all_assets_associated_with_tile_type('arrow_skinny_green', _AM)
 		);
+
+		const thick_arrow_tiles = concat(
+			Asset_Manager_ƒ.get_all_assets_associated_with_tile_type('arrowhead_green', _AM),
+			Asset_Manager_ƒ.get_all_assets_associated_with_tile_type('arrow_green', _AM)
+		);
+
 
 		tilemap_of_assets.map( (row_value, row_index) => {
 			return row_value.map( (tile_assets, col_index) => {
@@ -135,8 +142,15 @@ export const Tilemap_Manager_ƒ_Drawing = {
 				map(tile_assets, (individual_asset)=>{
 
 					let opacity = 1.0;
-					if(includes(individual_asset.id, arrow_tiles)){
+					if(includes(individual_asset.id, skinny_arrow_tiles)){
 						opacity = 0.5;
+					}
+
+					let brightness = 1.0;
+					if( _GM !== undefined && (_BM.time_tracker.current_tick - _GM.last_path_change_tick < 100) ){
+						if(includes(individual_asset.id, thick_arrow_tiles)){
+							brightness = 3.0;
+						}
 					}
 
 					Asset_Manager_ƒ.draw_image_for_asset_name({
@@ -153,7 +167,7 @@ export const Tilemap_Manager_ƒ_Drawing = {
 						opacity:					opacity,
 						rotate:						0,
 						scale:						1.0,
-						brightness:					1.0,
+						brightness:					brightness,
 						horizontally_flipped:		false,
 						vertically_flipped:			false,
 					})

@@ -92,6 +92,7 @@ export type Game_Manager_Data = {
 	cursor_pos: Screenspace_Pixel_Point;
 	cursor_tile_pos: Tile_Pos_Point,
 	last_cursor_move_tick: number,
+	last_path_change_tick: number,
 }
 
 export type Creature_Map_Instance = {
@@ -117,6 +118,7 @@ export const New_Game_Manager = (p: {
 		cursor_pos: {x: 0, y: 0} as Screenspace_Pixel_Point,
 		cursor_tile_pos: {x: 0, y: 0} as Tile_Pos_Point,
 		last_cursor_move_tick: 0,
+		last_path_change_tick: 0,
 
 		animation_state: {
 			processing_tick: 0,

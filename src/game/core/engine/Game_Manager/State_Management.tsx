@@ -83,6 +83,7 @@ export const Game_Manager_ƒ_State_Management = {
 
 		let new_creature: Creature_Data|undefined = undefined;
 		let new_creature_array = cloneDeep(me.game_state.current_frame_state.creature_list);
+		let changed_path_this_click = false;
 
 		if(newly_selected_creature_index === -1){
 			/*
@@ -113,6 +114,7 @@ export const Game_Manager_ƒ_State_Management = {
 					}
 
 					new_creature_array[me.game_state.selected_object_index] = new_creature;
+					changed_path_this_click = true;
 
 				} else if ( buttons_pressed.right == true ){
 					/*
@@ -192,6 +194,7 @@ export const Game_Manager_ƒ_State_Management = {
 
 		return {
 			...cloneDeep(me),
+			last_path_change_tick: changed_path_this_click ? _BM.time_tracker.current_tick : me.last_path_change_tick,
 			game_state: {
 				...cloneDeep(me.game_state),
 				current_frame_state: {
