@@ -146,7 +146,16 @@ get_highlit_creature: (
 	) );
 },
 
-get_creature_by_uuid: (me: Game_Manager_Data, uuid: string): Creature_Data => {
+get_creature_by_uuid: (me: Game_Manager_Data, uuid: string): Creature_Data|undefined => {
+	let creature = find( Game_Manager_ƒ.get_game_state(me).current_frame_state.creature_list, (val) => (
+		val.unique_id === uuid
+	))
+
+	return creature;
+},
+
+
+get_creature_by_uuid_or_die: (me: Game_Manager_Data, uuid: string): Creature_Data => {
 	let creature = find( Game_Manager_ƒ.get_game_state(me).current_frame_state.creature_list, (val) => (
 		val.unique_id === uuid
 	))

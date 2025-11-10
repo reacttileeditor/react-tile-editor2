@@ -18,7 +18,8 @@ import { CO_Shot_Utils_ƒ } from "../Custom_Object_Utilities/Shot_Utils";
 export type CO_Shot_State = {
 	target_obj: string, //uuid
 	source_obj: string,
-	original_pos: Gamespace_Pixel_Point,
+	last_source_pos: Gamespace_Pixel_Point,
+	last_target_pos: Gamespace_Pixel_Point,
 }
 
 export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
@@ -37,21 +38,22 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 		const GM = me.get_GM_instance();
 
 
-		const target = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.target_obj );
 		const source = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.source_obj );
+		const target = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.target_obj );
 		const lifetime_tick = (tick - me.creation_timestamp);
 
 
+		const source_pos = CO_Shot_Utils_ƒ.get_pos_or_fallback_value(source, _prior_delegate_state.last_source_pos);
+		const target_pos = CO_Shot_Utils_ƒ.get_pos_or_fallback_value(target, _prior_delegate_state.last_target_pos);
 
 
 
 
 		const new_values = CO_Shot_Utils_ƒ.calculate_serpentine_shot_trajectory(
 			me,
-			_prior_delegate_state.original_pos,
 			lifetime_tick,
-			target,
-			source
+			source_pos,
+			target_pos,
 		)
 
 
@@ -74,29 +76,23 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 			}));
 		}
 
-		// if(lifetime_tick == 1 && probable_target_pos){
-		// 	spawnees.push(New_Custom_Object<{}>({
-		// 		accessors: Custom_Object_ƒ.get_accessors(me),
-		// 		pixel_pos: probable_target_pos,
-		// 		type_name: 'target_indicator',
-		// 		creation_timestamp: tick,
-		// 		text: ``,
-		// 		delegate_state: {},
-		// 	}));
-		// }
 
 		return {
 			data: {
 				...Custom_Object_ƒ.get_base_object_state(me),
 				pixel_pos: new_values.pixel_pos,
 				rotate: new_values.rotate,
-				delegate_state: _prior_delegate_state,
+				delegate_state: {
+					...me.delegate_state,
+					last_source_pos: source_pos,
+					last_target_pos: target_pos
+				},
 			},
 			change_list: [],
 			spawnees: spawnees,
 		}
 	},
-	//yield_asset: () => 'arrow_placeholder',
+
 	yield_asset: () => 'arcane_shot',
 
 	should_be_removed: (

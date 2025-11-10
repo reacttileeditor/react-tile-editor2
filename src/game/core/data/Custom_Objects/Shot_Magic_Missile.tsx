@@ -18,7 +18,8 @@ import { CO_Shot_Utils_ƒ } from "../Custom_Object_Utilities/Shot_Utils";
 export type CO_Shot_State = {
 	target_obj: string, //uuid
 	source_obj: string,
-	original_pos: Gamespace_Pixel_Point,
+	last_source_pos: Gamespace_Pixel_Point,
+	last_target_pos: Gamespace_Pixel_Point,
 }
 
 export const CO_Shot_Magic_Missile_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
@@ -41,6 +42,8 @@ export const CO_Shot_Magic_Missile_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 		const source = Game_Manager_ƒ.get_creature_by_uuid( GM, _prior_delegate_state.source_obj );
 		const lifetime_tick = (tick - me.creation_timestamp);
 
+		const source_pos = CO_Shot_Utils_ƒ.get_pos_or_fallback_value(source, _prior_delegate_state.last_source_pos);
+		const target_pos = CO_Shot_Utils_ƒ.get_pos_or_fallback_value(target, _prior_delegate_state.last_target_pos);
 
 
 
@@ -48,10 +51,9 @@ export const CO_Shot_Magic_Missile_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 
 		const new_values = CO_Shot_Utils_ƒ.calculate_serpentine_shot_trajectory(
 			me,
-			_prior_delegate_state.original_pos,
 			lifetime_tick,
-			target,
-			source
+			source_pos,
+			target_pos
 		)
 
 
@@ -79,7 +81,11 @@ export const CO_Shot_Magic_Missile_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 				...Custom_Object_ƒ.get_base_object_state(me),
 				pixel_pos: new_values.pixel_pos,
 				rotate: new_values.rotate,
-				delegate_state: _prior_delegate_state,
+				delegate_state: {
+					...me.delegate_state,
+					last_source_pos: source_pos,
+					last_target_pos: target_pos
+				},
 			},
 			change_list: [],
 			spawnees: spawnees,
