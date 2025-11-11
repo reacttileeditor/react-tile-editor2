@@ -93,6 +93,10 @@ export type Game_Manager_Data = {
 	cursor_tile_pos: Tile_Pos_Point,
 	last_cursor_move_tick: number,
 	last_path_change_tick: number,
+
+	fx_state: {
+		last_click_cursor_tick: number,
+	},
 }
 
 export type Creature_Map_Instance = {
@@ -126,7 +130,9 @@ export const New_Game_Manager = (p: {
 			time_live_game_anim_started__in_ticks: 0,
 			time_paused_game_anim_started__in_ticks: 0,
 		},
-
+		fx_state: {
+			last_click_cursor_tick: 0,
+		},
 
 
 

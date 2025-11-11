@@ -21,6 +21,7 @@ import { Vals } from "../../constants/Constants";
 import { Game_Manager_Data, Game_Manager_ƒ } from "./Game_Manager";
 import { Palette_Names } from "../../data/Palette_List";
 import Prando from "prando";
+import { cubic, elastic, sinusoidal } from "@juliendargelos/easings";
 
 export const Game_Manager_ƒ_Drawing = {
 	deterministic_random_time_offset_for_creature: (creature: Creature_Data): number => {
@@ -47,6 +48,22 @@ export const Game_Manager_ƒ_Drawing = {
 	draw_cursor: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data) => {
 		//const pos = this._TM.convert_tile_coords_to_pixel_coords(0,4); 
 
+		let scale = 1.0;
+		if( _BM.time_tracker.current_tick - me.fx_state.last_click_cursor_tick < 30 ){
+			//sinusoidal(elastic.out
+				const fraction = -(-1.0 + 3 * elastic.out(((_BM.time_tracker.current_tick - me.fx_state.last_click_cursor_tick) / 30.0)));
+
+				scale = 1.0 + (1.0 * fraction);
+		}
+
+		let brightness = 1.0;
+		if( _BM.time_tracker.current_tick - me.fx_state.last_click_cursor_tick < 10 ){
+
+				const fraction = 1.0 - cubic((_BM.time_tracker.current_tick - me.fx_state.last_click_cursor_tick) / 10.0);
+
+				brightness = 1.0 + 2.0 * fraction;
+		}
+
 		Asset_Manager_ƒ.draw_image_for_asset_name({
 			_AM:						_AM,
 			asset_name:					'cursor',
@@ -65,8 +82,8 @@ export const Game_Manager_ƒ_Drawing = {
 			current_milliseconds:		0,
 			opacity:					1.0,
 			rotate:						0,
-			scale:						1.0,
-			brightness:					1.0,
+			scale:						scale,
+			brightness:					brightness,
 			horizontally_flipped:		false,
 			vertically_flipped:			false,
 		})

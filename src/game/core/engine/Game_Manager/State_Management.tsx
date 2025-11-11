@@ -204,6 +204,10 @@ export const Game_Manager_ƒ_State_Management = {
 				selected_object_index: newly_selected_creature_index == -1 ? me.game_state.selected_object_index : newly_selected_creature_index,
 				selected_object_possible_moves: newly_selected_object_possible_moves,
 				turn_list: new_turn_list
+			},
+			fx_state: {
+				...me.fx_state,
+				last_click_cursor_tick: _BM.time_tracker.current_tick
 			}
 		}
 	},
