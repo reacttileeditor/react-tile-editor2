@@ -42,6 +42,18 @@ export const Misc_Image_Data = {
 			h: 34,
 		},
 	},
+	map_cursor_grey_marquee_cutout: {
+		url: "map_cursor_grey_marquee_cutout.png",
+		frames: 6,
+		frame_duration: 80,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 54,
+			h: 34,
+		},
+	},
 	red_dot: {
 		url: "red_dot.png",
 	},

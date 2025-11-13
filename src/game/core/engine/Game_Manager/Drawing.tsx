@@ -66,7 +66,7 @@ export const Game_Manager_ƒ_Drawing = {
 
 		Asset_Manager_ƒ.draw_image_for_asset_name({
 			_AM:						_AM,
-			asset_name:					'map_cursor_grey_marquee',
+			asset_name:					'map_cursor_grey_marquee_cutout',
 			_BM:						_BM,
 			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
 				_TM,
