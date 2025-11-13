@@ -30,6 +30,18 @@ export const Misc_Image_Data = {
 		url: "map-cursor-red-small.png",
 		not_a_tile: true,
 	},
+	map_cursor_grey_marquee: {
+		url: "map-cursor-grey-animation.png",
+		frames: 6,
+		frame_duration: 100,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 54,
+			h: 34,
+		},
+	},
 	red_dot: {
 		url: "red_dot.png",
 	},

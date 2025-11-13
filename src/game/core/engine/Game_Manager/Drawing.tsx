@@ -66,7 +66,7 @@ export const Game_Manager_ƒ_Drawing = {
 
 		Asset_Manager_ƒ.draw_image_for_asset_name({
 			_AM:						_AM,
-			asset_name:					'cursor',
+			asset_name:					'map_cursor_grey_marquee',
 			_BM:						_BM,
 			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
 				_TM,
@@ -79,7 +79,7 @@ export const Game_Manager_ƒ_Drawing = {
 				)
 			),
 			zorder:						zorder.map_cursor_low,
-			current_milliseconds:		0,
+			current_milliseconds:		_BM.time_tracker.current_millisecond,
 			opacity:					1.0,
 			rotate:						0,
 			scale:						scale,
