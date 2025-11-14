@@ -21,7 +21,7 @@ import { Vals } from "../../constants/Constants";
 import { Game_Manager_Data, Game_Manager_ƒ } from "./Game_Manager";
 import { Palette_Names } from "../../data/Palette_List";
 import Prando from "prando";
-import { cubic, elastic, sinusoidal } from "@juliendargelos/easings";
+import { circular, cubic, elastic, exponential, sinusoidal } from "@juliendargelos/easings";
 
 export const Game_Manager_ƒ_Drawing = {
 	deterministic_random_time_offset_for_creature: (creature: Creature_Data): number => {
@@ -49,17 +49,21 @@ export const Game_Manager_ƒ_Drawing = {
 		//const pos = this._TM.convert_tile_coords_to_pixel_coords(0,4); 
 
 		let scale = 1.0;
-		if( _BM.time_tracker.current_tick - me.fx_state.last_click_cursor_tick < 30 ){
+		if( _BM.time_tracker.current_tick - me.fx_state.last_click_cursor_tick < 15 ){
 			//sinusoidal(elastic.out
-				const fraction = -(-1.0 + 3 * elastic.out(((_BM.time_tracker.current_tick - me.fx_state.last_click_cursor_tick) / 30.0)));
+				const core_fraction = ((_BM.time_tracker.current_tick - me.fx_state.last_click_cursor_tick) / 15.0)
 
-				scale = 1.0 + (1.0 * fraction);
+				const rephased_fraction = (core_fraction * 4.0) - 2.0;
+
+				const fraction = rephased_fraction > 0 ? sinusoidal(rephased_fraction) : -sinusoidal(-rephased_fraction);
+
+				scale = 1.0 + (1.0 + fraction)/4;
 		}
 
 		let brightness = 1.0;
-		if( _BM.time_tracker.current_tick - me.fx_state.last_click_cursor_tick < 10 ){
+		if( _BM.time_tracker.current_tick - me.fx_state.last_click_cursor_tick < 15 ){
 
-				const fraction = 1.0 - cubic((_BM.time_tracker.current_tick - me.fx_state.last_click_cursor_tick) / 10.0);
+				const fraction = 1.0 - cubic((_BM.time_tracker.current_tick - me.fx_state.last_click_cursor_tick) / 15.0);
 
 				brightness = 1.0 + 2.0 * fraction;
 		}
@@ -78,7 +82,7 @@ export const Game_Manager_ƒ_Drawing = {
 					me.cursor_pos
 				)
 			),
-			zorder:						zorder.map_cursor_low,
+			zorder:						zorder.map_cursor,
 			current_milliseconds:		_BM.time_tracker.current_millisecond,
 			opacity:					1.0,
 			rotate:						0,
@@ -87,6 +91,30 @@ export const Game_Manager_ƒ_Drawing = {
 			horizontally_flipped:		false,
 			vertically_flipped:			false,
 		})
+
+		Asset_Manager_ƒ.draw_image_for_asset_name({
+			_AM:						_AM,
+			asset_name:					'map_cursor_grey_marquee',
+			_BM:						_BM,
+			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
+				_TM,
+				_AM,
+				Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords(
+					_TM,
+					_AM,
+					_BM,
+					me.cursor_pos
+				)
+			),
+			zorder:						zorder.map_cursor_low,
+			current_milliseconds:		_BM.time_tracker.current_millisecond,
+			opacity:					0.3,
+			rotate:						0,
+			scale:						scale,
+			brightness:					brightness,
+			horizontally_flipped:		false,
+			vertically_flipped:			false,
+		})		
 	},
 
 
