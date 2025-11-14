@@ -18,6 +18,10 @@ export const Misc_Image_Data = {
 		url: "map-cursor-green.png",
 		not_a_tile: true,
 	},
+	cursor_green_filled: {
+		url: "map-cursor-green-filled.png",
+		not_a_tile: true,
+	},
 	cursor_red: {
 		url: "map-cursor-red.png",
 		not_a_tile: true,

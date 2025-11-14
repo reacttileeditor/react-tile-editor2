@@ -232,11 +232,20 @@ export const Game_Manager_ƒ_Drawing = {
 		);
 
 		map( Game_Manager_ƒ.get_current_turn_state(me).creature_list, (val,idx) => {
+
+			const creature_pos = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, val.tile_pos);
+
+			const is_selected_creature = ((me.game_state.selected_object_index !== undefined) && me.game_state.selected_object_index == idx);
+			
+			
 			Asset_Manager_ƒ.draw_image_for_asset_name({
 				_AM:						_AM,
 				asset_name:					Creature_ƒ.yield_animation_asset_for_time(val, _TM, Game_Manager_ƒ.get_time_offset(me, _BM)),
 				_BM:						_BM,
-				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, val.tile_pos),
+				pos:						{
+												x: creature_pos.x,
+												y: creature_pos.y - (is_selected_creature ? 2 : 0)
+											},
 				zorder:						zorder.rocks,
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM) + Game_Manager_ƒ.deterministic_random_time_offset_for_creature(val),
 				opacity:					1.0,
@@ -252,7 +261,10 @@ export const Game_Manager_ƒ_Drawing = {
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
 				_BM:						_BM,
 				_AM:						_AM,
-				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, val.tile_pos),
+				pos:						{
+												x: creature_pos.x,
+												y: creature_pos.y - (is_selected_creature ? 2 : 0)
+											},
 				zorder:						zorder.rocks,
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
@@ -281,14 +293,14 @@ export const Game_Manager_ƒ_Drawing = {
 			} else if ((me.game_state.selected_object_index !== undefined) && me.game_state.selected_object_index == idx) {
 				Asset_Manager_ƒ.draw_image_for_asset_name({
 					_AM:						_AM,
-					asset_name:					'cursor_green',
+					asset_name:					'cursor_green_filled',
 					_BM:						_BM,
 					pos:						val.pixel_pos, 
 					zorder:						zorder.map_cursor,
 					current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 					opacity:					1.0,
 					rotate:						0.0,
-					scale:						1.0 + 0.15 * Math.sin(Game_Manager_ƒ.get_tick_offset(me, _BM) * 0.05),
+					scale:						1.0,
 					brightness:					1.0,
 					horizontally_flipped:		false,
 					vertically_flipped:			false,
