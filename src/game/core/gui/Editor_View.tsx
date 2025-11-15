@@ -13,7 +13,7 @@ import { zorder } from "../constants/zorder";
 import { constrain_point_within_rect, DOMRect_to_Rectangle, is_within_rectangle, useInterval } from "../engine/Utils";
 import { Button, Divider, Drawer, Dropdown, IconButton, Input, List, Modal, RadioTile, RadioTileGroup, Slider, Tooltip, Whisper } from "rsuite";
 import { Icon, Page, Trash, Global, PeoplesCostomize, Copy } from "@rsuite/icons";
-import { BsFileEarmarkLock2, BsFileEarmark, BsClipboard2Plus } from "react-icons/bs";
+import { BsFileEarmarkLock2, BsFileEarmark, BsClipboard2Plus, BsGearFill } from "react-icons/bs";
 import { GiPerspectiveDiceSixFacesOne, GiSpatter } from "react-icons/gi";
 
 
@@ -34,6 +34,7 @@ import { Unit_Palette_Drawer } from "./Editor_Components/Unit_Palette_Drawer";
 import { Editor_Tooltip_Manager } from "./Editor_Components/Editor_Tooltip_Manager";
 import { ReactElement } from "rsuite/esm/internals/types";
 import { App_Modes } from "./Primary_View";
+import { Preferences_Modal } from "./Editor_Components/Preferences_Modal";
 
 
 interface Editor_View_Props {
@@ -64,6 +65,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 	const [tile_cursor_pos, set_tile_cursor_pos] = useState<Tile_Pos_Point>({ x: 0, y: 0 } as Tile_Pos_Point);
 	const [render_tick, set_render_tick] = useState<number>(0);
 
+	const [show_preferences_dialog, set_show_preferences_dialog] = useState<boolean>(false);
 	const [show_load_dialog, set_show_load_dialog] = useState<boolean>(false);
 	const [show_save_dialog, set_show_save_dialog] = useState<boolean>(false);
 	const [show_generate_map_dialog, set_show_generate_map_dialog] = useState<boolean>(false);
@@ -306,6 +308,16 @@ export const Editor_View = (props: Editor_View_Props) => {
 					</Button>
 				</span>
 			</Whisper>
+			<Whisper placement='top' speaker={<Tooltip>{"Open Preferences Dialog"}</Tooltip>}>
+				<IconButton
+					icon={<Icon as={BsGearFill as React.ElementType} />}
+					onClick={()=>{
+						set_show_preferences_dialog(true);
+					}}
+				/>
+			</Whisper>
+			
+			<Divider vertical />
 			<Button
 				onClick={ () => { 
 					set_show_save_dialog(true);
@@ -375,6 +387,13 @@ export const Editor_View = (props: Editor_View_Props) => {
 			className="editor_node"
 			ref={Canvas_View_Ref}
 		>
+			<Preferences_Modal
+				show_preferences_dialog={show_preferences_dialog}
+				set_show_preferences_dialog={set_show_preferences_dialog}
+				_Asset_Manager={props._Asset_Manager}
+				_Tilemap_Manager={props._Tilemap_Manager}
+				set_Tilemap_Manager={props.set_Tilemap_Manager}
+			/>
 			<Load_File_Modal
 				show_load_dialog={show_load_dialog}
 				set_show_load_dialog={set_show_load_dialog}
