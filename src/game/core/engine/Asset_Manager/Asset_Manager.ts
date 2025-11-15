@@ -13,6 +13,7 @@ import { Initialization } from "./Initialization";
 import { Drawing } from "./Drawing";
 import { Accessors } from "./Accessors";
 import { Image_And_Image_Sequence_Data_Names, Image_Data_Dictionary, Image_Data_Names, Image_Data_Type, Image_Sequence_Dictionary } from "../../data/Image_Data";
+import { Preferences_Data, Preferences_Init } from "../Preference_Manager";
 
 export interface Image_Data {
 	url: string,
@@ -144,7 +145,8 @@ export type Asset_Manager_Data = {
 		tile_width: number,
 		tile_height: number,
 	};
-	static_vals: Static_Values;
+	static_vals: Static_Values,
+	preferences: Preferences_Data,
 }
 													
 export const New_Asset_Manager = (): Asset_Manager_Data => {
@@ -155,6 +157,7 @@ export const New_Asset_Manager = (): Asset_Manager_Data => {
 		},
 
 		static_vals: asset_list,
+		preferences: Preferences_Init,
 	}
 }
 

@@ -7,51 +7,8 @@ import { Icon, Trash } from "@rsuite/icons";
 import { BsFileEarmark, BsFileEarmarkLock2 } from "react-icons/bs";
 import { includes } from "ramda";
 import localforage from "localforage";
+import { Preference_Manager_ƒ } from "../../engine/Preference_Manager";
 
-type Preferences_Data = {
-	start_in_titlescreen: boolean,
-	show_unit_hitboxes: boolean,
-}
-
-const Preferences_Init: Preferences_Data = {
-	start_in_titlescreen: true,
-	show_unit_hitboxes: false,
-}
-
-
-export const Preferences_ƒ = {
-
-/*----------------------- file writing -----------------------*/
-load_settings: (
-): void => {
-	let prefs_data = Preferences_Init;
-
-	localforage.getItem<Preferences_Data>('preferences').then((value) => {
-		if(value != null){
-			prefs_data = value;
-		}
-
-		//SET SINGLETON VALUE IN CALLBACK, HERE
-	}).catch((value) => {
-		throw("couldn't load level")
-	});
-},
-
-save_setting: (
-	prior_prefs_data: Preferences_Data,
-	setting_name: string,
-	setting_value: boolean
-): void => {
-
-		const prefs_data: Preferences_Data = {
-			...prior_prefs_data,
-			[setting_name]: setting_value,
-		}
-
-		localforage.setItem('preferences', prefs_data);
-		//SET SINGLETON VALUE IN CALLBACK, HERE
-	},
-}
 
 
 
@@ -65,6 +22,7 @@ export const Preferences_Modal = (props: {
 	const [selected_file, set_selected_file] = useState<string>('');
 	const [deletion_target, set_deletion_target] = useState<string>('');
 
+
 	return <Modal
 		open={props.show_preferences_dialog}
 		onClose={()=>props.set_show_preferences_dialog(false)}
@@ -73,10 +31,37 @@ export const Preferences_Modal = (props: {
 		<h3>Preferences</h3>
 		<div className="label">(Settings will be immediately changed on-click, and are saved in "local storage" - in your browser, not in the cloud.):</div>
 		<div className="label">{`\u00A0`}</div>
+		<div className="label">{JSON.stringify( props._Asset_Manager().preferences )}</div>
 
 		<CheckboxGroup name="checkbox-group">
-			<Checkbox value="A">Start in Fullscreen</Checkbox>
-			<Checkbox value="B">Show Unit Hitboxes</Checkbox>
+			<Checkbox
+				value="start_in_fullscreen"
+				checked={props._Asset_Manager().preferences.start_in_fullscreen}
+				defaultChecked={props._Asset_Manager().preferences.start_in_fullscreen}
+				onChange={	(value, checked: boolean) => {
+
+						Preference_Manager_ƒ.save_individual_preference(
+							props._Asset_Manager(),
+							'start_in_fullscreen',
+							checked
+						)
+					}
+				}
+			>Start in Fullscreen</Checkbox>
+			<Checkbox
+				value="show_unit_hitboxes"
+				checked={props._Asset_Manager().preferences.show_unit_hitboxes}
+				defaultChecked={props._Asset_Manager().preferences.show_unit_hitboxes}
+				onChange={	(value, checked: boolean) => {
+
+						Preference_Manager_ƒ.save_individual_preference(
+							props._Asset_Manager(),
+							'show_unit_hitboxes',
+							checked
+						)
+					}
+				}
+			>Show Unit Hitboxes</Checkbox>
 		</CheckboxGroup>
 
 

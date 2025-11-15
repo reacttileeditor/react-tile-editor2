@@ -19,6 +19,7 @@ import { Vals } from "../constants/Constants";
 import { Loading_View } from "./Loading_View";
 import { ap } from "ramda";
 import { Titlescreen_View } from "./Titlescreen_View";
+import { Preference_Manager_ƒ } from "../engine/Preference_Manager";
 
 interface Props {
 }
@@ -47,7 +48,7 @@ export type App_Modes = 'editor' | 'game' | 'titlescreen';
 
 
 export const Primary_View = () => {
-	const _Asset_Manager: Asset_Manager_Data = New_Asset_Manager();
+	let _Asset_Manager: Asset_Manager_Data = New_Asset_Manager();
 
 	const [app_mode, set_app_mode] = useState<App_Modes>('titlescreen');
 	const [assets_loaded, set_assets_loaded] = useState<boolean>(false);
@@ -58,6 +59,9 @@ export const Primary_View = () => {
 
 	useEffect(() => {
 		console.log('PRIMARY LAUNCH')
+
+		Preference_Manager_ƒ.load_preferences(_Asset_Manager);
+
 		Asset_Manager_ƒ.launch_app(
 			_Asset_Manager,
 			() => { set_assets_loaded(true); },
