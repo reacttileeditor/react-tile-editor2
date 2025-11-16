@@ -60,20 +60,21 @@ export const Primary_View = () => {
 	useEffect(() => {
 		console.log('PRIMARY LAUNCH')
 
-		Preference_Manager_ƒ.load_preferences(_Asset_Manager);
-
-		Asset_Manager_ƒ.launch_app(
+		Preference_Manager_ƒ.load_preferences(
 			_Asset_Manager,
-			() => { set_assets_loaded(true); },
-			set_loaded_fraction,
+			(new_AM: Asset_Manager_Data) => {
+				Asset_Manager_ƒ.launch_app(
+					new_AM,
+					() => { set_assets_loaded(true); },
+					set_loaded_fraction,
+				);
+
+					//might be a race condition on this one, we'll see.
+				set_Tilemap_Manager(
+					Tilemap_Manager_ƒ.get_builtin_level('default_level')
+				);		
+			}
 		);
-
-			//might be a race condition on this one, we'll see.
-		set_Tilemap_Manager(
-			Tilemap_Manager_ƒ.get_builtin_level('default_level')
-		);		
-
-
 
 		return () => {
 			console.log('PRIMARY CLEANUP')

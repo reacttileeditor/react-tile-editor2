@@ -390,9 +390,7 @@ export const Editor_View = (props: Editor_View_Props) => {
 			<Preferences_Modal
 				show_preferences_dialog={show_preferences_dialog}
 				set_show_preferences_dialog={set_show_preferences_dialog}
-				_Asset_Manager={props._Asset_Manager}
-				_Tilemap_Manager={props._Tilemap_Manager}
-				set_Tilemap_Manager={props.set_Tilemap_Manager}
+				_AM={props._Asset_Manager()}
 			/>
 			<Load_File_Modal
 				show_load_dialog={show_load_dialog}

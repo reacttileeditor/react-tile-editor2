@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Asset_Manager_Data } from "../../engine/Asset_Manager/Asset_Manager";
 import { Tilemap_Manager_Data, Tilemap_Manager_ƒ } from "../../engine/Tilemap_Manager/Tilemap_Manager";
 import { Button, Checkbox, CheckboxGroup, Input, List, Modal, Tooltip, Whisper } from "rsuite";
@@ -15,12 +15,25 @@ import { Preference_Manager_ƒ, Preferences_Data } from "../../engine/Preference
 export const Preferences_Modal = (props: {
 	show_preferences_dialog: boolean,
 	set_show_preferences_dialog: Dispatch<SetStateAction<boolean>>,
-	_Asset_Manager: () => Asset_Manager_Data,
-	_Tilemap_Manager: () => Tilemap_Manager_Data,
-	set_Tilemap_Manager: (newVal: Tilemap_Manager_Data) => void,
+	_AM: Asset_Manager_Data,
 }) => {
 	
-	const possible_items =  pickBy(props._Asset_Manager().preferences, (item) => (isBoolean(item)));
+	//fuck react reference frames.
+	const [current_prefs, set_current_prefs] = useState<{ [keyOf: string]: boolean }>({});
+
+
+
+	useEffect(() => {
+		Preference_Manager_ƒ.load_preferences(
+			props._AM,
+			(new_AM: Asset_Manager_Data) => {
+				set_current_prefs(new_AM.preferences)	
+			}
+		);
+	}, []);
+
+
+	const possible_items =  pickBy(current_prefs, (item) => (isBoolean(item)));
 	const possible_item_names = keys(possible_items);
 
 	const selected_items = pickBy(possible_items, (val)=> val == true);
@@ -34,19 +47,19 @@ export const Preferences_Modal = (props: {
 		<h3>Preferences</h3>
 		<div className="label">(Settings will be immediately changed on-click, and are saved in "local storage" - in your browser, not in the cloud.):</div>
 		<div className="label">{`\u00A0`}</div>
-		<div className="label">{JSON.stringify( props._Asset_Manager().preferences )}</div>
+		<div className="label">{JSON.stringify( current_prefs )}</div>
 
 		<CheckboxGroup
 			name="checkbox-group"
 			value={selected_item_names}
 			onChange={new_true_value_names => {
 				let new_prefs_object: { [keyOf: string]: boolean } = {};
-				map( props._Asset_Manager().preferences, (val,idx)=>{
+				map( current_prefs, (val,idx)=>{
 					new_prefs_object[idx] = includes(idx, new_true_value_names)
 				});
 
 				Preference_Manager_ƒ.save_all_preferences(
-					props._Asset_Manager(),
+					props._AM,
 					new_prefs_object as Preferences_Data,
 				);
 			}}			

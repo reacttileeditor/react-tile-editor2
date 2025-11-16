@@ -17,8 +17,9 @@ export const Preference_Manager_ƒ = {
 	/*----------------------- file writing -----------------------*/
 	load_preferences: (
 		_AM: Asset_Manager_Data,
+		do_after_load: (new_AM: Asset_Manager_Data) => void,
 	): void => {
-		let prefs_data = Preferences_Init;
+		let prefs_data = _AM.preferences;
 
 		localforage.getItem<Preferences_Data>('preferences').then((value) => {
 			if(value != null){
@@ -26,8 +27,10 @@ export const Preference_Manager_ƒ = {
 			}
 
 			_AM.preferences = prefs_data;
+
+			do_after_load(_AM);
 		}).catch((value) => {
-			throw("couldn't load level")
+			throw("couldn't load preferences")
 		});
 	},
 
