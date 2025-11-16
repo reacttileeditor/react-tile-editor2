@@ -154,6 +154,7 @@ export const Primary_View = () => {
 											return (<Titlescreen_View
 												set_app_mode={set_app_mode}
 												set_fullscreen={set_fullscreen}
+												_AM={_Asset_Manager}
 											/>);
 										} else if (app_mode == 'editor') {
 											return <Editor_View

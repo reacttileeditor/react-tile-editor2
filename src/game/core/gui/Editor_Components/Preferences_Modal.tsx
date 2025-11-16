@@ -47,7 +47,6 @@ export const Preferences_Modal = (props: {
 		<h3>Preferences</h3>
 		<div className="label">(Settings will be immediately changed on-click, and are saved in "local storage" - in your browser, not in the cloud.):</div>
 		<div className="label">{`\u00A0`}</div>
-		<div className="label">{JSON.stringify( current_prefs )}</div>
 
 		<CheckboxGroup
 			name="checkbox-group"
@@ -62,6 +61,7 @@ export const Preferences_Modal = (props: {
 					props._AM,
 					new_prefs_object as Preferences_Data,
 				);
+				set_current_prefs(new_prefs_object)
 			}}			
 		>
 			{

@@ -1,16 +1,33 @@
 import { Button } from "rsuite";
 import "./Primary_View.scss";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { App_Modes } from "./Primary_View";
 import Foot_Icon from '../../assets/logo.png';
+import { Preference_Manager_ƒ } from "../engine/Preference_Manager";
+import { Asset_Manager_Data } from "../engine/Asset_Manager/Asset_Manager";
 
 interface Props {
 	set_app_mode: Dispatch<SetStateAction<App_Modes>>,
 	set_fullscreen: (status: boolean) => void,
+	_AM: Asset_Manager_Data,
 }
 
 
 export const Titlescreen_View = (props: Props) => {
+
+	const [current_prefs, set_current_prefs] = useState<{ [keyOf: string]: boolean }>({});
+
+
+	useEffect(() => {
+		Preference_Manager_ƒ.load_preferences(
+			props._AM,
+			(new_AM: Asset_Manager_Data) => {
+				set_current_prefs(new_AM.preferences)	
+			}
+		);
+	}, []);
+
+
 	return (
 		<div className="width_wrapper">
 			<div className="title_screen">
@@ -22,7 +39,9 @@ export const Titlescreen_View = (props: Props) => {
 							<Button
 								onClick={ () => { 
 									props.set_app_mode('game');
-									props.set_fullscreen(true);
+									if(current_prefs.start_in_fullscreen){
+										props.set_fullscreen(true);
+									}
 								} }
 							>
 								{'Start Game...'}
