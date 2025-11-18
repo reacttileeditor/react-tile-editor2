@@ -187,11 +187,11 @@ export const Editor_View = (props: Editor_View_Props) => {
 
 		Asset_Manager_ƒ.draw_image_for_asset_name({
 			_AM:						props._Asset_Manager(),
-			asset_name:					'cursor',
+			asset_name:					'map_cursor_grey_marquee_cutout',
 			_BM:						props._Blit_Manager(),
 			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords( props._Tilemap_Manager(), props._Asset_Manager(), tile_cursor_pos ),
 			zorder:						zorder.rocks,
-			current_milliseconds:		0,
+			current_milliseconds:		props._Blit_Manager().time_tracker.current_millisecond,
 			opacity:					1.0,
 			rotate:						0,
 			scale:						1.0,

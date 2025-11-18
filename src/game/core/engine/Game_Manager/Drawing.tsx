@@ -155,28 +155,26 @@ export const Game_Manager_ƒ_Drawing = {
 
 		})
 
-		map( me.game_state.current_frame_state.tiles_blocked_by_creatures, (pos,idx) => {
-			Asset_Manager_ƒ.draw_image_for_asset_name({
-				_AM:						_AM,
-				asset_name:					'white_tile',
-				_BM:						_BM,
-				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, pos), 
-				zorder:						zorder.map_boundary,
-				current_milliseconds:		0.0,
-				opacity:					1.0,
-				rotate:						0.0,
-				scale:						1.0,
-				brightness:					1.0,
-				horizontally_flipped:		false,
-				vertically_flipped:			false,
+
+		if(_AM.preferences.show_unit_hitboxes){
+			map( me.game_state.current_frame_state.tiles_blocked_by_creatures, (pos,idx) => {
+				Asset_Manager_ƒ.draw_image_for_asset_name({
+					_AM:						_AM,
+					asset_name:					'white_tile',
+					_BM:						_BM,
+					pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, pos), 
+					zorder:						zorder.map_boundary,
+					current_milliseconds:		0.0,
+					opacity:					1.0,
+					rotate:						0.0,
+					scale:						1.0,
+					brightness:					1.0,
+					horizontally_flipped:		false,
+					vertically_flipped:			false,
+				});
 			});
-		});	
+		}
 
-		// const creature_tile_positions: Array<Point2D> = map(all_creatures_processed_and_culled, (val)=>(
-		// 	Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, val.pixel_pos)
-		// ))
-
-		// console.log( `creature tile positions: ${JSON.stringify(creature_tile_positions)}` );
 
 
 		map( me.game_state.custom_object_list, (val,idx) => {
@@ -309,24 +307,25 @@ export const Game_Manager_ƒ_Drawing = {
 			}		
 		})
 
-		
-
-		map( me.game_state.current_frame_state.tiles_blocked_by_creatures, (pos,idx) => {
-			Asset_Manager_ƒ.draw_image_for_asset_name({
-				_AM:						_AM,
-				asset_name:					'white_tile',
-				_BM:						_BM,
-				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, pos), 
-				zorder:						zorder.map_boundary,
-				current_milliseconds:		0.0,
-				opacity:					1.0,
-				rotate:						0.0,
-				scale:						1.0,
-				brightness:					1.0,
-				horizontally_flipped:		false,
-				vertically_flipped:			false,
+		console.log(_AM.preferences.show_unit_hitboxes)
+		if(_AM.preferences.show_unit_hitboxes){
+			map( me.game_state.current_frame_state.tiles_blocked_by_creatures, (pos,idx) => {
+				Asset_Manager_ƒ.draw_image_for_asset_name({
+					_AM:						_AM,
+					asset_name:					'white_tile',
+					_BM:						_BM,
+					pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, pos), 
+					zorder:						zorder.map_boundary,
+					current_milliseconds:		0.0,
+					opacity:					1.0,
+					rotate:						0.0,
+					scale:						1.0,
+					brightness:					1.0,
+					horizontally_flipped:		false,
+					vertically_flipped:			false,
+				});
 			});
-		});	
+		}
 
 
 		map( me.game_state.custom_object_list, (val,idx) => {
