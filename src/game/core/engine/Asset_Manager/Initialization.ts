@@ -209,6 +209,17 @@ export const Initialization = {
 		return "#" + Asset_Manager_ƒ.component_to_hex(rgba[0]) + Asset_Manager_ƒ.component_to_hex(rgba[1]) + Asset_Manager_ƒ.component_to_hex(rgba[2]) + Asset_Manager_ƒ.component_to_hex(rgba[3]);
 	},
 
+	apply_magic_color_transparency__to_raw_image_data: (image_data: ImageData): void => {
+		for (let i = 0; i < image_data.data.length; i += 4) {
+			if(
+				image_data.data[i + 0] == 249 &&
+				image_data.data[i + 1] == 48 &&
+				image_data.data[i + 2] == 61
+			){
+				image_data.data[i + 3] = 0;
+			}
+		}
+	},
 
 	apply_magic_color_transparency: (
 		me: Asset_Manager_Data,
@@ -225,34 +236,10 @@ export const Initialization = {
 		osb_ctx.drawImage(temp_image, 0, 0 );
 		const image_data: globalThis.ImageData = osb_ctx.getImageData(0, 0, temp_image.naturalWidth, temp_image.naturalHeight);
 
-		// map( range(temp_image.naturalWidth), (col_val,col_idx) => {
-		// 	return 	map( range(temp_image.naturalHeight), (row_val,row_idx) => {
-		// 		//const color = osb_ctx.getImageData(col_idx, row_idx, 1, 1).data;
+		Asset_Manager_ƒ.apply_magic_color_transparency__to_raw_image_data(image_data);
 
-		// 		if( Asset_Manager_ƒ.rgba_to_hex(color) == "#f9303d00"){
-		// 			alert('magic color!')
-		// 		}
-		// 	})
-		// })
-
-		// map( image_data.data, (val,idx)=> {
-			
-		// })
-
-		for (let i = 0; i < image_data.data.length; i += 4) {
-			if(
-				image_data.data[i + 0] == 249 &&
-				image_data.data[i + 1] == 48 &&
-				image_data.data[i + 2] == 61
-			){
-				image_data.data[i + 3] = 0;
-			}
-		}
 		osb_ctx.putImageData(image_data, 0, 0);
-		// const new_image = osb.toDataURL();
 
-		// osb.remove()
-		//return new_image;
 
 		osb.toBlob((blob: Blob|null) => {
 			if(blob != null){
@@ -327,7 +314,7 @@ export const Initialization = {
 		const image_data: globalThis.ImageData = osb_ctx.getImageData(0, 0, original_image.naturalWidth, original_image.naturalHeight);
 
 		/*----------------------- do the actual color conversion -----------------------*/
-		Asset_Manager_ƒ.apply_individual_palette_HSL_shift(
+		Asset_Manager_ƒ.apply_individual_palette_HSL_shift__to_raw_image_data(
 			image_data,
 			palette,
 		);
@@ -356,7 +343,7 @@ export const Initialization = {
 
 	},
 
-	apply_individual_palette_HSL_shift: (
+	apply_individual_palette_HSL_shift__to_raw_image_data: (
 		image_data: globalThis.ImageData,
 		palette: Palette_Names,
 	) => {
