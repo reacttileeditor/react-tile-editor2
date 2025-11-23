@@ -354,7 +354,7 @@ export const Blit_Manager_ƒ = {
 
 				me.osb_ctx.translate(
 					value.pos.x + viewport_pos.x,
-					value.pos.y + viewport_pos.y - 50
+					value.pos.y + viewport_pos.y,
 				);
 				me.osb_ctx.globalAlpha = value.opacity;
 

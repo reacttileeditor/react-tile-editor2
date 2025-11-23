@@ -46,4 +46,6 @@ export const CT_Human_Footman_ƒ: Creature_Delegate = {
 	),
 
 	action_delay_for_animation: (animation_name: string) => ( 32 ),
+
+	yield_pixel_height: () => 47,
 }

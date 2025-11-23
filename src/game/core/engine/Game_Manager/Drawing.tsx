@@ -261,9 +261,9 @@ export const Game_Manager_ƒ_Drawing = {
 				_AM:						_AM,
 				pos:						{
 												x: creature_pos.x,
-												y: creature_pos.y - (is_selected_creature ? 2 : 0)
+												y: creature_pos.y - (is_selected_creature ? 2 : 0) - Creature_ƒ.get_delegate(val.type_name).yield_pixel_height() - 5,
 											},
-				zorder:						zorder.rocks,
+				zorder:						zorder.text,
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
 			})
