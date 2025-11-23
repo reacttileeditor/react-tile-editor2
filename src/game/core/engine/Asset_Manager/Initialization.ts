@@ -70,13 +70,22 @@ export const Initialization = {
 					}
 
 
-					Asset_Manager_ƒ.apply_magic_color_transparency(me, temp_image, index, do_once_app_ready, set_loaded_fraction );
 					if( value.uses_palette_swap ){
 						Asset_Manager_ƒ.prepare_alternate_palette_colors(
 							me,
 							value,
 							temp_image,
-							index
+							index,
+							do_once_app_ready,
+							set_loaded_fraction
+						);
+					} else {
+						Asset_Manager_ƒ.apply_magic_color_transparency(
+							me,
+							temp_image,
+							index,
+							do_once_app_ready,
+							set_loaded_fraction
 						);
 					}
 
@@ -273,6 +282,8 @@ export const Initialization = {
 		image_data: Image_Data,
 		image_element: HTMLImageElement,
 		image_name: string,
+		do_once_app_ready: ()=>void,
+		set_loaded_fraction: Dispatch<SetStateAction<number>>,
 	)=>{
 		console.log(`applying team color to ${image_data.url}`);
 		
@@ -289,15 +300,27 @@ export const Initialization = {
 				me.static_vals.raw_image_palette_swap_list[ image_name ][palette_key] = new_image_element;
 			}		
 
-			Asset_Manager_ƒ.apply_palette_shift_conversion(image_element, palette_key, set_image);
+			Asset_Manager_ƒ.apply_palette_shift_conversion(
+				me,
+				image_element,
+				palette_key,
+				set_image,
+				image_name,
+				do_once_app_ready,
+				set_loaded_fraction,
+			);
 		})
 	},
 
 
 	apply_palette_shift_conversion: (
+		me: Asset_Manager_Data,
 		original_image: HTMLImageElement,
 		palette: Palette_Names,
 		set_image: (new_image_element: HTMLImageElement) => void,
+		image_name: string,
+		do_once_app_ready: ()=>void,
+		set_loaded_fraction: Dispatch<SetStateAction<number>>,
 	) => {
 
 		/*----------------------- prepare an offscreen buffer -----------------------*/
@@ -319,6 +342,10 @@ export const Initialization = {
 			palette,
 		);
 
+		Asset_Manager_ƒ.apply_magic_color_transparency__to_raw_image_data(
+			image_data
+		);
+
 		osb_ctx.putImageData(image_data, 0, 0);		
 
 		/*----------------------- prepare an offscreen buffer -----------------------*/
@@ -338,6 +365,12 @@ export const Initialization = {
 
 
 				set_image(new_image_element)
+
+				me.static_vals.assets_meta[ image_name ] = {
+					...me.static_vals.assets_meta[ image_name ],
+					preprocessed: true,
+				}
+				Asset_Manager_ƒ.launch_if_all_assets_are_loaded(me, do_once_app_ready, set_loaded_fraction);
 			}
 		})
 
