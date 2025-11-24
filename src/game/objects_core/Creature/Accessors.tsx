@@ -5,7 +5,7 @@ import { ƒ } from "../../core/engine/Utils";
 
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 
-import { Point2D, Rectangle, Tile_Pos_Point } from '../../interfaces';
+import { Gamespace_Pixel_Point, Point2D, Rectangle, Tile_Pos_Point } from '../../interfaces';
 import { Creature_Delegate} from "./Creature_Delegate";
 import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
@@ -67,7 +67,16 @@ export const Creature_ƒ_Accessors = {
 		Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, me.pixel_pos)
 	),
 
+	get_midpoint: (me: Creature_Data): Gamespace_Pixel_Point => (
+		Creature_ƒ.get_midpoint_from_pos(me, me.pixel_pos)
+	),
 
+	get_midpoint_from_pos: (me: Creature_Data, pos: Gamespace_Pixel_Point ): Gamespace_Pixel_Point => (
+		{
+			x: pos.x,
+			y: pos.y - Math.floor( Creature_ƒ.get_delegate(me.type_name).yield_pixel_height()/2 ) 
+		} as Gamespace_Pixel_Point
+	),
 
 	/*----------------------- basetype management -----------------------*/
 	list_all_creature_types: (): Array<Creature_Type_Name> => {

@@ -143,12 +143,16 @@ export const Game_Manager_ƒ_Drawing = {
 				palette:					`team${val.team}` as Palette_Names
 			});
 
+			
 			Asset_Manager_ƒ.draw_hitpoints({
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
 				_BM:						_BM,
 				_AM:						_AM,
-				pos:						val.pixel_pos,
-				zorder:						zorder.rocks,
+				pos:						{
+												x: val.pixel_pos.x,
+												y: val.pixel_pos.y - Creature_ƒ.get_delegate(val.type_name).yield_pixel_height() - 5,
+											},
+				zorder:						zorder.text,
 				current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM),
 				opacity:					1.0,
 			});

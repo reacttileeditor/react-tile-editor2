@@ -162,7 +162,9 @@ export const CO_Shot_Utils_ƒ = {
 			:
 			target.pixel_pos;
 
-		return probable_target_pos;
+		const midpoint = Creature_ƒ.get_midpoint_from_pos(target, probable_target_pos)
+
+		return midpoint;
 	}
 
 }
