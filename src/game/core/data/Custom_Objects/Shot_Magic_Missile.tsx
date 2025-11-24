@@ -115,7 +115,18 @@ export const CO_Shot_Magic_Missile_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data<unknown>>,
 	} => {
-	
+
+		spawnees.push(New_Custom_Object({
+			accessors: Custom_Object_ƒ.get_accessors(me),
+			pixel_pos: me.pixel_pos,
+			type_name: 'shot_magic_missile_explosion',
+			creation_timestamp: tick,
+			text: ``,
+			parent_id: me.unique_id,
+			delegate_state: {
+			},
+		}));
+
 		console.error('do upon removal: magic missile ${tick}')
 		return {
 			change_list: change_list,
