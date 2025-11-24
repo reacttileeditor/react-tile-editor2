@@ -100,6 +100,18 @@ export const Misc_Image_Data = {
 			w: 7,
 			h: 7,
 		},
+	},
+	arcane_shot_impact: {
+		url: "effects/particles5.png",
+		frames: 13,
+		frame_duration: 80,
+		pad: 3,
+		bounds: {
+			x: 1,
+			y: 257,
+			w: 61,
+			h: 61,
+		},
 	}
 };
 	
