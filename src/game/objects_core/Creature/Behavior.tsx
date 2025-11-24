@@ -269,7 +269,7 @@ export const Creature_ƒ_Behavior = {
 				},
 				scheduled_events: [{
 					tick_offset: tick + Vals.shot_flight_duration,
-					command: (change_list_: Array<Change_Instance>, spawnees_: Array<Custom_Object_Data<unknown>>) => {
+					command: (CO: Custom_Object_Data<unknown>, change_list_: Array<Change_Instance>, spawnees_: Array<Custom_Object_Data<unknown>>) => {
 						//alert('damage')
 
 						Creature_ƒ.add(change_list_, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());

@@ -63,7 +63,7 @@ export const Custom_Object_ƒ_Processing = {
 		), scheduled_events);
 
 		map( (val)=>{
-			val.command(change_list, spawnees);
+			val.command(me_after_physics, change_list, spawnees);
 
 			//console.warn( change_list, spawnees )
 		}, current_events );

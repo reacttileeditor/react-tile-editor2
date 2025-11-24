@@ -42,6 +42,7 @@ Base_Object_Accessors;
 export type Scheduled_Event = {
 	tick_offset: number,
 	command: (
+		me: Custom_Object_Data<unknown>,
 		change_list_inner: Array<Change_Instance>,
 		spawnees_: Array<Custom_Object_Data<unknown>>,
 	) => void,
