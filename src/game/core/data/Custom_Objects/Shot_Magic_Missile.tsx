@@ -103,4 +103,24 @@ export const CO_Shot_Magic_Missile_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 		return ƒ.if( (tick - me.creation_timestamp) > Vals.shot_flight_duration, true, false )
 	},
 
+
+
+	do_upon_removal: (
+		me: Custom_Object_Data<CO_Shot_State>,
+		offset_in_ms: number,
+		tick: number,
+		change_list: Array<Change_Instance>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
+	): {
+		change_list: Array<Change_Instance>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
+	} => {
+	
+		console.error('do upon removal: magic missile ${tick}')
+		return {
+			change_list: change_list,
+			spawnees: spawnees
+		}
+	},
+
 }

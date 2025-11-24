@@ -59,6 +59,17 @@ export type Custom_Object_Delegate<Delegate_State_Type> = {
 	should_remove_at_animation_end: (
 		me: Custom_Object_Data<Delegate_State_Type>,
 	) => boolean,
+
+	do_upon_removal: (
+		me: Custom_Object_Data<Delegate_State_Type>,
+		offset_in_ms: number,
+		tick: number,
+		change_list: Array<Change_Instance>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
+	) => {
+		change_list: Array<Change_Instance>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
+	},
 }
 
 
@@ -88,6 +99,20 @@ export const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate<unknown> = {
 			spawnees: [],
 		}
 	},
+
+	do_upon_removal: (
+		me: Custom_Object_Data<unknown>,
+		offset_in_ms: number,
+		tick: number,
+		change_list: Array<Change_Instance>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
+	): {
+		change_list: Array<Change_Instance>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
+	} => ({
+		change_list: change_list,
+		spawnees: spawnees
+	}),
 
 	_should_be_removed: (
 		me: Custom_Object_Data<unknown>,

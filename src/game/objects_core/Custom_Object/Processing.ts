@@ -52,8 +52,8 @@ export const Custom_Object_ƒ_Processing = {
 
 		const processed_data = processed_results.data;
 
-		const change_list: Array<Change_Instance> = processed_results.change_list;
-		const spawnees: Array<Custom_Object_Data<unknown>> = processed_results.spawnees;
+		let change_list: Array<Change_Instance> = processed_results.change_list;
+		let spawnees: Array<Custom_Object_Data<unknown>> = processed_results.spawnees;
 
 /*----------------------- scheduled events -----------------------*/
 		let scheduled_events = me_after_physics.scheduled_events;
@@ -72,6 +72,26 @@ export const Custom_Object_ƒ_Processing = {
 		scheduled_events = without( current_events, scheduled_events);
 
 
+		const should_be_removed = Custom_Object_ƒ.get_delegate(me.type_name)._should_be_removed(
+			me,
+			parent_object,
+			tick,
+			offset_in_ms
+		);
+
+		if(should_be_removed) {
+			const new_lists = Custom_Object_ƒ.do_upon_removal(
+				me_after_physics,		//TODO: WARNING <- could be stale data here; we're not rebuilding a whole CO after the physics, just part of one
+				offset_in_ms,
+				tick,
+				change_list,
+				spawnees
+			)
+
+			change_list = new_lists.change_list;
+			spawnees = new_lists.spawnees;
+		}
+
 
 /*----------------------- final object -----------------------*/
 		const final_values = { 
@@ -87,12 +107,7 @@ export const Custom_Object_ƒ_Processing = {
 				type_name: me.type_name,
 				is_done_with_turn: false, //isEmpty(scheduled_events),
 				creation_timestamp: me.creation_timestamp,
-				should_remove: Custom_Object_ƒ.get_delegate(me.type_name)._should_be_removed(
-					me,
-					parent_object,
-					tick,
-					offset_in_ms
-				),
+				should_remove: should_be_removed,
 				text: me.text,
 				unique_id: me.unique_id,
 				parent_id: parent_id,
@@ -116,5 +131,21 @@ export const Custom_Object_ƒ_Processing = {
 		}
 	},
 
+	do_upon_removal: (
+		me: Custom_Object_Data<unknown>,
+		offset_in_ms: number,
+		tick: number,
+		change_list: Array<Change_Instance>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
+	): {
+		change_list: Array<Change_Instance>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
+	} => (Custom_Object_ƒ.get_delegate(me.type_name).do_upon_removal(
+		me,
+		offset_in_ms,
+		tick,
+		change_list,
+		spawnees,
+	)),
 }
 
