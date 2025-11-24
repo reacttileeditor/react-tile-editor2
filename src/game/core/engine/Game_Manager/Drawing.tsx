@@ -259,6 +259,22 @@ export const Game_Manager_ƒ_Drawing = {
 				palette:					`team${val.team}` as Palette_Names
 			})
 
+			/* text testout */
+			// Asset_Manager_ƒ.draw_text({
+			// 	text:						`${val.team}`,
+			// 	_BM:						_BM,
+			// 	_AM:						_AM,
+			// 	pos:						val.pixel_pos,
+			// 	zorder:						zorder.text,
+			// 	current_milliseconds:		Game_Manager_ƒ.get_time_offset(me, _BM) + Game_Manager_ƒ.deterministic_random_time_offset_for_creature(val),
+			// 	opacity:					1.0,
+			// 	rotate:						0,
+			// 	scale:						1.0,
+			// 	brightness:					1.0,
+			// 	horizontally_flipped:		false,
+			// 	vertically_flipped:			false,
+			// })			
+
 			Asset_Manager_ƒ.draw_hitpoints({
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
 				_BM:						_BM,

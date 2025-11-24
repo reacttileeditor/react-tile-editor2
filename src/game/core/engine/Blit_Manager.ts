@@ -336,11 +336,16 @@ export const Blit_Manager_ƒ = {
 			if( Blit_Manager_ƒ.isDraw_Data_Image_With_BoundsForText(value.drawing_data) ){
 				me.osb_ctx.save();
 				me.osb_ctx.imageSmoothingEnabled = false;
-				me.osb_ctx.font = '16px pixel, sans-serif';
-				me.osb_ctx.textAlign = 'center';
+				//@ts-ignore
+				me.osb_ctx.textRendering = 'geometricPrecision';
+
+				me.osb_ctx.font = '11.0px Endless Boss Battle, sans-serif';
+				me.osb_ctx.textAlign = 'left';
 		
+				const metrics = me.osb_ctx.measureText(value.drawing_data.text)
+
 				me.osb_ctx.translate(
-					value.pos.x + viewport_pos.x,
+					value.pos.x + viewport_pos.x - Math.floor(metrics.width / 2),
 					value.pos.y + viewport_pos.y
 				);
 

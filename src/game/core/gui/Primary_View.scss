@@ -15,6 +15,14 @@
 		font-weight: normal;
 		font-style: normal;
 }
+@font-face {
+	font-family: 'Endless Boss Battle';
+
+		src:	url('~/src/fonts/Chequered_Ink/Endless Boss Battle.woff2') format('woff2'), 
+				url('~/src/fonts/Chequered_Ink/Endless Boss Battle.ttf')  format('truetype'); 
+		font-weight: normal;
+		font-style: normal;
+}
 
 html {
 	font-size: min(calc(1.10vw), calc(1.9vh));
