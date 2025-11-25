@@ -91,15 +91,26 @@ $mult: 0.75;
 						min-width: 10rem;
 
 						div {
-							font-size: 2.5rem;
-							font-weight: 0.5;
 
+							.header {
+								font-size: 2.5rem;
+								text-align: center;
+								//font-weight: 0.5;
+								font-family: 'Ancient Modern Tales';
+								margin-bottom: 1rem;
+							}
+							
 							.body {
-								font-size: 1.5rem;
-								color: #ccc;
+								font-family: 'Super Legend Boy';
+								transform: scaleX(80%);
+								margin: 0 -10%;
+
+								font-size: 1.0rem;
+								color: #ddd;
 
 								strong {
-									color: #ddd;
+									color: #aaa;
+									font-size: 110%;
 								}
 							}
 

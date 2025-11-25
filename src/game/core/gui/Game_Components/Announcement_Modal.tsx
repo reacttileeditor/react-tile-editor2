@@ -60,12 +60,14 @@ export const Announcement_Modal = (props: {
 					(()=>{
 						if( _GS.current_turn == 0 ){
 							return <>
-								<div>{`Starting Game`}</div>
-								<div className='body'><strong>Objective: </strong>{ Game_Manager_ƒ.describe_objectives(_GS.objective_type) }</div>
-								<div className='body'>Click anywhere to continue…</div>
+								<div className="header">{`Starting Game`}</div>
+								<div className='body'><strong>Objective: </strong></div>
+								<div className='body'>{ Game_Manager_ƒ.describe_objectives(_GS.objective_type) }</div>
+								<div className='body'>{`\u00A0`}</div>
+								<div className='body centered'>(Click anywhere to continue…)</div>
 							</>
 						} else {
-							return <div className="centered">{`Turn ${_GS.current_turn}`}</div>
+							return <div className="centered header">{`Turn ${_GS.current_turn}`}</div>
 						}
 					})()
 					
