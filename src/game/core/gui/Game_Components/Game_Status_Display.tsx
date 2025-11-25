@@ -103,20 +103,28 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 			?
 			<>
 			<div
-				className="game_status_display"
+				className={`game_status_display ${selected_creature !== undefined ? '' : 'disabled'}`}
 				ref={props.ref}
 			>
 				<div className="centered_text">
 				{
 					(selected_creature !== undefined ?
-						<Label_and_Data_Pair
-							label={'Selected Unit:'}
-							data={`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_prettyprint_name()}`}
-						/> :
-						<Label_and_Data_Pair
-							label={'No Unit Selected.'}
-							data={`\u00A0`}
-						/>
+						<>
+							<div className="small_caption">
+								{'Selected Unit:'}
+							</div>
+							<div className="text_data">
+								{`${Creature_ƒ.get_delegate(selected_creature.type_name).yield_prettyprint_name()}`}
+							</div>
+						</> :
+						<>
+							<div className="small_caption">
+								{'No Unit Selected.'}
+							</div>
+							<div className="text_data">
+								{`\u00A0`}
+							</div>
+						</>
 					)
 				}
 				</div>
@@ -193,22 +201,22 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 						<Icon_and_Data_Pair
 							label={'Team'}
 							icon={Flag_Icon}
-							data={`\u00A0`}
+							data={`--`}
 						/>
 						<Icon_and_Data_Pair
 							label={'Hitpoints'}
 							icon={Heart_Icon}
-							data={`\u00A0`}
+							data={`--`}
 						/>
 						<Icon_and_Data_Pair
 							label={'Moves'}
 							icon={Foot_Icon}
-							data={`\u00A0`}
+							data={`--`}
 						/>
 						<Icon_and_Data_Pair
 							label={'Damage'}
 							icon={Damage_Icon}
-							data={`\u00A0`}
+							data={`--`}
 						/>
 					</>
 				}</>

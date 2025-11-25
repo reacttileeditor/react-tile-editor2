@@ -1,6 +1,7 @@
 @import '../backgrounds.scss';
 
 .master_node {
+
 	.centered_text {
 		text-align: center;
 		align-self: center;
@@ -46,6 +47,7 @@
 		border: 0.25rem solid black;
 		border-radius: 0.5rem;
 	
+		font-family: 'Messe Duesseldorf';//'Eight Bit Dragon';
 		
 		flex-shrink: 0;
 		
@@ -63,6 +65,15 @@
 		}
 		@include smoke-glass-border-tall;
 		@include smoke-glass-bg;
+
+
+		.small_caption {
+			font-size: 0.9rem;
+		}
+		.text_data {
+			color: #fff1f1;
+			font-size: 1.0rem;
+		}
 
 		.tile_cell {
 			width: 12rem;
@@ -97,6 +108,12 @@
 	}
 
 	.game_status_display, .next_turn_control {
+
+		&.disabled {
+			.icon_and_data_pair {
+				opacity: 0.5;
+			}
+		}
 		.icon_and_data_pair {
 			display: flex;
 			flex-flow: row;

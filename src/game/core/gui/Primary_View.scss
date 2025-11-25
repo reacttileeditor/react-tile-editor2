@@ -7,14 +7,34 @@
     font-weight: normal;
     font-style: normal;
 }
+
 @font-face {
-	font-family: 'bf2';
+	font-family: 'Ancient Modern Tales';
+
+		src:	url('~/src/fonts/Chequered_Ink/Ancient Modern Tales.woff2') format('woff2'), 
+				url('~/src/fonts/Chequered_Ink/Ancient Modern Tales.otf')  format('opentype'); 
+		font-weight: normal;
+		font-style: normal;
+}
+
+@font-face {
+	font-family: 'Breathe Fire II';
 
 		src:	url('~/src/fonts/Chequered_Ink/Breathe Fire II.woff2') format('woff2'), 
 				url('~/src/fonts/Chequered_Ink/Breathe Fire II.otf')  format('opentype'); 
 		font-weight: normal;
 		font-style: normal;
 }
+
+@font-face {
+	font-family: 'Eight Bit Dragon';
+
+		src:	url('~/src/fonts/Chequered_Ink/Eight Bit Dragon.woff2') format('woff2'), 
+				url('~/src/fonts/Chequered_Ink/Eight Bit Dragon.otf')  format('opentype'); 
+		font-weight: normal;
+		font-style: normal;
+}
+
 @font-face {
 	font-family: 'Endless Boss Battle';
 
@@ -23,6 +43,29 @@
 		font-weight: normal;
 		font-style: normal;
 }
+
+@font-face {
+	font-family: 'Messe Duesseldorf';
+
+		src:	url('~/src/fonts/Chequered_Ink/Messe Duesseldorf.woff2') format('woff2'), 
+				url('~/src/fonts/Chequered_Ink/Messe Duesseldorf.ttf')  format('truetype'); 
+		font-weight: normal;
+		font-style: normal;
+}
+
+@font-face {
+	font-family: 'Hannover Messe Serif';
+
+		src:	url('~/src/fonts/Chequered_Ink/Hannover Messe Serif.woff2') format('woff2'), 
+				url('~/src/fonts/Chequered_Ink/Hannover Messe Serif.otf')  format('opentype'); 
+		font-weight: normal;
+		font-style: normal;
+}
+
+
+
+
+
 
 html {
 	font-size: min(calc(1.10vw), calc(1.9vh));
@@ -155,7 +198,7 @@ body {
 					h1 {
 						margin: 1rem 0 2rem 0;
 
-						font-family: 'bf2';
+						font-family: 'Breathe Fire II';
 						letter-spacing: 0.5rem;
 						font-size: 6.0rem;
 						line-height: 1.0;
