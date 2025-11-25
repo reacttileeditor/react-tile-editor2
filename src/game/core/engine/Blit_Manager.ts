@@ -618,8 +618,16 @@ export const Blit_Manager_ƒ = {
 	draw_fps_text: ( me: Blit_Manager_Data) => {
 		me.osb_ctx.save();
 		me.osb_ctx.imageSmoothingEnabled = false;
-		me.osb_ctx.font = 'bold 18px pixel, sans-serif';
+//		me.osb_ctx.font = 'bold 18px pixel, sans-serif';
 		me.osb_ctx.textAlign = 'left';
+
+		me.osb_ctx.imageSmoothingEnabled = false;
+		//@ts-ignore
+		me.osb_ctx.textRendering = 'geometricPrecision';
+
+		me.osb_ctx.font = '11.0px Endless Boss Battle, sans-serif';
+
+		
 		//me.osb_ctx.imageSmoothingEnabled = true;
 		//me.osb_ctx.letterSpacing = '1.5px';		//TODO:  this works but typescript or the build tool doesn't understand that it's legal, yet.
 
@@ -628,15 +636,15 @@ export const Blit_Manager_ƒ = {
 	    //me.osb_ctx.shadowOffsetY = 2;
 	    //me.osb_ctx.shadowBlur = 3;
 
-		const text = `FPS: ${me.time_tracker.prior_frame_count.toString()}`;
+		const text = `FPS:  ${me.time_tracker.prior_frame_count.toString()}`;
 		const position: Point2D = {x: 10, y: Math.round(me.osb_ctx.canvas.height - 14)}
 
 		me.osb_ctx.strokeStyle = 'black';
-		//me.osb_ctx.miterLimit = 1;
-		me.osb_ctx.lineJoin = 'round';
-		me.osb_ctx.lineWidth = 3;
+		me.osb_ctx.miterLimit = 1;
+		me.osb_ctx.lineJoin = 'miter';
+		me.osb_ctx.lineWidth = 2.25;
 		me.osb_ctx.textBaseline = 'middle';
-		me.osb_ctx.strokeText(text, position.x, position.y);
+		me.osb_ctx.strokeText(text, position.x, position.y + 1);
 		
 	    me.osb_ctx.fillStyle = "#ffffff";
 		me.osb_ctx.fillText(text, position.x, position.y);
