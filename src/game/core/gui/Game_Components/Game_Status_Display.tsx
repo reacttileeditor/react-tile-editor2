@@ -190,21 +190,24 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 							canvas_size={ {x: 100, y: 100} }
 							centering_offset={ {x: 0, y: -0.6} }
 						/>
-						<Label_and_Data_Pair
-							label={'Team:'}
+						<Icon_and_Data_Pair
+							label={'Team'}
+							icon={Flag_Icon}
 							data={`\u00A0`}
 						/>
-
-						<Label_and_Data_Pair
-							label={'Hitpoints:'}
+						<Icon_and_Data_Pair
+							label={'Hitpoints'}
+							icon={Heart_Icon}
 							data={`\u00A0`}
 						/>
-						<Label_and_Data_Pair
-							label={'Moves:'}
+						<Icon_and_Data_Pair
+							label={'Moves'}
+							icon={Foot_Icon}
 							data={`\u00A0`}
 						/>
-						<Label_and_Data_Pair
-							label={'Damage:'}
+						<Icon_and_Data_Pair
+							label={'Damage'}
+							icon={Damage_Icon}
 							data={`\u00A0`}
 						/>
 					</>
