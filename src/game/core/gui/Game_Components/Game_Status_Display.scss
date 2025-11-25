@@ -27,15 +27,19 @@
 			border: 0.2rem #777;
 			border-style: outset;
 			border-radius: 0;
-			font-family: "pixel";
-			font-size: 2rem;
+			font-family: "Hannover Messe Serif";
+			font-size: 1.2rem;
+			font-weight: normal;
 		}
 
 		.annotations {
 			margin-top: 1rem;
-			font-family: 'pixel';
-			font-size: 1.5rem;
-			color: white;
+			font-family: 'Messe Duesseldorf';
+			//font-size: 1.5rem;
+			display: flex;
+			flex-flow: column nowrap;
+			justify-content: center;
+			align-items: center;
 		}
 
 	}
@@ -157,13 +161,13 @@
 			line-height: 1.5;
 
 			.label {
-				font-weight: 600;
+				color: #c7c4c4;
 				margin-right: 0.3em;
-				font-size: 0.9rem;
+				font-size: 1.0rem;
 			}
 			.data {
 				color: #fff1f1;
-				font-size: 1.0rem;
+				font-size: 1.2rem;
 			}
 		}
 	}

@@ -66,7 +66,10 @@ export const New_Turn_Controls = (props: Game_Status_Display_Props ) => {
 			{`${_GM.animation_state.is_animating_live_game ? 'Playing…': 'Next Turn'}`}
 		</Button>
 		<div className="annotations">
-			{`Turn: ${_GS.current_turn}`}
+			<Label_and_Data_Pair
+				label={'Turn:'}
+				data={`${_GS.current_turn}`}
+			/>
 		</div>
 	</div>
 }
