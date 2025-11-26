@@ -9,7 +9,7 @@ import { Gamespace_Pixel_Point, Point2D, Rectangle, Tile_Pos_Point } from '../..
 import { Creature_Delegate} from "./Creature_Delegate";
 import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
-import { Core_Accessors, Creature_Data, Creature_Type_Name, Creature_ƒ } from "./Creature";
+import { Change_Instance, Core_Accessors, Creature_Data, Creature_Type_Name, Creature_ƒ } from "./Creature";
 import { CT_Hermit_ƒ } from "../../core/data/Creatures/Hermit";
 import { CT_Peasant_ƒ } from "../../core/data/Creatures/Peasant";
 import { CT_Skeleton_ƒ } from "../../core/data/Creatures/Skeleton";
@@ -77,6 +77,21 @@ export const Creature_ƒ_Accessors = {
 			y: pos.y - Math.floor( Creature_ƒ.get_delegate(me.type_name).yield_pixel_height()/2 ) 
 		} as Gamespace_Pixel_Point
 	),
+
+
+	/*----------------------- setters -----------------------*/
+	adjust_hitpoints: (
+		target: Creature_Data,
+		change_list: Array<Change_Instance>,
+		offset_in_ms: number,
+		damage_amount: number,
+	) => {
+		//add/set directly push to the array; no return needed.
+
+		Creature_ƒ.add(change_list, target, 'current_hitpoints', -damage_amount);
+		Creature_ƒ.set(change_list, target, 'last_changed_hitpoints', offset_in_ms);
+		Creature_ƒ.add(change_list, target, 'hitpoint_change_tally', damage_amount);
+	},
 
 	/*----------------------- basetype management -----------------------*/
 	list_all_creature_types: (): Array<Creature_Type_Name> => {

@@ -178,6 +178,23 @@ export const Creature_ƒ_Processing = {
 	},
 
 
+/*----------------------- management -----------------------*/
+	// manage_hitpoint_mutation: (
+	// 	me: Creature_Data,
+	// 	offset_in_ms: number,
+	// 	tick: number,
+
+	// ): {
+	// 	change_list: Array<Change_Instance>,
+	// 	spawnees: Array<Custom_Object_Data<unknown>>
+	// } => {
+	// 	if(
+	// 		me.last_changed_hitpoints == (tick - 1)
+	// 	){
+
+	// 	}
+	// },
+
 /*----------------------- central processing -----------------------*/
 
 	process_single_frame: (

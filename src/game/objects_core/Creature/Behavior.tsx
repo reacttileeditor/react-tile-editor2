@@ -272,8 +272,12 @@ export const Creature_ƒ_Behavior = {
 					command: (CO: Custom_Object_Data<unknown>, change_list_: Array<Change_Instance>, spawnees_: Array<Custom_Object_Data<unknown>>) => {
 						//alert('damage')
 
-						Creature_ƒ.add(change_list_, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
-						Creature_ƒ.set(change_list_, target, 'last_changed_hitpoints', offset_in_ms);
+						Creature_ƒ.adjust_hitpoints(
+							target,
+							change_list_,
+							offset_in_ms,
+							Creature_ƒ.get_delegate(me.type_name).yield_damage(),
+						);
 
 						spawnees_.push(New_Custom_Object({
 							accessors: Creature_ƒ.get_accessors(me),
@@ -298,8 +302,12 @@ export const Creature_ƒ_Behavior = {
 				is_done_with_turn: false,
 			}));
 		} else {
-			Creature_ƒ.add(change_list, target, 'current_hitpoints', -Creature_ƒ.get_delegate(me.type_name).yield_damage());
-			Creature_ƒ.set(change_list, target, 'last_changed_hitpoints', offset_in_ms);
+			Creature_ƒ.adjust_hitpoints(
+				target,
+				change_list,
+				offset_in_ms,
+				Creature_ƒ.get_delegate(me.type_name).yield_damage(),
+			);
 
 			spawnees.push(New_Custom_Object({
 				accessors: Creature_ƒ.get_accessors(me),
