@@ -83,13 +83,13 @@ export const Creature_ƒ_Accessors = {
 	adjust_hitpoints: (
 		target: Creature_Data,
 		change_list: Array<Change_Instance>,
-		offset_in_ms: number,
+		tick: number,
 		damage_amount: number,
 	) => {
 		//add/set directly push to the array; no return needed.
 
 		Creature_ƒ.add(change_list, target, 'current_hitpoints', -damage_amount);
-		Creature_ƒ.set(change_list, target, 'last_changed_hitpoints', offset_in_ms);
+		Creature_ƒ.set(change_list, target, 'last_changed_hitpoints', tick);
 		Creature_ƒ.add(change_list, target, 'hitpoint_change_tally', damage_amount);
 	},
 

@@ -257,6 +257,8 @@ export const Creature_ƒ_Behavior = {
 
 		if( Creature_ƒ.get_delegate(me.type_name).yield_weapon_range() > 1 ){
 
+			const tick_offset = tick + Vals.shot_flight_duration;
+
 			spawnees.push(New_Custom_Object({
 				accessors: Creature_ƒ.get_accessors(me),
 				pixel_pos: me.pixel_pos,
@@ -268,14 +270,13 @@ export const Creature_ƒ_Behavior = {
 					original_pos: me.pixel_pos,
 				},
 				scheduled_events: [{
-					tick_offset: tick + Vals.shot_flight_duration,
+					tick_offset: tick_offset,
 					command: (CO: Custom_Object_Data<unknown>, change_list_: Array<Change_Instance>, spawnees_: Array<Custom_Object_Data<unknown>>) => {
-						//alert('damage')
 
 						Creature_ƒ.adjust_hitpoints(
 							target,
 							change_list_,
-							offset_in_ms,
+							tick_offset,
 							Creature_ƒ.get_delegate(me.type_name).yield_damage(),
 						);
 
@@ -283,7 +284,7 @@ export const Creature_ƒ_Behavior = {
 							accessors: Creature_ƒ.get_accessors(me),
 							pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2} as Gamespace_Pixel_Point,
 							type_name: 'text_label',
-							creation_timestamp: tick,
+							creation_timestamp: tick_offset,
 							text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
 							delegate_state: {},
 						}));
@@ -292,7 +293,7 @@ export const Creature_ƒ_Behavior = {
 							accessors: Creature_ƒ.get_accessors(me),
 							pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20} as Gamespace_Pixel_Point,
 							type_name: 'hit_star_bg',
-							creation_timestamp: tick,
+							creation_timestamp: tick_offset,
 							delegate_state: {
 								angle: angle_between({source: me.tile_pos, dest: target.tile_pos})
 							},
@@ -305,7 +306,7 @@ export const Creature_ƒ_Behavior = {
 			Creature_ƒ.adjust_hitpoints(
 				target,
 				change_list,
-				offset_in_ms,
+				tick,
 				Creature_ƒ.get_delegate(me.type_name).yield_damage(),
 			);
 
