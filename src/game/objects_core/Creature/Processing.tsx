@@ -179,21 +179,37 @@ export const Creature_ƒ_Processing = {
 
 
 /*----------------------- management -----------------------*/
-	// manage_hitpoint_mutation: (
-	// 	me: Creature_Data,
-	// 	offset_in_ms: number,
-	// 	tick: number,
+	manage_hitpoint_mutation: (
+		me: Creature_Data,
+		offset_in_ms: number,
+		tick: number,
+		change_list: Array<Change_Instance>,
+		spawnees: Array<Custom_Object_Data<unknown>>
+	): {
+		change_list: Array<Change_Instance>,
+		spawnees: Array<Custom_Object_Data<unknown>>
+	} => {
+		if(
+			me.last_changed_hitpoints == (tick - 30)
+		){
 
-	// ): {
-	// 	change_list: Array<Change_Instance>,
-	// 	spawnees: Array<Custom_Object_Data<unknown>>
-	// } => {
-	// 	if(
-	// 		me.last_changed_hitpoints == (tick - 1)
-	// 	){
+			spawnees.push(New_Custom_Object({
+				accessors: Creature_ƒ.get_accessors(me),
+				pixel_pos: Creature_ƒ.get_midpoint(me),
+				type_name: 'text_label',
+				creation_timestamp: tick,
+				text: `${me.hitpoint_change_tally}`,
+				delegate_state: {},
+			}));
+			
+			Creature_ƒ.set(change_list, me, 'hitpoint_change_tally', 0);
+		}
 
-	// 	}
-	// },
+		return {
+			change_list: change_list,
+			spawnees: spawnees
+		}
+	},
 
 /*----------------------- central processing -----------------------*/
 
@@ -212,6 +228,14 @@ export const Creature_ƒ_Processing = {
 		let change_list: Array<Change_Instance> = [];
 		const spawnees: Array<Custom_Object_Data<unknown>> = [];
 
+
+		Creature_ƒ.manage_hitpoint_mutation(
+			me,
+			offset_in_ms,
+			tick,
+			change_list,
+			spawnees
+		)
 
 		if( tick >= me.next_behavior_reconsideration_timestamp ) {
 			AI_Core_ƒ.reconsider_behavior(me, _TM, _AM, _BM, _GM, offset_in_ms, tick, change_list, spawnees);

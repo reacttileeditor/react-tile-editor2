@@ -280,14 +280,14 @@ export const Creature_ƒ_Behavior = {
 							Creature_ƒ.get_delegate(me.type_name).yield_damage(),
 						);
 
-						spawnees_.push(New_Custom_Object({
-							accessors: Creature_ƒ.get_accessors(me),
-							pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2} as Gamespace_Pixel_Point,
-							type_name: 'text_label',
-							creation_timestamp: tick_offset,
-							text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
-							delegate_state: {},
-						}));
+						// spawnees_.push(New_Custom_Object({
+						// 	accessors: Creature_ƒ.get_accessors(me),
+						// 	pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2} as Gamespace_Pixel_Point,
+						// 	type_name: 'text_label',
+						// 	creation_timestamp: tick_offset,
+						// 	text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
+						// 	delegate_state: {},
+						// }));
 				
 						spawnees_.push(New_Custom_Object({
 							accessors: Creature_ƒ.get_accessors(me),
@@ -310,14 +310,14 @@ export const Creature_ƒ_Behavior = {
 				Creature_ƒ.get_delegate(me.type_name).yield_damage(),
 			);
 
-			spawnees.push(New_Custom_Object({
-				accessors: Creature_ƒ.get_accessors(me),
-				pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2} as Gamespace_Pixel_Point,
-				type_name: 'text_label',
-				creation_timestamp: tick,
-				text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
-				delegate_state: {},
-			}));
+			// spawnees.push(New_Custom_Object({
+			// 	accessors: Creature_ƒ.get_accessors(me),
+			// 	pixel_pos: {x: target.pixel_pos.x + 1, y: target.pixel_pos.y - 20 - 2} as Gamespace_Pixel_Point,
+			// 	type_name: 'text_label',
+			// 	creation_timestamp: tick,
+			// 	text: `${Creature_ƒ.get_delegate(me.type_name).yield_damage()}`,
+			// 	delegate_state: {},
+			// }));
 	
 			spawnees.push(New_Custom_Object({
 				accessors: Creature_ƒ.get_accessors(me),
