@@ -418,15 +418,15 @@ export const Blit_Manager_ƒ = {
 				me.osb_ctx.fillRect(
 					-12,
 					-2,
-					Math.round(24 * value.drawing_data.portion),
+					Math.floor(24 * value.drawing_data.portion),
 					3
 				);
 
 				me.osb_ctx.fillStyle = `rgba(${255}, ${255}, ${255}, ${255})`;
 				me.osb_ctx.fillRect(
-					-12 + Math.round(24 * value.drawing_data.portion),
+					-12 + Math.floor(24 * value.drawing_data.portion),
 					-2,
-					Math.round(24 * value.drawing_data.buffer),
+					Math.floor(24 * value.drawing_data.buffer),
 					3
 				);
 

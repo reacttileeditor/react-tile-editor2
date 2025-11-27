@@ -144,10 +144,12 @@ export const Game_Manager_ƒ_Drawing = {
 			});
 
 			const at_full_health = val.current_hitpoints == Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints();
+			const fade_buffer_fraction = 1.0 - cubic.in((me.animation_state.processing_tick - val.last_changed_hitpoints) / 30.0);
+
 
 			Asset_Manager_ƒ.draw_hitpoints({
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
-				buffer:						val.hitpoint_change_tally / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
+				buffer:						((val.hitpoint_change_tally * fade_buffer_fraction) / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints()),
 				_BM:						_BM,
 				_AM:						_AM,
 				pos:						{
