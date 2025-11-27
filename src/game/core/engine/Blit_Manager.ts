@@ -41,6 +41,7 @@ interface Draw_Data_Text {
 }
 
 interface Draw_Data_Hitpoints {
+	buffer:	number, //normalized (0.0 to 1.0)
 	portion: number, //normalized (0.0 to 1.0)
 }
 
@@ -414,7 +415,21 @@ export const Blit_Manager_ƒ = {
 				
 
 				me.osb_ctx.fillStyle = `rgba(${final_color[0]}, ${final_color[1]}, ${final_color[2]}, ${final_color[3]})`;//'#32a852';
-				me.osb_ctx.fillRect( -12, -2, Math.round(24 * value.drawing_data.portion), 3);
+				me.osb_ctx.fillRect(
+					-12,
+					-2,
+					Math.round(24 * value.drawing_data.portion),
+					3
+				);
+
+				me.osb_ctx.fillStyle = `rgba(${255}, ${255}, ${255}, ${255})`;
+				me.osb_ctx.fillRect(
+					-12 + Math.round(24 * value.drawing_data.portion),
+					-2,
+					Math.round(24 * value.drawing_data.buffer),
+					3
+				);
+
 
 				me.osb_ctx.restore();
 			} else if( Blit_Manager_ƒ.isDraw_Data_Image_With_BoundsWithBounds(value.drawing_data) ){

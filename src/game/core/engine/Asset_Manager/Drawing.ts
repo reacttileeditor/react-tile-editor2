@@ -411,6 +411,7 @@ export const Drawing = {
 
 	draw_hitpoints: (p: {
 		portion: number,
+		buffer: number,
 		_BM: Blit_Manager_Data,
 		_AM: Asset_Manager_Data,
 		pos: Point2D,
@@ -431,6 +432,7 @@ export const Drawing = {
 			vertically_flipped:		false,
 			drawing_data:			{
 										portion: p.portion,
+										buffer: p.buffer,
 									}
 		});
 	},

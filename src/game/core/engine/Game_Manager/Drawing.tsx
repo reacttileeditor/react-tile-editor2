@@ -149,6 +149,7 @@ export const Game_Manager_ƒ_Drawing = {
 			
 			Asset_Manager_ƒ.draw_hitpoints({
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
+				buffer:						0.1,
 				_BM:						_BM,
 				_AM:						_AM,
 				pos:						{
@@ -280,6 +281,7 @@ export const Game_Manager_ƒ_Drawing = {
 
 			Asset_Manager_ƒ.draw_hitpoints({
 				portion:					val.current_hitpoints / Creature_ƒ.get_delegate(val.type_name).yield_max_hitpoints(),
+				buffer:						0.1,
 				_BM:						_BM,
 				_AM:						_AM,
 				pos:						{
