@@ -86,4 +86,33 @@ export const CO_Shot_Javelin_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 		return ƒ.if( (tick - me.creation_timestamp) > Vals.shot_flight_duration, true, false )
 	},
 
+
+	do_upon_removal: (
+		me: Custom_Object_Data<CO_Shot_State>,
+		offset_in_ms: number,
+		tick: number,
+		change_list: Array<Change_Instance>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
+	): {
+		change_list: Array<Change_Instance>,
+		spawnees: Array<Custom_Object_Data<unknown>>,
+	} => {
+
+		spawnees.push(New_Custom_Object({
+			accessors: Custom_Object_ƒ.get_accessors(me),
+			pixel_pos: me.pixel_pos,
+			type_name: 'hit_star_bg',
+			creation_timestamp: tick,
+			text: ``,
+			parent_id: me.unique_id,
+			delegate_state: {
+			},
+		}));
+
+		return {
+			change_list: change_list,
+			spawnees: spawnees
+		}
+	},	
+
 }

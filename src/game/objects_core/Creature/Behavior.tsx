@@ -289,15 +289,15 @@ export const Creature_ƒ_Behavior = {
 						// 	delegate_state: {},
 						// }));
 				
-						spawnees_.push(New_Custom_Object({
-							accessors: Creature_ƒ.get_accessors(me),
-							pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20} as Gamespace_Pixel_Point,
-							type_name: 'hit_star_bg',
-							creation_timestamp: tick_offset,
-							delegate_state: {
-								angle: angle_between({source: me.tile_pos, dest: target.tile_pos})
-							},
-						}));					
+						// spawnees_.push(New_Custom_Object({
+						// 	accessors: Creature_ƒ.get_accessors(me),
+						// 	pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20} as Gamespace_Pixel_Point,
+						// 	type_name: 'hit_star_bg',
+						// 	creation_timestamp: tick_offset,
+						// 	delegate_state: {
+						// 		angle: angle_between({source: me.tile_pos, dest: target.tile_pos})
+						// 	},
+						// }));					
 					}
 				}],
 				is_done_with_turn: false,
