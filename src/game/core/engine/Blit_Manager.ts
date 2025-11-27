@@ -349,6 +349,14 @@ export const Blit_Manager_ƒ = {
 					value.pos.y + viewport_pos.y
 				);
 
+
+				me.osb_ctx.strokeStyle = '#4e0000';
+				me.osb_ctx.miterLimit = 1;
+				me.osb_ctx.lineJoin = 'miter';
+				me.osb_ctx.lineWidth = 2.25;
+				me.osb_ctx.strokeText(value.drawing_data.text, 0, 4);
+		
+
 				me.osb_ctx.fillStyle = "#ffffff";
 				me.osb_ctx.textBaseline = 'middle';
 				me.osb_ctx.fillText(value.drawing_data.text, 0, 0);

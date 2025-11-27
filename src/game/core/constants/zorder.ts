@@ -24,5 +24,6 @@ export const zorder = {
 	characters: 23,
 	fx: 30,
 	text: 40,
+	hp_text: 80
 };
 	

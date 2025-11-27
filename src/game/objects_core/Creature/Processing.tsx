@@ -196,7 +196,7 @@ export const Creature_ƒ_Processing = {
 			spawnees.push(New_Custom_Object({
 				accessors: Creature_ƒ.get_accessors(me),
 				pixel_pos: Creature_ƒ.get_midpoint(me),
-				type_name: 'text_label',
+				type_name: 'text_popper',
 				creation_timestamp: tick,
 				text: `${me.hitpoint_change_tally}`,
 				delegate_state: {},
