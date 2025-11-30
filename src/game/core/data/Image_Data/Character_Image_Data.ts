@@ -189,7 +189,7 @@ export const Character_Image_Data = {
 
 /*----------------------- human footman -----------------------*/
 	human_footman_se_stand: {
-		url: "characters/human_footman_stand_se.png",
+		url: "characters/human_footman_se_stand.png",
 		frames: 5,
 		frame_duration: 170,
 		ping_pong: true,
@@ -200,6 +200,7 @@ export const Character_Image_Data = {
 			w: 58,
 			h: 158,
 		},
+		uses_palette_swap: true,
 	},
 	human_footman_ne_stand: {
 		url: "characters/human_footman_ne_stand.png",
@@ -213,6 +214,7 @@ export const Character_Image_Data = {
 			w: 78,
 			h: 158,
 		},
+		uses_palette_swap: true,
 	},
 	human_footman_se_walk: {
 		url: "characters/human_footman_se_walk.png",
@@ -226,6 +228,7 @@ export const Character_Image_Data = {
 			w: 68,
 			h: 158,
 		},
+		uses_palette_swap: true,
 	},
 	human_footman_ne_walk: {
 		url: "characters/human_footman_ne_walk.png",
@@ -239,6 +242,7 @@ export const Character_Image_Data = {
 			w: 68,
 			h: 158,
 		},
+		uses_palette_swap: true,
 	},
 	human_footman_ne_attack: {
 		url: "characters/human_footman_ne_attack.png",
@@ -252,6 +256,7 @@ export const Character_Image_Data = {
 			w: 78,
 			h: 158,
 		},
+		uses_palette_swap: true,
 	},
 	human_footman_se_attack: {
 		url: "characters/human_footman_se_attack.png",
@@ -265,6 +270,7 @@ export const Character_Image_Data = {
 			w: 78,
 			h: 158,
 		},
+		uses_palette_swap: true,
 	},
 
 
