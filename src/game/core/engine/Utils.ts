@@ -130,7 +130,7 @@ export const is_within_rectangle = (point: Point2D|Screenspace_Pixel_Point|Games
 	point.y < rect.y + rect.h
 );
 
-export const radianss_to_degrees = (rad: number) => (rad * 180.0) / Math.PI;
+export const radians_to_degrees = (rad: number) => (rad * 180.0) / Math.PI;
 export const degrees_to_radians = (deg: number) => (deg * Math.PI) / 180.0;
 
 //  saving this for posterity; it doesn't work for the intended purpose, since it recieves a type of `whatever | undefined`, and we can't do just `whatever` without being verbose, which is the entire thing we're trying to avoid.

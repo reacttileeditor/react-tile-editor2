@@ -33,6 +33,10 @@ export const Melee_Slash_Impact_ƒ: Custom_Object_Delegate<CO_Hit_Star_State> = 
 
 		const local_tick = Custom_Object_ƒ.get_lifetime_tick(me, tick); 
 
+		if(local_tick == 2){
+			console.log(me.rotate);
+		}
+
 		const spawnees: Array<Custom_Object_Data<unknown>> = [];
 		// (local_tick == 0 ? map(range(3), (val) => (
 		// 		New_Custom_Object({

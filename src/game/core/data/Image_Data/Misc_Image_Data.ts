@@ -129,7 +129,7 @@ export const Misc_Image_Data = {
 	melee_slash: {
 		url: "effects/melee_slash.png",
 		frames: 8,
-		frame_duration: 80,
+		frame_duration: 50,
 		pad: 2,
 		bounds: {
 			x: 1,

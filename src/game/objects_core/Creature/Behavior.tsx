@@ -1,7 +1,7 @@
 
 import _, { cloneDeep, filter, find, first, isBoolean, isEqual, map, size } from "lodash";
 
-import { angle_between, ƒ } from "../../core/engine/Utils";
+import { angle_between, radians_to_degrees, ƒ } from "../../core/engine/Utils";
 
 import { Tilemap_Manager_Data, Direction, Tilemap_Manager_ƒ } from "../../core/engine/Tilemap_Manager/Tilemap_Manager";
 import { Pathfinder_ƒ } from "../../core/engine/Pathfinding";
@@ -324,7 +324,7 @@ export const Creature_ƒ_Behavior = {
 				pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20} as Gamespace_Pixel_Point,
 				type_name: 'melee_slash_impact',
 				creation_timestamp: tick,
-				rotate: angle_between({source: me.tile_pos, dest: target.tile_pos}),
+				rotate: radians_to_degrees(angle_between({source: me.tile_pos, dest: target.tile_pos})),
 				delegate_state: {
 					angle: angle_between({source: me.tile_pos, dest: target.tile_pos})
 				},
