@@ -101,10 +101,11 @@ export const CO_Shot_Javelin_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 		spawnees.push(New_Custom_Object({
 			accessors: Custom_Object_ƒ.get_accessors(me),
 			pixel_pos: me.pixel_pos,
-			type_name: 'hit_star_bg',
+			type_name: 'shot_projectile_impact',
 			creation_timestamp: tick,
 			text: ``,
 			parent_id: me.unique_id,
+			rotate: me.rotate,
 			delegate_state: {
 			},
 		}));

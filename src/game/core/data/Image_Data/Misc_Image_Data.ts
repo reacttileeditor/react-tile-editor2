@@ -112,7 +112,33 @@ export const Misc_Image_Data = {
 			w: 61,
 			h: 61,
 		},
+	},
+
+	projectile_impact: {
+		url: "effects/projectile_impact.png",
+		frames: 8,
+		frame_duration: 60,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 62,
+			h: 62,
+		},		
+	},
+	melee_slash: {
+		url: "effects/melee_slash.png",
+		frames: 8,
+		frame_duration: 80,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 62,
+			h: 62,
+		},		
 	}
+
 };
 	
 const Safety: Image_Data_Dictionary = Misc_Image_Data;

@@ -322,8 +322,9 @@ export const Creature_ƒ_Behavior = {
 			spawnees.push(New_Custom_Object({
 				accessors: Creature_ƒ.get_accessors(me),
 				pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20} as Gamespace_Pixel_Point,
-				type_name: 'hit_star_bg',
+				type_name: 'melee_slash_impact',
 				creation_timestamp: tick,
+				rotate: angle_between({source: me.tile_pos, dest: target.tile_pos}),
 				delegate_state: {
 					angle: angle_between({source: me.tile_pos, dest: target.tile_pos})
 				},

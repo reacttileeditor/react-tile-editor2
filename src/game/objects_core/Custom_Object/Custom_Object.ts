@@ -28,9 +28,11 @@ import { CO_Shot_Javelin_ƒ } from "../../core/data/Custom_Objects/Shot_Javelin"
 import { CO_Shot_Magic_Missile_ƒ } from "../../core/data/Custom_Objects/Shot_Magic_Missile";
 import { CO_Shot_Magic_Missile_Explosion_ƒ } from "../../core/data/Custom_Objects/Shot_Magic_Missile_Explosion";
 import { CO_Text_Popper_ƒ } from "../../core/data/Custom_Objects/Text_Popper";
+import { CO_Shot_Projectile_Impact_ƒ } from "../../core/data/Custom_Objects/Shot_Projectile_Impact";
+import { Melee_Slash_Impact_ƒ } from "../../core/data/Custom_Objects/Melee_Slash_Impact";
  
 
-export type Custom_Object_Type_Name = 'shot' | 'shot_javelin' | 'shot_magic_missile' | 'shot_magic_missile_explosion' | 'text_label' | 'text_popper' | 'skull_icon' | 'hit_star_bg' | 'hit_spark' | 'particle_system' | 'particle' | 'target_indicator';
+export type Custom_Object_Type_Name = 'shot' | 'shot_javelin' | 'shot_magic_missile' | 'shot_magic_missile_explosion' | 'shot_projectile_impact' | 'text_label' | 'text_popper' | 'skull_icon' | 'hit_star_bg' | 'hit_spark' | 'particle_system' | 'particle' | 'target_indicator' | 'melee_slash_impact';
 
 export type Custom_Object_Data<Delegate_State_Type> = {
 	type_name: Custom_Object_Type_Name,
@@ -163,11 +165,13 @@ export const Custom_Object_ƒ = {
 			shot_javelin: CO_Shot_Javelin_ƒ,
 			shot_magic_missile: CO_Shot_Magic_Missile_ƒ,
 			shot_magic_missile_explosion: CO_Shot_Magic_Missile_Explosion_ƒ,
+			shot_projectile_impact: CO_Shot_Projectile_Impact_ƒ,
 			text_label: CO_Text_Label_ƒ,
 			text_popper: CO_Text_Popper_ƒ,
 			skull_icon: CO_Skull_Icon_ƒ,
 			hit_star_bg: CO_Hit_Star_BG_ƒ,
 			hit_spark: CO_Hit_Spark_ƒ,
+			melee_slash_impact: Melee_Slash_Impact_ƒ,
 			particle_system: CO_Particle_System_ƒ,
 			particle: CO_Particle_ƒ,
 			target_indicator: CO_Target_Indicator_ƒ,
