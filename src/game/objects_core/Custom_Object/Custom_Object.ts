@@ -113,6 +113,13 @@ export const New_Custom_Object = <Delegate_State_Type>(
 		Custom_Object_ƒ.get_delegate(p.type_name).yield_asset()
 	)[0];
 
+	const random_anim_offset = Asset_Manager_ƒ.get_random_starting_offset_and_length_for_sub_animation_of_animation_sequence(
+		p.accessors._Asset_Manager(),
+		Custom_Object_ƒ.get_delegate(p.type_name).yield_asset()
+	);
+
+	console.log( p.type_name, random_anim_offset);
+
 	return {
 		//accessors
 		get_GM_instance: p.accessors.get_GM_instance,

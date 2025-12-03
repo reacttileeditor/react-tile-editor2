@@ -162,6 +162,74 @@ export const Drawing = {
 		return animation_durations;
 	},
 
+	get_random_starting_offset_and_length_for_sub_animation_of_animation_sequence: (
+		_AM: Asset_Manager_Data,
+		asset_name: Image_And_Image_Sequence_Data_Names | 'omit_image',
+	) : {
+		starting_offset: number,
+		length: number,
+	} => {
+
+		/*
+			Before we get started, we have a special 'magic name' used to make various objects (such as floating hp numbers) skip drawing a sprite entirely.
+		*/
+		if( asset_name !== 'omit_image' ){
+			const asset_data_records = Asset_Manager_ƒ.get_data_for_asset_name(_AM, asset_name);
+
+			if( size(asset_data_records) == 1 ){
+				/*
+					If this is bigger than one, we have an animation sequence and want to do the fancy calcs.  If it's just one, then there's only one choice, and it's 0ms.
+				*/
+				const animation_length = Asset_Manager_ƒ.get_animation_lengths_for_asset(
+					_AM,
+					asset_name
+				)[0];
+
+				return {
+					starting_offset: 0,
+					length: animation_length,
+				};
+			} else {
+
+				const shuffled_asset_data_records = Asset_Manager_ƒ.deterministically_convolute_animation_sequence(asset_data_records, 0);
+
+				/*
+					This function is designed to ONLY operate on the very first set of an animation sequence.  Like all the others, this will be shuffled, so we use the above function to do the shuffling to find out what the first one ends up being.
+
+					It doesn't return an infinite sequence, it just returns the "current shuffle" for the timestamp we provide; in this case, the origin point of 0ms.
+				*/
+
+
+				const animation_durations = Asset_Manager_ƒ.calculate_animation_durations(shuffled_asset_data_records);
+
+				/*
+					Calculate when each sub-animation ends.  I.e. if input values were [4, 3.5, 6] (durations), this function would give: [4, 7.5, 13.5].
+
+					We can use this to decide which animation we're in by calculating how far into the whole "compound asset sequence" we are.  The first one we're >= is the one we're currently on.
+				
+				*/
+				const sub_animation_end_timestamps = animation_durations.map((num, i, arr) =>
+					num + arr.slice(0, i).reduce((a, b) =>
+						a + b, 0));
+
+				const random_animation_choice = Utils.dice( size(sub_animation_end_timestamps) ) - 1;
+
+				const sub_animation_start_timestamps = concat([0], sub_animation_end_timestamps.slice(0,-1));
+
+
+				return {
+					starting_offset: sub_animation_start_timestamps[random_animation_choice],
+					length: animation_durations[random_animation_choice],
+				};
+			}
+		} else {
+			return {
+				starting_offset: 0,
+				length: 0,
+			};
+		}
+	},
+
 
 	get_current_frame_number_and_asset_data_for_animation_sequence: (
 		asset_data_records: Array<Asset_Data_Record>,
