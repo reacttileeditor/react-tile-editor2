@@ -114,7 +114,7 @@ export const Misc_Image_Data = {
 		},
 	},
 
-	projectile_impact: {
+	projectile_impact1: {
 		url: "effects/projectile_impact.png",
 		frames: 8,
 		frame_duration: 60,

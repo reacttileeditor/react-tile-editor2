@@ -16,7 +16,7 @@ import { Vals } from "../../core/constants/Constants";
 import { CO_Shot_State } from "../../core/data/Custom_Objects/Shot";
 import { CO_Hit_Star_State } from "../../core/data/Custom_Objects/Hit_Star";
 import { ms_to_ticks, ticks_to_ms } from "../../core/engine/Blit_Manager";
-import { Image_Data_Names } from "../../core/data/Image_Data";
+import { Image_And_Image_Sequence_Data_Names, Image_Data_Names } from "../../core/data/Image_Data";
 
 
 export type Custom_Object_Delegate_States = {} | CO_Shot_State | CO_Hit_Star_State;
@@ -52,7 +52,7 @@ export type Custom_Object_Delegate<Delegate_State_Type> = {
 		offset_in_ms: number,
 	) => boolean,
 
-	yield_asset: () => Image_Data_Names | 'omit_image',
+	yield_asset: () => Image_And_Image_Sequence_Data_Names | 'omit_image',
 	yield_zorder: () => number,
 	time_to_live: () => number,
 

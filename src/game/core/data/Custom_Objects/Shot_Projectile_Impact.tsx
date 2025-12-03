@@ -32,7 +32,7 @@ export const CO_Shot_Projectile_Impact_ƒ: Custom_Object_Delegate<{}> = {
 	},
 
 
-	yield_asset: () => 'projectile_impact2',
+	yield_asset: () => 'projectile_impact',
 
 	should_remove_at_animation_end: (me: Custom_Object_Data<unknown>) => (
 		true

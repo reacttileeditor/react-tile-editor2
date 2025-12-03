@@ -126,7 +126,7 @@ export const Accessors = {
 /*----------------------- asset data accessors -----------------------*/
 	get_animation_lengths_for_asset: (
 		_AM: Asset_Manager_Data,
-		asset_name: Image_Data_Names | 'omit_image',
+		asset_name: Image_And_Image_Sequence_Data_Names | 'omit_image',
 	): Array<number> =>{
 		if(asset_name !== 'omit_image'){
 			return Asset_Manager_ƒ.calculate_animation_durations(
