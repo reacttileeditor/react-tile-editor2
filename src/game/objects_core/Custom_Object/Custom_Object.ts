@@ -39,6 +39,7 @@ export type Custom_Object_Data<Delegate_State_Type> = {
 	text: string,
 	delegate_state: Delegate_State_Type,
 	scheduled_events: Array<Scheduled_Event>,
+	animation_offset: number,  //ms
 } & Base_Object_Statics &
 Base_Object_State &
 Base_Object_Accessors;
@@ -113,12 +114,12 @@ export const New_Custom_Object = <Delegate_State_Type>(
 		Custom_Object_ƒ.get_delegate(p.type_name).yield_asset()
 	)[0];
 
-	const random_anim_offset = Asset_Manager_ƒ.get_random_starting_offset_and_length_for_sub_animation_of_animation_sequence(
+	const random_anim_choice_info = Asset_Manager_ƒ.get_random_starting_offset_and_length_for_sub_animation_of_animation_sequence(
 		p.accessors._Asset_Manager(),
 		Custom_Object_ƒ.get_delegate(p.type_name).yield_asset()
 	);
 
-	console.log( p.type_name, random_anim_offset);
+	console.log( p.type_name, random_anim_choice_info.starting_offset);
 
 	return {
 		//accessors
@@ -131,7 +132,9 @@ export const New_Custom_Object = <Delegate_State_Type>(
 		creation_timestamp: p.creation_timestamp ?? 0,
 		unique_id: p.unique_id ?? uuid(),
 		parent_id: p.parent_id ?? undefined,
-		animation_length: animation_length,
+		animation_length: random_anim_choice_info.length,
+		animation_offset: random_anim_choice_info.starting_offset,
+
 
 		//state	
 		pixel_pos: cloneDeep(p.pixel_pos) ?? {x:0, y: 0} as Gamespace_Pixel_Point,  //TODO use TM

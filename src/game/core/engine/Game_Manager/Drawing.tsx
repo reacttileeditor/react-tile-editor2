@@ -195,7 +195,7 @@ export const Game_Manager_ƒ_Drawing = {
 				current_milliseconds:		Custom_Object_ƒ.get_lifetime_ms(
 					val,
 					Game_Manager_ƒ.get_time_offset(me, _BM)
-				),
+				) + val.animation_offset,
 				opacity:					1.0,
 				rotate:						val.rotate,
 				scale:						1.0,
@@ -351,7 +351,7 @@ export const Game_Manager_ƒ_Drawing = {
 				current_milliseconds:		Custom_Object_ƒ.get_lifetime_ms(
 					val,
 					Game_Manager_ƒ.get_time_offset(me, _BM)
-				),
+				) + val.animation_offset,
 				opacity:					1.0,
 				rotate:						val.rotate,
 				scale:						1.0,
