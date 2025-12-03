@@ -228,6 +228,24 @@ export const Drawing = {
 
 
 
+
+	/*
+		Based on the above description of animation sequences, however, we can do something devilish:  because every "chunk" of the sequence is known to be the exact same length, i.e. the sum durations of animations 1 + 2 + 3 are always equal no matter what order they're in, then it affords us the opportunity to shuffle them.
+
+		If we know which "nth" set we're in, and we have an absolutely deteministic way of shuffling "cards", we can shuffle each "1, 2, 3" chunk in a deterministically random way, without needing to store the random shuffle.  I.e. if we're at the 2nd sequence, and we know the shuffle for it will always result in "3, 1, 2", then the global time offset, alone, will suffice for us to know which of the 3 animations is currently playing, and how deep into the animation we currently are.
+
+		For example:
+
+		0ms																		50ms																100ms
+		[		anim 1					anim2					anim 3		   ][	anim 2					anim1						anim 3	 	   ]
+		[<-------------------------->][<----------->][<----------------------->][<----------->][<----------------------->][<-------------------------->]
+											>|<
+								current global time offset @ 25ms
+
+		You can see in the above example that we can predict what the second shuffle will be, because no matter what, the 3 animations that comprise it always add up to 50ms.
+	*/
+
+
 	deterministically_convolute_animation_sequence: (
 		asset_data_records: Array<Asset_Data_Record>,
 		current_milliseconds: number,
