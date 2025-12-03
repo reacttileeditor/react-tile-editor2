@@ -104,6 +104,10 @@ export const Custom_Object_ƒ_Processing = {
 				velocity: processed_data.velocity,
 				accel: processed_data.accel,
 				rotate: processed_data.rotate,
+				
+				animation_offset: me_after_physics.animation_offset,
+				animation_length: me_after_physics.animation_length,
+
 				type_name: me.type_name,
 				is_done_with_turn: false, //isEmpty(scheduled_events),
 				creation_timestamp: me.creation_timestamp,

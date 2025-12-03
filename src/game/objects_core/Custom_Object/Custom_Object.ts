@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { cloneDeep, find, size } from "lodash";
+import { cloneDeep, find, isNil, size } from "lodash";
 import { v4 as uuid } from "uuid";
 
 import { ƒ } from "../../core/engine/Utils";
@@ -100,7 +100,10 @@ export const New_Custom_Object = <Delegate_State_Type>(
 		is_done_with_turn?: boolean,
 		rotate?: number,
 		velocity?: Point2D,
-		accel?: Point2D, 
+		accel?: Point2D,
+
+		animation_length?: number,
+		animation_offset?: number,
 
 		type_name: Custom_Object_Type_Name,
 		text?: string,
@@ -108,11 +111,6 @@ export const New_Custom_Object = <Delegate_State_Type>(
 		delegate_state: Delegate_State_Type,
 	}
 ): Custom_Object_Data<Delegate_State_Type> => {
-	//TODO:  we don't sufficiently handle the possibility of us having multiple animation variants of differing length here
-	const animation_length = Asset_Manager_ƒ.get_animation_lengths_for_asset(
-		p.accessors._Asset_Manager(),
-		Custom_Object_ƒ.get_delegate(p.type_name).yield_asset()
-	)[0];
 
 	const random_anim_choice_info = Asset_Manager_ƒ.get_random_starting_offset_and_length_for_sub_animation_of_animation_sequence(
 		p.accessors._Asset_Manager(),
@@ -132,8 +130,8 @@ export const New_Custom_Object = <Delegate_State_Type>(
 		creation_timestamp: p.creation_timestamp ?? 0,
 		unique_id: p.unique_id ?? uuid(),
 		parent_id: p.parent_id ?? undefined,
-		animation_length: random_anim_choice_info.length,
-		animation_offset: random_anim_choice_info.starting_offset,
+		animation_length: p.animation_length ?? random_anim_choice_info.length,
+		animation_offset: p.animation_offset ?? random_anim_choice_info.starting_offset,
 
 
 		//state	
