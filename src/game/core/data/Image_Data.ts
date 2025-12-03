@@ -52,6 +52,6 @@ export const image_sequence_data_list = {
 	water_ripples_2: ['water_ripples_2a','water_ripples_2b','water_ripples_2c'] as Array<Image_Data_Names>,
 	water_reeds_1: ['water_reeds_1a','water_reeds_1b','water_reeds_1c'] as Array<Image_Data_Names>,
 
-	projectile_impact: ['projectile_impact1','projectile_impact2'] as Array<Image_Data_Names>,
+	projectile_impact: ['projectile_impact1', 'projectile_impact2', 'projectile_impact3'] as Array<Image_Data_Names>,
 }
 

@@ -138,6 +138,18 @@ export const Misc_Image_Data = {
 			h: 62,
 		},		
 	},
+	projectile_impact3: {
+		url: "effects/projectile_impact3.png",
+		frames: 7,
+		frame_duration: 55,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 62,
+			h: 62,
+		},		
+	},
 	melee_slash: {
 		url: "effects/melee_slash.png",
 		frames: 8,
