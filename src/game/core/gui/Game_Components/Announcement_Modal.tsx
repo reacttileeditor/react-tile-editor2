@@ -51,23 +51,28 @@ export const Announcement_Modal = (props: {
 		}
 	}, [_GS.current_turn]);
 
+	const win_status = Game_Manager_ƒ.validate_objectives(_GM, _GS);
 
 	return <div className={`game-info-modal-anchor`}>
-		<div className={`game-info-modal ${props.announcement_modal_hidden ? 'hidden':'visible'}`}>
+		<div className={`game-info-modal ${props.announcement_modal_hidden && !win_status.is_won ? 'hidden':'visible'}`}>
 			<div className="core">
 				<div className="content">
 				{
 					(()=>{
-						if( _GS.current_turn == 0 ){
-							return <>
-								<div className="header">{`Starting Game`}</div>
-								<div className='body'><strong>Objective: </strong></div>
-								<div className='body'>{ Game_Manager_ƒ.describe_objectives(_GS.objective_type) }</div>
-								<div className='body'>{`\u00A0`}</div>
-								<div className='body centered'>(Click anywhere to continue…)</div>
-							</>
+						if( !win_status.is_won ){
+							if( _GS.current_turn == 0 ){
+								return <>
+									<div className="header">{`Starting Game`}</div>
+									<div className='body'><strong>Objective: </strong></div>
+									<div className='body'>{ Game_Manager_ƒ.describe_objectives(_GS.objective_type) }</div>
+									<div className='body'>{`\u00A0`}</div>
+									<div className='body centered'>(Click anywhere to continue…)</div>
+								</>
+							} else {
+								return <div className="centered header">{`Turn ${_GS.current_turn}`}</div>
+							}
 						} else {
-							return <div className="centered header">{`Turn ${_GS.current_turn}`}</div>
+							return <div className="centered header">{`Game Over!`}</div>
 						}
 					})()
 					

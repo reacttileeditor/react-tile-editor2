@@ -43,12 +43,26 @@ export const New_Turn_Controls = (props: Game_Status_Display_Props ) => {
 	const _GS = props.get_Game_Manager_Data()?.game_state;
 	const _GM = props.get_Game_Manager_Data();
 
+	const win_status = Game_Manager_ƒ.validate_objectives(_GM, _GS);
+
+	const button_text = (
+		win_status.is_won
+			?
+			'Game Over'
+			:
+			_GM.animation_state.is_animating_live_game
+				?
+				'Playing…'
+				:
+				'Next Turn'
+	)
+
 	return <div
 		className="next_turn_control centered_text"
 		ref={props.ref}
 	>
 		<Button
-			disabled={ _GM.animation_state.is_animating_live_game }
+			disabled={ _GM.animation_state.is_animating_live_game || win_status.is_won }
 			onClick={(evt)=>{
 				props.set_announcement_modal_hidden(true);
 
@@ -63,7 +77,7 @@ export const New_Turn_Controls = (props: Game_Status_Display_Props ) => {
 				)
 			}}
 		>
-			{`${_GM.animation_state.is_animating_live_game ? 'Playing…': 'Next Turn'}`}
+			{`${button_text}`}
 		</Button>
 		<div className="annotations">
 			<Label_and_Data_Pair
