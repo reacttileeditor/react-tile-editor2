@@ -143,11 +143,12 @@ export const Game_View = (props: Game_View_Props) => {
 			
 		) {
 
-
-
 			let new_state: Game_and_Tilemap_Manager_Data = Game_Manager_ƒ.do_one_frame_of_processing(props.get_Game_Manager_Data(), props._Tilemap_Manager(), props._Asset_Manager(), props._Blit_Manager());
 
-			props.set_Game_Manager_Data( new_state.gm );
+			props.set_Game_Manager_Data({
+				...new_state.gm,
+				is_cursor_behind_hud: Standard_Input_ƒ.is_within_exclusion_rectangles(props.get_Game_Manager_Data().cursor_pos, exclusion_rectangles)
+			});
 			props.set_Tilemap_Manager(new_state.tm);
 
 			Tilemap_Manager_ƒ.do_one_frame_of_rendering(
@@ -178,34 +179,24 @@ export const Game_View = (props: Game_View_Props) => {
 
 
 	/*----------------------- IO routines -----------------------*/
-	const update_mouse_pos = (pos: Screenspace_Pixel_Point, _exclusion_rectangles: Named_Mouse_Exclusion_Rects) => {
-		console.log('update_mouse_pos', _exclusion_rectangles)
+	const update_mouse_pos = (pos: Screenspace_Pixel_Point) => {
 		if( props.get_Game_Manager_Data() != null ){
-			const is_behind_hud = Standard_Input_ƒ.is_within_exclusion_rectangles(props.get_Game_Manager_Data().cursor_pos, _exclusion_rectangles)
-
-			props.set_Game_Manager_Data( Game_Manager_ƒ.set_cursor_pos(props.get_Game_Manager_Data(), props._Blit_Manager(), pos, is_behind_hud));
+			props.set_Game_Manager_Data( Game_Manager_ƒ.set_cursor_pos(props.get_Game_Manager_Data(), props._Blit_Manager(), pos));
 		}
 	}
 
 
-	const handle_canvas_mouse_move = (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State, _exclusion_rectangles: Named_Mouse_Exclusion_Rects) => {
-		console.log('handle_canvas_mouse_move', _exclusion_rectangles)
-
+	const handle_canvas_mouse_move = (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => {
 		Standard_Input_ƒ.handle_canvas_mouse_move(
 			pos,
 			buttons_pressed,
 			props._Tilemap_Manager(),
 			props._Asset_Manager(),
 			props._Blit_Manager(),
-			(pos: Screenspace_Pixel_Point) => update_mouse_pos(pos, _exclusion_rectangles),
+			update_mouse_pos,
 			props.set_Blit_Manager,
 			handle_canvas_mouse_click
 		)
-	}
-
-	const handle_canvas_mouse_move_with_exclusion_rects = (_exclusion_rectangles: Named_Mouse_Exclusion_Rects) => {
-		console.log('handle_canvas_mouse_move_with_exclusion_rects', _exclusion_rectangles)
-		return (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => handle_canvas_mouse_move(pos, buttons_pressed, _exclusion_rectangles);
 	}
 
 	const handle_canvas_mouse_click = (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => {
@@ -267,7 +258,7 @@ export const Game_View = (props: Game_View_Props) => {
 					dimensions={props.dimensions}
 					handle_canvas_click={handle_canvas_mouse_click}
 					handle_canvas_keys_down={game_handle_canvas_keys_down}
-					handle_canvas_mouse_move={(pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => handle_canvas_mouse_move(pos, buttons_pressed, exclusion_rectangles)}
+					handle_canvas_mouse_move={handle_canvas_mouse_move}
 				/>
 				<Game_Tooltip_Manager
 					announcement_modal_hidden={announcement_modal_hidden}
