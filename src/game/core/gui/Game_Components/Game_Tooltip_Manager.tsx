@@ -15,6 +15,8 @@ import { Vals } from '../../constants/Constants';
 import { BsCrop, BsFillSignpostSplitFill, BsImage } from "react-icons/bs";
 import { Icon } from '@rsuite/icons';
 import { IconType } from 'react-icons';
+import { Named_Mouse_Exclusion_Rects } from '../Editor_View';
+import { Standard_Input_ƒ } from '../Standard_Input_Handling';
 
 
 export type Game_Tooltip_Data = {
@@ -36,9 +38,12 @@ export const Game_Tooltip_Manager = (props: {
 	_Tilemap_Manager: () => Tilemap_Manager_Data,
 	render_ticktock: boolean,
 	announcement_modal_hidden: boolean,
+	exclusion_rectangles: Named_Mouse_Exclusion_Rects,
 }) => {
 
-	return <div className={`map-tooltip-anchor`} style={{display: `${props.announcement_modal_hidden ? 'block' : 'none'}`}}>
+	const is_behind_hud = Standard_Input_ƒ.is_within_exclusion_rectangles(props.get_Game_Manager_Data().cursor_pos, props.exclusion_rectangles)
+
+	return <div className={`map-tooltip-anchor`} style={{opacity: `${props.announcement_modal_hidden && !is_behind_hud ? '1.0' : '0.0'}`}}>
 		{
 			props.get_Game_Manager_Data() != undefined && props._Blit_Manager() != undefined
 			&&

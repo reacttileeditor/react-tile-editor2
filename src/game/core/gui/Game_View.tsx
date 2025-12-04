@@ -263,6 +263,7 @@ export const Game_View = (props: Game_View_Props) => {
 					_Blit_Manager={props._Blit_Manager}
 					_Tilemap_Manager={props._Tilemap_Manager}
 					render_ticktock={render_ticktock}
+					exclusion_rectangles={exclusion_rectangles}
 				/>
 
 				<New_Turn_Controls
