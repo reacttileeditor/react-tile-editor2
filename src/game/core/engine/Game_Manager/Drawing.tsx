@@ -22,6 +22,7 @@ import { Game_Manager_Data, Game_Manager_ƒ } from "./Game_Manager";
 import { Palette_Names } from "../../data/Palette_List";
 import Prando from "prando";
 import { circular, cubic, elastic, exponential, sinusoidal } from "@juliendargelos/easings";
+import { Standard_Input_ƒ } from "../../gui/Standard_Input_Handling";
 
 export const Game_Manager_ƒ_Drawing = {
 	deterministic_random_time_offset_for_creature: (creature: Creature_Data): number => {
@@ -48,6 +49,8 @@ export const Game_Manager_ƒ_Drawing = {
 	draw_cursor: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data, _TM: Tilemap_Manager_Data) => {
 		//const pos = this._TM.convert_tile_coords_to_pixel_coords(0,4); 
 
+
+		
 		let scale = 1.0;
 		if( _BM.time_tracker.current_tick - me.fx_state.last_click_cursor_tick < 15 ){
 			//sinusoidal(elastic.out
@@ -68,53 +71,55 @@ export const Game_Manager_ƒ_Drawing = {
 				brightness = 1.0 + 2.0 * fraction;
 		}
 
-		Asset_Manager_ƒ.draw_image_for_asset_name({
-			_AM:						_AM,
-			asset_name:					'map_cursor_grey_marquee_cutout',
-			_BM:						_BM,
-			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
-				_TM,
-				_AM,
-				Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords(
+		if( !me.is_cursor_behind_hud ){
+			Asset_Manager_ƒ.draw_image_for_asset_name({
+				_AM:						_AM,
+				asset_name:					'map_cursor_grey_marquee_cutout',
+				_BM:						_BM,
+				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
 					_TM,
 					_AM,
-					_BM,
-					me.cursor_pos
-				)
-			),
-			zorder:						zorder.map_cursor,
-			current_milliseconds:		_BM.time_tracker.current_millisecond,
-			opacity:					1.0,
-			rotate:						0,
-			scale:						scale,
-			brightness:					brightness,
-			horizontally_flipped:		false,
-			vertically_flipped:			false,
-		})
+					Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords(
+						_TM,
+						_AM,
+						_BM,
+						me.cursor_pos
+					)
+				),
+				zorder:						zorder.map_cursor,
+				current_milliseconds:		_BM.time_tracker.current_millisecond,
+				opacity:					1.0,
+				rotate:						0,
+				scale:						scale,
+				brightness:					brightness,
+				horizontally_flipped:		false,
+				vertically_flipped:			false,
+			})
 
-		Asset_Manager_ƒ.draw_image_for_asset_name({
-			_AM:						_AM,
-			asset_name:					'map_cursor_grey_marquee',
-			_BM:						_BM,
-			pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
-				_TM,
-				_AM,
-				Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords(
+			Asset_Manager_ƒ.draw_image_for_asset_name({
+				_AM:						_AM,
+				asset_name:					'map_cursor_grey_marquee',
+				_BM:						_BM,
+				pos:						Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(
 					_TM,
 					_AM,
-					_BM,
-					me.cursor_pos
-				)
-			),
-			zorder:						zorder.map_cursor_low,
-			current_milliseconds:		_BM.time_tracker.current_millisecond,
-			opacity:					0.3,
-			rotate:						0,
-			scale:						scale,
-			brightness:					brightness,
-			horizontally_flipped:		false,
-			vertically_flipped:			false,
-		})		
+					Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords(
+						_TM,
+						_AM,
+						_BM,
+						me.cursor_pos
+					)
+				),
+				zorder:						zorder.map_cursor_low,
+				current_milliseconds:		_BM.time_tracker.current_millisecond,
+				opacity:					0.3,
+				rotate:						0,
+				scale:						scale,
+				brightness:					brightness,
+				horizontally_flipped:		false,
+				vertically_flipped:			false,
+			})	
+		}	
 	},
 
 
@@ -319,7 +324,7 @@ export const Game_Manager_ƒ_Drawing = {
 			}		
 		})
 
-		console.log(_AM.preferences.show_unit_hitboxes)
+//		console.log(_AM.preferences.show_unit_hitboxes)
 		if(_AM.preferences.show_unit_hitboxes){
 			map( me.game_state.current_frame_state.tiles_blocked_by_creatures, (pos,idx) => {
 				Asset_Manager_ƒ.draw_image_for_asset_name({

@@ -178,27 +178,40 @@ export const Game_View = (props: Game_View_Props) => {
 
 
 	/*----------------------- IO routines -----------------------*/
-	const update_mouse_pos = (pos: Screenspace_Pixel_Point) => {
+	const update_mouse_pos = (pos: Screenspace_Pixel_Point, _exclusion_rectangles: Named_Mouse_Exclusion_Rects) => {
+		console.log('update_mouse_pos', _exclusion_rectangles)
 		if( props.get_Game_Manager_Data() != null ){
-			props.set_Game_Manager_Data( Game_Manager_ƒ.set_cursor_pos(props.get_Game_Manager_Data(), props._Blit_Manager(), pos));
+			const is_behind_hud = Standard_Input_ƒ.is_within_exclusion_rectangles(props.get_Game_Manager_Data().cursor_pos, _exclusion_rectangles)
+
+			props.set_Game_Manager_Data( Game_Manager_ƒ.set_cursor_pos(props.get_Game_Manager_Data(), props._Blit_Manager(), pos, is_behind_hud));
 		}
 	}
 
-	const handle_canvas_mouse_move = (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => {
+
+	const handle_canvas_mouse_move = (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State, _exclusion_rectangles: Named_Mouse_Exclusion_Rects) => {
+		console.log('handle_canvas_mouse_move', _exclusion_rectangles)
+
 		Standard_Input_ƒ.handle_canvas_mouse_move(
 			pos,
 			buttons_pressed,
 			props._Tilemap_Manager(),
 			props._Asset_Manager(),
 			props._Blit_Manager(),
-			update_mouse_pos,
+			(pos: Screenspace_Pixel_Point) => update_mouse_pos(pos, _exclusion_rectangles),
 			props.set_Blit_Manager,
 			handle_canvas_mouse_click
 		)
 	}
 
+	const handle_canvas_mouse_move_with_exclusion_rects = (_exclusion_rectangles: Named_Mouse_Exclusion_Rects) => {
+		console.log('handle_canvas_mouse_move_with_exclusion_rects', _exclusion_rectangles)
+		return (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => handle_canvas_mouse_move(pos, buttons_pressed, _exclusion_rectangles);
+	}
+
 	const handle_canvas_mouse_click = (pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => {
 		console.log('canvas click game')
+
+
 
 		if( !announcement_modal_hidden ){
 			set_announcement_modal_hidden(true);
@@ -254,7 +267,7 @@ export const Game_View = (props: Game_View_Props) => {
 					dimensions={props.dimensions}
 					handle_canvas_click={handle_canvas_mouse_click}
 					handle_canvas_keys_down={game_handle_canvas_keys_down}
-					handle_canvas_mouse_move={handle_canvas_mouse_move}
+					handle_canvas_mouse_move={(pos: Screenspace_Pixel_Point, buttons_pressed: Mouse_Button_State) => handle_canvas_mouse_move(pos, buttons_pressed, exclusion_rectangles)}
 				/>
 				<Game_Tooltip_Manager
 					announcement_modal_hidden={announcement_modal_hidden}
