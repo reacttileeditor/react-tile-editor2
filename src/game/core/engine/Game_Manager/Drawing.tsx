@@ -241,12 +241,15 @@ export const Game_Manager_ƒ_Drawing = {
 			_BM,
 			me.cursor_pos
 		);
+		const highlit_creature = Game_Manager_ƒ.get_highlit_creature(me, _TM, _AM, _BM);
+
 
 		map( Game_Manager_ƒ.get_current_turn_state(me).creature_list, (val,idx) => {
 
 			const creature_pos = Tilemap_Manager_ƒ.convert_tile_coords_to_pixel_coords(_TM, _AM, val.tile_pos);
 
 			const is_selected_creature = ((me.game_state.selected_object_index !== undefined) && me.game_state.selected_object_index == idx);
+			const is_highlit_creature = ((highlit_creature !== undefined) && highlit_creature.unique_id == val.unique_id);
 			
 			
 			Asset_Manager_ƒ.draw_image_for_asset_name({
@@ -262,7 +265,7 @@ export const Game_Manager_ƒ_Drawing = {
 				opacity:					1.0,
 				rotate:						0.0,
 				scale:						1.0,
-				brightness:					isEqual(cursor_pos, val.tile_pos) ? 1.0 + 0.75 * Math.sin(Game_Manager_ƒ.get_tick_offset(me, _BM) * 0.2) : 1.0,
+				brightness:					is_highlit_creature ? 1.0 + 0.75 * Math.sin(Game_Manager_ƒ.get_tick_offset(me, _BM) * 0.2) : 1.0,
 				horizontally_flipped:		Game_Manager_ƒ.get_flip_state_from_direction(val.facing_direction),
 				vertically_flipped:			false,
 				palette:					`team${val.team}` as Palette_Names
