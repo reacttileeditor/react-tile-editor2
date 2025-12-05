@@ -50,14 +50,17 @@ export const Tile_Palette_Element = (props: Props) => {
 
 /*----------------------- initialization and asset loading -----------------------*/
 	useEffect(() => {
+		set_Tilemap_Manager(New_Tilemap_Manager());
+	}, []);
+
+	useEffect(() => {
 		const ctx = getContext();
 		if(ctx != null){
 			initialize_tilemap_manager(ctx);
 			set_initialized(true);
 
-			//draw_canvas();
 		}
-	}, [_Blit_Manager, props.asset_list]);
+	}, [ JSON.stringify(props.asset_list) ]);
 
 
 	useEffect(() => {
@@ -76,26 +79,18 @@ export const Tile_Palette_Element = (props: Props) => {
 			set_render_tick(render_tick + 1);
 		}
 
-		// Your custom logic here
 	}, 16.666 );	
 
-
-
-	useEffect(() => {
-		if(_Blit_Manager){
-			set_Tilemap_Manager(New_Tilemap_Manager());
-		}
-	}, [_Blit_Manager]);
 
 	const initialize_tilemap_manager = (ctx: CanvasRenderingContext2D) => {
 		if( !_Tilemap_Manager ){
 			set_Blit_Manager(New_Blit_Manager(ctx, props.canvas_size, false));
 		} else {
 			if(_Blit_Manager){
+				set_Tilemap_Manager(New_Tilemap_Manager());
 				Blit_Manager_ƒ.reset_context(_Blit_Manager, ctx);
 			}
 		}
-
 	}
 
 
