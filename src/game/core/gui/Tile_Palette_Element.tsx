@@ -7,8 +7,9 @@ import { Blit_Manager_Data, Blit_Manager_ƒ, New_Blit_Manager } from "../engine/
 import { Asset_Blit_List, New_Tilemap_Manager, Tilemap_Manager_Data } from "../engine/Tilemap_Manager/Tilemap_Manager";
 import { Point2D, Rectangle } from '../../interfaces';
 import { zorder } from "../constants/zorder";
-import { useInterval, ƒ } from "../engine/Utils";
+import { ƒ } from "../engine/Utils";
 import { Palette_Names } from "../data/Palette_List";
+import { useInterval } from "usehooks-ts";
 
 
 interface Props {
