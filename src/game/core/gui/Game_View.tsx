@@ -147,7 +147,7 @@ export const Game_View = (props: Game_View_Props) => {
 
 			props.set_Game_Manager_Data({
 				...new_state.gm,
-				is_cursor_behind_hud: Standard_Input_ƒ.is_within_exclusion_rectangles(props.get_Game_Manager_Data().cursor_pos, exclusion_rectangles)
+				is_cursor_behind_hud: Standard_Input_ƒ.is_within_exclusion_rectangles(props.get_Game_Manager_Data().cursor_pos, exclusion_rectangles) || !announcement_modal_hidden
 			});
 			props.set_Tilemap_Manager(new_state.tm);
 
