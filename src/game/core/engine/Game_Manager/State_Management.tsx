@@ -25,11 +25,22 @@ import { Map_Analysis_ƒ } from "../Map_Analysis";
 
 export const Game_Manager_ƒ_State_Management = {
 	/*----------------------- core ui interaction -----------------------*/
-	set_cursor_pos: (me: Game_Manager_Data, _BM: Blit_Manager_Data, coords: Screenspace_Pixel_Point): Game_Manager_Data => {
+	set_cursor_pos: (
+		me: Game_Manager_Data,
+		_TM: Tilemap_Manager_Data,
+		_AM: Asset_Manager_Data,
+		_BM: Blit_Manager_Data,
+		coords: Screenspace_Pixel_Point
+	): Game_Manager_Data => {
+
+		const new_tile_pos = Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords( _TM, _AM, _BM, coords )
+
 		return {
 			...cloneDeep(me),
 			cursor_pos: coords,
+			cursor_tile_pos: new_tile_pos,
 			last_cursor_move_tick: _BM.time_tracker.current_tick,
+			last_tile_pos_move_tick: !isEqual(new_tile_pos, me.cursor_tile_pos) ? _BM.time_tracker.current_tick : me.last_tile_pos_move_tick,
 		}
 	},
 

@@ -93,6 +93,7 @@ export type Game_Manager_Data = {
 	cursor_tile_pos: Tile_Pos_Point,
 	is_cursor_behind_hud: boolean,
 	last_cursor_move_tick: number,
+	last_tile_pos_move_tick: number,
 	last_path_change_tick: number,
 
 	fx_state: {
@@ -124,6 +125,7 @@ export const New_Game_Manager = (p: {
 		cursor_tile_pos: {x: 0, y: 0} as Tile_Pos_Point,
 		is_cursor_behind_hud: false,
 		last_cursor_move_tick: 0,
+		last_tile_pos_move_tick: 0,
 		last_path_change_tick: 0,
 
 		animation_state: {
