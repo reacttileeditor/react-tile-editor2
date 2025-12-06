@@ -22,6 +22,11 @@ export const Misc_Image_Data = {
 		url: "map-cursor-green-filled.png",
 		not_a_tile: true,
 	},
+	map_cursor_teamcolor_filled: {
+		url: "map_cursor_teamcolor_filled.png",
+		not_a_tile: true,
+		uses_palette_swap: true,
+	},
 	cursor_red: {
 		url: "map-cursor-red.png",
 		not_a_tile: true,

@@ -292,7 +292,10 @@ export const Game_Manager_ƒ_Drawing = {
 			/*
 				If there's a creature selected, then draw an indicator under every -other- creature to indicate the team.
 			*/
+
 			if(me.game_state.selected_object_index && me.game_state.selected_object_index != idx){
+	
+
 				Asset_Manager_ƒ.draw_image_for_asset_name({
 					_AM:						_AM,
 					asset_name:					'unit_team_indicator',
@@ -309,9 +312,13 @@ export const Game_Manager_ƒ_Drawing = {
 					palette:					`team${val.team}` as Palette_Names
 				});
 			} else if ((me.game_state.selected_object_index !== undefined) && me.game_state.selected_object_index == idx) {
+				
+				const creature = Game_Manager_ƒ.get_current_turn_state(me).creature_list[ me.game_state.selected_object_index ];
+				const is_selected_creature_player_controlled = Game_Manager_ƒ.is_creature_player_controlled(me, creature);
+
 				Asset_Manager_ƒ.draw_image_for_asset_name({
 					_AM:						_AM,
-					asset_name:					'cursor_green_filled',
+					asset_name:					is_selected_creature_player_controlled ? 'cursor_green_filled' : 'map_cursor_teamcolor_filled',
 					_BM:						_BM,
 					pos:						val.pixel_pos, 
 					zorder:						zorder.map_cursor,
