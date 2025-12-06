@@ -61,12 +61,21 @@ do_mouse_position_updates: (
 			If someone's selected, though, we want to show both prospective moves, AND highlight the possible path our mouse's position would allow.
 		*/
 
+
 		if(selected_creature){
-			const new_path = Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me, _BM, selected_creature.tile_pos, me.cursor_tile_pos, selected_creature ).successful_path;
-			const new_path_reachable = Creature_ƒ.yield_path_reachable_this_turn(selected_creature, _TM, new_path);
+			const is_selected_creature_player_controlled = Game_Manager_ƒ.is_creature_player_controlled(me, selected_creature);
 
-			return Game_Manager_ƒ.adjust_tiles_to_display_possible_moves_and_prospective_path(me, selected_creature, new_path_reachable, _AM, _BM, _TM);
+			if(is_selected_creature_player_controlled){
+				const new_path = Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, me, _BM, selected_creature.tile_pos, me.cursor_tile_pos, selected_creature ).successful_path;
+				const new_path_reachable = Creature_ƒ.yield_path_reachable_this_turn(selected_creature, _TM, new_path);
 
+				return Game_Manager_ƒ.adjust_tiles_to_display_possible_moves_and_prospective_path(me, selected_creature, new_path_reachable, _AM, _BM, _TM);
+			} else {
+				return {
+					gm: me,
+					tm: _TM,
+				}
+			}
 		} else {
 			return Game_Manager_ƒ.adjust_tiles_to_display_possible_moves(me, displayed_creature, _AM, _BM, _TM);
 		}

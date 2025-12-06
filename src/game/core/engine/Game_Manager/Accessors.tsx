@@ -126,6 +126,16 @@ get_tooltip_data: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_
 
 /*----------------------- getters -----------------------*/
 
+get_current_human_players_team_number: (me: Game_Manager_Data): number => (
+	1
+),
+
+is_creature_player_controlled: (me: Game_Manager_Data, creature: Creature_Data): boolean => (
+	creature.team == Game_Manager_ƒ.get_current_human_players_team_number(me)
+),
+
+
+
 get_selected_creature: (me: Game_Manager_Data):Creature_Data|undefined => {
 	const idx = me.game_state.selected_object_index;
 	
