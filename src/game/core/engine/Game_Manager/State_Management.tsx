@@ -108,8 +108,11 @@ export const Game_Manager_ƒ_State_Management = {
 					First we get the info on what unit is currently selected.
 				*/
 
+				const is_selected_creature_player_controlled = Game_Manager_ƒ.is_creature_player_controlled(me, creature);
 
-				if( buttons_pressed.left == true ){
+
+
+				if( buttons_pressed.left == true && is_selected_creature_player_controlled){
 					/*
 						If a unit is selected, a left click on open terrain is a move command.
 					*/
