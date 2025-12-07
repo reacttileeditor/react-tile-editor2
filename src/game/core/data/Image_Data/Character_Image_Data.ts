@@ -155,6 +155,16 @@ export const Character_Image_Data = {
 	},
 	undead_javelineer_ne_stand: {
 		url: "characters/undead_javelineer_ne_stand.png",
+		frames: 5,
+		frame_duration: 250,
+		ping_pong: true,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 58,
+			h: 158,
+		},
 		uses_palette_swap: true,
 	},
 	undead_javelineer_ne_attack: {
