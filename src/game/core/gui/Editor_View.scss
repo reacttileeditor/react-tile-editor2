@@ -122,6 +122,19 @@
 		.team-selection {
 			width: 100%;
 			margin-bottom: 1.5rem;
+
+			.team_descriptor {
+				display: flex;
+				align-items: center;
+
+				.team_indicator_rect {
+					margin-left: 0.5rem;
+					width: 1rem;
+					height: 1rem;
+					border: 1px solid rgb(111, 111, 111);
+					background-color: black;
+				}
+			}
 		}
 		
 		.team-slider {

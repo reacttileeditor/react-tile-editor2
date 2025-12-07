@@ -6,7 +6,7 @@ import { Drawer, Dropdown, Slider } from "rsuite";
 import { indexOf, map } from "ramda";
 import { Tile_Palette_Element } from "../Tile_Palette_Element";
 import { zorder } from "../../constants/zorder";
-import { Palette_Names } from "../../data/Palette_List";
+import { Palette_Names, palette_representative_colors } from "../../data/Palette_List";
 
 export const Unit_Palette_Drawer = (props: {
 	show_unit_palette_drawer: boolean,
@@ -29,6 +29,7 @@ export const Unit_Palette_Drawer = (props: {
 
 	const creature_list: Array<Creature_Type_Name> = Creature_ƒ.list_all_creature_types();
 
+
 	return <Drawer
 		open={props.show_unit_palette_drawer}
 		onClose={() => props.set_show_unit_palette_drawer(false)}
@@ -42,8 +43,18 @@ export const Unit_Palette_Drawer = (props: {
 			</Drawer.Actions>
 		</Drawer.Header>
 		<Drawer.Body>
-			<div className="team-selection">
-				<Dropdown title={`Team #${props.selected_creature_team}`}>
+			<div className="team-selection"
+			>
+				<Dropdown 
+					title={<div
+						className="team_descriptor"
+					>
+						{`Team #${props.selected_creature_team}`} <div 
+							className="team_indicator_rect"
+							style={{backgroundColor: `#${palette_representative_colors[`team${props.selected_creature_team}` as Palette_Names]}`}}
+						/>
+					</div>}
+				>
 					{
 						map( (team_number)=>(
 							<Dropdown.Item
@@ -52,7 +63,14 @@ export const Unit_Palette_Drawer = (props: {
 									props.set_selected_creature_team(team_number)
 								} }
 								active={props.selected_creature_team == team_number}
-							>Team #{team_number}</Dropdown.Item>
+							><div
+							className="team_descriptor"
+							>
+								Team #{team_number} <div 
+									className="team_indicator_rect"
+									style={{backgroundColor: `#${palette_representative_colors[`team${team_number}` as Palette_Names]}`}}
+								/>
+							</div></Dropdown.Item>
 						),
 						[1,2,3])
 					}

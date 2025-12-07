@@ -12,6 +12,23 @@ export type Palette_Data = {
 	pairs: Array<Color_Pair>,
 };
 
+export type Palette_Reps = {
+	[Property in Palette_Names as `${string & Property}`]: string
+};
+
+
+export const palette_representative_colors: Palette_Reps = {
+	'team1': 'dd4830',
+	'team2': '3057dd',
+	'team3': '17c82c',
+}
+
+export const palette_representative_names: Palette_Reps = {
+	'team1': 'Red',
+	'team2': 'Blue',
+	'team3': 'Green',
+}
+
 export const palette_list: Palette_List = {
 	'team1': {
 		pairs: [
