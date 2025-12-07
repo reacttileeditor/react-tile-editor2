@@ -6,6 +6,7 @@ import { Drawer, Dropdown, Slider } from "rsuite";
 import { indexOf, map } from "ramda";
 import { Tile_Palette_Element } from "../Tile_Palette_Element";
 import { zorder } from "../../constants/zorder";
+import { Palette_Names } from "../../data/Palette_List";
 
 export const Unit_Palette_Drawer = (props: {
 	show_unit_palette_drawer: boolean,
@@ -98,6 +99,7 @@ export const Unit_Palette_Drawer = (props: {
 								handle_click={ ()=>{} }
 								canvas_size={ {x: 70, y: 70} }
 								centering_offset={ {x: 0, y: -0.8} }
+								palette={`team${props.selected_creature_team}` as Palette_Names}
 							/>
 						</div>
 					),
