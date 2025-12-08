@@ -19,7 +19,7 @@ import { Custom_Object_Data, Custom_Object_ƒ } from "../../../objects_core/Cust
 import { zorder } from "../../constants/zorder";
 import { Vals } from "../../constants/Constants";
 import { Game_Manager_Data, Game_Manager_ƒ, Game_and_Tilemap_Manager_Data } from "./Game_Manager";
-import { Map_Analysis_ƒ } from "../Map_Analysis";
+import { calculate_accessible_tiles_for_remaining_movement, Map_Analysis_ƒ } from "../Map_Analysis";
 import { tile_maps_init } from "../Tilemap_Manager/Initialization";
 
 
@@ -153,7 +153,7 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 			const terrain_plus_blocking = Pathfinder_ƒ.block_tiles_occupied_by_other_creatures(_TM, _AM, me, _BM, _TM.tile_maps.terrain, creature) as Tilemap_Single;
 
 
-			newly_selected_object_possible_moves = Map_Analysis_ƒ.calculate_accessible_tiles_for_remaining_movement(
+			newly_selected_object_possible_moves = calculate_accessible_tiles_for_remaining_movement(
 				creature,
 				_TM,
 				creature.tile_pos,

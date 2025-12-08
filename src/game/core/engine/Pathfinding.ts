@@ -269,5 +269,7 @@ export const Pathfinder_ƒ = {
 
 		return a_star_search( _graph, _start_coords, _end_coords, _Creature );
 	}
+
+
 }
 

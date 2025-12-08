@@ -4,6 +4,7 @@ import { Creature_Data, Creature_ƒ } from "../../objects_core/Creature/Creature
 import { Map_Generation_ƒ } from "./Map_Generation";
 import { Tilemap_Manager_Data, Tilemap_Manager_ƒ, Tilemap_Single } from "./Tilemap_Manager/Tilemap_Manager";
 import { ascend, concat, descend, equals, filter, flatten, includes, keys, Ord, slice, sortBy, sortWith, uniq, uniqWith } from "ramda";
+import memoize from "memoize";
 
 
 
@@ -12,16 +13,16 @@ type Tile_And_Movement_Data = {
 	remaining_moves: number,
 }
 
+
+
 export const Map_Analysis_ƒ = {
-
-
-
-	calculate_accessible_tiles_for_remaining_movement: (
+	_calculate_accessible_tiles_for_remaining_movement: (
 		creature: Creature_Data,
 		_TM: Tilemap_Manager_Data,
 		location: Tile_Pos_Point,
 		tile_map: Tilemap_Single,
 	): Array<Tile_Pos_Point> => {
+		console.log('here')
 
 		/*
 			WARNING:  this entire system bakes in a cardinal assumption that our a-star pathfinding doesn't, which is that moving from tile A to tile B is purely determined by the cost of tile B.  This algorithm should be easily adaptable to a differential system (relying on A->B rather than just B), but it's important for future reference.   A differential system would be desirable for e.g. Civ-style "embarkation", or any similar things where it's more expensive to step "up" than it is to step "down".
@@ -189,3 +190,7 @@ export const Map_Analysis_ƒ = {
 		// },
 	
 }
+
+export const calculate_accessible_tiles_for_remaining_movement = memoize(Map_Analysis_ƒ._calculate_accessible_tiles_for_remaining_movement, {
+	cacheKey: arguments_ => [arguments_[0].unique_id, JSON.stringify(arguments_[2])].join(',')
+});
