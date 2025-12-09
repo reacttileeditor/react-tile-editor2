@@ -44,8 +44,8 @@ validate_objectives: (me: Game_Manager_Data, _game_state: Game_State ): {
 
 describe_objectives: (objective_type: Objective_Types): string => (
 	{
-		'extermination': `Kill off all units on the enemy team.`,
-		'decapitation': `Kill the leaders of the enemy team.`,
+		'extermination': `Kill off all enemy units.`,
+		'decapitation': `Kill the enemy leaders.`,
 	}[objective_type]
 ),
 

@@ -46,6 +46,15 @@ export const Titlescreen_View = (props: Props) => {
 							>
 								{'Start Game...'}
 							</Button>
+							<div className="description">
+								<p>Worth noting to avoid confusion:</p>
+
+								<p>This is obviously a tactical strategy game, but at least one key feature is radically different from most games in the genre; all units move <strong>simultaneously</strong> rather than sequentially.  Because of this, units don't move when you click on them, they're just given a plan that will only happen when you click "Next Turn".</p>
+
+								<p>Ranged units, once they're "in range" to start attacking, will ignore any move commands and start shooting, instead.  Since I'm currently working on their animations, I've given them infinite range so it's really easy for me to preview those - because of this, they'll currently ignore all movement commands and just stand-and-shoot.</p>
+
+								<p>This is an incredibly early beta, so don't be surprised if other things are broken.</p>
+							</div>
 						</div>
 					</div>
 				</div>
