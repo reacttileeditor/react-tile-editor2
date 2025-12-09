@@ -16,11 +16,12 @@ type Tile_And_Movement_Data = {
 
 
 export const Map_Analysis_ƒ = {
-	_calculate_accessible_tiles_for_remaining_movement: (
+	calculate_accessible_tiles_for_remaining_movement: (
 		creature: Creature_Data,
 		_TM: Tilemap_Manager_Data,
 		location: Tile_Pos_Point,
 		tile_map: Tilemap_Single,
+		current_turn: number,
 	): Array<Tile_Pos_Point> => {
 		console.log('here')
 
@@ -191,6 +192,8 @@ export const Map_Analysis_ƒ = {
 	
 }
 
-export const calculate_accessible_tiles_for_remaining_movement = memoize(Map_Analysis_ƒ._calculate_accessible_tiles_for_remaining_movement, {
-	cacheKey: arguments_ => [arguments_[0].unique_id, JSON.stringify(arguments_[2])].join(',')
-});
+export const Memoized_Map_Analysis_ƒ = {
+	calculate_accessible_tiles_for_remaining_movement: memoize(Map_Analysis_ƒ.calculate_accessible_tiles_for_remaining_movement, {
+		cacheKey: arguments_ => [arguments_[0].unique_id, JSON.stringify(arguments_[2]), arguments_[4]].join(',')
+	})
+}
