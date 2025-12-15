@@ -35,6 +35,19 @@ export const CT_Hermit_ƒ: Creature_Delegate = {
 			'south_west':	'human_hermit_se_walk',	
 		} as Creature_Animation_Chart)[direction]
 	),
-	action_delay_for_animation: (animation_name: string) => ( 1 ),
+
+	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction: Direction): Image_Data_Names => (
+		({
+			'north_east':	'human_hermit_se_attack',
+			'north_west':	'human_hermit_se_attack',
+			'east':			'human_hermit_se_attack',
+			'south_east':	'human_hermit_se_attack',
+			'west':			'human_hermit_se_attack',
+			'south_west':	'human_hermit_se_attack',	
+		} as Creature_Animation_Chart)[direction]
+	),
+
+
+	action_delay_for_animation: (animation_name: string) => ( 30 ),
 	yield_shot_type: () => ( 'shot_magic_missile' ),
 }
