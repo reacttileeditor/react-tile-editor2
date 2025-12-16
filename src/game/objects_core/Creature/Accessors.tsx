@@ -16,6 +16,7 @@ import { CT_Skeleton_ƒ } from "../../core/data/Creatures/Skeleton";
 import { CT_Undead_Javelineer_ƒ } from "../../core/data/Creatures/Undead_Javelineer";
 import { CT_Human_Footman_ƒ } from "../../core/data/Creatures/Human_Footman";
 import { Image_Data_Names } from "../../core/data/Image_Data";
+import { Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";
 
 
 export const Creature_ƒ_Accessors = {
@@ -82,10 +83,14 @@ export const Creature_ƒ_Accessors = {
 	get_shot_start_position: (me: Creature_Data ): Gamespace_Pixel_Point => {
 		const my_midpoint = Creature_ƒ.get_midpoint(me);
 		const shot_offset = Creature_ƒ.get_delegate(me.type_name).yield_shot_offset();
+		
+		const facing_coefficient = Game_Manager_ƒ.get_flip_state_from_direction(me.facing_direction) ? -1 : 1;
+		
 		const shot_start_pos = {
-			x: my_midpoint.x + shot_offset.x,
+			x: my_midpoint.x + (shot_offset.x * facing_coefficient),
 			y: my_midpoint.y + shot_offset.y,
 		} as Gamespace_Pixel_Point;
+
 
 		return shot_start_pos;
 	},
