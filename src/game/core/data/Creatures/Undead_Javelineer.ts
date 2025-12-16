@@ -49,4 +49,6 @@ export const CT_Undead_Javelineer_ƒ: Creature_Delegate = {
 	yield_shot_type: () => ( 'shot_javelin' ),
 
 	yield_pixel_height: () => 51,
+	yield_shot_offset: () => ({x: 15, y: -30}),
+
 }
