@@ -31,6 +31,7 @@ export type Creature_Delegate = {
 	action_delay_for_animation: (animation_name: string) => number,
 	yield_shot_type: () => Custom_Object_Type_Name,
 	yield_pixel_height: () => number,
+	yield_shot_offset: () => Point2D,
 }
 
 /*
@@ -90,6 +91,8 @@ export const Creature_Delegate_Base_ƒ: Creature_Delegate = {
 	action_delay_for_animation: (animation_name: string) => ( 0 ),
 	yield_shot_type: () => ( 'shot' ),
 	yield_pixel_height: () => 45,
+
+	yield_shot_offset: () => ({x: 0, y: 0}),
 }
 
 

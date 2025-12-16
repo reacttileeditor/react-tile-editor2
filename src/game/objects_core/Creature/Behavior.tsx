@@ -259,15 +259,24 @@ export const Creature_ƒ_Behavior = {
 
 			const tick_offset = tick + Vals.shot_flight_duration;
 
+			const my_midpoint = Creature_ƒ.get_midpoint(me);
+			const shot_offset = Creature_ƒ.get_delegate(me.type_name).yield_shot_offset();
+			const shot_start_pos = {
+				x: my_midpoint.x + shot_offset.x,
+				y: my_midpoint.y + shot_offset.y,
+			} as Gamespace_Pixel_Point;
+
+			console.log( my_midpoint, shot_offset, shot_start_pos)
+
 			spawnees.push(New_Custom_Object({
 				accessors: Creature_ƒ.get_accessors(me),
-				pixel_pos: me.pixel_pos,
+				pixel_pos: shot_start_pos ,
 				type_name: Creature_ƒ.get_delegate(me.type_name).yield_shot_type(),
 				creation_timestamp: tick,
 				delegate_state: {
 					target_obj: target.unique_id,
 					source_obj: me.unique_id,
-					original_pos: me.pixel_pos,
+					original_pos: shot_start_pos,
 				},
 				scheduled_events: [{
 					tick_offset: tick_offset,
@@ -321,7 +330,7 @@ export const Creature_ƒ_Behavior = {
 	
 			spawnees.push(New_Custom_Object({
 				accessors: Creature_ƒ.get_accessors(me),
-				pixel_pos: {x: target.pixel_pos.x, y: target.pixel_pos.y - 20} as Gamespace_Pixel_Point,
+				pixel_pos: Creature_ƒ.get_midpoint(target),
 				type_name: 'melee_slash_impact',
 				creation_timestamp: tick,
 				rotate: radians_to_degrees(angle_between({source: me.tile_pos, dest: target.tile_pos})),
