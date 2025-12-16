@@ -79,6 +79,18 @@ export const Creature_ƒ_Accessors = {
 	),
 
 
+	get_shot_start_position: (me: Creature_Data ): Gamespace_Pixel_Point => {
+		const my_midpoint = Creature_ƒ.get_midpoint(me);
+		const shot_offset = Creature_ƒ.get_delegate(me.type_name).yield_shot_offset();
+		const shot_start_pos = {
+			x: my_midpoint.x + shot_offset.x,
+			y: my_midpoint.y + shot_offset.y,
+		} as Gamespace_Pixel_Point;
+
+		return shot_start_pos;
+	},
+
+
 	/*----------------------- setters -----------------------*/
 	adjust_hitpoints: (
 		target: Creature_Data,

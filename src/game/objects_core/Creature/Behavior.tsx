@@ -13,6 +13,7 @@ import { Asset_Manager_Data, Asset_Manager_ƒ } from "../../core/engine/Asset_Ma
 import { Vals } from "../../core/constants/Constants";
 import { Game_Manager_Data } from "../../core/engine/Game_Manager/Game_Manager";
 import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
+import { CO_Shot_State } from "../../core/data/Custom_Objects/Shot";
 
 
 
@@ -259,24 +260,17 @@ export const Creature_ƒ_Behavior = {
 
 			const tick_offset = tick + Vals.shot_flight_duration;
 
-			const my_midpoint = Creature_ƒ.get_midpoint(me);
-			const shot_offset = Creature_ƒ.get_delegate(me.type_name).yield_shot_offset();
-			const shot_start_pos = {
-				x: my_midpoint.x + shot_offset.x,
-				y: my_midpoint.y + shot_offset.y,
-			} as Gamespace_Pixel_Point;
 
-			console.log( my_midpoint, shot_offset, shot_start_pos)
-
-			spawnees.push(New_Custom_Object({
+			spawnees.push(New_Custom_Object<CO_Shot_State>({
 				accessors: Creature_ƒ.get_accessors(me),
-				pixel_pos: shot_start_pos ,
+				pixel_pos: Creature_ƒ.get_shot_start_position(me),
 				type_name: Creature_ƒ.get_delegate(me.type_name).yield_shot_type(),
 				creation_timestamp: tick,
 				delegate_state: {
 					target_obj: target.unique_id,
 					source_obj: me.unique_id,
-					original_pos: shot_start_pos,
+					last_source_pos: Creature_ƒ.get_shot_start_position(me),
+					last_target_pos: Creature_ƒ.get_midpoint(target)
 				},
 				scheduled_events: [{
 					tick_offset: tick_offset,

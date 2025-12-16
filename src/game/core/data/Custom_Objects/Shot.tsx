@@ -43,7 +43,7 @@ export const CO_Shot_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 		const lifetime_tick = (tick - me.creation_timestamp);
 
 
-		const source_pos = CO_Shot_Utils_ƒ.get_pos_or_fallback_value(source, _prior_delegate_state.last_source_pos);
+		const source_pos = CO_Shot_Utils_ƒ.get_shot_starting_pos_or_fallback_value(source, _prior_delegate_state.last_source_pos);
 		const target_pos = CO_Shot_Utils_ƒ.get_pos_or_fallback_value(target, _prior_delegate_state.last_target_pos);
 
 

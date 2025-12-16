@@ -51,6 +51,6 @@ export const CT_Hermit_ƒ: Creature_Delegate = {
 	action_delay_for_animation: (animation_name: string) => ( 30 ),
 	yield_shot_type: () => ( 'shot_magic_missile' ),
 
-	yield_shot_offset: () => ({x: 0, y: -60}),
+	yield_shot_offset: () => ({x: 10, y: -30}),
 
 }

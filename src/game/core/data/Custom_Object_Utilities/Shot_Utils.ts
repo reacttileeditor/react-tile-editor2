@@ -21,6 +21,17 @@ export const CO_Shot_Utils_ƒ = {
 		}
 	},
 
+	get_shot_starting_pos_or_fallback_value: (
+		creature: Creature_Data|undefined,
+		fallback_pos: Gamespace_Pixel_Point
+	): Gamespace_Pixel_Point => {
+		if(creature){
+			return Creature_ƒ.get_shot_start_position(creature);
+		} else {
+			return fallback_pos;
+		}
+	},
+	
 
 	calculate_arcing_shot_trajectory: (
 		me: Custom_Object_Data<unknown>,
