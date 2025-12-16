@@ -356,7 +356,20 @@ export const Character_Image_Data = {
 		},
 		uses_palette_swap: true,
 	},
-
+	human_hermit_ne_attack: {
+		url: "characters/human_hermit_ne_attack.png",
+		frames: 6,
+		frame_duration: 100,
+		ping_pong: true,
+		pad: 0,
+		bounds: {
+			x: 0,
+			y: 0,
+			w: 70,
+			h: 130,
+		},
+		uses_palette_swap: true,
+	},
 
 };
 	

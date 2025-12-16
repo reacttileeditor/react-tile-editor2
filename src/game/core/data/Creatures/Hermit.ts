@@ -38,9 +38,9 @@ export const CT_Hermit_ƒ: Creature_Delegate = {
 
 	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction: Direction): Image_Data_Names => (
 		({
-			'north_east':	'human_hermit_se_attack',
-			'north_west':	'human_hermit_se_attack',
-			'east':			'human_hermit_se_attack',
+			'north_east':	'human_hermit_ne_attack',
+			'north_west':	'human_hermit_ne_attack',
+			'east':			'human_hermit_ne_attack',
 			'south_east':	'human_hermit_se_attack',
 			'west':			'human_hermit_se_attack',
 			'south_west':	'human_hermit_se_attack',	
