@@ -4,7 +4,7 @@ import Left_Click_Icon from '../../../assets/left-click-icon.png';
 import Right_Click_Icon from '../../../assets/right-click-icon.png';
 import { GameStateInit, Game_Manager_Data, Game_Manager_ƒ, Game_State, Game_and_Tilemap_Manager_Data, New_Game_Manager } from "../../engine/Game_Manager/Game_Manager";
 import { equals } from "ramda";
-import { Creature_Data, Path_Data } from '../../../objects_core/Creature/Creature';
+import { Creature_Data, Creature_ƒ, Path_Data } from '../../../objects_core/Creature/Creature';
 import { Point2D, Tile_Pos_Point } from '../../../interfaces';
 import { Asset_Manager_Data } from '../../engine/Asset_Manager/Asset_Manager';
 import { Blit_Manager_Data } from '../../engine/Blit_Manager';
@@ -104,6 +104,10 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 		}
 	}
 
+
+	const creature_delegate = props.selected_unit !== undefined ? Creature_ƒ.get_delegate(props.selected_unit.type_name) : undefined;
+	const creature_move_capacity = creature_delegate !== undefined ? creature_delegate.yield_moves_per_turn() : undefined;
+
 	return <div
 		className="map-tooltip"
 		style={{
@@ -137,7 +141,7 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 			&&
 			<div className="data-row">
 				<Icon className="vector_icon" as={BsFillSignpostSplitFill as React.ElementType} />
-				{`${props.cumulative_move_cost}`}
+				{ creature_move_capacity !== undefined ? `${props.cumulative_move_cost}/${creature_move_capacity}` : `${props.cumulative_move_cost}` }
 				<span className='caption'>Total Move Cost</span>
 			</div>
 		}
@@ -146,7 +150,7 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 			&&
 			<div className="data-row">
 				<img src={Distance_Icon}/>
-				{`${distance}`}
+				{ `${distance}` }
 				<span className='caption'>Tile Distance</span>
 			</div>
 		}
