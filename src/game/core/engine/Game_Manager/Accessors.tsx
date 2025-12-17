@@ -267,7 +267,7 @@ get_cost_of_path: (_TM: Tilemap_Manager_Data, me: Creature_Data|undefined, path:
 	var cumulative_move_cost = 0;
 
 	if(me !== undefined){
-		map( path, (val) => {
+		map( path, (val, idx) => {
 			const tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
 				_TM,
 				val,
@@ -275,7 +275,12 @@ get_cost_of_path: (_TM: Tilemap_Manager_Data, me: Creature_Data|undefined, path:
 			);
 			const move_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(tile_type) ?? 100000000000000;
 
-			cumulative_move_cost += move_cost;
+			/*
+				make a point of omitting the first tile; we want the cost of the tiles we move *to*, not the ones we move *from*.
+			*/
+			if(idx != 0){
+				cumulative_move_cost += move_cost;
+			};
 		})
 	};
 
