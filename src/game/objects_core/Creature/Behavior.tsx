@@ -14,6 +14,7 @@ import { Vals } from "../../core/constants/Constants";
 import { Game_Manager_Data } from "../../core/engine/Game_Manager/Game_Manager";
 import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
 import { CO_Shot_State } from "../../core/data/Custom_Objects/Shot";
+import { slice } from "ramda";
 
 
 
@@ -109,6 +110,7 @@ export const Creature_ƒ_Behavior = {
 		me: Creature_Data,
 		_TM: Tilemap_Manager_Data,
 		_AM: Asset_Manager_Data,
+		tick: number,
 		change_list: Array<Change_Instance>,
 	) => {
 		/*
@@ -116,6 +118,7 @@ export const Creature_ƒ_Behavior = {
 
 			First, however, deduct the cost of our current tile from our existing move_points:
 		*/
+//		const prior_tile_pos = first(slice(1, Infinity, me.path_data.path_reachable_this_turn));
 		const prior_tile_pos = first(me.path_data.path_reachable_this_turn);
 		let current_tile_type = '';
 		if( prior_tile_pos != undefined) {
@@ -131,6 +134,7 @@ export const Creature_ƒ_Behavior = {
 			prior_tile_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(current_tile_type) as number;
 		}
 
+		console.log(tick, me.type_name, prior_tile_pos, current_tile_type, prior_tile_cost, me.remaining_move_points)
 		Creature_ƒ.add(change_list, me, 'remaining_move_points', -prior_tile_cost);
 
 		if(me.remaining_move_points - prior_tile_cost < 0){

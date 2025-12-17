@@ -41,9 +41,9 @@ export const AI_Core_ƒ = {
 		me: Creature_Data,
 	): boolean => (
 		/*
-			The most sad hack:  for now, "team 2" is the AI-controlled enemy.  Actual indicator variables come later.
+			The most sad hack:  for now, everything other than team 1 is the AI-controlled enemy.  Actual indicator variables come later.
 		*/
-		me.team == 2
+		me.team != 1
 	),
 
 	find_closest_target: (
@@ -263,7 +263,7 @@ export const AI_Core_ƒ = {
 					Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
 
 
-					Creature_ƒ.deduct_cost_from_last_move(me,_TM, _AM, change_list);
+					Creature_ƒ.deduct_cost_from_last_move(me,_TM, _AM, tick, change_list);
 					Creature_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
 				} else {
 					Creature_ƒ.terminate_movement(me, _TM, offset_in_ms, tick, change_list, spawnees);
