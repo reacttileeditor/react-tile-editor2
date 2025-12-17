@@ -262,8 +262,15 @@ export const AI_Core_ƒ = {
 
 					Creature_ƒ.set(change_list, me, 'path_data', new_path_data);
 
+					/*
+						This is a really, really disgusting/dangerous way to achieve this, but basically what this is intended to accomplish is making sure we only ever deduct the cost of the tile we move TO, never the one we're coming FROM.  The particular effect of this is that the only tile we really need to omit is the very first one we moved from this turn.  We have a simple path, and to ensure we're doing "move-to rather than move-from costs", we just always bias that calc to be the second of all pairs of tiles.   (Idea: It's possible that treating it as a series of to-from move-pairs rather than a sequence of individual tiles, might be easier for some calculations).
 
-					Creature_ƒ.deduct_cost_from_last_move(me,_TM, _AM, tick, change_list);
+						To get the effect of this from a sequence, we just omit the very first tile.
+						Currently, this will always coincide with the very first invocation of this function, because all creatures (currently!) run a tick 0 'recalc' of their intentions, and by that point, we're sure they haven't moved yet.  But as the stressed word suggests - it's a dangerous assumption that we won't rearchitect this to break that assumption.
+					*/
+					if(tick !== 0){
+						Creature_ƒ.deduct_cost_from_last_move(me,_TM, _AM, tick, change_list, new_path_data);
+					}
 					Creature_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
 				} else {
 					Creature_ƒ.terminate_movement(me, _TM, offset_in_ms, tick, change_list, spawnees);

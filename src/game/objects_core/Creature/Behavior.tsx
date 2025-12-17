@@ -112,6 +112,7 @@ export const Creature_ƒ_Behavior = {
 		_AM: Asset_Manager_Data,
 		tick: number,
 		change_list: Array<Change_Instance>,
+		new_path: Path_Data,
 	) => {
 		/*
 			We're at a new tile.  Pathfind a new route to our destination, in case something is now in the way.
@@ -119,7 +120,7 @@ export const Creature_ƒ_Behavior = {
 			First, however, deduct the cost of our current tile from our existing move_points:
 		*/
 //		const prior_tile_pos = first(slice(1, Infinity, me.path_data.path_reachable_this_turn));
-		const prior_tile_pos = first(me.path_data.path_reachable_this_turn);
+		const prior_tile_pos = first(new_path.path_reachable_this_turn);
 		let current_tile_type = '';
 		if( prior_tile_pos != undefined) {
 			current_tile_type = Tilemap_Manager_ƒ.get_tile_name_for_pos(
