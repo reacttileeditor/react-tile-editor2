@@ -27,8 +27,8 @@ export type Game_Tooltip_Data = {
 	tile_pos: Point2D,
 	unit_pos?: Point2D,
 	tile_name: string,
-	tile_cost: string,
-	cumulative_move_cost: string,
+	tile_cost: number|null,
+	cumulative_move_cost: number,
 };
 
 export const Game_Tooltip_Manager = (props: {
@@ -128,7 +128,7 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 			{`${props.tile_name}`}
 		</div>
 		{
-			!isEmpty(props.tile_cost) && !isNil(props.tile_cost)
+			!isNil(props.tile_cost)
 			&&
 			<div className="data-row">
 				<img src={Foot_Icon}/>
@@ -137,11 +137,11 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 			</div>
 		}
 		{
-			!isEmpty(props.cumulative_move_cost) && !isNil(props.cumulative_move_cost)
+			!isNil(props.cumulative_move_cost)
 			&&
 			<div className="data-row">
 				<Icon className="vector_icon" as={BsFillSignpostSplitFill as React.ElementType} />
-				{ creature_move_capacity !== undefined ? `${props.cumulative_move_cost}/${creature_move_capacity}` : `${props.cumulative_move_cost}` }
+				{ creature_move_capacity !== undefined ? `${props.cumulative_move_cost.toFixed(1)}/${creature_move_capacity}` : `${props.cumulative_move_cost.toFixed(1)}` }
 				<span className='caption'>Total Move Cost</span>
 			</div>
 		}

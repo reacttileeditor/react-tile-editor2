@@ -79,8 +79,8 @@ get_tooltip_data: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_
 			Tilemap_Manager_ƒ.convert_screenspace_pixel_coords_to_tile_coords( _TM, _AM, _BM, me.cursor_pos ),
 			'terrain',
 		),
-		tile_cost: `${Game_Manager_ƒ.get_current_creatures_move_cost(me, _TM, _AM, _BM)}`,
-		cumulative_move_cost: `${me.game_state.selected_object_potential_move_cost}`
+		tile_cost: Game_Manager_ƒ.get_current_creatures_move_cost(me, _TM, _AM, _BM),
+		cumulative_move_cost: me.game_state.selected_object_potential_move_cost,
 	}
 },
 
@@ -223,7 +223,7 @@ get_list_of_occupied_tiles: (me: Game_Manager_Data, _AM: Asset_Manager_Data, _BM
 	});
 },
 
-get_current_creatures_move_cost: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): string => {
+get_current_creatures_move_cost: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): number|null => {
 	const selected_creature = Game_Manager_ƒ.get_selected_creature(me);
 
 	if(selected_creature){
@@ -233,10 +233,9 @@ get_current_creatures_move_cost: (me: Game_Manager_Data, _TM: Tilemap_Manager_Da
 			'terrain',
 		);
 
-		return `${ Creature_ƒ.get_delegate(selected_creature.type_name).yield_move_cost_for_tile_type( tile_type ) }`
-		//return `${ Creature_ƒ.get_delegate(selected_creature.type_name).yield_prettyprint_name() }`
+		return Creature_ƒ.get_delegate(selected_creature.type_name).yield_move_cost_for_tile_type( tile_type )
 	} else {
-		return '';
+		return 0;
 	}
 },
 
