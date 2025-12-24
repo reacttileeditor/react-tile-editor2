@@ -331,6 +331,19 @@ body {
 
 						&.invalid {
 							color: #934242;
+
+							img {
+								/*
+									I kinda winged this one, instead of using these examples directly.  Basically the problem we're trying to solve is that, whilst `color` can trivially recolor a font icon, for some of these, we were using a straight, white PNG, and there isn't an easy, built-in web feature that can take a white image and change it to a different color.  The most vexing thing is that, by being white, most color-shifting filters choke, because there's no "saturation" to shift - we've perversely picked the one possible color that can't be modified.
+
+									There's a dirty trick you can do, though, because one of the css filters will actually introduce saturation as a byproduct of doing its transformation - `sepia`.  Use sepia to introduce some actualy "color" to work with, and then modify it wildly get something close to our intended color, via trial and error.  As noted before; we didn't directly use these examples, but they illustrate the general point.
+
+									https://dev.to/domysee/coloring-white-images-with-css-filter-4bd1
+									https://angel-rs.github.io/css-color-filter-generator/
+
+								*/
+								filter: brightness(28%) sepia(1000%) saturate(600%) ;
+							}
 						}
 
 						.caption {
