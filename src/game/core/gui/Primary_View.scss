@@ -311,7 +311,7 @@ body {
 					transition: top 0.075s ease-in-out;
 					transition: left 0.075s ease-in-out;
 	
-					.data-row {
+					.data_row {
 						display: flex;
 						justify-content: flex-start;
 						align-items: center;
@@ -327,6 +327,10 @@ body {
 
 						&.disabled {
 							opacity: 0.6;
+						}
+
+						&.invalid {
+							color: #934242;
 						}
 
 						.caption {

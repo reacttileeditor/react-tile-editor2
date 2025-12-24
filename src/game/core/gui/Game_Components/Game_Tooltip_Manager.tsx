@@ -115,31 +115,42 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 			top: `${ 100.0 * (props.pos.y / Vals.default_canvas_size.y) }%`
 		}}
 	>
-		<div className={`data-row ${get_left_click_text() == 'n/a' ? 'disabled' : '' }`}><img src={Left_Click_Icon}/> {`${get_left_click_text()}`}</div>
-		<div className={`data-row ${get_right_click_text() == 'n/a' ? 'disabled' : '' }`}><img src={Right_Click_Icon}/> {`${get_right_click_text()}`}</div>
+		<div className={`data_row ${get_left_click_text() == 'n/a' ? 'disabled' : '' }`}><img src={Left_Click_Icon}/> {`${get_left_click_text()}`}</div>
+		<div className={`data_row ${get_right_click_text() == 'n/a' ? 'disabled' : '' }`}><img src={Right_Click_Icon}/> {`${get_right_click_text()}`}</div>
 		<hr />
-		<div className="data-row">
+		<div className="data_row">
 			<Icon className="vector_icon" as={BsCrop as React.ElementType} />
 			{`${props.tile_pos.x}, ${props.tile_pos.y}`}
 			<span className='caption'>Position</span>
 		</div>
-		<div className="data-row">
+		<div className="data_row">
 			<Icon className="vector_icon" as={BsImage as React.ElementType} />
 			{`${props.tile_name}`}
 		</div>
 		{
 			!isNil(props.tile_cost)
-			&&
-			<div className="data-row">
+			?
+			<div className="data_row">
 				<img src={Foot_Icon}/>
 				{`${props.tile_cost}`}
 				<span className='caption'>Move Cost of This Tile</span>
 			</div>
+			:
+			<div className="data_row invalid">
+				<img src={Foot_Icon}/>
+				{ `inaccessible` }
+			</div>
 		}
 		{
+			isNil(props.tile_cost) //if it's null, then the tile's completely inaccessible, and this calc is meaningless.
+			?
+			<div className="data_row invalid">
+				<Icon className="vector_icon" as={BsFillSignpostSplitFill as React.ElementType} />
+			</div>
+			:
 			!isNil(props.cumulative_move_cost)
 			&&
-			<div className="data-row">
+			<div className="data_row">
 				<Icon className="vector_icon" as={BsFillSignpostSplitFill as React.ElementType} />
 				{ creature_move_capacity !== undefined ? `${props.cumulative_move_cost.toFixed(1)}/${creature_move_capacity}` : `${props.cumulative_move_cost.toFixed(1)}` }
 				<span className='caption'>Total Move Cost</span>
@@ -148,7 +159,7 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 		{
 			!isNil(props.unit_pos)
 			&&
-			<div className="data-row">
+			<div className="data_row">
 				<img src={Distance_Icon}/>
 				{ `${distance}` }
 				<span className='caption'>Tile Distance</span>
