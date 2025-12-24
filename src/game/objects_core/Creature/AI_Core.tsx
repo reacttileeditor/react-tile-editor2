@@ -59,17 +59,20 @@ export const AI_Core_ƒ = {
 		let valid_targets: Array<Creature_Data> = []; 
 		if( size(targets) ){
 			valid_targets = filter(targets, (target)=>{
-				const distance = Tilemap_Manager_ƒ.get_tile_coord_distance_between(
-					Creature_ƒ.get_current_tile_pos_from_pixel_pos(me, _TM, _AM, _BM),
-					Creature_ƒ.get_current_tile_pos_from_pixel_pos(target, _TM, _AM, _BM)
-				);
+				const distance = Creature_ƒ.get_distance_between_creatures(me, target, _TM, _AM, _BM);
 
 				return ( distance <= Creature_ƒ.get_delegate(me.type_name).yield_weapon_range() );
 			});
 		}
 
-		if( size(valid_targets) ){
-			return valid_targets[0];
+		const sorted_valid_targets = sort((creature_a, creature_b) => {
+			return (Creature_ƒ.get_distance_between_creatures(me, creature_a, _TM, _AM, _BM)
+			-
+			Creature_ƒ.get_distance_between_creatures(me, creature_b, _TM, _AM, _BM));
+		}, valid_targets)
+
+		if( size(sorted_valid_targets) ){
+			return sorted_valid_targets[0];
 		} else {
 			return undefined;
 		}

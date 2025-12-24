@@ -96,6 +96,13 @@ export const Creature_ƒ_Accessors = {
 	},
 
 
+	get_distance_between_creatures: (source: Creature_Data, target: Creature_Data, _TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _BM: Blit_Manager_Data): number => {
+		return Tilemap_Manager_ƒ.get_tile_coord_distance_between(
+			Creature_ƒ.get_current_tile_pos_from_pixel_pos(source, _TM, _AM, _BM),
+			Creature_ƒ.get_current_tile_pos_from_pixel_pos(target, _TM, _AM, _BM)
+		);
+	},
+
 	/*----------------------- setters -----------------------*/
 	adjust_hitpoints: (
 		target: Creature_Data,
