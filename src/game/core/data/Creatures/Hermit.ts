@@ -11,7 +11,8 @@ export const CT_Hermit_ƒ: Creature_Delegate = {
 	yield_moves_per_turn: () =>  10,
 	yield_creature_image: () => 'human_hermit_se_stand',
 	yield_prettyprint_name: () => 'Hermit',
-	yield_weapon_range: () => 14,
+	yield_weapon_range: () => 5,
+	yield_damage: (): number => ( 8 ),
 
 	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction: Direction): Image_Data_Names => (
 		({
