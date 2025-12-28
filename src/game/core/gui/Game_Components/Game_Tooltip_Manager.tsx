@@ -128,42 +128,59 @@ const Map_Tooltip = (props: Game_Tooltip_Data) => {
 			{`${props.tile_name}`}
 		</div>
 		{
-			!isNil(props.tile_cost)
-			?
-			<div className="data_row">
-				<img src={Foot_Icon}/>
-				{`${props.tile_cost}`}
-				<span className='caption'>Move Cost of This Tile</span>
-			</div>
-			:
-			<div className="data_row invalid">
-				<img src={Foot_Icon}/>
-				{ `inaccessible` }
-			</div>
+			props.selected_unit
+			&&			
+			<hr />
 		}
 		{
-			isNil(props.tile_cost) //if it's null, then the tile's completely inaccessible, and this calc is meaningless.
-			?
-			<div className="data_row invalid">
-				<Icon className="vector_icon" as={BsFillSignpostSplitFill as React.ElementType} />
-			</div>
-			:
-			!isNil(props.cumulative_move_cost)
-			&&
-			<div className="data_row">
-				<Icon className="vector_icon" as={BsFillSignpostSplitFill as React.ElementType} />
-				{ creature_move_capacity !== undefined ? `${props.cumulative_move_cost.toFixed(1)}/${creature_move_capacity}` : `${props.cumulative_move_cost.toFixed(1)}` }
-				<span className='caption'>Total Move Cost</span>
-			</div>
+			props.selected_unit
+			&&			
+			(		
+				!isNil(props.tile_cost)
+				?
+				<div className="data_row">
+					<img src={Foot_Icon}/>
+					{`${props.tile_cost}`}
+					<span className='caption'>Move Cost of This Tile</span>
+				</div>
+				:
+				<div className="data_row invalid">
+					<img src={Foot_Icon}/>
+					{ `inaccessible` }
+				</div>
+			)
 		}
 		{
-			!isNil(props.unit_pos)
+			props.selected_unit
 			&&
-			<div className="data_row">
-				<img src={Distance_Icon}/>
-				{ `${distance}` }
-				<span className='caption'>Tile Distance</span>
-			</div>
+			(
+				isNil(props.tile_cost) //if it's null, then the tile's completely inaccessible, and this calc is meaningless.
+				?
+				<div className="data_row invalid">
+					<Icon className="vector_icon" as={BsFillSignpostSplitFill as React.ElementType} />
+				</div>
+				:
+				!isNil(props.cumulative_move_cost)
+				&&
+				<div className="data_row">
+					<Icon className="vector_icon" as={BsFillSignpostSplitFill as React.ElementType} />
+					{ creature_move_capacity !== undefined ? `${props.cumulative_move_cost.toFixed(1)}/${creature_move_capacity}` : `${props.cumulative_move_cost.toFixed(1)}` }
+					<span className='caption'>Total Move Cost</span>
+				</div>
+			)
+		}
+		{
+			props.selected_unit
+			&&
+			(
+				!isNil(props.unit_pos)
+				&&
+				<div className="data_row">
+					<img src={Distance_Icon}/>
+					{ `${distance}` }
+					<span className='caption'>Tile Distance</span>
+				</div>
+			)
 		}
 
 	</div>
