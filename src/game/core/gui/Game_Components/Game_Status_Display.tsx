@@ -24,6 +24,8 @@ import Damage_Icon from '../../../assets/icons/damage.png';
 import Heart_Icon from '../../../assets/icons/heart.png';
 import Flag_Icon from '../../../assets/icons/flag.png';
 import { Palette_Names } from "../../data/Palette_List";
+import { Icon } from "@rsuite/icons";
+import { GiBarefoot, GiBroadsword } from "react-icons/gi";
 
 interface Game_Status_Display_Props {
 	ref: React.RefObject<HTMLDivElement | null>	
@@ -237,6 +239,35 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 						/>
 					</>
 				}</>
+				<>{
+					(selected_creature !== undefined)
+					&&
+						<div className="controls">
+							<div className="centered_text">
+								<div className="small_caption">
+									{'Movement Mode:'}
+								</div>
+							</div>
+
+							<div className="button_strip">
+								<div className="button_icon">
+									<Whisper placement='top' speaker={<Tooltip><div className="label">{'Move'}</div></Tooltip>}>
+										<div className="icon_cell">	
+											<Icon className="vector_icon" as={GiBarefoot as React.ElementType} />
+										</div> 
+									</Whisper>
+								</div>
+								<div className="button_icon">
+									<Whisper placement='top' speaker={<Tooltip><div className="label">{'Attack Move'}</div></Tooltip>}>
+										<div className="icon_cell">	
+											<Icon className="vector_icon" as={GiBroadsword as React.ElementType} />
+										</div> 
+									</Whisper>
+								</div>
+							</div>
+						</div>
+				}</>
+
 			</div>
 			</>
 			:

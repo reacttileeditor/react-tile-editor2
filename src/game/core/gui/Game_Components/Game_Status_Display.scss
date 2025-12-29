@@ -154,6 +154,45 @@
 			}			
 		}
 
+		.controls {
+
+			width: 100%;
+			margin-top: 1rem;
+
+			.button_strip {
+				margin-top: 0.5rem;
+				display: flex;
+				flex-flow: row;
+				gap: 0.3rem;
+				justify-content: center;
+				align-items: center;
+
+			}
+		}
+
+		.button_icon {
+			border: 0.20rem outset #aaa;
+			background: #aaa;
+			border-radius: 0.25rem;
+			margin-right: 0.5rem;
+			display: inline-block;
+
+			&.active {
+				border: 0.20rem inset #aaa;
+			}
+
+			.vector_icon {
+				border: 0.15rem solid black;
+				border-radius: 0.25rem;
+				padding: 0.15rem;
+				background: black;
+				color: white;
+
+				width: 2.3rem;
+				height: 2.3rem;
+			}
+		}
+
 		.label_and_data_pair {
 			display: flex;
 			flex-flow: row;
