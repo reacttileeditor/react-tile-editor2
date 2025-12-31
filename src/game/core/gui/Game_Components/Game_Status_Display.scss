@@ -182,6 +182,12 @@
 			padding: 0;
 			margin: 0;
 		
+			&:disabled {
+				.vector_icon {
+					color: grey;
+				}
+				border: 0.20rem solid grey;
+			}
 
 			&.active {
 				border: 0.20rem inset #aaa;
