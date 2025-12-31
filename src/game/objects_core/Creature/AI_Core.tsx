@@ -240,7 +240,7 @@ export const AI_Core_ƒ = {
 		const target = AI_Core_ƒ.find_closest_target(me, _TM, _AM, _BM);
 
 
-		if( target && (me.remaining_action_points > 0) ){
+		if( target && (me.remaining_action_points > 0) && (me.ai_intent == 'attack_move') ){
 			/*
 				We have at least one valid target.  I think we'll probably want some priority criterion, but for now, just pick the first one.
 
