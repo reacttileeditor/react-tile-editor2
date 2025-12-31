@@ -176,6 +176,12 @@
 			border-radius: 0.25rem;
 			margin-right: 0.5rem;
 			display: inline-block;
+		
+			height: fit-content;
+			width: fit-content;
+			padding: 0;
+			margin: 0;
+		
 
 			&.active {
 				border: 0.20rem inset #aaa;
