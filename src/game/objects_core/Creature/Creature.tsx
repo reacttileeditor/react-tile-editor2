@@ -77,17 +77,19 @@ export type Path_Data = {
 export type ValueOf<T> = T[keyof T];
 
 
+export type AI_Intent = 'attack_move' | 'forced_move';
+
 /*----------------------- Core Data Types -----------------------*/
 
 
 
 export type Creature_Data = {
 	//static values
-	type_name: Creature_Type_Name;
-	team: number;
+	type_name: Creature_Type_Name,
+	team: number,
 
 	//state	
-	tile_pos: Tile_Pos_Point;
+	tile_pos: Tile_Pos_Point,
 	facing_direction: Direction;
 	remaining_action_points: number,
 	remaining_move_points: number,
@@ -101,10 +103,11 @@ export type Creature_Data = {
 	behavior_mode: Behavior_Mode,
 
 	//intended moves
-	planned_tile_pos: Tile_Pos_Point;
+	planned_tile_pos: Tile_Pos_Point,
 	walk_segment_start_time: number,
-	path_data: Path_Data;
-	target?: Creature_Data;
+	path_data: Path_Data,
+	target?: Creature_Data,
+	ai_intent: AI_Intent,
 } & Core_Data;
 
 
@@ -164,7 +167,8 @@ export const New_Creature = (
 		is_done_with_turn: boolean,
 		behavior_mode: Behavior_Mode,
 		planned_tile_pos: Tile_Pos_Point,
-		target?: Creature_Data
+		target?: Creature_Data,
+		ai_intent?: AI_Intent,
 		type_name: Creature_Type_Name,
 		team: number,
 		unique_id?: string,
@@ -225,6 +229,10 @@ export const New_Creature = (
 		),
 		target: p.target,
 		behavior_mode: p.behavior_mode,
+		ai_intent: ƒ.if(p.ai_intent !== undefined,
+			p.ai_intent,
+			'attack_move',
+		),
 
 
 		//intended moves
@@ -258,6 +266,7 @@ export const Creature_ƒ = {
 			path_data: cloneDeep(path_data_empty),
 			behavior_mode: 'stand',
 			target: undefined,
+			ai_intent: 'attack_move',
 			is_done_with_turn: false,
 			remaining_move_points: Creature_ƒ.get_delegate(me.type_name).yield_moves_per_turn()
 		})

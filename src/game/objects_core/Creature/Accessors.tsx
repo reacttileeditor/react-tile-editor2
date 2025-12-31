@@ -9,7 +9,7 @@ import { Gamespace_Pixel_Point, Point2D, Rectangle, Tile_Pos_Point } from '../..
 import { Creature_Delegate} from "./Creature_Delegate";
 import { Asset_Manager_Data } from "../../core/engine/Asset_Manager/Asset_Manager";
 import { Blit_Manager_Data } from "../../core/engine/Blit_Manager";
-import { Change_Instance, Core_Accessors, Creature_Data, Creature_Type_Name, Creature_ƒ } from "./Creature";
+import { AI_Intent, Change_Instance, Core_Accessors, Creature_Data, Creature_Type_Name, Creature_ƒ } from "./Creature";
 import { CT_Hermit_ƒ } from "../../core/data/Creatures/Hermit";
 import { CT_Peasant_ƒ } from "../../core/data/Creatures/Peasant";
 import { CT_Skeleton_ƒ } from "../../core/data/Creatures/Skeleton";
@@ -123,6 +123,12 @@ export const Creature_ƒ_Accessors = {
 	},
 
 
+	set_AI_intent: (
+		me: Creature_Data,
+		new_intent: AI_Intent,
+	) => {
+		me.ai_intent = new_intent;
+	},
 
 
 	get_delegate: (type_name: Creature_Type_Name): Creature_Delegate => {

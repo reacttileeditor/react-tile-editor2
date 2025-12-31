@@ -250,14 +250,22 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 							</div>
 
 							<div className="button_strip">
-								<div className="button_icon">
+								<div className={`button_icon ${selected_creature.ai_intent == 'forced_move' ? 'active' : ''}`}
+									onClick={ ()=>{
+										Creature_ƒ.set_AI_intent(selected_creature, 'forced_move')
+									}}
+								>
 									<Whisper placement='top' speaker={<Tooltip><div className="label">{'Move'}</div></Tooltip>}>
 										<div className="icon_cell">	
 											<Icon className="vector_icon" as={GiBarefoot as React.ElementType} />
 										</div> 
 									</Whisper>
 								</div>
-								<div className="button_icon">
+								<div className={`button_icon ${selected_creature.ai_intent == 'attack_move' ? 'active' : ''}`}
+									onClick={ ()=>{
+										Creature_ƒ.set_AI_intent(selected_creature, 'attack_move')
+									}}
+								>
 									<Whisper placement='top' speaker={<Tooltip><div className="label">{'Attack Move'}</div></Tooltip>}>
 										<div className="icon_cell">	
 											<Icon className="vector_icon" as={GiBroadsword as React.ElementType} />
