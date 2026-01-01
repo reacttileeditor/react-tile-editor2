@@ -246,6 +246,7 @@ export const Game_Manager_ƒ_State_Management = {
 				},
 				game_state: {
 					...cloneDeep(me.game_state),
+					selected_object_index: undefined,
 					current_frame_state: cloneDeep(Game_Manager_ƒ.get_current_turn_state(me)),
 					objective_text: Game_Manager_ƒ.write_full_objective_text(me, Game_Manager_ƒ.get_game_state(me).objective_type, Game_Manager_ƒ.get_game_state(me)),
 				}
