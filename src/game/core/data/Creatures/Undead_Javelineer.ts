@@ -9,7 +9,7 @@ export const CT_Undead_Javelineer_ƒ: Creature_Delegate = {
 	yield_moves_per_turn: () => 16,
 	yield_creature_image: () => 'undead_javelineer_se_stand',
 	yield_prettyprint_name: () => 'Hanged Man',
-	yield_damage: (): number => ( 3 ),
+	yield_damage: (): number => ( 10 ),
 	yield_weapon_range: () => 4,
 
 	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction: Direction): Image_Data_Names => (

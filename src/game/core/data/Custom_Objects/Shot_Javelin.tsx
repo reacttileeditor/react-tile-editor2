@@ -119,15 +119,20 @@ export const CO_Shot_Javelin_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 
 	get_custom_image_transform_matrix: (
 		me
-	) => (
-		{
+	) => {
+
+		const angle_to_target = angle_between({source: me.delegate_state.last_source_pos, dest: me.delegate_state.last_target_pos});
+
+		const vert_scale = Math.abs( Math.cos( angle_to_target ) );
+
+		return {
 			hor_scale: 1,
 			hor_skew: 0,
 			vert_skew: 0,
-			vert_scale: 5,
+			vert_scale: vert_scale,
 			hor_move: 0,
 			vert_move: 0,
 		}
-	)		
+	}	
 
 }
