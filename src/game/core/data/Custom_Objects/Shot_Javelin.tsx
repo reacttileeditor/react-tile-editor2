@@ -75,7 +75,7 @@ export const CO_Shot_Javelin_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 			spawnees: spawnees,
 		}
 	},
-	yield_asset: () => 'arrow_placeholder',
+	yield_asset: () => 'javelin_projectile',
 
 	should_be_removed: (
 		me: Custom_Object_Data<CO_Shot_State>,

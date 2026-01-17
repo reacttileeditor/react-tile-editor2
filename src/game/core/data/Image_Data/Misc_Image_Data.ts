@@ -78,6 +78,9 @@ export const Misc_Image_Data = {
 	arrow_placeholder: {
 		url: "arrow_placeholder.png",
 	},
+	javelin_projectile: {
+		url: "projectile-javelin.png",
+	},
 	hit_star: {
 		url: "hit_star.png",
 	},
