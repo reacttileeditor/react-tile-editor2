@@ -3,7 +3,7 @@ import { Asset_Data_Record, Asset_Manager_Data, Asset_Manager_ƒ, Autotile_Restr
 import { filter, isString, map, size } from "lodash";
 import { get_nth_permutation_of_deck, is_all_true, ƒ } from "../Utils";
 import { add, concat, findIndex, reduce, slice, uniq } from "ramda";
-import { Blit_Manager_Data, Blit_Manager_ƒ } from "../Blit_Manager";
+import { Blit_Manager_Data, Blit_Manager_ƒ, Transform_Matrix } from "../Blit_Manager";
 import { Point2D } from "../../../interfaces";
 import * as Utils from "../Utils";
 import { Image_And_Image_Sequence_Data_Names, Image_Data_Names } from "../../data/Image_Data";
@@ -345,6 +345,7 @@ export const Drawing = {
 		horizontally_flipped: boolean,
 		vertically_flipped: boolean,
 		palette?: Palette_Names,
+		transform_matrix?: Transform_Matrix,
 	}) => {
 		/*
 			Before we get started, we have a special 'magic name' used to make various objects (such as floating hp numbers) skip drawing a sprite entirely.
@@ -392,6 +393,7 @@ export const Drawing = {
 		horizontally_flipped: boolean,
 		vertically_flipped: boolean,
 		asset_data: Asset_Data_Record,
+		transform_matrix?: Transform_Matrix,
 	}) => {
 		const { raw_image, metadata, image_data } = p.asset_data;
 
@@ -431,7 +433,8 @@ export const Drawing = {
 												x:			-Math.floor(dim.w/2),
 												y:			-Math.floor(dim.h/2),
 											}
-										}
+										},
+				transform_matrix: p.transform_matrix,
 			});
 		} else {
 			Blit_Manager_ƒ.queue_draw_op({
@@ -459,7 +462,8 @@ export const Drawing = {
 												w:	metadata.bounds.w,
 												h:	metadata.bounds.h,
 											},
-										}
+										},
+				transform_matrix:		p.transform_matrix,
 			});
 		}
 	},
@@ -491,7 +495,8 @@ export const Drawing = {
 			vertically_flipped:		p.vertically_flipped,
 			drawing_data:			{
 										text: p.text,
-									}
+									},
+			transform_matrix:		undefined,
 		});
 	},
 
@@ -519,7 +524,8 @@ export const Drawing = {
 			drawing_data:			{
 										portion: p.portion,
 										buffer: p.buffer,
-									}
+									},
+			transform_matrix:		undefined,
 		});
 	},
 

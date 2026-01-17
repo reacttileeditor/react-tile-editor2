@@ -10,6 +10,16 @@ import { Tile_Comparator_Sample } from "./Asset_Manager/Asset_Manager";
 
 import { Gamespace_Pixel_Point, Point2D, Rectangle, Screenspace_Pixel_Point } from '../../interfaces';
 
+export type Transform_Matrix = {
+	hor_scale: number,
+	hor_skew: number,
+	vert_skew: number,
+	vert_scale: number,
+	hor_move: number,
+	vert_move: number,
+};
+
+
 interface Draw_Entity {
 	pos: Point2D,
 	z_index: number,
@@ -20,6 +30,7 @@ interface Draw_Entity {
 	horizontally_flipped: boolean,
 	vertically_flipped: boolean,
 	drawing_data: Draw_Data_Types,
+	transform_matrix?:	Transform_Matrix,
 }
 
 interface Draw_Data_Image_With_Bounds {
@@ -282,6 +293,7 @@ export const Blit_Manager_ƒ = {
 		horizontally_flipped: 	boolean,
 		vertically_flipped: 	boolean,
 		drawing_data:			Draw_Data_Types
+		transform_matrix:		Transform_Matrix | undefined,
 	}) => {
 
 		const occlusion_margin = p._AM.static_vals.post_loading_metadata.max_asset_dimension;
@@ -303,7 +315,8 @@ export const Blit_Manager_ƒ = {
 				brightness: 			p.brightness,
 				horizontally_flipped:	p.horizontally_flipped,
 				vertically_flipped:		p.vertically_flipped,
-				drawing_data:			p.drawing_data
+				drawing_data:			p.drawing_data,
+				transform_matrix:		p.transform_matrix,
 			});
 		}
 	},
@@ -465,6 +478,16 @@ export const Blit_Manager_ƒ = {
 					ƒ.if(value.vertically_flipped, -value.scale, value.scale),
 				);
 				
+				if( value.transform_matrix !== undefined){
+					me.osb_ctx.transform(
+						value.transform_matrix.hor_scale,
+						value.transform_matrix.hor_skew,
+						value.transform_matrix.vert_skew,
+						value.transform_matrix.vert_scale,
+						value.transform_matrix.hor_move,
+						value.transform_matrix.vert_move,
+					)
+				}
 
 				me.osb_ctx.drawImage	(
 					/* file */			value.drawing_data.image_ref,
@@ -507,6 +530,16 @@ export const Blit_Manager_ƒ = {
 					ƒ.if(value.vertically_flipped, -value.scale, value.scale),
 				);
 
+				if( value.transform_matrix !== undefined){
+					me.osb_ctx.transform(
+						value.transform_matrix.hor_scale,
+						value.transform_matrix.hor_skew,
+						value.transform_matrix.vert_skew,
+						value.transform_matrix.vert_scale,
+						value.transform_matrix.hor_move,
+						value.transform_matrix.vert_move,
+					)
+				}
 
 				me.osb_ctx.drawImage	(
 					/* file */				value.drawing_data.image_ref,

@@ -59,5 +59,9 @@ export const Custom_Object_ƒ_Accessors = {
 	should_remove_at_animation_end: (me: Custom_Object_Data<unknown>) => (
 		Custom_Object_ƒ.get_delegate(me.type_name).should_remove_at_animation_end(me)
 	),
+
+	get_custom_image_transform_matrix: (me: Custom_Object_Data<unknown>) => (
+		Custom_Object_ƒ.get_delegate(me.type_name).get_custom_image_transform_matrix(me)
+	), 
 }
 

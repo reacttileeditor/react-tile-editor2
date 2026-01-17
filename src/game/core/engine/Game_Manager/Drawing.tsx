@@ -207,6 +207,7 @@ export const Game_Manager_ƒ_Drawing = {
 				brightness:					1.0,
 				horizontally_flipped:		false,
 				vertically_flipped:			false,
+				transform_matrix:			Custom_Object_ƒ.get_custom_image_transform_matrix(val),
 			})
 
 			Asset_Manager_ƒ.draw_text({
@@ -373,6 +374,7 @@ export const Game_Manager_ƒ_Drawing = {
 				brightness:					1.0,
 				horizontally_flipped:		false,
 				vertically_flipped:			false,
+				transform_matrix:			Custom_Object_ƒ.get_custom_image_transform_matrix(val),
 			})
 
 			Asset_Manager_ƒ.draw_text({

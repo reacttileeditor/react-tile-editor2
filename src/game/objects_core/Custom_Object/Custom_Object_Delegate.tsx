@@ -15,7 +15,7 @@ import { Base_Object_State, Custom_Object_Data, Custom_Object_ƒ, New_Custom_Obj
 import { Vals } from "../../core/constants/Constants";
 import { CO_Shot_State } from "../../core/data/Custom_Objects/Shot";
 import { CO_Hit_Star_State } from "../../core/data/Custom_Objects/Hit_Star";
-import { ms_to_ticks, ticks_to_ms } from "../../core/engine/Blit_Manager";
+import { ms_to_ticks, ticks_to_ms, Transform_Matrix } from "../../core/engine/Blit_Manager";
 import { Image_And_Image_Sequence_Data_Names, Image_Data_Names } from "../../core/data/Image_Data";
 
 
@@ -70,6 +70,12 @@ export type Custom_Object_Delegate<Delegate_State_Type> = {
 		change_list: Array<Change_Instance>,
 		spawnees: Array<Custom_Object_Data<unknown>>,
 	},
+
+	get_custom_image_transform_matrix: (
+		me: Custom_Object_Data<Delegate_State_Type>,
+	) => (
+		Transform_Matrix | undefined
+	)
 }
 
 
@@ -159,7 +165,13 @@ export const Custom_Object_Delegate_Base_ƒ: Custom_Object_Delegate<unknown> = {
 
 	should_remove_at_animation_end: (me: Custom_Object_Data<unknown>) => (
 		false
-	),	
+	),
+
+	get_custom_image_transform_matrix: (
+		me
+	) => (
+		undefined
+	)	
 }
 
 

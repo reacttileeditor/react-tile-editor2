@@ -114,6 +114,20 @@ export const CO_Shot_Javelin_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 			change_list: change_list,
 			spawnees: spawnees
 		}
-	},	
+	},
+
+
+	get_custom_image_transform_matrix: (
+		me
+	) => (
+		{
+			hor_scale: 1,
+			hor_skew: 0,
+			vert_skew: 0,
+			vert_scale: 5,
+			hor_move: 0,
+			vert_move: 0,
+		}
+	)		
 
 }
