@@ -13,7 +13,7 @@ import { CO_Particle_System_State } from "./Particle_System";
 import { Tilemap_Manager_ƒ } from "../../engine/Tilemap_Manager/Tilemap_Manager";
 import { CO_Shot_Utils_ƒ } from "../Custom_Object_Utilities/Shot_Utils";
 import { CO_Shot_State } from "./Shot";
-import { cubic } from "@juliendargelos/easings";
+import { cubic, exponential } from "@juliendargelos/easings";
 
 
 
@@ -153,21 +153,20 @@ export const CO_Shot_Javelin_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 			Now we want to adjust the vertical scale to make the shot appear to be "foreshortened" if the shot is mostly travelling vertical.  We basically make this proportionate to the vert_scale value.
 		*/
 
-		const foreshortening_amount = (1.0 - Math.sin(degrees_to_radians(  modulo(me.rotate, 180)  )))
-		const adjusted_vert_scale =  (1.0 - vert_scale) + (foreshortening_amount* vert_scale);
+		const foreshortening_amount = (1.0- Math.sin(degrees_to_radians(  modulo(me.rotate, 180)  )))
+		const adjusted_vert_scale =  Math.max(exponential.in(vert_scale), foreshortening_amount);
 		//		const adjusted_vert_scale =  Math.max(vert_scale, foreshortening_amount * vert_scale);
 
-		const adjusted_vert_scale_tweaked = (adjusted_vert_scale);
 		
 		
-		console.log( me.delegate_state.last_source_pos, me.delegate_state.last_target_pos, is_facing_left, rnd(raw_angle_to_target), rnd(modulated_angle_to_target), rnd(angle_to_target),  vert_scale, '🔵', me.rotate, adjusted_vert_scale_tweaked);
+		console.log( me.delegate_state.last_source_pos, me.delegate_state.last_target_pos, is_facing_left, rnd(raw_angle_to_target), rnd(modulated_angle_to_target), rnd(angle_to_target),  vert_scale, '🔵', me.rotate, adjusted_vert_scale);
 
 
 		return {
 			hor_scale: 1,
 			hor_skew: 0,
 			vert_skew: 0,
-			vert_scale: adjusted_vert_scale_tweaked,
+			vert_scale: adjusted_vert_scale,
 			hor_move: 0,
 			vert_move: 0,
 		}
