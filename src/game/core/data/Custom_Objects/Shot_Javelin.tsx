@@ -6,7 +6,7 @@ import { Custom_Object_Data, Custom_Object_ƒ, New_Custom_Object } from "../../.
 import { Custom_Object_Delegate, Custom_Object_Delegate_Base_ƒ, Custom_Object_Update } from "../../../objects_core/Custom_Object/Custom_Object_Delegate";
 import { Gamespace_Pixel_Point, Point2D } from "../../../interfaces";
 import { cloneDeep } from "lodash";
-import { angle_between, ƒ } from "../../engine/Utils";
+import { angle_between, modulo, radians_to_degrees, ƒ } from "../../engine/Utils";
 import { Vals } from "../../constants/Constants";
 import { Game_Manager_ƒ } from "../../engine/Game_Manager/Game_Manager";
 import { CO_Particle_System_State } from "./Particle_System";
@@ -121,9 +121,15 @@ export const CO_Shot_Javelin_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 		me
 	) => {
 
-		const angle_to_target = angle_between({source: me.delegate_state.last_source_pos, dest: me.delegate_state.last_target_pos});
+		const raw_angle_to_target = angle_between({source: me.delegate_state.last_source_pos, dest: me.delegate_state.last_target_pos}) + Math.PI/2
+		const angle_to_target = modulo( raw_angle_to_target , Math.PI * 2);
 
-		const vert_scale = Math.abs( Math.cos( angle_to_target ) );
+
+
+		const vert_scale = modulo( Math.cos( angle_to_target/2 ), 1.0 );
+
+		console.log( me.delegate_state.last_source_pos, me.delegate_state.last_target_pos, radians_to_degrees(raw_angle_to_target),  vert_scale);
+
 
 		return {
 			hor_scale: 1,
