@@ -135,7 +135,7 @@ export const Creature_ƒ_Behavior = {
 			prior_tile_cost = Creature_ƒ.get_delegate(me.type_name).yield_move_cost_for_tile_type(current_tile_type) as number;
 		}
 
-		console.log(tick, me.type_name, prior_tile_pos, current_tile_type, prior_tile_cost, me.remaining_move_points)
+		//console.log(tick, me.type_name, prior_tile_pos, current_tile_type, prior_tile_cost, me.remaining_move_points)
 		Creature_ƒ.add(change_list, me, 'remaining_move_points', -prior_tile_cost);
 
 		if(me.remaining_move_points - prior_tile_cost < 0){
