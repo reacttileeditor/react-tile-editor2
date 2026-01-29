@@ -12,15 +12,11 @@ import { Game_Manager_ƒ } from "../../engine/Game_Manager/Game_Manager";
 import { CO_Particle_System_State } from "./Particle_System";
 import { Tilemap_Manager_ƒ } from "../../engine/Tilemap_Manager/Tilemap_Manager";
 import { CO_Shot_Utils_ƒ } from "../Custom_Object_Utilities/Shot_Utils";
+import { CO_Shot_State } from "./Shot";
 
 
 
-export type CO_Shot_State = {
-	target_obj: string, //uuid
-	source_obj: string,
-	last_source_pos: Gamespace_Pixel_Point,
-	last_target_pos: Gamespace_Pixel_Point,
-}
+
 
 export const CO_Shot_Magic_Missile_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 	...Custom_Object_Delegate_Base_ƒ,
@@ -43,6 +39,7 @@ export const CO_Shot_Magic_Missile_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 		const lifetime_tick = (tick - me.creation_timestamp);
 
 		const source_pos = CO_Shot_Utils_ƒ.get_shot_starting_pos_or_fallback_value(source, _prior_delegate_state.last_source_pos);
+		const source_body_pos = CO_Shot_Utils_ƒ.get_pos_or_fallback_value(source, _prior_delegate_state.last_source_body_pos);
 		const target_pos = CO_Shot_Utils_ƒ.get_pos_or_fallback_value(target, _prior_delegate_state.last_target_pos);
 
 
@@ -84,6 +81,7 @@ export const CO_Shot_Magic_Missile_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 				delegate_state: {
 					...me.delegate_state,
 					last_source_pos: source_pos,
+					last_source_body_pos: source_body_pos,
 					last_target_pos: target_pos
 				},
 			},

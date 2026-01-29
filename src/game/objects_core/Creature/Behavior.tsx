@@ -275,6 +275,7 @@ export const Creature_ƒ_Behavior = {
 					target_obj: target.unique_id,
 					source_obj: me.unique_id,
 					last_source_pos: Creature_ƒ.get_shot_start_position(me),
+					last_source_body_pos: Creature_ƒ.get_midpoint(me),
 					last_target_pos: Creature_ƒ.get_midpoint(target)
 				},
 				scheduled_events: [{
