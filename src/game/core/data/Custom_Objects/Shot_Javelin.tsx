@@ -155,11 +155,10 @@ export const CO_Shot_Javelin_ƒ: Custom_Object_Delegate<CO_Shot_State> = {
 
 		const foreshortening_amount = (1.0- Math.sin(degrees_to_radians(  modulo(me.rotate, 180)  )))
 		const adjusted_vert_scale =  Math.max(exponential.in(vert_scale), foreshortening_amount);
-		//		const adjusted_vert_scale =  Math.max(vert_scale, foreshortening_amount * vert_scale);
 
 		
 		
-		console.log( me.delegate_state.last_source_pos, me.delegate_state.last_target_pos, is_facing_left, rnd(raw_angle_to_target), rnd(modulated_angle_to_target), rnd(angle_to_target),  vert_scale, '🔵', me.rotate, adjusted_vert_scale);
+		//console.log( me.delegate_state.last_source_pos, me.delegate_state.last_target_pos, is_facing_left, rnd(raw_angle_to_target), rnd(modulated_angle_to_target), rnd(angle_to_target),  vert_scale, '🔵', me.rotate, adjusted_vert_scale);
 
 
 		return {
