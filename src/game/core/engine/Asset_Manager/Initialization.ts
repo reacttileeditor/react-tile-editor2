@@ -6,6 +6,7 @@ import { concat, keys, uniq } from "ramda";
 import { Point2D } from "../../../interfaces";
 import convert from "color-convert";
 import { palette_list, Palette_Names } from "../../data/Palette_List";
+import { Loading_Metadata } from "../../gui/Primary_View";
 
 var has_launched_app_already = false;
 
@@ -18,7 +19,7 @@ export const Initialization = {
 	launch_app: (
 		me: Asset_Manager_Data,
 		do_once_app_ready: ()=>void,
-		set_loaded_fraction: Dispatch<SetStateAction<number>>,
+		set_loading_metadata: Dispatch<SetStateAction<Loading_Metadata>>,
 	) => {
 		console.error('launch app');
 		if(!has_launched_app_already){
@@ -77,7 +78,7 @@ export const Initialization = {
 							temp_image,
 							index,
 							do_once_app_ready,
-							set_loaded_fraction
+							set_loading_metadata
 						);
 					} else {
 						Asset_Manager_ƒ.apply_magic_color_transparency(
@@ -85,7 +86,7 @@ export const Initialization = {
 							temp_image,
 							index,
 							do_once_app_ready,
-							set_loaded_fraction
+							set_loading_metadata
 						);
 					}
 
@@ -123,7 +124,7 @@ export const Initialization = {
 	launch_if_all_assets_are_loaded: (
 		me: Asset_Manager_Data,
 		do_once_app_ready: ()=>void,
-		set_loaded_fraction: Dispatch<SetStateAction<number>>,
+		set_loading_metadata: Dispatch<SetStateAction<Loading_Metadata>>,
 	) => {
 		/*
 			There's a big problem most canvas apps have, which is that the canvas will start doing its thing right away and start trying to render, even if you haven't loaded any of the images yet.  What we want to do is have it wait until all the images are done loading, so we're rolling a minimalist "asset manager" here.  The only way (I'm aware of) to tell if an image has loaded is the onload callback.  Thus, we register one of these on each and every image, before attempting to load it.
@@ -136,7 +137,11 @@ export const Initialization = {
 		const preprocessed_image_list___size =  size(  filter( me.static_vals.assets_meta, (val)=> (val.preprocessed == true) ) );
 
 
-		set_loaded_fraction( (image_data_list___size + preprocessed_image_list___size) / (raw_image_list___size * 2) );
+		set_loading_metadata({
+			assets_loaded: image_data_list___size,
+			assets_total: raw_image_list___size,
+			assets_preprocessed: preprocessed_image_list___size,			
+		});//(image_data_list___size + preprocessed_image_list___size) / (raw_image_list___size * 2) );
 
 		if( image_data_list___size == raw_image_list___size) {
 			console.log( 'preprocessed:', preprocessed_image_list___size);
@@ -235,7 +240,7 @@ export const Initialization = {
 		temp_image: HTMLImageElement,
 		image_name: string,
 		do_once_app_ready: ()=>void,
-		set_loaded_fraction: Dispatch<SetStateAction<number>>,
+		set_loading_metadata: Dispatch<SetStateAction<Loading_Metadata>>,
 	): void => {
 
 		const osb = document.createElement('canvas');
@@ -267,7 +272,7 @@ export const Initialization = {
 					...me.static_vals.assets_meta[ image_name ],
 					preprocessed: true,
 				}
-				Asset_Manager_ƒ.launch_if_all_assets_are_loaded(me, do_once_app_ready, set_loaded_fraction);
+				Asset_Manager_ƒ.launch_if_all_assets_are_loaded(me, do_once_app_ready, set_loading_metadata);
 
 			}
 		})
@@ -283,7 +288,7 @@ export const Initialization = {
 		image_element: HTMLImageElement,
 		image_name: string,
 		do_once_app_ready: ()=>void,
-		set_loaded_fraction: Dispatch<SetStateAction<number>>,
+		set_loading_metadata: Dispatch<SetStateAction<Loading_Metadata>>,
 	)=>{
 		console.log(`applying team color to ${image_data.url}`);
 		
@@ -307,7 +312,7 @@ export const Initialization = {
 				set_image,
 				image_name,
 				do_once_app_ready,
-				set_loaded_fraction,
+				set_loading_metadata,
 			);
 		})
 	},
@@ -320,7 +325,7 @@ export const Initialization = {
 		set_image: (new_image_element: HTMLImageElement) => void,
 		image_name: string,
 		do_once_app_ready: ()=>void,
-		set_loaded_fraction: Dispatch<SetStateAction<number>>,
+		set_loading_metadata: Dispatch<SetStateAction<Loading_Metadata>>,
 	) => {
 
 		/*----------------------- prepare an offscreen buffer -----------------------*/
@@ -370,7 +375,7 @@ export const Initialization = {
 					...me.static_vals.assets_meta[ image_name ],
 					preprocessed: true,
 				}
-				Asset_Manager_ƒ.launch_if_all_assets_are_loaded(me, do_once_app_ready, set_loaded_fraction);
+				Asset_Manager_ƒ.launch_if_all_assets_are_loaded(me, do_once_app_ready, set_loading_metadata);
 			}
 		})
 

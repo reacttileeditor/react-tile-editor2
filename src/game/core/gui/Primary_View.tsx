@@ -45,6 +45,12 @@ const set_Game_Manager_Data = (newVal: Game_Manager_Data) => { _Game_Manager_Dat
 
 export type App_Modes = 'editor' | 'game' | 'titlescreen';
 
+export type Loading_Metadata = {
+	assets_loaded: number,
+	assets_total: number,
+	assets_preprocessed: number,
+}
+
 
 
 export const Primary_View = () => {
@@ -52,9 +58,13 @@ export const Primary_View = () => {
 
 	const [app_mode, set_app_mode] = useState<App_Modes>('titlescreen');
 	const [assets_loaded, set_assets_loaded] = useState<boolean>(false);
-	const [loaded_fraction, set_loaded_fraction] = useState<number>(0);
 	const [context_connected, set_context_connected] = useState<boolean>(false);
 	const [game_manager_loaded, set_game_manager_loaded] = useState<boolean>(false);
+	const [loading_metadata, set_loading_metadata] = useState<Loading_Metadata>({
+		assets_loaded: 0,
+		assets_total: 1,
+		assets_preprocessed: 0,
+	});
 
 
 	useEffect(() => {
@@ -66,7 +76,7 @@ export const Primary_View = () => {
 				Asset_Manager_ƒ.launch_app(
 					new_AM,
 					() => { set_assets_loaded(true); },
-					set_loaded_fraction,
+					set_loading_metadata,
 				);
 
 					//might be a race condition on this one, we'll see.
@@ -198,7 +208,7 @@ export const Primary_View = () => {
 								className="master_flex_wrapper"
 							>
 								<Loading_View
-									loaded_fraction={loaded_fraction}
+									loading_metadata={loading_metadata}
 								/>
 							</div>
 						}</>
