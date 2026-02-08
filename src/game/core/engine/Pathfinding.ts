@@ -239,12 +239,18 @@ export const Pathfinder_ƒ = {
 		_GM: Game_Manager_Data,
 		_BM: Blit_Manager_Data,
 		tilemap: Tile_Grid,
-		excluded_creature: Creature_Data
+		excluded_creatures: Array<Creature_Data>
 	): Tile_Grid => {
 	
-		const creature_tile_pos = Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, excluded_creature.pixel_pos)
+		const excluded_creature_tile_positions = map(excluded_creatures, (creature)=> {
+			return Tilemap_Manager_ƒ.convert_pixel_coords_to_tile_coords(_TM, _AM, _BM, creature.pixel_pos)
+		});
 
-		const occupied_tiles = filter((val)=>(!isEqual(val, creature_tile_pos)), _GM.game_state.current_frame_state.tiles_blocked_by_creatures);
+		const occupied_tiles = filter(
+			(val)=>( !includes(val, excluded_creature_tile_positions) ),
+			_GM.game_state.current_frame_state.tiles_blocked_by_creatures
+		);
+
 
 
 		return map( tilemap, (row_val, row_idx)=>(
@@ -263,13 +269,29 @@ export const Pathfinder_ƒ = {
 	
 		//const _graph = _Node_Graph_Generator.build_node_graph_from_grid( _TM.tile_maps.terrain );
 
-		const tilemap_with_tiles_blocked_by_creatures = Pathfinder_ƒ.block_tiles_occupied_by_other_creatures(_TM, _AM, _GM, _BM, _TM.tile_maps.terrain, _Creature);
+		const tilemap_with_tiles_blocked_by_creatures = Pathfinder_ƒ.block_tiles_occupied_by_other_creatures(_TM, _AM, _GM, _BM, _TM.tile_maps.terrain, [_Creature]);
+
+		const _graph = Node_Graph_Generate(_TM, _AM, _Creature, tilemap_with_tiles_blocked_by_creatures);
+
+		return a_star_search( _graph, _start_coords, _end_coords, _Creature );
+	},
+
+
+	find_path_between_map_tiles_with_destination_open: (_TM: Tilemap_Manager_Data, _AM: Asset_Manager_Data, _GM: Game_Manager_Data, _BM: Blit_Manager_Data, _start_coords: Tile_Pos_Point, _end_coords: Tile_Pos_Point, _Creature: Creature_Data, _Target_Creature: Creature_Data) => {
+		/*
+			We're going to go ahead and pass in the creature as a constructor argument; the idea here is that we can't really "reuse" an existing node graph generator and just pass in a new creature type; the moment anything changes about the creature we're using, we need to completely rebuild the node graph from scratch.  So there's no sense in pipelining it into the whole function tree inside the class - we have to nuke and rebuild anyways, so why not make the interface a bit simpler?
+		*/
+		//const _Node_Graph_Generator = new Node_Graph_Generator(_TM, _AM, _Creature);
+
+	
+		//const _graph = _Node_Graph_Generator.build_node_graph_from_grid( _TM.tile_maps.terrain );
+
+		const tilemap_with_tiles_blocked_by_creatures = Pathfinder_ƒ.block_tiles_occupied_by_other_creatures(_TM, _AM, _GM, _BM, _TM.tile_maps.terrain, [_Creature,_Target_Creature]);
 
 		const _graph = Node_Graph_Generate(_TM, _AM, _Creature, tilemap_with_tiles_blocked_by_creatures);
 
 		return a_star_search( _graph, _start_coords, _end_coords, _Creature );
 	}
-
 
 }
 

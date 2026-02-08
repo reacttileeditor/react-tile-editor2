@@ -85,16 +85,7 @@ export const AI_Core_ƒ = {
 		_AM: Asset_Manager_Data,
 		_BM: Blit_Manager_Data,
 	): Creature_Data|undefined => {
-		// const targets = filter( Game_Manager_ƒ.get_game_state(me.get_GM_instance()).current_frame_state.creature_list, (val) => (
-		// 	val.team !== me.team
-		// ));
-		
 
-		// if( size(targets) ){
-		// 	return targets[0];
-		// } else {
-		// 	return undefined;
-		// }
 
 		return AI_Core_ƒ.get_closest_enemy(me);
 	},
@@ -175,12 +166,12 @@ export const AI_Core_ƒ = {
 		/*
 			AI units don't have paths assigned by the player, so they need to construct them, manually, at the start of the turn (and may also need to replace them later, if the situation changes — i.e. if their target dies, and they need a new one).
 		*/
-		const target = AI_Core_ƒ.find_destination(me, _TM, _AM, _BM);
+		const target_unit = AI_Core_ƒ.find_destination(me, _TM, _AM, _BM);
 
-		if( target ){
+		if( target_unit ){
 			return cloneDeep(Creature_ƒ.set_path(
 				me,
-				Pathfinder_ƒ.find_path_between_map_tiles( _TM, _AM, _GM, _BM, me.tile_pos, target.tile_pos, me ).successful_path,
+				Pathfinder_ƒ.find_path_between_map_tiles_with_destination_open( _TM, _AM, _GM, _BM, me.tile_pos, target_unit.tile_pos, me, target_unit).successful_path,
 				_TM
 			));
 		} else {
@@ -227,7 +218,7 @@ export const AI_Core_ƒ = {
 
 
 		// if( AI_Core_ƒ.is_ai_controlled(me) ){
-		// 	AI_Core_ƒ.make_AI_driven_choices(me, _TM, _AM, _BM, offset_in_ms, tick, change_list, spawnees)
+		// 	AI_Core_ƒ.make_AI_driven_choices(me, _TM, _AM, _BM, _GM, offset_in_ms, tick, change_list, spawnees)
 		// }
 
 
@@ -274,6 +265,7 @@ export const AI_Core_ƒ = {
 					if(tick !== 0){
 						Creature_ƒ.deduct_cost_from_last_move(me,_TM, _AM, tick, change_list, new_path_data);
 					}
+					
 					Creature_ƒ.walk_next_segment(me,_TM, _AM, offset_in_ms, tick, change_list, new_path_data);
 				} else {
 					Creature_ƒ.terminate_movement(me, _TM, offset_in_ms, tick, change_list, spawnees);
