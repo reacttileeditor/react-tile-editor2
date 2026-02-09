@@ -150,7 +150,7 @@ export const Game_Manager_ƒ_Tile_Indicator_Generation = {
 
 		if( creature != undefined ){
 
-			const terrain_plus_blocking = Pathfinder_ƒ.block_tiles_occupied_by_other_creatures(_TM, _AM, me, _BM, _TM.tile_maps.terrain, creature) as Tilemap_Single;
+			const terrain_plus_blocking = Pathfinder_ƒ.block_tiles_occupied_by_other_creatures(_TM, _AM, me, _BM, _TM.tile_maps.terrain, [creature]) as Tilemap_Single;
 
 
 			newly_selected_object_possible_moves = Memoized_Map_Analysis_ƒ.calculate_accessible_tiles_for_remaining_movement(

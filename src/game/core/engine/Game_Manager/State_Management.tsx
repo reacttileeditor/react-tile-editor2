@@ -193,7 +193,7 @@ export const Game_Manager_ƒ_State_Management = {
 
 			const creature = Game_Manager_ƒ.get_current_turn_state(me).creature_list[ newly_selected_creature_index as number ]
 
-			const terrain_plus_blocking = Pathfinder_ƒ.block_tiles_occupied_by_other_creatures(_TM, _AM, me, _BM, _TM.tile_maps.terrain, creature) as Tilemap_Single;
+			const terrain_plus_blocking = Pathfinder_ƒ.block_tiles_occupied_by_other_creatures(_TM, _AM, me, _BM, _TM.tile_maps.terrain, [creature]) as Tilemap_Single;
 
 			newly_selected_object_possible_moves = Memoized_Map_Analysis_ƒ.calculate_accessible_tiles_for_remaining_movement(
 				creature,
