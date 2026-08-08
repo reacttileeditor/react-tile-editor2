@@ -118,6 +118,11 @@ do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM:
 
 		});
 
+		/*
+			This feature exists to allow external sources, like clicking on UI buttons, to also supply new changes.
+		*/
+		map(me.game_state.current_frame_state.supplementary_change_list, (val)=>{ master_change_list.push(val) });
+
 
 		/*
 			Add the new custom_objects to our existing list, and then process all custom_objects (existing and new).
@@ -196,6 +201,7 @@ do_live_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _AM:
 					...cloneDeep(me.game_state),
 					current_frame_state: {
 						creature_list: all_creatures_processed_and_culled,
+						supplementary_change_list: [],
 						tiles_blocked_by_creatures: occupied_tiles,
 					},
 					custom_object_list: all_objects_processed_and_culled,
@@ -210,6 +216,9 @@ do_paused_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _A
 		This is considerably simpler; we just run existing custom objects through their processing.
 	*/
 	const tick = me.animation_state.processing_tick;
+	let master_change_list: Array<Change_Instance> = [];
+	map(me.game_state.current_frame_state.supplementary_change_list, (val)=>{ master_change_list.push(val) });
+
 
 	let all_objects = cloneDeep(me.game_state.custom_object_list);
 	// let all_objects_sorted = sort((a,b)=>(
@@ -245,6 +254,23 @@ do_paused_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _A
 		new_data = Game_Manager_ƒ.do_mouse_position_updates(me, _TM, _AM, _BM);
 	}
 
+	/*
+		Without running the actual "processing" commands on creatures, at least run through the act of applying any listed changes which we've gotten from, say, UI inputs.
+	*/
+
+	let all_creatures_processed = map( me.game_state.current_frame_state.creature_list, (creature) => (
+		cloneDeep(Creature_ƒ.apply_changes(
+			creature,
+			filter( master_change_list, (val)=> (
+				val.target_obj_uuid == creature.unique_id
+			))
+		))
+	))
+
+	let all_creatures_processed_and_culled = filter( all_creatures_processed, (val)=>(
+		val.should_remove !== true
+	) );
+
 
 	return {
 		tm: new_data.tm,
@@ -256,6 +282,11 @@ do_paused_game_processing: (me: Game_Manager_Data, _TM: Tilemap_Manager_Data, _A
 			},
 			game_state: {
 				...cloneDeep(me.game_state),
+				current_frame_state: {
+					...me.game_state.current_frame_state,
+					creature_list: all_creatures_processed_and_culled,
+					supplementary_change_list: [],
+				},				
 				selected_object_potential_move_cost: new_data.gm.game_state.selected_object_potential_move_cost,
 				custom_object_list: all_objects_processed_and_culled,
 			}

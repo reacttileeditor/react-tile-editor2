@@ -49,11 +49,13 @@ export interface Game_State {
 export interface Individual_Game_Turn_State {
 	creature_list: Array<Creature_Data>,
 	tiles_blocked_by_creatures: Array<Tile_Pos_Point>,
+	supplementary_change_list: Array<Change_Instance>,
 }
 
 export const Individual_Game_Turn_State_Init: Individual_Game_Turn_State = {
 	creature_list: [],
 	tiles_blocked_by_creatures: [],
+	supplementary_change_list: [],
 }
 
 export const GameStateInit: Game_State = {
@@ -159,6 +161,7 @@ export const New_Game_Manager = (p: {
 	const first_turn_state_init = {
 		creature_list: map( p._Tilemap_Manager().creature_list, (val)=>( creature_from_setup_data(val) ) ),
 		tiles_blocked_by_creatures: [],
+		supplementary_change_list: [],
 	};
 
 	game_manager.game_state = {
@@ -170,6 +173,7 @@ export const New_Game_Manager = (p: {
 
 	const revised_first_turn_state_init = {
 		creature_list: first_turn_state_init.creature_list,
+		supplementary_change_list: [],
 		tiles_blocked_by_creatures: Game_Manager_ƒ.get_list_of_occupied_tiles(game_manager, p._Asset_Manager(), p._Blit_Manager(), p._Tilemap_Manager()),
 	}
 
