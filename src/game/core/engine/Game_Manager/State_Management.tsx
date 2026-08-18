@@ -44,6 +44,24 @@ export const Game_Manager_ƒ_State_Management = {
 		}
 	},
 
+	add_creature_change: (
+		me: Game_Manager_Data,
+		change: Change_Instance,
+	): Game_Manager_Data => {
+
+		const new_list = concat(me.game_state.current_frame_state.supplementary_change_list, [change]);
+
+		return {
+			...me,
+			game_state: {
+				...me.game_state,
+				current_frame_state: {
+					...me.game_state.current_frame_state,
+					supplementary_change_list: new_list
+				}
+			}
+		}
+	},
 
 	handle_click: (
 		get_game_state: () => Game_Manager_Data,
