@@ -255,7 +255,20 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 									className={`button_icon ${selected_creature.ai_intent == 'forced_move' ? 'active' : ''}`}
 									disabled={ false }
 									onClick={(evt)=>{
-										Creature_ƒ.set_AI_intent(selected_creature, 'forced_move')
+
+										props.set_Game_Manager_Data(
+											Game_Manager_ƒ.add_creature_change(
+												props.get_Game_Manager_Data(),
+												{
+													type: 'set',
+													target_variable: 'ai_intent',
+													value: 'forced_move',
+													target_obj_uuid: selected_creature.unique_id
+												}
+											)
+										)
+
+										//Creature_ƒ.set_AI_intent(selected_creature, 'forced_move')
 									}}
 								>
 									<div className="icon_cell">	
@@ -269,7 +282,20 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 									className={`button_icon ${selected_creature.ai_intent == 'attack_move' ? 'active' : ''}`}
 									disabled={ false }
 									onClick={(evt)=>{
-										Creature_ƒ.set_AI_intent(selected_creature, 'attack_move')
+										
+										props.set_Game_Manager_Data(
+											Game_Manager_ƒ.add_creature_change(
+												props.get_Game_Manager_Data(),
+												{
+													type: 'set',
+													target_variable: 'ai_intent',
+													value: 'attack_move',
+													target_obj_uuid: selected_creature.unique_id
+												}
+											)
+										)
+
+										//Creature_ƒ.set_AI_intent(selected_creature, 'attack_move')
 									}}
 								>
 									<div className="icon_cell">	
