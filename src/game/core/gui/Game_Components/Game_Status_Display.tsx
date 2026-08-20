@@ -242,101 +242,13 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 				<>{
 					(selected_creature !== undefined)
 					?
-					<div className="controls">
-						<div className="centered_text">
-							<div className="small_caption">
-								{'Movement Mode:'}
-							</div>
-						</div>
-
-						<div className="button_strip">
-							<Whisper placement='top' speaker={<Tooltip><div className="label">{'Force Move'}</div></Tooltip>}>
-								<Button
-									className={`button_icon ${selected_creature.ai_intent == 'forced_move' ? 'active' : ''}`}
-									disabled={ false }
-									onClick={(evt)=>{
-
-										props.set_Game_Manager_Data(
-											Game_Manager_ƒ.add_creature_change(
-												props.get_Game_Manager_Data(),
-												{
-													type: 'set',
-													target_variable: 'ai_intent',
-													value: 'forced_move',
-													target_obj_uuid: selected_creature.unique_id
-												}
-											)
-										)
-
-										//Creature_ƒ.set_AI_intent(selected_creature, 'forced_move')
-									}}
-								>
-									<div className="icon_cell">	
-										<Icon className="vector_icon" as={GiBarefoot as React.ElementType} />
-									</div> 
-								</Button>
-							</Whisper>
-
-							<Whisper placement='top' speaker={<Tooltip><div className="label">{'Attack Move'}</div></Tooltip>}>
-								<Button
-									className={`button_icon ${selected_creature.ai_intent == 'attack_move' ? 'active' : ''}`}
-									disabled={ false }
-									onClick={(evt)=>{
-										
-										props.set_Game_Manager_Data(
-											Game_Manager_ƒ.add_creature_change(
-												props.get_Game_Manager_Data(),
-												{
-													type: 'set',
-													target_variable: 'ai_intent',
-													value: 'attack_move',
-													target_obj_uuid: selected_creature.unique_id
-												}
-											)
-										)
-
-										//Creature_ƒ.set_AI_intent(selected_creature, 'attack_move')
-									}}
-								>
-									<div className="icon_cell">	
-										<Icon className="vector_icon" as={GiBroadsword as React.ElementType} />
-									</div> 
-								</Button>
-							</Whisper>
-						</div>
-					</div>
+					<Unit_Controls
+						get_Game_Manager_Data={props.get_Game_Manager_Data}
+						set_Game_Manager_Data={props.set_Game_Manager_Data}
+						selected_creature={selected_creature}
+					/>					
 					:
-					<div className="controls">
-						<div className="centered_text">
-							<div className="small_caption">
-								{'Movement Mode:'}
-							</div>
-						</div>
-
-						<div className="button_strip">
-							<Whisper placement='top' speaker={<Tooltip><div className="label">{'Force Move'}</div></Tooltip>}>
-								<Button
-									className={`button_icon`}
-									disabled={ true }
-								>
-									<div className="icon_cell">	
-										<Icon className="vector_icon" as={GiBarefoot as React.ElementType} />
-									</div> 
-								</Button>
-							</Whisper>
-
-							<Whisper placement='top' speaker={<Tooltip><div className="label">{'Attack Move'}</div></Tooltip>}>
-								<Button
-									className={`button_icon`}
-									disabled={ true }
-								>
-									<div className="icon_cell">	
-										<Icon className="vector_icon" as={GiBroadsword as React.ElementType} />
-									</div> 
-								</Button>
-							</Whisper>
-						</div>
-					</div>					
+					<Disabled_Unit_Controls />					
 				}</>
 
 			</div>
@@ -349,6 +261,115 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 		}</>
 	)
 }
+
+const Unit_Controls = (props: {
+	get_Game_Manager_Data: () => Game_Manager_Data,
+	set_Game_Manager_Data: (newVal: Game_Manager_Data) => void;
+	selected_creature: Creature_Data
+}) => (
+	<div className="controls">
+		<div className="centered_text">
+			<div className="small_caption">
+				{'Movement Mode:'}
+			</div>
+		</div>
+
+		<div className="button_strip">
+			<Whisper placement='top' speaker={<Tooltip><div className="label">{'Force Move'}</div></Tooltip>}>
+				<Button
+					className={`button_icon ${props.selected_creature.ai_intent == 'forced_move' ? 'active' : ''}`}
+					disabled={ false }
+					onClick={(evt)=>{
+
+						props.set_Game_Manager_Data(
+							Game_Manager_ƒ.add_creature_change(
+								props.get_Game_Manager_Data(),
+								{
+									type: 'set',
+									target_variable: 'ai_intent',
+									value: 'forced_move',
+									target_obj_uuid: props.selected_creature.unique_id
+								}
+							)
+						)
+
+						//Creature_ƒ.set_AI_intent(selected_creature, 'forced_move')
+					}}
+				>
+					<div className="icon_cell">	
+						<Icon className="vector_icon" as={GiBarefoot as React.ElementType} />
+					</div> 
+				</Button>
+			</Whisper>
+
+			<Whisper placement='top' speaker={<Tooltip><div className="label">{'Attack Move'}</div></Tooltip>}>
+				<Button
+					className={`button_icon ${props.selected_creature.ai_intent == 'attack_move' ? 'active' : ''}`}
+					disabled={ false }
+					onClick={(evt)=>{
+						
+						props.set_Game_Manager_Data(
+							Game_Manager_ƒ.add_creature_change(
+								props.get_Game_Manager_Data(),
+								{
+									type: 'set',
+									target_variable: 'ai_intent',
+									value: 'attack_move',
+									target_obj_uuid: props.selected_creature.unique_id
+								}
+							)
+						)
+
+						//Creature_ƒ.set_AI_intent(selected_creature, 'attack_move')
+					}}
+				>
+					<div className="icon_cell">	
+						<Icon className="vector_icon" as={GiBroadsword as React.ElementType} />
+					</div> 
+				</Button>
+			</Whisper>
+		</div>
+	</div>
+)
+
+const Disabled_Unit_Controls = (props: {
+}) => (
+	<div className="controls">
+		<div className="centered_text">
+			<div className="small_caption">
+				{'Movement Mode:'}
+			</div>
+		</div>
+
+		<div className="button_strip">
+			<Whisper placement='top' speaker={<Tooltip><div className="label">{'Force Move'}</div></Tooltip>}>
+				<Button
+					className={`button_icon`}
+					disabled={ true }
+				>
+					<div className="icon_cell">	
+						<Icon className="vector_icon" as={GiBarefoot as React.ElementType} />
+					</div> 
+				</Button>
+			</Whisper>
+
+			<Whisper placement='top' speaker={<Tooltip><div className="label">{'Attack Move'}</div></Tooltip>}>
+				<Button
+					className={`button_icon`}
+					disabled={ true }
+				>
+					<div className="icon_cell">	
+						<Icon className="vector_icon" as={GiBroadsword as React.ElementType} />
+					</div> 
+				</Button>
+			</Whisper>
+		</div>
+	</div>	
+)
+
+
+
+
 
 const Icon_and_Data_Pair = (props: {
 	label: string,
