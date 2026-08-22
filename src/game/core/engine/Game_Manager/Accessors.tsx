@@ -181,14 +181,11 @@ get_creature_by_uuid_or_die: (me: Game_Manager_Data, uuid: string): Creature_Dat
 	}
 },
 
-get_previous_turn_state: (me: Game_Manager_Data): Individual_Game_Turn_State => {
-	const state = me.game_state.turn_list[ size(me.game_state.turn_list) -2 ];
-
-	return state ? state : Individual_Game_Turn_State_Init;
-},
 
 get_current_turn_state: (me: Game_Manager_Data): Individual_Game_Turn_State => {
-	const state = last(me.game_state.turn_list);
+	//const state = last(me.game_state.turn_list);
+	const state = me.game_state.current_frame_state;
+
 
 	return state ? state : Individual_Game_Turn_State_Init;
 },
