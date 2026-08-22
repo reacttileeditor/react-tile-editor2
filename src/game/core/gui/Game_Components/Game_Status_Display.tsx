@@ -102,7 +102,7 @@ export const Game_Status_Display = (props: Game_Status_Display_Props) => {
 	const get_selected_creature = (_GS: Game_State): Creature_Data|undefined => {
 
 		if( _GS?.selected_object_index != undefined ){
-			return _GS.turn_list[_GS.current_turn].creature_list[_GS.selected_object_index]
+			return _GS.current_frame_state.creature_list[_GS.selected_object_index];
 		} else {
 			return undefined;
 		}
