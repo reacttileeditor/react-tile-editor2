@@ -266,7 +266,7 @@ export const Creature_ƒ = {
 			path_data: cloneDeep(path_data_empty),
 			behavior_mode: 'stand',
 			target: undefined,
-			ai_intent: 'attack_move',
+			ai_intent: me.ai_intent,
 			is_done_with_turn: false,
 			remaining_move_points: Creature_ƒ.get_delegate(me.type_name).yield_moves_per_turn()
 		})
