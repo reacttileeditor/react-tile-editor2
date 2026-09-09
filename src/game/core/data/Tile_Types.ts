@@ -90,6 +90,8 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'dirt1',
 				'dirt2',
+				'dirt3',
+				'dirt4',
 			],		
 		}],
 	},{
@@ -398,6 +400,8 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'dirt1',
 				'dirt2',
+				'dirt3',
+				'dirt4',
 			],		
 		}],
 
@@ -419,6 +423,8 @@ export const tile_types: Array<Tile_Item> = [
 			asset_variants: [
 				'dirt1',
 				'dirt2',
+				'dirt3',
+				'dirt4',
 			],		
 		}],
 

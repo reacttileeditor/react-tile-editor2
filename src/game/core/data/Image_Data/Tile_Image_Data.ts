@@ -359,6 +359,24 @@ export const Tile_Image_Data = {
 			h: 34,
 		},
 	},
+	dirt3: {
+		url: "hex-tile-experiment-tiles.png",
+		bounds: {
+			x: 113,
+			y: 205,
+			w: 54,
+			h: 34,
+		},
+	},	
+	dirt4: {
+		url: "hex-tile-experiment-tiles.png",
+		bounds: {
+			x: 169,
+			y: 205,
+			w: 54,
+			h: 34,
+		},
+	},	
 	"sandy-dirt1": {
 		url: "hex-tile-experiment-tiles.png",
 		bounds: {
