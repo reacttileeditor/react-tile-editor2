@@ -114,10 +114,18 @@ export const tile_types: Array<Tile_Item> = [
 	},{
 		name: "scrub-dirt-tall",
 		graphics: [{
-			zorder: zorder.grass,
+			zorder: zorder.rocks,
 			asset_variants: [
 				'scrub-dirt-tall1',
 				'scrub-dirt-tall2',
+			],
+		},{
+			zorder: zorder.grass,
+			asset_variants: [
+				'dirt1',
+				'dirt2',
+				'dirt3',
+				'dirt4',
 			],
 		}],
 	},{

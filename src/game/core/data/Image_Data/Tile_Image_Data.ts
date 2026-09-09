@@ -405,21 +405,21 @@ export const Tile_Image_Data = {
 		},
 	},
 	"scrub-dirt-tall1": {
-		url: "hex-tile-experiment-tiles.png",
+		url: "bushes2.png",
 		bounds: {
-			x: 57,
-			y: 313,
-			w: 54,
-			h: 48,
+			x: 1,
+			y: 1,
+			w: 62,
+			h: 74,
 		},
 	},
 	"scrub-dirt-tall2": {
-		url: "hex-tile-experiment-tiles.png",
+		url: "bushes2.png",
 		bounds: {
-			x: 113,
-			y: 313,
-			w: 54,
-			h: 48,
+			x: 1,
+			y: 77,
+			w: 62,
+			h: 74,
 		},
 	},
 	sand1: {
