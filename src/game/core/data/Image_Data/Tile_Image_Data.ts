@@ -459,13 +459,14 @@ export const Tile_Image_Data = {
 	"scrub_dirt_tall1c": {
 		url: "bushes2.png",
 		bounds: {
-			x: 1,
+			x: 513,
 			y: 1,
 			w: 62,
 			h: 74,
 		},
-		frames: 1,
-		frame_duration: 400,
+		frames: 2,
+		frame_duration: 450,
+		ping_pong: true,
 		pad: 2,
 	},
 		
