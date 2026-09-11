@@ -413,15 +413,27 @@ export const Tile_Image_Data = {
 			w: 62,
 			h: 74,
 		},
-		frames: 1,
-		frame_duration: 130,
+		frames: 3,
+		frame_duration: 230,
 		ping_pong: true,
 		pad: 2,
 	},
-	"scrub_dirt_tall1b": {
+	"scrub_dirt_tall1aa": {
 		url: "bushes2.png",
 		bounds: {
 			x: 1,
+			y: 1,
+			w: 62,
+			h: 74,
+		},
+		frames: 3,
+		frame_duration: 330,
+		ping_pong: true,
+		pad: 2,
+	},	"scrub_dirt_tall1b": {
+		url: "bushes2.png",
+		bounds: {
+			x: 257,
 			y: 1,
 			w: 62,
 			h: 74,
@@ -431,7 +443,32 @@ export const Tile_Image_Data = {
 		ping_pong: true,
 		pad: 2,
 	},
-	
+	"scrub_dirt_tall1bb": {
+		url: "bushes2.png",
+		bounds: {
+			x: 257,
+			y: 1,
+			w: 62,
+			h: 74,
+		},
+		frames: 3,
+		frame_duration: 380,
+		ping_pong: true,
+		pad: 2,
+	},
+	"scrub_dirt_tall1c": {
+		url: "bushes2.png",
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 62,
+			h: 74,
+		},
+		frames: 1,
+		frame_duration: 400,
+		pad: 2,
+	},
+		
 	"scrub-dirt-tall2": {
 		url: "bushes2.png",
 		bounds: {
