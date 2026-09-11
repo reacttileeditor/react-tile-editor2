@@ -404,7 +404,8 @@ export const Tile_Image_Data = {
 			h: 34,
 		},
 	},
-	"scrub-dirt-tall1": {
+
+	"scrub_dirt_tall1a": {
 		url: "bushes2.png",
 		bounds: {
 			x: 1,
@@ -412,7 +413,25 @@ export const Tile_Image_Data = {
 			w: 62,
 			h: 74,
 		},
+		frames: 1,
+		frame_duration: 130,
+		ping_pong: true,
+		pad: 2,
 	},
+	"scrub_dirt_tall1b": {
+		url: "bushes2.png",
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 62,
+			h: 74,
+		},
+		frames: 3,
+		frame_duration: 230,
+		ping_pong: true,
+		pad: 2,
+	},
+	
 	"scrub-dirt-tall2": {
 		url: "bushes2.png",
 		bounds: {
@@ -932,7 +951,7 @@ export const Tile_Image_Data = {
 		pad: 2,
 		ping_pong: true
 	},
-	
+
 	wideleaf_scrub2__anim2: {
 		url: "terrain-tiles2.png",
 		bounds: {
