@@ -848,6 +848,8 @@ export const Tile_Image_Data = {
 		frame_duration: 200,
 		ping_pong: false
 	},
+
+
 	wideleaf_scrub1__anim1: {
 		url: "terrain-tiles2.png",
 		bounds: {
@@ -861,6 +863,7 @@ export const Tile_Image_Data = {
 		pad: 2,
 		ping_pong: true
 	},
+
 	wideleaf_scrub1__anim2: {
 		url: "terrain-tiles2.png",
 		bounds: {
@@ -871,19 +874,6 @@ export const Tile_Image_Data = {
 		},
 		frames: 3,
 		frame_duration: 210,
-		pad: 2,
-		ping_pong: true
-	},
-	wideleaf_scrub1__anim3: {
-		url: "terrain-tiles2.png",
-		bounds: {
-			x: 1,
-			y: 73,
-			w: 54,
-			h: 34,
-		},
-		frames: 2,
-		frame_duration: 410,
 		pad: 2,
 		ping_pong: true
 	},
@@ -900,6 +890,20 @@ export const Tile_Image_Data = {
 		pad: 2,
 		ping_pong: true
 	},
+
+	wideleaf_scrub1__anim3: {
+		url: "terrain-tiles2.png",
+		bounds: {
+			x: 1,
+			y: 73,
+			w: 54,
+			h: 34,
+		},
+		frames: 2,
+		frame_duration: 410,
+		pad: 2,
+		ping_pong: true
+	},
 	wideleaf_scrub1__anim3b: {
 		url: "terrain-tiles2.png",
 		bounds: {
@@ -913,6 +917,8 @@ export const Tile_Image_Data = {
 		pad: 2,
 		ping_pong: true
 	},
+
+
 	wideleaf_scrub2__anim1: {
 		url: "terrain-tiles2.png",
 		bounds: {
@@ -926,6 +932,7 @@ export const Tile_Image_Data = {
 		pad: 2,
 		ping_pong: true
 	},
+	
 	wideleaf_scrub2__anim2: {
 		url: "terrain-tiles2.png",
 		bounds: {
@@ -936,19 +943,6 @@ export const Tile_Image_Data = {
 		},
 		frames: 3,
 		frame_duration: 210,
-		pad: 2,
-		ping_pong: true
-	},
-	wideleaf_scrub2__anim3: {
-		url: "terrain-tiles2.png",
-		bounds: {
-			x: 224,
-			y: 73,
-			w: 54,
-			h: 34,
-		},
-		frames: 2,
-		frame_duration: 410,
 		pad: 2,
 		ping_pong: true
 	},
@@ -965,6 +959,20 @@ export const Tile_Image_Data = {
 		pad: 2,
 		ping_pong: true
 	},
+
+	wideleaf_scrub2__anim3: {
+		url: "terrain-tiles2.png",
+		bounds: {
+			x: 224,
+			y: 73,
+			w: 54,
+			h: 34,
+		},
+		frames: 2,
+		frame_duration: 410,
+		pad: 2,
+		ping_pong: true
+	},
 	wideleaf_scrub2__anim3b: {
 		url: "terrain-tiles2.png",
 		bounds: {
@@ -978,6 +986,8 @@ export const Tile_Image_Data = {
 		pad: 2,
 		ping_pong: true
 	},
+
+
 	"shore-walls-right1": {
 		url: "shore-walls-right1.png",
 		bounds: {
