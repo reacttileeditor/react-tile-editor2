@@ -499,6 +499,33 @@ export const Tile_Image_Data = {
 		pad: 2,
 	},
 
+	"scrub_dirt_tall2b": {
+		url: "bushes2.png",
+		bounds: {
+			x: 257,
+			y: 77,
+			w: 62,
+			h: 74,
+		},
+		frames: 3,
+		frame_duration: 230,
+		ping_pong: true,
+		pad: 2,
+	},
+	"scrub_dirt_tall2bb": {
+		url: "bushes2.png",
+		bounds: {
+			x: 257,
+			y: 77,
+			w: 62,
+			h: 74,
+		},
+		frames: 3,
+		frame_duration: 380,
+		ping_pong: true,
+		pad: 2,
+	},
+
 
 	sand1: {
 		url: "hex-tile-experiment-tiles.png",
