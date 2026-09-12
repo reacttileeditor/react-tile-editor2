@@ -430,7 +430,8 @@ export const Tile_Image_Data = {
 		frame_duration: 330,
 		ping_pong: true,
 		pad: 2,
-	},	"scrub_dirt_tall1b": {
+	},
+	"scrub_dirt_tall1b": {
 		url: "bushes2.png",
 		bounds: {
 			x: 257,
@@ -470,7 +471,8 @@ export const Tile_Image_Data = {
 		pad: 2,
 	},
 		
-	"scrub-dirt-tall2": {
+
+	"scrub_dirt_tall2a": {
 		url: "bushes2.png",
 		bounds: {
 			x: 1,
@@ -478,7 +480,26 @@ export const Tile_Image_Data = {
 			w: 62,
 			h: 74,
 		},
+		frames: 3,
+		frame_duration: 230,
+		ping_pong: true,
+		pad: 2,
 	},
+	"scrub_dirt_tall2aa": {
+		url: "bushes2.png",
+		bounds: {
+			x: 1,
+			y: 77,
+			w: 62,
+			h: 74,
+		},
+		frames: 3,
+		frame_duration: 330,
+		ping_pong: true,
+		pad: 2,
+	},
+
+
 	sand1: {
 		url: "hex-tile-experiment-tiles.png",
 		bounds: {

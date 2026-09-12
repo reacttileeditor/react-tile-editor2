@@ -117,7 +117,7 @@ export const tile_types: Array<Tile_Item> = [
 			zorder: zorder.rocks,
 			asset_variants: [
 				'scrub_dirt_tall1',
-				'scrub-dirt-tall2',
+				'scrub_dirt_tall2',
 			],
 		},{
 			zorder: zorder.grass,
