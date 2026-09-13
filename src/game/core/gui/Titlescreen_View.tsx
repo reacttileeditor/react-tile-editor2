@@ -49,8 +49,6 @@ export const Titlescreen_View = (props: Props) => {
 							<div className="description">
 								<p><strong>Note:</strong> This is a tactical strategy game, but with a <em>major</em> twist; units don't move when you click on them, they're just given a plan that will only happen when you click "Next Turn" - and then they all move at once.</p>
 
-								<p><strong>Known Bugs:</strong> </p>
-								<p>The Forced Move/Attack Move buttons are glitchy and you might have to click on them repeatedly to make them work.</p>
 							</div>
 						</div>
 					</div>
