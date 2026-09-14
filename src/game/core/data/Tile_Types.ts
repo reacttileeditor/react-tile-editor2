@@ -107,8 +107,8 @@ export const tile_types: Array<Tile_Item> = [
 		graphics: [{
 			zorder: zorder.grass,
 			asset_variants: [
-				'scrub-dirt1',
-				'scrub-dirt2',
+				'scrub_dirt1',
+				'scrub_dirt2',
 			],
 		}],
 	},{

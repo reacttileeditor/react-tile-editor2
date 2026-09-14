@@ -386,24 +386,87 @@ export const Tile_Image_Data = {
 			h: 34,
 		},
 	},
-	"scrub-dirt1": {
-		url: "hex-tile-experiment-tiles.png",
+	scrub_dirt1a: {
+		url: "bushes3.png",
 		bounds: {
-			x: 57,
-			y: 169,
+			x: 1,
+			y: 1,
 			w: 54,
 			h: 34,
 		},
+		frames: 2,
+		frame_duration: 230,
+		ping_pong: true,
+		pad: 2,
 	},
-	"scrub-dirt2": {
-		url: "hex-tile-experiment-tiles.png",
+	scrub_dirt1b: {
+		url: "bushes3.png",
 		bounds: {
-			x: 113,
-			y: 169,
+			x: 169,
+			y: 1,
 			w: 54,
 			h: 34,
 		},
+		frames: 2,
+		frame_duration: 280,
+		ping_pong: true,
+		pad: 2,
 	},
+	scrub_dirt1c: {
+		url: "bushes3.png",
+		bounds: {
+			x: 337,
+			y: 1,
+			w: 54,
+			h: 34,
+		},
+		frames: 2,
+		frame_duration: 330,
+		ping_pong: true,
+		pad: 2,
+	},
+
+	scrub_dirt2a: {
+		url: "bushes3.png",
+		bounds: {
+			x: 1,
+			y: 37,
+			w: 54,
+			h: 34,
+		},
+		frames: 2,
+		frame_duration: 230,
+		ping_pong: true,
+		pad: 2,
+	},
+	scrub_dirt2b: {
+		url: "bushes3.png",
+		bounds: {
+			x: 169,
+			y: 37,
+			w: 54,
+			h: 34,
+		},
+		frames: 2,
+		frame_duration: 280,
+		ping_pong: true,
+		pad: 2,
+	},
+	scrub_dirt2c: {
+		url: "bushes3.png",
+		bounds: {
+			x: 337,
+			y: 37,
+			w: 54,
+			h: 34,
+		},
+		frames: 2,
+		frame_duration: 330,
+		ping_pong: true,
+		pad: 2,
+	},
+
+	
 
 	"scrub_dirt_tall1a": {
 		url: "bushes2.png",

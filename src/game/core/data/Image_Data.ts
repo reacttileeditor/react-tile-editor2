@@ -53,6 +53,8 @@ export const image_sequence_data_list = {
 	water_reeds_1: ['water_reeds_1a','water_reeds_1b','water_reeds_1c'] as Array<Image_Data_Names>,
 	scrub_dirt_tall1: ['scrub_dirt_tall1a','scrub_dirt_tall1aa','scrub_dirt_tall1b','scrub_dirt_tall1bb','scrub_dirt_tall1c'] as Array<Image_Data_Names>,
 	scrub_dirt_tall2: ['scrub_dirt_tall2a','scrub_dirt_tall2aa', 'scrub_dirt_tall2b', 'scrub_dirt_tall2bb','scrub_dirt_tall2c'] as Array<Image_Data_Names>,
+	scrub_dirt1: ['scrub_dirt1a', 'scrub_dirt1b', 'scrub_dirt1c'] as Array<Image_Data_Names>,
+	scrub_dirt2: ['scrub_dirt2a', 'scrub_dirt2b', 'scrub_dirt2c'] as Array<Image_Data_Names>,
 
 	projectile_impact: ['projectile_impact1', 'projectile_impact2', 'projectile_impact3'] as Array<Image_Data_Names>,
 }
