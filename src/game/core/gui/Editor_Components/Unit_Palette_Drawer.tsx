@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Direction, Directions } from "../../engine/Tilemap_Manager/Tilemap_Manager";
 import { Creature_Type_Name, Creature_ƒ } from "../../../objects_core/Creature/Creature";
 import { Asset_Manager_Data } from "../../engine/Asset_Manager/Asset_Manager";
-import { Drawer, Dropdown, Slider } from "rsuite";
+import { Drawer, Dropdown, Slider, Tooltip, Whisper } from "rsuite";
 import { indexOf, map } from "ramda";
 import { Tile_Palette_Element } from "../Tile_Palette_Element";
 import { zorder } from "../../constants/zorder";
@@ -98,28 +98,30 @@ export const Unit_Palette_Drawer = (props: {
 			<div className="unit-palette">
 				{
 					map( (creature_type)=>(
-						<div
-							className={`creature_instance ${creature_type == props.selected_creature_type ? 'selected' : ''}`}
-							key={`${Creature_ƒ.get_delegate(creature_type).yield_creature_image()}`}
-							onClick={(evt)=>{
-								props.set_selected_creature_type(creature_type)
-							}}
-						>
-							<Tile_Palette_Element
-								asset_manager={props._Asset_Manager()}
-								tile_name={''}
-								asset_list={[{
-									id: `${Creature_ƒ.get_delegate(creature_type).yield_creature_image()}`,
-									zorder: zorder.rocks,
-								}]}
-								use_black_background={true}
-								highlight={false}
-								handle_click={ ()=>{} }
-								canvas_size={ {x: 70, y: 70} }
-								centering_offset={ {x: 0, y: -0.8} }
-								palette={`team${props.selected_creature_team}` as Palette_Names}
-							/>
-						</div>
+						<Whisper placement='top' speaker={<Tooltip>{Creature_ƒ.get_delegate(creature_type).yield_prettyprint_name()}</Tooltip>}>
+							<div
+								className={`creature_instance ${creature_type == props.selected_creature_type ? 'selected' : ''}`}
+								key={`${Creature_ƒ.get_delegate(creature_type).yield_creature_image()}`}
+								onClick={(evt)=>{
+									props.set_selected_creature_type(creature_type)
+								}}
+							>
+								<Tile_Palette_Element
+									asset_manager={props._Asset_Manager()}
+									tile_name={''}
+									asset_list={[{
+										id: `${Creature_ƒ.get_delegate(creature_type).yield_creature_image()}`,
+										zorder: zorder.rocks,
+									}]}
+									use_black_background={true}
+									highlight={false}
+									handle_click={ ()=>{} }
+									canvas_size={ {x: 70, y: 70} }
+									centering_offset={ {x: 0, y: -0.8} }
+									palette={`team${props.selected_creature_team}` as Palette_Names}
+								/>
+							</div>
+						</Whisper>
 					),
 					creature_list)
 				}
@@ -127,4 +129,3 @@ export const Unit_Palette_Drawer = (props: {
 		</Drawer.Body>
 	</Drawer>
 }
-
