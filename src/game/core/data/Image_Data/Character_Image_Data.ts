@@ -197,6 +197,39 @@ export const Character_Image_Data = {
 	},
 
 
+
+/*----------------------- human archer -----------------------*/
+	human_archer_se_stand: {
+		url: "characters/human_archer_se_stand.png",
+		frames: 1,
+		frame_duration: 170,
+		ping_pong: true,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 58,
+			h: 158,
+		},
+		uses_palette_swap: true,
+	},
+	human_archer_ne_stand: {
+		url: "characters/human_archer_ne_stand.png",
+		frames: 1,
+		frame_duration: 170,
+		ping_pong: true,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 78,
+			h: 158,
+		},
+		uses_palette_swap: true,
+	},
+
+
+
 /*----------------------- human footman -----------------------*/
 	human_footman_se_stand: {
 		url: "characters/human_footman_se_stand.png",
