@@ -24,7 +24,7 @@ export type Path_Node_With_Direction = {
 	direction: Direction,
 }
 
-export type Creature_Type_Name = 'hermit' | 'peasant' | 'skeleton' | 'undead_javelineer' | 'human_footman';
+export type Creature_Type_Name = 'hermit' | 'peasant' | 'skeleton' | 'undead_javelineer' | 'human_footman' | 'human_archer';
 
 export type Creature_Animation_Chart = { [k in Direction]: Image_Data_Names };
 

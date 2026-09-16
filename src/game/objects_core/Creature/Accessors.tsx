@@ -15,6 +15,7 @@ import { CT_Peasant_ƒ } from "../../core/data/Creatures/Peasant";
 import { CT_Skeleton_ƒ } from "../../core/data/Creatures/Skeleton";
 import { CT_Undead_Javelineer_ƒ } from "../../core/data/Creatures/Undead_Javelineer";
 import { CT_Human_Footman_ƒ } from "../../core/data/Creatures/Human_Footman";
+import { CT_Human_Archer_ƒ } from "../../core/data/Creatures/Human_Archer";
 import { Image_Data_Names } from "../../core/data/Image_Data";
 import { Game_Manager_ƒ } from "../../core/engine/Game_Manager/Game_Manager";
 
@@ -119,7 +120,7 @@ export const Creature_ƒ_Accessors = {
 
 	/*----------------------- basetype management -----------------------*/
 	list_all_creature_types: (): Array<Creature_Type_Name> => {
-		return ['hermit','peasant','skeleton','undead_javelineer','human_footman'];
+		return ['hermit','peasant','skeleton','undead_javelineer','human_footman', 'human_archer'];
 	},
 
 
@@ -138,6 +139,7 @@ export const Creature_ƒ_Accessors = {
 			skeleton: CT_Skeleton_ƒ,
 			undead_javelineer: CT_Undead_Javelineer_ƒ,
 			human_footman: CT_Human_Footman_ƒ,
+			human_archer: CT_Human_Archer_ƒ,
 		}[type_name];
 	},
 
