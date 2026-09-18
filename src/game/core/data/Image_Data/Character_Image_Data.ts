@@ -202,7 +202,7 @@ export const Character_Image_Data = {
 	human_archer_se_stand: {
 		url: "characters/human_archer_se_stand.png",
 		frames: 1,
-		frame_duration: 170,
+		frame_duration: 1070,
 		ping_pong: true,
 		pad: 2,
 		bounds: {
@@ -216,7 +216,7 @@ export const Character_Image_Data = {
 	human_archer_ne_stand: {
 		url: "characters/human_archer_ne_stand.png",
 		frames: 1,
-		frame_duration: 170,
+		frame_duration: 1070,
 		ping_pong: true,
 		pad: 2,
 		bounds: {
