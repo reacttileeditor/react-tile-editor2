@@ -11,7 +11,7 @@ export const CT_Human_Archer_ƒ: Creature_Delegate = {
 	yield_creature_image: () => 'human_archer_se_stand',
 	yield_prettyprint_name: () => 'Archer',
 	yield_damage: (): number => ( 7 ),
-	yield_weapon_range: () => 4,
+	yield_weapon_range: () => 10,
 
 
 	yield_stand_asset_for_direction: (kind: Creature_Delegate, direction: Direction): Image_Data_Names => (
