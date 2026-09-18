@@ -261,6 +261,7 @@ export const Creature_ƒ = {
 			next_behavior_reconsideration_timestamp: 0,
 			last_behavior_reconsideration_timestamp: 0,
 			last_changed_hitpoints: -200,
+			hitpoint_change_tally: 0,
 			remaining_action_points: 1,
 			planned_tile_pos: me.tile_pos,
 			path_data: cloneDeep(path_data_empty),
