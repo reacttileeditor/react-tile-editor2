@@ -81,6 +81,18 @@ export const Misc_Image_Data = {
 	javelin_projectile: {
 		url: "projectile-javelin.png",
 	},
+	arrow_projectile: {
+		url: "projectile-arrow.png",
+		frames: 6,
+		frame_duration: 20,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 61,
+			h: 61,
+		},
+	},
 	hit_star: {
 		url: "hit_star.png",
 	},

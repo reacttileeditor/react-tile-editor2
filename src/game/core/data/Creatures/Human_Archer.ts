@@ -48,6 +48,7 @@ export const CT_Human_Archer_ƒ: Creature_Delegate = {
 	),
 
 	action_delay_for_animation: (animation_name: string) => ( 32 ),
+	yield_shot_type: () => ( 'shot_arrow' ),
 
 	yield_pixel_height: () => 47,
 }
