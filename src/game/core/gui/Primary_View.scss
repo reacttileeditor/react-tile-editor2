@@ -212,6 +212,7 @@ body {
 						line-height: 1.0;
 						color: #43444bdd;
 						text-shadow: 1px 2px 2px maroon;
+						-webkit-text-stroke: 0.001rem #da56;
 
 						span {
 							font-size: 160%;
@@ -235,7 +236,8 @@ body {
 						border: 0.1rem solid rgb(72 65 72);
 						border-radius: 0.5rem;
 						padding: 1rem 2rem;
-						font-size: 1.2em;						
+						font-size: 1.2em;		
+						background: #00000055;				
 					}
 				}
 			}
