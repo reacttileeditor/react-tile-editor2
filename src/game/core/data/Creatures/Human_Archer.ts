@@ -41,9 +41,9 @@ export const CT_Human_Archer_ƒ: Creature_Delegate = {
 			'north_east':	'human_archer_ne_stand',
 			'north_west':	'human_archer_ne_stand',
 			'east':			'human_archer_ne_stand',
-			'south_east':	'human_archer_se_stand',
-			'west':			'human_archer_se_stand',
-			'south_west':	'human_archer_se_stand',	
+			'south_east':	'human_archer_se_attack',
+			'west':			'human_archer_se_attack',
+			'south_west':	'human_archer_se_attack',	
 		} as Creature_Animation_Chart)[direction]
 	),
 
