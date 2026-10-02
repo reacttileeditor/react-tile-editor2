@@ -241,6 +241,20 @@ export const Character_Image_Data = {
 		},
 		uses_palette_swap: true,
 	},
+	human_archer_ne_attack: {
+		url: "characters/human_archer_ne_attack.png",
+		frames: 10,
+		frame_duration: 80,
+		ping_pong: false,
+		pad: 2,
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 78,
+			h: 158,
+		},
+		uses_palette_swap: true,
+	},
 
 
 /*----------------------- human footman -----------------------*/

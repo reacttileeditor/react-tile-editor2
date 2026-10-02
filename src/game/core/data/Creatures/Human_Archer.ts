@@ -38,9 +38,9 @@ export const CT_Human_Archer_ƒ: Creature_Delegate = {
 	
 	yield_attack_asset_for_direction: (kind: Creature_Delegate, direction: Direction): Image_Data_Names => (
 		({
-			'north_east':	'human_archer_ne_stand',
-			'north_west':	'human_archer_ne_stand',
-			'east':			'human_archer_ne_stand',
+			'north_east':	'human_archer_ne_attack',
+			'north_west':	'human_archer_ne_attack',
+			'east':			'human_archer_ne_attack',
 			'south_east':	'human_archer_se_attack',
 			'west':			'human_archer_se_attack',
 			'south_west':	'human_archer_se_attack',	
