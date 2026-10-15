@@ -638,6 +638,8 @@ export const Tile_Image_Data = {
 			h: 34,
 		},
 	},
+
+	
 	"water-edge-nw1": {
 		url: "water-tiles.png",
 		bounds: {
@@ -696,18 +698,20 @@ export const Tile_Image_Data = {
 		pad: 2,
 	},
 	"water-edge-ne1": {
-		url: "water-tiles.png",
+		url: "terrain/water/se_shore_wave1.png",
 		bounds: {
 			x: 1,
-			y: 241,
-			w: 54,
-			h: 34,
+			y: 1,
+			w: 62,
+			h: 74,
 		},
-		frames: 4,
-		frame_duration: 130,
+		frames: 6,
+		frame_duration: 150,
 		ping_pong: true,
 		pad: 2,
 	},
+
+	
 	water_ripples_1a: {
 		url: "water_ripple_1a.png",
 		bounds: {
