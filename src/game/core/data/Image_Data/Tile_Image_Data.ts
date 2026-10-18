@@ -641,15 +641,15 @@ export const Tile_Image_Data = {
 
 	
 	"water-edge-nw1": {
-		url: "water-tiles.png",
+		url: "terrain/water/sw_shore_wave1.png",
 		bounds: {
 			x: 1,
-			y: 61,
-			w: 54,
-			h: 34,
+			y: 1,
+			w: 62,
+			h: 74,
 		},
-		frames: 4,
-		frame_duration: 130,
+		frames: 6,
+		frame_duration: 150,
 		ping_pong: true,
 		pad: 2,
 	},
