@@ -239,6 +239,7 @@ export const tile_types: Array<Tile_Item> = [
 			zorder: zorder.water_edge,
 			asset_variants: [
 				'water-edge-ne1',
+				'water-edge-ne2',
 			],
 			restrictions:	[
 								[ground_tiles, /.*/],
@@ -344,6 +345,7 @@ export const tile_types: Array<Tile_Item> = [
 			zorder: zorder.water_edge,
 			asset_variants: [
 				'water-edge-ne1',
+				'water-edge-ne2',
 			],
 			restrictions:	[
 										[ground_tiles, /.*/],
