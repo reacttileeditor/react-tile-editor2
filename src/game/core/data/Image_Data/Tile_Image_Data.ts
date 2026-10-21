@@ -653,6 +653,19 @@ export const Tile_Image_Data = {
 		ping_pong: true,
 		pad: 2,
 	},
+	"water-edge-nw2": {
+		url: "terrain/water/sw_shore_wave2.png",
+		bounds: {
+			x: 1,
+			y: 1,
+			w: 62,
+			h: 74,
+		},
+		frames: 6,
+		frame_duration: 150,
+		ping_pong: true,
+		pad: 2,
+	},
 	"water-edge-w1": {
 		url: "water-tiles.png",
 		bounds: {
