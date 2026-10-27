@@ -8,6 +8,7 @@ export const zorder = {
 	water_surface: -1,
 	water_surface_protrusions: 0,
 	water_edge: 1,
+	water_edge_overlay: 2,
 	grass: 3,
 
 	map_boundary_low: 9,
