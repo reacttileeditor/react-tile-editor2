@@ -248,6 +248,16 @@ export const tile_types: Array<Tile_Item> = [
 										[/.*/, /.*/]
 							]
 		},{
+			zorder: zorder.water_edge_overlay,
+			asset_variants: [
+				'water-edge-nw+ne1'
+			],
+			restrictions:	[
+								[ground_tiles, ground_tiles],
+							[/.*/, water_tiles, /.*/],
+								[/.*/, /.*/]
+					]
+		},{
 			zorder: zorder.water_edge,
 			asset_variants: [
 				'water-edge-e1',
